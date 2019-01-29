@@ -2,7 +2,7 @@
 'use strict';
 
 const { Map, List, fromJS } = require('immutable');
-const shuffle = require('immutable-shuffle');
+
 const pokemon_js = require('./pokemon');
 const deck_js = require('./deck');
 const f = require('./f');
@@ -37,11 +37,11 @@ function buildPieceStorage(){
             if(pokemon.evolves_from == undefined){ // Only add base level
                 console.log('Adding',rarity.get(pokemon.cost),pokemon.name,'to',pokemon.cost);
                 for(let l = 0; l < rarity.get(pokemon.cost - 1); l++){
-                    availablePieces = availablePieces.set(i, availablePieces.get(i).push(pokemon.name));
+                    availablePieces = state_logic_js.push(availablePieces, i, pokemon.name);
                 }
             }
         }
-        availablePieces = availablePieces.set(i, shuffle(availablePieces.get(i)));
+        availablePieces = state_logic_js.shuffle(availablePieces, i); 
     }
     return availablePieces;
 }
@@ -65,23 +65,23 @@ function getFive(state, playerIndex){
         if(probSum += prob.get('1') > random){
             let piece = pieceStorage.get(0).get(0);
             fivePieces = fivePieces.push(piece);
-            pieceStorage = pieceStorage.set(0, pieceStorage.get(0).shift());
+            pieceStorage = state_logic_js.removeFirst(pieceStorage, 0);
         } else if(probSum += prob.get('2') > random){
             let piece = pieceStorage.get(1).get(0);
             fivePieces = fivePieces.push(piece);
-            pieceStorage = pieceStorage.set(1, pieceStorage.get(1).shift());
+            pieceStorage = state_logic_js.removeFirst(pieceStorage, 1);
         } else if(probSum += prob.get('3') > random){
             let piece = pieceStorage.get(2).get(0);
             fivePieces = fivePieces.push(piece);
-            pieceStorage = pieceStorage.set(2, pieceStorage.get(2).shift());
+            pieceStorage = state_logic_js.removeFirst(pieceStorage, 2);
         } else if(probSum += prob.get('4') > random){
             let piece = pieceStorage.get(3).get(0);
             fivePieces = fivePieces.push(piece);
-            pieceStorage = pieceStorage.set(3, pieceStorage.get(3).shift());
+            pieceStorage = state_logic_js.removeFirst(pieceStorage, 3);
         } else if(probSum += prob.get('5') > random){
             let piece = pieceStorage.get(0).get(4);
             fivePieces = fivePieces.push(piece);
-            pieceStorage = pieceStorage.set(4, pieceStorage.get(4).shift());
+            pieceStorage = state_logic_js.removeFirst(pieceStorage, 4);
         }
     }
     state = state_logic_js.updateShop(state, playerIndex, fivePieces, pieceStorage);
@@ -94,9 +94,9 @@ exports.start = function(){
     state = player_js.initPlayers(state, 2);
     //f.print(state, '2: ');
     state = getFive(state, 0);
-    //f.print(state, '3: ');
+    f.print(state, '3: ');
 
 }
 
 //console.log(f.getRandomInt(5));
-//console.log(pokemon_js.getMap().get('pikachu'));
+//console.log(pokemon_js.getMap().get('Pikachu'.toLowerCase()));

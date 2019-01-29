@@ -8,7 +8,6 @@ const fileModule = rewire("../src/game.js");
 
 const f = require('../src/f');
 
-console.log(fileModule)
 //const levelPieceProbability = fileModule.__get__('getLevelPieceProbability');
 
 describe('levelPiece', function(){
@@ -21,7 +20,7 @@ describe('levelPiece', function(){
                 for(var j = 1; j <= 5; j++){
                     sum += level.get(String(j));
                 }
-                console.error(i);
+                //console.error(i);
                 assert.equal(Math.round(sum * 100) / 100, 1.0);
             }
         });
