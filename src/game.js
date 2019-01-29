@@ -7,6 +7,7 @@ const pokemon_js = require('./pokemon');
 const deck_js = require('./deck');
 const f = require('./f');
 const player_js = require('./player');
+const state_logic_js = require('./state_logic');
 
 
 const rarity = List([45, 30, 25, 15, 10]);
@@ -83,7 +84,7 @@ function getFive(state, playerIndex){
             pieceStorage = pieceStorage.set(4, pieceStorage.get(4).shift());
         }
     }
-    state = player_js.updateShop(state, playerIndex, fivePieces, pieceStorage);
+    state = state_logic_js.updateShop(state, playerIndex, fivePieces, pieceStorage);
     return state;
 }
 
@@ -91,9 +92,9 @@ exports.start = function(){
     let state = init();
     //f.print(state, '1: ');
     state = player_js.initPlayers(state, 2);
-    f.print(state, '2: ');
+    //f.print(state, '2: ');
     state = getFive(state, 0);
-    f.print(state, '3: ');
+    //f.print(state, '3: ');
 
 }
 
