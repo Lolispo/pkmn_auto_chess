@@ -9,17 +9,22 @@ const f = require('./f');
 const player_js = require('./player');
 const state_logic_js = require('./state_logic');
 
+/**
+ * File used for interactive methods for users
+ * Noted as Interaction in TODO
+ */
+
 
 //const rarity = List([45, 30, 25, 15, 10]);    // Real version
-const rarity = List([3, 3, 3, 3, 3]);      // Test version
+const rarity = List([3, 3, 3, 3, 3]);           // Test version
 const levelPieceProbability = Map({
-    1:  Map({ 1: 1.00, 2: 0.00, 3: 0.00, 4: 0.0, 5: 0.00 }),
-    2:  Map({ 1: 0.70, 2: 0.30, 3: 0.00, 4: 0.0, 5: 0.0 }),
-    3:  Map({ 1: 0.60, 2: 0.35, 3: 0.05, 4: 0.0, 5: 0.0 }),
-    4:  Map({ 1: 0.50, 2: 0.35, 3: 0.15, 4: 0.0, 5: 0.0 }),
-    5:  Map({ 1: 0.40, 2: 0.35, 3: 0.23, 4: 0.02, 5: 0.0 }),
-    6:  Map({ 1: 0.33, 2: 0.30, 3: 0.30, 4: 0.07, 5: 0.0 }),
-    7:  Map({ 1: 0.30, 2: 0.30, 3: 0.30, 4: 0.10, 5: 0.0 }),
+    1:  Map({ 1: 1.00, 2: 0.00, 3: 0.00, 4: 0.00, 5: 0.00 }),
+    2:  Map({ 1: 0.70, 2: 0.30, 3: 0.00, 4: 0.00, 5: 0.00 }),
+    3:  Map({ 1: 0.60, 2: 0.35, 3: 0.05, 4: 0.00, 5: 0.00 }),
+    4:  Map({ 1: 0.50, 2: 0.35, 3: 0.15, 4: 0.00, 5: 0.00 }),
+    5:  Map({ 1: 0.40, 2: 0.35, 3: 0.23, 4: 0.02, 5: 0.00 }),
+    6:  Map({ 1: 0.33, 2: 0.30, 3: 0.30, 4: 0.07, 5: 0.00 }),
+    7:  Map({ 1: 0.30, 2: 0.30, 3: 0.30, 4: 0.10, 5: 0.00 }),
     8:  Map({ 1: 0.24, 2: 0.30, 3: 0.30, 4: 0.15, 5: 0.01 }),
     9:  Map({ 1: 0.22, 2: 0.30, 3: 0.35, 4: 0.20, 5: 0.03 }),
     10: Map({ 1: 0.19, 2: 0.25, 3: 0.25, 4: 0.25, 5: 0.06 }),
@@ -56,7 +61,11 @@ function init(){
     return state;
 }
 
-function getFive(state, playerIndex){
+/**
+ * Move me
+ * Refactor into two methods
+ */
+function refreshShop(state, playerIndex){
     const level = state.get('players').get(playerIndex).get('level');
     const prob = levelPieceProbability.get(String(level));
     const random = Math.random();
@@ -103,30 +112,52 @@ function buyUnit(state, playerIndex, unitID){
     const unit = shop.get(unitID);
     shop = shop.splice(unitID, 1, null); 
     state = state.setIn(['players', playerIndex,'shop'], shop);
-    const hand = state.getIn(['players', playerIndex, 'hand']).push(unit); 
-    state = state.setIn(['players', playerIndex,'hand'], hand);
+    
+    const hand = state.getIn(['players', playerIndex, 'hand']); 
+    const unit_info = pokemon_js.getStats(unit);
+    const unit_hand = Map({
+        name: unit,
+        display_name: unit_info.get('display_name'),
+        position: Map({
+            x: hand.size
+        })
+    });
+    state = state.setIn(['players', playerIndex,'hand'], hand.push(unit_hand));
+    
     const currentGold = state.getIn(['players', playerIndex,'gold']);
-    console.log(unit)
-    const cost = pokemon_js.getStats(unit).get('cost');
-    return state.setIn(['players', playerIndex,'gold'], currentGold - cost);
+    return state.setIn(['players', playerIndex,'gold'], currentGold - unit_info.get('cost'));
+}
+
+/**
+ * TODO
+ * *This is not a player made action, time based event for all players
+ * *When last battle is over this method shall be called
+ * Increase players exp by 1
+ * Refresh shop as long as player is not locked
+ */
+function endTurn(){
+}
+
+/**
+ * TODO
+ * toggleLock for player (setIn)
+ */
+function toggleLock(state, playerIndex){
+}
+
+/**
+ * TODO
+ * Buy exp for player (setIn)
+ */
+function buyExp(state, playerIndex){
 }
 
 exports.start = function(){
     let state = init();
-    //f.print(state, '1: ');
     state = player_js.initPlayers(state, 2);
-    //f.print(state, '2: ');
-    state = getFive(state, 0);
-    f.print(state, '3: ');
-    /*
-    state = getFive(state, 0);
-    f.print(state, '4: ');
-    state = getFive(state, 0);
-    f.print(state, '5: ');
-    */
+    //f.print(state, '**Initial State: ');
+    state = refreshShop(state, 0);
+    f.print(state, '**State with shop given to player 0: ');
     state = buyUnit(state, 0, 1);
-    f.print(state, '** Bought a Unit at index 1: ');
+    f.print(state, '**State where player 0 Bought a Unit at index 1: ');
 }
-
-//console.log(f.getRandomInt(5));
-//console.log(pokemon_js.getMap().get('Pikachu'.toLowerCase()));

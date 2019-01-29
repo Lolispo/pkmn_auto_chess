@@ -1,5 +1,12 @@
 # TODO
 
+## Check
+
+Cost of dota auto chess upgraded units
+    Equal to cost? 
+    (3 doom -> doom level 2 -> cost = 12? Sell for 12?)
+    
+
 ## Interaction (Client/Server)
 
 ### Shop
