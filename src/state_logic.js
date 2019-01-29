@@ -1,15 +1,16 @@
 // Author: Petter Andersson
 'use strict';
 
-const { Map, List, fromJS, setIn} = require('immutable');
+const { Map, List, fromJS} = require('immutable');
 const shuffle = require('immutable-shuffle');
 
 exports.updateShop = function(state, playerIndex, fivePieces, newPieceStorage){
-    if(state.getIn(['players', playerIndex,'shop']).size != 0){
-        state.p
+    let shop = state.getIn(['players', playerIndex,'shop']);
+    if(shop.size != 0){
+        state = state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
     }
-    state = state.setIn(['players',playerIndex,'shop'], fivePieces);
-    state = state.set('pieceStorage', newPieceStorage);
+    state = state.setIn(['players', playerIndex,'shop'], fivePieces);
+    state = state.set('pieces', newPieceStorage);
     return state;
 }
 

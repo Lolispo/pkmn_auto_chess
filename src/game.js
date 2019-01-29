@@ -49,7 +49,8 @@ function buildPieceStorage(){
 function init(){
     const pieceStorage = buildPieceStorage();
     const state = Map({
-        pieceStorage: pieceStorage
+        pieces: pieceStorage,
+        discarded_pieces: List([])
     });
     return state;
 }
@@ -60,7 +61,7 @@ function getFive(state, playerIndex){
     const random = Math.random();
     let probSum = 0.0;
     let fivePieces = List([]);
-    let pieceStorage = state.get('pieceStorage');
+    let pieceStorage = state.get('pieces');
     for(let i = 0; i < 5; i++){
         if(probSum += prob.get('1') > random){
             let piece = pieceStorage.get(0).get(0);
@@ -95,6 +96,10 @@ exports.start = function(){
     //f.print(state, '2: ');
     state = getFive(state, 0);
     f.print(state, '3: ');
+    state = getFive(state, 0);
+    f.print(state, '4: ');
+    state = getFive(state, 0);
+    f.print(state, '5: ');
 
 }
 
