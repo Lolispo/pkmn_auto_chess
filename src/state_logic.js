@@ -4,6 +4,11 @@
 const { Map, List, fromJS} = require('immutable');
 const shuffle = require('immutable-shuffle');
 
+/**
+ * Refresh shop
+ * Update discarded cards from previous shop
+ * Add new shop
+ */
 exports.updateShop = function(state, playerIndex, fivePieces, newPieceStorage){
     let shop = state.getIn(['players', playerIndex,'shop']);
     if(shop.size != 0){
@@ -25,6 +30,8 @@ exports.updateShop = function(state, playerIndex, fivePieces, newPieceStorage){
         }
     ); 
  */
+
+ 
 exports.removeFirst = function(state, id){
     return state.set(id, state.get(id).shift());
 }
@@ -36,3 +43,4 @@ exports.push = function(state, id, value){
 exports.shuffle = function(state, id){
     return state.set(id, shuffle(state.get(id)));
 }
+

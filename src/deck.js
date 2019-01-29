@@ -12,7 +12,7 @@ function buildDecks(pokemon){
     let pokemon_iter = pokemon.values();
     let temp_pokemon = pokemon_iter.next();
     while(!temp_pokemon.done){
-        decks = state_logic_js.push(decks, temp_pokemon.value.cost - 1, temp_pokemon.value);
+        decks = state_logic_js.push(decks, temp_pokemon.value.get('cost') - 1, temp_pokemon.value);
         temp_pokemon = pokemon_iter.next();
     }
     return decks;

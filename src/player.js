@@ -7,12 +7,13 @@ function Player(i){
     return Map({
         index: i,
         name: 'Default String',
+        level: 1,
         exp: 0,
         exp_to_reach: 1,
-        level: 1,
-        shop: Map({}),    // Buys from 5
-        hand: Map({}),    // Sideline
-        board: Map({}),   // Placed on board
+        gold: 1,
+        shop: List([]),    // Buys from 5
+        hand: List([]),    // Sideline, 8 at once
+        board: Map({}),   // Placed on board (8x8 area, placeable is 4x8)
     });
 }
 
