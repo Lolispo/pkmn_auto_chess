@@ -6,39 +6,21 @@ Cost of dota auto chess upgraded units
     Equal to cost? 
     (3 doom -> doom level 2 -> cost = 12? Sell for 12?)
     
+Level 9, chance for level 3 towers? (25% or 35%)
 
-## Interaction (Client/Server)
+How much hp to lose?
 
-### Shop
+## General
 
-Buy Piece
+Get all close interactions with state separated from functions used further up
 
-Reroll
+game.js either contain functions for front-end interaction OR state manipulation, not both!
 
-Lock / Unlock
+## Everywhere
 
-Buy Exp
+Remove unused variables in imports
 
-### Board
+Cleanup comments, better structure
 
-Place Unit
+More tests
 
-Return Unit
-
-Sell Unit
-
-### Timer
-
-Round starts
-
-Round ends (Gain money)
-
-### Money
-
-Interest for 10 gold
-
-Increasing throughout the game basic income
-
-Give 1 gold for win
-
-Win streak / lose streak

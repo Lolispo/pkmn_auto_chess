@@ -154,6 +154,11 @@ function buyUnit(state, playerIndex, unitID) {
  * *When last battle is over this method shall be called
  * Increase players exp by 1
  * Refresh shop as long as player is not locked
+ * Gold:
+ *  Interest for 10 gold
+ *  Increasing throughout the game basic income
+ *  Give 1 gold for win
+ *  Win streak / lose streak
  */
 function endTurn() {
 }

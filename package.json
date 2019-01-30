@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node src/index.js",
     "complete": "eslint . && mocha --exit && node src/index.js",
-    "mocha": "mocha --exit",
-    "test": "eslint . && mocha --exit",
+    "pretest": "eslint . && mocha --exit",
+    "posttest": "mocha --exit && eslint .",
+    "test": "mocha --exit",
     "lint": "eslint .",
     "lintfix": "eslint --fix ."
   },
