@@ -4,8 +4,9 @@
   "description": "Pokemon Auto Chess",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha --exit",
-    "start": "node src/index.js"
+    "test": "eslint . && mocha --exit",
+    "start": "node src/index.js",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
