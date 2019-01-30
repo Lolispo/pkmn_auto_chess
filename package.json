@@ -5,12 +5,12 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "complete": "eslint . && mocha --exit && node src/index.js",
-    "pretest": "eslint . && mocha --exit",
-    "posttest": "mocha --exit && eslint .",
+    "complete": "eslint ./src && mocha --exit && node src/index.js",
+    "pretest": "eslint ./src && mocha --exit",
+    "posttest": "mocha --exit && eslint ./src",
     "test": "mocha --exit",
-    "lint": "eslint .",
-    "lintfix": "eslint --fix ."
+    "lint": "eslint ./src",
+    "lintfix": "eslint --fix ./src"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
   "homepage": "https://github.com/Lolispo/pkmn_auto_chess#readme",
   "dependencies": {
     "eslint": "^5.6.0",
+    "express": "^4.16.4",
+    "http": "0.0.0",
     "immutable": "^4.0.0-rc.12",
     "immutable-shuffle": "^1.0.3",
     "mocha": "^5.2.0",
