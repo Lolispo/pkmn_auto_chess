@@ -10,7 +10,7 @@ class App extends Component {
     // dispatch can be used to change state values
     dispatch({ type: 'MEMES' });
     // Example: Send data to server
-    sendNameToServer(name)
+    //sendNameToServer(name)
   };
 
   render() {
