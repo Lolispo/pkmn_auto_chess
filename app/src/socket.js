@@ -19,20 +19,9 @@ const configureSocket = dispatch => {
   return socket;
 };
 
-// the following are fucntions that our client side uses
+// the following are functions that our client side uses
 // to emit actions to everyone connected to our web socket
-
-/*
-    // TODO: Check if interesting
-export const getCurrentPot = () => socket.emit('GET_CURRENT_POT');
-
 export const sendNameToServer = name =>
   socket.emit('SEND_NAME_TO_SERVER', name);
-
-export const sendPitchInToServer = name =>
-  socket.emit('SOMEONE_PITCHED_IN', name);
-
-export const sendGetOneToServer = name => socket.emit('SOMEONE_GOT_ONE', name);
-*/
 
 export default configureSocket;

@@ -10,6 +10,7 @@ const { Map, List, fromJS } = require('immutable');
 function Player(i) {
   return Map({
     index: i,
+    hp: 100,
     level: 1,
     exp: 0,
     exp_to_reach: 1,
@@ -36,5 +37,6 @@ exports.initPlayers = function (state, peoplePlaying) {
     players = players.push(player);
   }
   state = state.set('players', players);
+  state = state.set('amountOfPlayers', players.size);
   return state;
 };
