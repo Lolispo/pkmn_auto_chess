@@ -1,5 +1,5 @@
 // Author: Petter Andersson
-'use strict';
+
 
 const { Map, List, fromJS } = require('immutable');
 
@@ -19,12 +19,12 @@ const pokemon_js = require('./pokemon');
  *   y (can be missing -> is on hand, outside of the board)
  * }
  */
-function placePiece(state, playerIndex, from_position, to_position){
+function placePiece(state, playerIndex, from_position, to_position) {
 }
 
 /**
  * TODO
  * Sell piece
  */
-function sellPiece(state, playerIndex, piece_position){
+function sellPiece(state, playerIndex, piece_position) {
 }
