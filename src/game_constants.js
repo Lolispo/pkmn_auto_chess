@@ -40,27 +40,21 @@ const levelPieceProbability = Map({
 
 // TODO: Correct numbers
 const expRequiredPerLevel = Map({
-    1: 1,
-    2: 1,
-    3: 2,
-    4: 4,
-    5: 8,
-    6: 12,
-    7: 16,
-    8: 24,
-    9: 28,
-    10: 32 
+  1: 1,
+  2: 1,
+  3: 2,
+  4: 4,
+  5: 8,
+  6: 12,
+  7: 16,
+  8: 24,
+  9: 28,
+  10: 32,
 });
 
 // index - 1, Handles 0-4 indexes, send cost directly
-exports.getRarityAmount = index => {
-    return rarityAmount.get(index - 1);
-}
+exports.getRarityAmount = index => rarityAmount.get(index - 1);
 
-exports.getLevelPieceProbability = index => {
-  return levelPieceProbability.get(String(index));
-};
+exports.getLevelPieceProbability = index => levelPieceProbability.get(String(index));
 
-exports.getExpRequired = index => {
-    return expRequiredPerLevel.get(index);
-}
+exports.getExpRequired = index => expRequiredPerLevel.get(index);

@@ -6,6 +6,7 @@ const rewire = require('rewire');
 const { Map, List, fromJS } = require('immutable');
 
 const fileModule = rewire('../src/game.js');
+const fileModule2 = rewire('../src/game_constants.js');
 
 const f = require('../src/f');
 
@@ -14,9 +15,8 @@ const f = require('../src/f');
 describe('levelPiece', () => {
   describe('levelPieceAccurate', () => {
     it('does all rows add up to 1?', () => {
-      const levelPieceProbability = fileModule.getLevelPieceProbability();
       for (let i = 1; i <= 10; i++) {
-        const level = levelPieceProbability.get(String(i));
+        const level = fileModule2.getLevelPieceProbability(i);
         let sum = 0;
         for (let j = 1; j <= 5; j++) {
           sum += level.get(String(j));

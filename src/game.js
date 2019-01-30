@@ -14,7 +14,6 @@ const game_constants_js = require('./game_constants');
  */
 
 
-
 function buildPieceStorage() {
   let availablePieces = List([List([]), List([]), List([]), List([]), List([])]);
   const decks = deck_js.getDecks();
@@ -22,7 +21,7 @@ function buildPieceStorage() {
     for (let j = 0; j < decks.get(i).size; j++) {
       const pokemon = decks.get(i).get(j);
       if (pokemon.get('evolves_from') == undefined) { // Only add base level
-        let rarityAmount = game_constants_js.getRarityAmount(pokemon.get('cost'));
+        const rarityAmount = game_constants_js.getRarityAmount(pokemon.get('cost'));
         console.log('Adding', rarityAmount, pokemon.get('name'), 'to', pokemon.get('cost'));
         for (let l = 0; l < rarityAmount; l++) {
           availablePieces = state_logic_js.push(availablePieces, i, pokemon.get('name'));
@@ -57,7 +56,7 @@ function refreshShop(state, playerIndex) {
   let probSum = 0.0;
   let fivePieces = List([]);
   let pieceStorage = state.get('pieces');
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) { // TODO: Check if probSum logic works as intended
     if (probSum += prob.get('1') > random) {
       const piece = pieceStorage.get(0).get(0);
       fivePieces = fivePieces.push(piece);
@@ -126,9 +125,9 @@ function buyUnit(state, playerIndex, unitID) {
  */
 function endTurn(state) {
   const income_basic = state.get('income_basic');
-  for(let i = 0; i < state.get('amountOfPlayers'); i++){
+  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
     state = increaseExp(state, i, 1);
-    if(state.getIn(['players', i, 'locked'])){
+    if (state.getIn(['players', i, 'locked'])) {
       state = refreshShop(state, i);
     }
     const gold = state.getIn(['players', i, 'gold']);
@@ -136,9 +135,9 @@ function endTurn(state) {
     const newGold = gold + income_basic + bonusGold;
     state = state.setIn(['players', i, 'gold'], newGold);
   }
-  const round =  state.get('round');
+  const round = state.get('round');
   state = state.set('round', round + 1);
-  if(round % 10 === 0){
+  if (round % 10 === 0) {
     state = state.set('income_basic', income_basic + 1);
   }
   return state;
@@ -149,12 +148,11 @@ function endTurn(state) {
  * toggleLock for player (setIn)
  */
 function toggleLock(state, playerIndex) {
-  let locked = state.getIn(['players', playerIndex, 'locked']);
-  if(locked === false || locked === undefined){
+  const locked = state.getIn(['players', playerIndex, 'locked']);
+  if (locked === false || locked === undefined) {
     return state.setIn(['players', playerIndex, 'locked'], true);
-  } else {
-    return state.setIn(['players', playerIndex, 'locked'], false);
   }
+  return state.setIn(['players', playerIndex, 'locked'], false);
 }
 
 /**
@@ -165,20 +163,20 @@ function buyExp(state, playerIndex) {
   return increaseExp(state, playerIndex, 5);
 }
 
-function increaseExp(state, playerIndex, amount){
-  let player = state.getIn(['players', playerIndex]);
+function increaseExp(state, playerIndex, amount) {
+  const player = state.getIn(['players', playerIndex]);
   let level = player.get('level');
   let exp = player.get('exp');
   let exp_to_reach = player.get('exp_to_reach');
-  while(amount > 0){
-    if(exp_to_reach > exp + amount){ // not enough exp to level up
+  while (amount > 0) {
+    if (exp_to_reach > exp + amount) { // not enough exp to level up
       exp += amount;
       amount = 0;
       player.set('level', level);
       player.set('exp', exp);
       player.set('exp_to_reach', exp_to_reach);
       state = state.setIn(['players', playerIndex], player);
-    } else {// Leveling up
+    } else { // Leveling up
       level++;
       exp_to_reach = game_constants_js.getExpRequired(level);
       amount -= exp_to_reach - exp; // 2exp -> 4 when +5 => lvlup +3 exp: 5 = 5 - (4 - 2) = 5 - 2 = 3
