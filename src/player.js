@@ -19,7 +19,7 @@ function Player(i) {
     board: Map({}), // Placed on board (8x8 area, placeable is 4x8)
     /**
          * Board example
-         *      Map({
+         *      Map({ (Check OrderedMap in immutable)
          *          'x,y': unit,
          *          '6,4': Map({name: 'Pidor'})
          *          default: empty
