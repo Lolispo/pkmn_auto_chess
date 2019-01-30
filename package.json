@@ -28,7 +28,8 @@
     "immutable-shuffle": "^1.0.3",
     "mocha": "^5.2.0",
     "npm": "^6.7.0",
-    "rewire": "^4.0.1"
+    "rewire": "^4.0.1",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "eslint-config-airbnb": "^17.1.0",
