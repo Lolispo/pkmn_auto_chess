@@ -6,6 +6,7 @@ const { Map, List, fromJS } = require('immutable');
 /**
  * locked assumed false
  * name: 'Default String',
+ * streak: 0
  */
 function Player(i) {
   return Map({

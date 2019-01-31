@@ -33,16 +33,15 @@ function buildPieceStorage() {
   return availablePieces;
 }
 
-function init() {
+function initEmptyState(amountPlaying) {
   const pieceStorage = buildPieceStorage();
   const state = Map({
     pieces: pieceStorage,
     discarded_pieces: List([]),
     round: 1,
-    income_basic: 1,
-
+    income_basic: 1
   });
-  return state;
+  return player_js.initPlayers(state, 2);
 }
 
 /**
@@ -112,36 +111,7 @@ function buyUnit(state, playerIndex, unitID) {
   return state.setIn(['players', playerIndex, 'gold'], currentGold - unit_info.get('cost'));
 }
 
-/**
- * TODO
- * *This is not a player made action, time based event for all players
- * *When last battle is over this method shall be called
- * Increase players exp by 1
- * Refresh shop as long as player is not locked
- * Gold:
- *  Interest for 10 gold
- *  Increasing throughout the game basic income
- *  Win streak / lose streak (TODO)
- */
-function endTurn(state) {
-  const income_basic = state.get('income_basic');
-  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
-    state = increaseExp(state, i, 1);
-    if (state.getIn(['players', i, 'locked'])) {
-      state = refreshShop(state, i);
-    }
-    const gold = state.getIn(['players', i, 'gold']);
-    const bonusGold = Math.min(gold % 10, 5); // TODO: Check math, TODO Test
-    const newGold = gold + income_basic + bonusGold;
-    state = state.setIn(['players', i, 'gold'], newGold);
-  }
-  const round = state.get('round');
-  state = state.set('round', round + 1);
-  if (round % 10 === 0) {
-    state = state.set('income_basic', income_basic + 1);
-  }
-  return state;
-}
+
 
 /**
  * TODO
@@ -186,10 +156,122 @@ function increaseExp(state, playerIndex, amount) {
   return state;
 }
 
+/**
+ * Board interaction
+ * On move: reset the ids to index
+ */
+
+/**
+ * TODO
+ * Place piece
+ * Make this functions after!
+ *  TODO: Withdraw piece (return)
+ *      should use this aswell but should use to_position as best possible
+ *  TODO: Swap Piece (New!)
+ *
+ * Handle upgrades!
+ *  If 3 of the same exist on board, remove others and replace with evolves_to
+ * position: Map{
+ *   x ,
+ *   y (can be missing -> is on hand, outside of the board)
+ * }
+ */
+function placePiece(state, playerIndex, from_position, to_position) {
+}
+
+/**
+ * TODO
+ * Sell piece
+ */
+function sellPiece(state, playerIndex, piece_position) {
+}
+
+/**
+ * TODO
+ * Start battle
+ * Random Opponent
+ * Spawn opponent in reverse board
+ * Battle:
+ *  Simulate random movement on back-end (here)
+ *  Calculate order of attacks for all units adjacent to each other
+ *  Keep looping Movement -> Attack -> Mana -> Spell -> Check Team Dead
+ *  When Team Dead
+ */
+function startBattle(state, playerIndex, piece_position) {
+}
+
+
+/**
+ * TODO
+ * winner:
+ *  Gain 1 gold
+ * loser:
+ *  Lose hp
+ *      Calculate amount of hp to lose
+ * Call on endTurn with result (to calculate lose/win streak)
+ */
+function endBattle(state, playerIndex, winner, winningAmount) { // Enemy player index, winningAmount = damage? (units or damage)
+  let streak = state.getIn(['players', playerIndex, 'streak']) | 0;
+  if (winner) {
+    state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
+    state = state.setIn(['players', playerIndex, 'streak'], streak + 1);
+  } else {
+    state = state.setIn(['players', playerIndex, 'hp'], state.getIn(['players', playerIndex, 'hp']) - winningAmount);
+    state = state.setIn(['players', playerIndex, 'streak'], streak - 1);
+  }
+  prepEndTurn(state, playerIndex);
+}
+
+let synchronizedPlayers = List([]);
+
+/**
+ * Builds new state after battles
+ */
+function prepEndTurn(state, playerIndex){
+  synchronizedPlayers = synchronizedPlayers.push(state.getIn(['players', playerIndex]));
+  if(synchronizedPlayers.size === state.get('amountOfPlayers')){
+    state = state.set('players', synchronizedPlayers); // Set
+    endTurn(state);
+  }
+}
+
+/**
+ * TODO
+ * *This is not a player made action, time based event for all players
+ * *When last battle is over this method shall be called
+ * Increase players exp by 1
+ * Refresh shop as long as player is not locked
+ * Gold:
+ *  Interest for 10 gold
+ *  Increasing throughout the game basic income
+ *  Win streak / lose streak (TODO)
+ */
+function endTurn(state) {
+  const income_basic = state.get('income_basic');
+  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
+    state = increaseExp(state, i, 1);
+    if (state.getIn(['players', i, 'locked'])) {
+      state = refreshShop(state, i);
+    }
+    const gold = state.getIn(['players', i, 'gold']);
+    const bonusGold = Math.min(gold % 10, 5); // TODO: Check math, TODO Test
+    let streakGold = Math.floor(state.getIn(['players', i, 'streak']) / 2) // TODO: Math
+    streakGold = (streakGold >= 0 ? Math.min(streakGold, 3) : Math.max(streakGold, -3));
+    console.log('Gold updated for player ' + (i+1) + ': ', gold + ', ' + income_basic + ', ' + bonusGold + ', ' + streakGold);
+    const newGold = gold + income_basic + bonusGold + streakGold;
+    state = state.setIn(['players', i, 'gold'], newGold);
+  }
+  const round = state.get('round');
+  state = state.set('round', round + 1);
+  if (round % 10 === 0) {
+    state = state.set('income_basic', income_basic + 1);
+  }
+  return state;
+}
+
 
 exports.start = function () {
-  let state = init();
-  state = player_js.initPlayers(state, 2);
+  let state = initEmptyState(2);
   // f.print(state, '**Initial State: ');
   state = refreshShop(state, 0);
   f.print(state, '**State with shop given to player 0: ');
