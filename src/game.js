@@ -2,12 +2,12 @@
 
 const { Map, List } = require('immutable');
 
-const pokemon_js = require('./pokemon');
-const deck_js = require('./deck');
+const pokemonJS = require('./pokemon');
+const deckJS = require('./deck');
 const f = require('./f');
-const player_js = require('./player');
-const state_logic_js = require('./state_logic');
-const game_constants_js = require('./game_constants');
+const playerJS = require('./player');
+const stateLogicJS = require('./state_logic');
+const gameConstantsJS = require('./game_constants');
 
 /**
  * File used for interactive methods for users
@@ -16,19 +16,19 @@ const game_constants_js = require('./game_constants');
 
 function buildPieceStorage() {
   let availablePieces = List([List([]), List([]), List([]), List([]), List([])]);
-  const decks = deck_js.getDecks();
+  const decks = deckJS.getDecks();
   for (let i = 0; i < decks.size; i++) {
     for (let j = 0; j < decks.get(i).size; j++) {
       const pokemon = decks.get(i).get(j);
       if (pokemon.get('evolves_from') === undefined) { // Only add base level
-        const rarityAmount = game_constants_js.getRarityAmount(pokemon.get('cost'));
-        console.log('Adding', rarityAmount, pokemon.get('name'), 'to', pokemon.get('cost'));
+        const rarityAmount = gameConstantsJS.getRarityAmount(pokemon.get('cost'));
+        // console.log('Adding', rarityAmount, pokemon.get('name'), 'to', pokemon.get('cost'));
         for (let l = 0; l < rarityAmount; l++) {
-          availablePieces = state_logic_js.push(availablePieces, i, pokemon.get('name'));
+          availablePieces = stateLogicJS.push(availablePieces, i, pokemon.get('name'));
         }
       }
     }
-    availablePieces = state_logic_js.shuffle(availablePieces, i);
+    availablePieces = stateLogicJS.shuffle(availablePieces, i);
   }
   return availablePieces;
 }
@@ -41,7 +41,7 @@ function initEmptyState(amountPlaying) {
     round: 1,
     income_basic: 1,
   });
-  return player_js.initPlayers(state, amountPlaying);
+  return playerJS.initPlayers(state, amountPlaying);
 }
 
 /**
@@ -50,7 +50,7 @@ function initEmptyState(amountPlaying) {
  */
 function refreshShop(state, playerIndex) {
   const level = state.get('players').get(playerIndex).get('level');
-  const prob = game_constants_js.getLevelPieceProbability(level);
+  const prob = gameConstantsJS.getLevelPieceProbability(level);
   const random = Math.random();
   let probSum = 0.0;
   let fivePieces = List([]);
@@ -59,26 +59,26 @@ function refreshShop(state, playerIndex) {
     if (probSum += prob.get('1') > random) {
       const piece = pieceStorage.get(0).get(0);
       fivePieces = fivePieces.push(piece);
-      pieceStorage = state_logic_js.removeFirst(pieceStorage, 0);
+      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 0);
     } else if (probSum += prob.get('2') > random) {
       const piece = pieceStorage.get(1).get(0);
       fivePieces = fivePieces.push(piece);
-      pieceStorage = state_logic_js.removeFirst(pieceStorage, 1);
+      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 1);
     } else if (probSum += prob.get('3') > random) {
       const piece = pieceStorage.get(2).get(0);
       fivePieces = fivePieces.push(piece);
-      pieceStorage = state_logic_js.removeFirst(pieceStorage, 2);
+      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 2);
     } else if (probSum += prob.get('4') > random) {
       const piece = pieceStorage.get(3).get(0);
       fivePieces = fivePieces.push(piece);
-      pieceStorage = state_logic_js.removeFirst(pieceStorage, 3);
+      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 3);
     } else if (probSum += prob.get('5') > random) {
       const piece = pieceStorage.get(0).get(4);
       fivePieces = fivePieces.push(piece);
-      pieceStorage = state_logic_js.removeFirst(pieceStorage, 4);
+      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 4);
     }
   }
-  return state_logic_js.updateShop(state, playerIndex, fivePieces, pieceStorage);
+  return stateLogicJS.updateShop(state, playerIndex, fivePieces, pieceStorage);
 }
 
 /**
@@ -97,7 +97,7 @@ function buyUnit(stateParam, playerIndex, unitID) {
   state = state.setIn(['players', playerIndex, 'shop'], shop);
 
   const hand = state.getIn(['players', playerIndex, 'hand']);
-  const unit_info = pokemon_js.getStats(unit);
+  const unit_info = pokemonJS.getStats(unit);
   const unit_hand = Map({
     name: unit,
     display_name: unit_info.get('display_name'),
@@ -139,7 +139,7 @@ function increaseExp(state, playerIndex, amount) {
       return state.setIn(['players', playerIndex], player);
     } // Leveling up
     level++;
-    exp_to_reach = game_constants_js.getExpRequired(level);
+    exp_to_reach = gameConstantsJS.getExpRequired(level);
     amount -= exp_to_reach - exp;
     // 2exp -> 4 when +5 => lvlup +3 exp: 5 = 5 - (4 - 2) = 5 - 2 = 3
     exp = 0;
@@ -221,7 +221,8 @@ function endTurn(stateParam) {
     }
     const gold = state.getIn(['players', i, 'gold']);
     const bonusGold = Math.min(gold % 10, 5); // TODO: Check math, TODO Test
-    let streakGold = Math.floor(state.getIn(['players', i, 'streak']) / 2); // TODO: Math
+    const streak = state.getIn(['players', i, 'streak']) || 0;
+    let streakGold = Math.floor(Math.abs(streak) / 2); // TODO: Math
     streakGold = (streakGold >= 0 ? Math.min(streakGold, 3) : Math.max(streakGold, -3));
     console.log(`Gold updated for player ${i + 1}: `, `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
     const newGold = gold + income_basic + bonusGold + streakGold;
@@ -235,13 +236,13 @@ function endTurn(stateParam) {
   return state;
 }
 
-let synchronizedPlayers = List([]);
+let synchronizedPlayers = Map({});
 
 /**
  * Builds new state after battles
  */
 function prepEndTurn(state, playerIndex) {
-  synchronizedPlayers = synchronizedPlayers.push(state.getIn(['players', playerIndex]));
+  synchronizedPlayers = synchronizedPlayers.set(playerIndex, state.getIn(['players', playerIndex]));
   if (synchronizedPlayers.size === state.get('amountOfPlayers')) {
     const newState = state.set('players', synchronizedPlayers); // Set
     const newRoundState = endTurn(newState);
@@ -276,7 +277,7 @@ exports.start = function () {
   let state = initEmptyState(2);
   // f.print(state, '**Initial State: ');
   state = refreshShop(state, 0);
-  f.print(state, '**State with shop given to player 0: ');
+  // f.print(state, '**State with shop given to player 0: ');
   state = buyUnit(state, 0, 1);
   f.print(state, '**State where player 0 Bought a Unit at index 1: ');
 };

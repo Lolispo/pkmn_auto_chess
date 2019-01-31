@@ -29,6 +29,4 @@ const abilitiesMap = new Map({
   },
 });
 
-exports.getMap = function () {
-  return abilitiesMap;
-};
+exports.getMap = () => abilitiesMap;

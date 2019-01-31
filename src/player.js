@@ -31,11 +31,11 @@ function Player(i) {
 }
 
 exports.initPlayers = function (state, peoplePlaying) {
-  let players = List([]);
+  let players = Map({});
   for (let i = 0; i < peoplePlaying; i++) {
     const player = new Player(i);
     // TODO: Customize player more, name, avatar etc
-    players = players.push(player);
+    players = players.set(i, player);
   }
   state = state.set('players', players);
   state = state.set('amountOfPlayers', players.size);

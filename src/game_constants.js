@@ -1,6 +1,6 @@
 // Author: Petter Andersson
 
-const { Map, List, fromJS } = require('immutable');
+const { Map, List } = require('immutable');
 
 // const rarity = List([45, 30, 25, 15, 10]);    // Real version
 const rarityAmount = List([3, 3, 3, 3, 3]); // Test version

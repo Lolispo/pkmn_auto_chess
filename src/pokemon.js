@@ -167,10 +167,6 @@ const pokemonMap = new Map({
   }),
 });
 
-exports.getStats = function (name) {
-  return pokemonMap.get(name.toLowerCase());
-};
+exports.getStats = name => pokemonMap.get(name.toLowerCase());
 
-exports.getMap = function () {
-  return pokemonMap;
-};
+exports.getMap = () => pokemonMap;

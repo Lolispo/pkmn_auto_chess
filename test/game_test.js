@@ -7,6 +7,7 @@ const { Map, List, fromJS } = require('immutable');
 
 const fileModule = rewire('../src/game.js');
 const fileModule2 = rewire('../src/game_constants.js');
+const pokemonJs = rewire('../src/pokemon.js');
 
 const f = require('../src/f');
 
@@ -17,12 +18,34 @@ const buyExp = fileModule.__get__('buyExp');
 const toggleLock = fileModule.__get__('toggleLock');
 const endBattle = fileModule.__get__('endBattle');
 const endTurn = fileModule.__get__('endTurn');
+const buildPieceStorage = fileModule.__get__('buildPieceStorage');
 
 describe('game state', () => {
   describe('initEmptyState', () => {
     it('initEmptyState is correct?', () => {
       let state = initEmptyState(2);
-      // Test me with assertions TODO
+      assert.equal(state.get('round'), 1);
+      assert.equal(state.get('income_basic'), 1);
+      assert.equal(state.get('discarded_pieces').size, 0);
+      assert.equal(state.getIn(['players', 0, 'level']), 1);
+      assert.equal(state.getIn(['players', 1, 'level']), 1);
+      assert.equal(state.getIn(['players', 0, 'exp_to_reach']), 1);
+      assert.equal(state.getIn(['players', 0, 'exp']), 0);
+    });
+  });
+  describe('buildPieceStorage', () => {
+    it('buildPieceStorage is correct?', () => {
+      let pieces = buildPieceStorage();
+      /*
+      // Enable test when all rarities exist
+      let sum = 0;
+      for(let i = 0; i < 5; i++){
+        sum += fileModule2.getRarityAmount(i);
+      }
+      assert.equal(pieces.size, sum);
+      */
+      assert.equal(pokemonJs.getStats(pieces.get(0).get(0)).get('cost'), 1);
+      assert.equal(pokemonJs.getStats(pieces.get(2).get(0)).get('cost'), 3);
     });
   });
   describe('refreshShop', () => {
