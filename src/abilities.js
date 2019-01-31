@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 
-const { Map, List, fromJS } = require('immutable');
+const { Map } = require('immutable');
 
 /**
  * Mana cost: 100 assumed
@@ -30,5 +30,5 @@ const abilitiesMap = new Map({
 });
 
 exports.getMap = function () {
-  return pokemonMap;
+  return abilitiesMap;
 };

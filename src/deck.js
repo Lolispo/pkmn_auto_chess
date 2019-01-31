@@ -1,11 +1,9 @@
 // Author: Petter Andersson
 
 
-const { Map, List, fromJS } = require('immutable');
+const { List } = require('immutable');
 const pokemon_js = require('./pokemon');
 const state_logic_js = require('./state_logic');
-
-const decks = fromJS(buildDecks(pokemon_js.getMap()));
 
 function buildDecks(pokemon) {
   let decks = List([List([]), List([]), List([]), List([]), List([])]);
@@ -17,6 +15,8 @@ function buildDecks(pokemon) {
   }
   return decks;
 }
+
+const decks = buildDecks(pokemon_js.getMap());
 
 exports.getDecks = function () {
   return decks;

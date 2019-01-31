@@ -1,6 +1,6 @@
 // Author: Petter Andersson
 
-const { Map, List, fromJS } = require('immutable');
+const { Map, List } = require('immutable');
 
 const pokemon_js = require('./pokemon');
 const deck_js = require('./deck');
@@ -20,7 +20,7 @@ function buildPieceStorage() {
   for (let i = 0; i < decks.size; i++) {
     for (let j = 0; j < decks.get(i).size; j++) {
       const pokemon = decks.get(i).get(j);
-      if (pokemon.get('evolves_from') == undefined) { // Only add base level
+      if (pokemon.get('evolves_from') === undefined) { // Only add base level
         const rarityAmount = game_constants_js.getRarityAmount(pokemon.get('cost'));
         console.log('Adding', rarityAmount, pokemon.get('name'), 'to', pokemon.get('cost'));
         for (let l = 0; l < rarityAmount; l++) {
@@ -39,9 +39,9 @@ function initEmptyState(amountPlaying) {
     pieces: pieceStorage,
     discarded_pieces: List([]),
     round: 1,
-    income_basic: 1
+    income_basic: 1,
   });
-  return player_js.initPlayers(state, 2);
+  return player_js.initPlayers(state, amountPlaying);
 }
 
 /**
@@ -78,8 +78,7 @@ function refreshShop(state, playerIndex) {
       pieceStorage = state_logic_js.removeFirst(pieceStorage, 4);
     }
   }
-  state = state_logic_js.updateShop(state, playerIndex, fivePieces, pieceStorage);
-  return state;
+  return state_logic_js.updateShop(state, playerIndex, fivePieces, pieceStorage);
 }
 
 /**
@@ -90,7 +89,8 @@ function refreshShop(state, playerIndex) {
  * Remove money from player
  *  Amount of money = getUnit(unitId).cost
  */
-function buyUnit(state, playerIndex, unitID) {
+function buyUnit(stateParam, playerIndex, unitID) {
+  let state = stateParam;
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(unitID);
   shop = shop.splice(unitID, 1, null);
@@ -112,7 +112,6 @@ function buyUnit(state, playerIndex, unitID) {
 }
 
 
-
 /**
  * TODO
  * toggleLock for player (setIn)
@@ -123,14 +122,6 @@ function toggleLock(state, playerIndex) {
     return state.setIn(['players', playerIndex, 'locked'], true);
   }
   return state.setIn(['players', playerIndex, 'locked'], false);
-}
-
-/**
- * TODO
- * Buy exp for player (setIn)
- */
-function buyExp(state, playerIndex) {
-  return increaseExp(state, playerIndex, 5);
 }
 
 function increaseExp(state, playerIndex, amount) {
@@ -145,16 +136,25 @@ function increaseExp(state, playerIndex, amount) {
       player.set('level', level);
       player.set('exp', exp);
       player.set('exp_to_reach', exp_to_reach);
-      state = state.setIn(['players', playerIndex], player);
-    } else { // Leveling up
-      level++;
-      exp_to_reach = game_constants_js.getExpRequired(level);
-      amount -= exp_to_reach - exp; // 2exp -> 4 when +5 => lvlup +3 exp: 5 = 5 - (4 - 2) = 5 - 2 = 3
-      exp = 0;
-    }
+      return state.setIn(['players', playerIndex], player);
+    } // Leveling up
+    level++;
+    exp_to_reach = game_constants_js.getExpRequired(level);
+    amount -= exp_to_reach - exp;
+    // 2exp -> 4 when +5 => lvlup +3 exp: 5 = 5 - (4 - 2) = 5 - 2 = 3
+    exp = 0;
   }
   return state;
 }
+
+/**
+ * TODO
+ * Buy exp for player (setIn)
+ */
+function buyExp(state, playerIndex) {
+  return increaseExp(state, playerIndex, 5);
+}
+
 
 /**
  * Board interaction
@@ -200,41 +200,6 @@ function sellPiece(state, playerIndex, piece_position) {
 function startBattle(state, playerIndex, piece_position) {
 }
 
-
-/**
- * TODO
- * winner:
- *  Gain 1 gold
- * loser:
- *  Lose hp
- *      Calculate amount of hp to lose
- * Call on endTurn with result (to calculate lose/win streak)
- */
-function endBattle(state, playerIndex, winner, winningAmount) { // Enemy player index, winningAmount = damage? (units or damage)
-  let streak = state.getIn(['players', playerIndex, 'streak']) | 0;
-  if (winner) {
-    state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
-    state = state.setIn(['players', playerIndex, 'streak'], streak + 1);
-  } else {
-    state = state.setIn(['players', playerIndex, 'hp'], state.getIn(['players', playerIndex, 'hp']) - winningAmount);
-    state = state.setIn(['players', playerIndex, 'streak'], streak - 1);
-  }
-  prepEndTurn(state, playerIndex);
-}
-
-let synchronizedPlayers = List([]);
-
-/**
- * Builds new state after battles
- */
-function prepEndTurn(state, playerIndex){
-  synchronizedPlayers = synchronizedPlayers.push(state.getIn(['players', playerIndex]));
-  if(synchronizedPlayers.size === state.get('amountOfPlayers')){
-    state = state.set('players', synchronizedPlayers); // Set
-    endTurn(state);
-  }
-}
-
 /**
  * TODO
  * *This is not a player made action, time based event for all players
@@ -246,7 +211,8 @@ function prepEndTurn(state, playerIndex){
  *  Increasing throughout the game basic income
  *  Win streak / lose streak (TODO)
  */
-function endTurn(state) {
+function endTurn(stateParam) {
+  let state = stateParam;
   const income_basic = state.get('income_basic');
   for (let i = 0; i < state.get('amountOfPlayers'); i++) {
     state = increaseExp(state, i, 1);
@@ -255,9 +221,9 @@ function endTurn(state) {
     }
     const gold = state.getIn(['players', i, 'gold']);
     const bonusGold = Math.min(gold % 10, 5); // TODO: Check math, TODO Test
-    let streakGold = Math.floor(state.getIn(['players', i, 'streak']) / 2) // TODO: Math
+    let streakGold = Math.floor(state.getIn(['players', i, 'streak']) / 2); // TODO: Math
     streakGold = (streakGold >= 0 ? Math.min(streakGold, 3) : Math.max(streakGold, -3));
-    console.log('Gold updated for player ' + (i+1) + ': ', gold + ', ' + income_basic + ', ' + bonusGold + ', ' + streakGold);
+    console.log(`Gold updated for player ${i + 1}: `, `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
     const newGold = gold + income_basic + bonusGold + streakGold;
     state = state.setIn(['players', i, 'gold'], newGold);
   }
@@ -269,6 +235,42 @@ function endTurn(state) {
   return state;
 }
 
+let synchronizedPlayers = List([]);
+
+/**
+ * Builds new state after battles
+ */
+function prepEndTurn(state, playerIndex) {
+  synchronizedPlayers = synchronizedPlayers.push(state.getIn(['players', playerIndex]));
+  if (synchronizedPlayers.size === state.get('amountOfPlayers')) {
+    const newState = state.set('players', synchronizedPlayers); // Set
+    const newRoundState = endTurn(newState);
+    // Send data to users TODO
+  }
+}
+
+/**
+ * TODO
+ * winner:
+ *  Gain 1 gold
+ * loser:
+ *  Lose hp
+ *      Calculate amount of hp to lose
+ * Parameters: Enemy player index, winningAmount = damage? (units or damage)
+ */
+function endBattle(stateParam, playerIndex, winner, winningAmount) {
+  let state = stateParam;
+  const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
+  if (winner) {
+    state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
+    state = state.setIn(['players', playerIndex, 'streak'], streak + 1);
+  } else {
+    state = state.setIn(['players', playerIndex, 'hp'], state.getIn(['players', playerIndex, 'hp']) - winningAmount);
+    state = state.setIn(['players', playerIndex, 'streak'], streak - 1);
+  }
+  prepEndTurn(state, playerIndex);
+  return state;
+}
 
 exports.start = function () {
   let state = initEmptyState(2);

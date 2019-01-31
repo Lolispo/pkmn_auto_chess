@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 
-const { Map, List, fromJS } = require('immutable');
+const { Map, List } = require('immutable');
 
 /**
  * locked assumed false

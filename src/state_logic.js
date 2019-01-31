@@ -1,7 +1,5 @@
 // Author: Petter Andersson
 
-
-const { Map, List, fromJS } = require('immutable');
 const shuffle = require('immutable-shuffle');
 
 /**
@@ -9,9 +7,10 @@ const shuffle = require('immutable-shuffle');
  * Update discarded cards from previous shop
  * Add new shop
  */
-exports.updateShop = function (state, playerIndex, newShop, newPieceStorage) {
+exports.updateShop = function (stateParam, playerIndex, newShop, newPieceStorage) {
+  let state = stateParam;
   const shop = state.getIn(['players', playerIndex, 'shop']);
-  if (shop.size != 0) {
+  if (shop.size !== 0) {
     state = state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);

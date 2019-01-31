@@ -15,6 +15,8 @@ const refreshShop = fileModule.__get__('refreshShop');
 const buyUnit = fileModule.__get__('buyUnit');
 const buyExp = fileModule.__get__('buyExp');
 const toggleLock = fileModule.__get__('toggleLock');
+const endBattle = fileModule.__get__('endBattle');
+const endTurn = fileModule.__get__('endTurn');
 
 describe('game state', () => {
   describe('initEmptyState', () => {
