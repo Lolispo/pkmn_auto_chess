@@ -9,6 +9,7 @@
     "pretest": "eslint ./src && mocha --exit",
     "posttest": "mocha --exit && eslint ./src",
     "test": "mocha --exit",
+    "mocha": "mocha --exit",
     "lint": "eslint ./src",
     "lintfix": "eslint --fix ./src"
   },

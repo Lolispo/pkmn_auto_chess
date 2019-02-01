@@ -14,7 +14,7 @@ function Player(i) {
     hp: 100,
     level: 1,
     exp: 0,
-    exp_to_reach: 1,
+    expToReach: 1,
     gold: 1,
     shop: List([]), // Buys from 5
     hand: List([]), // Sideline, 8 at once
@@ -37,7 +37,6 @@ exports.initPlayers = function (state, peoplePlaying) {
     // TODO: Customize player more, name, avatar etc
     players = players.set(i, player);
   }
-  state = state.set('players', players);
-  state = state.set('amountOfPlayers', players.size);
-  return state;
+  const state2 = state.set('players', players);
+  return state2.set('amountOfPlayers', players.size);
 };

@@ -17,6 +17,9 @@ Check gold income basic increase when (every tenth level?)
 
 winstreak math
 
+Check gold early game, how to get 2 gold at level 2 if start at 0, from which rewards
+(does npc victories give a gold?)
+
 ## General
 
 Get all close interactions with state separated from functions used further up
@@ -26,6 +29,8 @@ game.js either contain functions for front-end interaction OR state manipulation
 Mapper: Json object to transfer to fron-end with relevant information
 
 Socket.io connection, simple listeners that connect to the functions
+
+battle: first movement random, then -> jump to closets target one team at a time, if in range attack until teams are dead
 
 ## Everywhere
 

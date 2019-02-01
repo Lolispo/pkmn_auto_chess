@@ -48,7 +48,7 @@ function initEmptyState(amountPlaying) {
  * Move me
  * Refactor into two methods
  */
-function refreshShop(state, playerIndex) {
+async function refreshShop(state, playerIndex) {
   const level = state.get('players').get(playerIndex).get('level');
   const prob = gameConstantsJS.getLevelPieceProbability(level);
   const random = Math.random();
@@ -78,7 +78,7 @@ function refreshShop(state, playerIndex) {
       pieceStorage = stateLogicJS.removeFirst(pieceStorage, 4);
     }
   }
-  return stateLogicJS.updateShop(state, playerIndex, fivePieces, pieceStorage);
+  return await stateLogicJS.updateShop(state, playerIndex, fivePieces, pieceStorage);
 }
 
 /**
@@ -93,22 +93,25 @@ function buyUnit(stateParam, playerIndex, unitID) {
   let state = stateParam;
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(unitID);
-  shop = shop.splice(unitID, 1, null);
-  state = state.setIn(['players', playerIndex, 'shop'], shop);
+  if (unit !== null) {
+    shop = shop.splice(unitID, 1, null);
+    state = state.setIn(['players', playerIndex, 'shop'], shop);
 
-  const hand = state.getIn(['players', playerIndex, 'hand']);
-  const unit_info = pokemonJS.getStats(unit);
-  const unit_hand = Map({
-    name: unit,
-    display_name: unit_info.get('display_name'),
-    position: Map({
-      x: hand.size,
-    }),
-  });
-  state = state.setIn(['players', playerIndex, 'hand'], hand.push(unit_hand));
+    const hand = state.getIn(['players', playerIndex, 'hand']);
+    const unitInfo = pokemonJS.getStats(unit);
+    const unitHand = Map({
+      name: unit,
+      display_name: unitInfo.get('display_name'),
+      position: Map({
+        x: hand.size,
+      }),
+    });
+    state = state.setIn(['players', playerIndex, 'hand'], hand.push(unitHand));
 
-  const currentGold = state.getIn(['players', playerIndex, 'gold']);
-  return state.setIn(['players', playerIndex, 'gold'], currentGold - unit_info.get('cost'));
+    const currentGold = state.getIn(['players', playerIndex, 'gold']);
+    state = state.setIn(['players', playerIndex, 'gold'], currentGold - unitInfo.get('cost'));
+  }
+  return state;
 }
 
 
@@ -116,7 +119,7 @@ function buyUnit(stateParam, playerIndex, unitID) {
  * TODO
  * toggleLock for player (setIn)
  */
-function toggleLock(state, playerIndex) {
+async function toggleLock(state, playerIndex) {
   const locked = state.getIn(['players', playerIndex, 'locked']);
   if (locked === false || locked === undefined) {
     return state.setIn(['players', playerIndex, 'locked'], true);
@@ -124,27 +127,31 @@ function toggleLock(state, playerIndex) {
   return state.setIn(['players', playerIndex, 'locked'], false);
 }
 
-function increaseExp(state, playerIndex, amount) {
-  const player = state.getIn(['players', playerIndex]);
+async function increaseExp(stateParam, playerIndex, amount) {
+  let state = stateParam;
+  let player = state.getIn(['players', playerIndex]);
   let level = player.get('level');
   let exp = player.get('exp');
-  let exp_to_reach = player.get('exp_to_reach');
-  while (amount > 0) {
-    if (exp_to_reach > exp + amount) { // not enough exp to level up
+  let expToReach = player.get('expToReach');
+  while (amount >= 0) {
+    // console.log(exp, level, expToReach, amount, expToReach > exp + amount);
+    if (expToReach > exp + amount) { // not enough exp to level up
       exp += amount;
       amount = 0;
-      player.set('level', level);
-      player.set('exp', exp);
-      player.set('exp_to_reach', exp_to_reach);
-      return state.setIn(['players', playerIndex], player);
-    } // Leveling up
-    level++;
-    exp_to_reach = gameConstantsJS.getExpRequired(level);
-    amount -= exp_to_reach - exp;
-    // 2exp -> 4 when +5 => lvlup +3 exp: 5 = 5 - (4 - 2) = 5 - 2 = 3
-    exp = 0;
+      player = player.set('level', level);
+      player = player.set('exp', exp);
+      player = player.set('expToReach', expToReach);
+      state = await state.setIn(['players', playerIndex], player);
+      break;
+    } else { // Leveling up
+      level += 1;
+      amount -= expToReach - exp;
+      expToReach = gameConstantsJS.getExpRequired(level);
+      // 2exp -> 4 when +5 => lvlup +3 exp: 5 = 5 - (4 - 2) = 5 - 2 = 3
+      exp = 0;
+    }
   }
-  return state;
+  return await state;
 }
 
 /**
@@ -211,29 +218,40 @@ function startBattle(state, playerIndex, piece_position) {
  *  Increasing throughout the game basic income
  *  Win streak / lose streak (TODO)
  */
-function endTurn(stateParam) {
+async function endTurn(stateParam) {
   let state = stateParam;
   const income_basic = state.get('income_basic');
-  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
-    state = increaseExp(state, i, 1);
-    if (state.getIn(['players', i, 'locked'])) {
-      state = refreshShop(state, i);
-    }
-    const gold = state.getIn(['players', i, 'gold']);
-    const bonusGold = Math.min(gold % 10, 5); // TODO: Check math, TODO Test
-    const streak = state.getIn(['players', i, 'streak']) || 0;
-    let streakGold = Math.floor(Math.abs(streak) / 2); // TODO: Math
-    streakGold = (streakGold >= 0 ? Math.min(streakGold, 3) : Math.max(streakGold, -3));
-    console.log(`Gold updated for player ${i + 1}: `, `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
-    const newGold = gold + income_basic + bonusGold + streakGold;
-    state = state.setIn(['players', i, 'gold'], newGold);
-  }
   const round = state.get('round');
-  state = state.set('round', round + 1);
-  if (round % 10 === 0) {
-    state = state.set('income_basic', income_basic + 1);
+  state = await state.set('round', round + 1);
+  if (round <= 5) {
+    state = await state.set('income_basic', income_basic + 1);
   }
-  return state;
+  return await playerEndTurn(state, state.get('amountOfPlayers'), income_basic + 1);
+}
+
+async function playerEndTurn(stateParam, amountPlayers, income_basic) {
+  let state = stateParam;
+  // console.log('@playerEndTurn\n', state, state.get('amountOfPlayers'));
+  for (let i = 0; i < amountPlayers; i++) {
+    const locked = await state.getIn(['players', i, 'locked']);
+    if (!locked || locked === undefined) {
+      state = await refreshShop(state, i);
+      // console.log('Not locked for player[' + i + '] \n', state.get('pieces').get(0));
+    }
+    state = await increaseExp(state, i, 1);
+    const gold = await state.getIn(['players', i, 'gold']);
+    // Min 0 gold interest -> max 5
+    const bonusGold = Math.min(Math.floor(gold / 10), 5);
+    const streak = state.getIn(['players', i, 'streak']) || 0;
+    const streakGold = Math.min(Math.floor(streak === 0 ? 0 : (Math.abs(streak) / 5) + 1), 3); // TODO: Math
+    // console.log(`@playerEndTurn Gold: p[${i + 1}]: `, `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
+    const newGold = gold + income_basic + bonusGold + streakGold;
+    state = await state.setIn(['players', i, 'gold'], newGold);
+    // console.log(i, '\n', state.get('pieces').get(0));
+    // state = await state.set(i, state.getIn(['players', i]));
+  }
+  const newState = await state;
+  return newState;
 }
 
 let synchronizedPlayers = Map({});

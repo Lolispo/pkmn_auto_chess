@@ -57,4 +57,4 @@ exports.getRarityAmount = index => rarityAmount.get(index - 1);
 
 exports.getLevelPieceProbability = index => levelPieceProbability.get(String(index));
 
-exports.getExpRequired = index => expRequiredPerLevel.get(index);
+exports.getExpRequired = index => expRequiredPerLevel.get(String(index));

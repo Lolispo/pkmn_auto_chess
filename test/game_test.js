@@ -19,6 +19,7 @@ const toggleLock = fileModule.__get__('toggleLock');
 const endBattle = fileModule.__get__('endBattle');
 const endTurn = fileModule.__get__('endTurn');
 const buildPieceStorage = fileModule.__get__('buildPieceStorage');
+const increaseExp = fileModule.__get__('increaseExp');
 
 describe('game state', () => {
   describe('initEmptyState', () => {
@@ -29,7 +30,7 @@ describe('game state', () => {
       assert.equal(state.get('discarded_pieces').size, 0);
       assert.equal(state.getIn(['players', 0, 'level']), 1);
       assert.equal(state.getIn(['players', 1, 'level']), 1);
-      assert.equal(state.getIn(['players', 0, 'exp_to_reach']), 1);
+      assert.equal(state.getIn(['players', 0, 'expToReach']), 1);
       assert.equal(state.getIn(['players', 0, 'exp']), 0);
     });
   });
@@ -49,61 +50,159 @@ describe('game state', () => {
     });
   });
   describe('refreshShop', () => {
-    it('does refreshShop remove current shop?', () => {
+    it('does refreshShop remove current shop?', async () => {
       let state = initEmptyState(2);
-      state = refreshShop(state, 0);
+      const pieces = state.get('pieces');
+      state = await refreshShop(state, 0);
       // Assertion
+      const newPieces = state.get('pieces');
+      const shop = state.getIn(['players', 0, 'shop']);
+      assert.equal(pieces.get(0).get(0), shop.get(0));
+      assert.equal(pieces.get(0).get(5), newPieces.get(0).get(0));
+      state = await refreshShop(state, 0);
+      const newestPieces = state.get('pieces');
+      assert.equal(pieces.get(0).get(10), newestPieces.get(0).get(0));
+      assert.equal(pieces.get(0).get(0), state.get('discarded_pieces').get(0));
+      assert.equal(pieces.get(0).get(5), state.getIn(['players', 0, 'shop']).get(0));
+      assert.equal(state.getIn(['players', 1, 'shop']).size, 0);
     });
   });
   describe('buyUnit', () => {
-    it('does buyunit remove unit from shop?', () => {
+    /*
+    * Remove unit from shop
+    * Add unit to hand
+    * Remove money from player
+    *  Amount of money = getUnit(unitId).cost
+    */
+    it('buyunit default?', async () => {
       let state = initEmptyState(2);
-      state = refreshShop(state, 0);
+      state = await refreshShop(state, 0);
+      const shop = state.getIn(['players', 0, 'shop']);
       state = buyUnit(state, 0, 1);
-      // Assertion
+      const hand = state.getIn(['players', 0, 'hand']);
+      assert.equal(hand.get(0).get('name'), shop.get(1));
+      assert.equal(state.getIn(['players', 0, 'shop']).get(1), null);
+    });
+  });
+  describe('increaseExp', () => {
+    it('increaseExp default?', async() => {
+      let state = initEmptyState(2);
+      assert.equal(state.getIn(['players', 0, 'level']), 1);
+      assert.equal(state.getIn(['players', 0, 'exp']), 0);
+      state = await increaseExp(state, 0, 1);
+      //console.log(state)
+      assert.equal(state.getIn(['players', 0, 'level']), 2);
+      assert.equal(state.getIn(['players', 0, 'exp']), 0);
+      assert.equal(state.getIn(['players', 0, 'expToReach']), fileModule2.getExpRequired(2));
     });
   });
   describe('buyExp', () => {
-    it('does buyexp increase level correctly?', () => {
+    it('does buyexp increase level correctly?', async() => {
       let state = initEmptyState(2);
-      state = buyExp(state, 0);
-      // Assertion
+      state = await buyExp(state, 0);
+      // Buy 5 exp from level 1, 0exp:
+      // 1(^1) + 1(^2) + 2(^3) + 1(4) = Level 4, 1 exp
+      assert.equal(state.getIn(['players', 0, 'level']), 4);
+      assert.equal(state.getIn(['players', 0, 'exp']), 1);
+      assert.equal(state.getIn(['players', 0, 'expToReach']), fileModule2.getExpRequired(4));
     });
   });
   describe('toggleLock', () => {
-    it('toggleLock false -> true', () => {
+    it('toggleLock false -> true', async () => {
       let state = initEmptyState(2);
-      state = toggleLock(state, 0);
-      // Assertion
+      state = await toggleLock(state, 0);
+      assert.equal(state.getIn(['players', 0, 'locked']), true);
     });
-    it('toggleLock false -> true -> false', () => {
+    it('toggleLock false -> true -> false', async () => {
       let state = initEmptyState(2);
-      state = toggleLock(state, 0);
-      state = toggleLock(state, 0);
+      state = await toggleLock(state, 0);
+      assert.equal(state.getIn(['players', 0, 'locked']), true);
+      state = await toggleLock(state, 0);
+      assert.equal(state.getIn(['players', 0, 'locked']), false);
       // Assertion
     });
   });
   describe('endBattle', () => {
-    it('many tests?', () => {
+    /*
+    * winner:
+    *  Gain 1 gold
+    * loser:
+    *  Lose hp
+    *      Calculate amount of hp to lose
+    */
+    it('endBattle win?', async () => {
       let state = initEmptyState(2);
-      state = endBattle(state, 0, true, 1); // index, winner, winneramount
-      // Assertion
+      const gold = state.getIn(['players', 0, 'gold']);
+      state = await endBattle(state, 0, true, 1); // index, winner, winneramount
+      assert.equal(state.getIn(['players', 0, 'gold']), gold + 1);
+    });
+    it('endBattle lose?', async () => {
+      let state = initEmptyState(2);
+      const hp = state.getIn(['players', 0, 'hp']);
+      state = await endBattle(state, 0, false, 1); // index, winner, winneramount
+      assert.equal(state.getIn(['players', 0, 'hp']), hp - 1);
     });
   });
   describe('endTurn', () => {
-    it('many tests?', () => {
+    /*
+    * Increase players exp by 1
+    * Refresh shop as long as player is not locked
+    * Gold:
+    *  Interest for 10 gold
+    *  Increasing throughout the game basic income
+    *  Win streak / lose streak (TODO)
+    */
+    it('endTurn default?', async () => {
       let state = initEmptyState(2);
-      state = endTurn(state);
-      // Assertion
+      const pieces = await state.get('pieces');
+      assert.equal(state.getIn(['players', 0, 'gold']), 1);
+      state = await endTurn(state);
+      assert.equal(state.get('income_basic'), 2);
+      assert.equal(state.get('round'), 2);
+      const shop = await state.getIn(['players', 0, 'shop']);
+      const shop2 = await state.getIn(['players', 1, 'shop']);
+      //console.log('\@endTurn Pieces', pieces.get(0))
+      //console.log('@endTurn Shop', shop)
+      //console.log('@endTurn Shop2', shop2)
+      assert.equal(state.getIn(['players', 0, 'exp']), 0);
+      assert.equal(state.getIn(['players', 1, 'exp']), 0);
+      assert.equal(state.getIn(['players', 0, 'level']), 2);
+      assert.equal(state.getIn(['players', 1, 'level']), 2);
+      assert.equal(shop.get(0), pieces.get(0).get(0));
+      assert.equal(shop2.get(0), pieces.get(0).get(5));
+      assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(10));
+      assert.equal(state.getIn(['players', 0, 'gold']), 3);
     });
+    
+    it('endTurn with locked player?', async () => {
+      let state = initEmptyState(2);
+      state = await toggleLock(state, 0);
+      const pieces = state.get('pieces');
+      state = await endTurn(state);
+      assert.equal(state.getIn(['players', 0, 'shop']).size, 0);
+      assert.equal(state.getIn(['players', 1, 'shop']).get(0), pieces.get(0).get(0));
+      assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(5));
+    });
+    it('endTurn higher gold?', async () => {
+      let state = initEmptyState(2);
+      state = state.setIn(['players', 0, 'gold'], 20);
+      state = state.setIn(['players', 0, 'streak'], 3);
+      state = state.set('income_basic', 2);
+      state = await endTurn(state);
+      // 20 start, 2 + 1(endTurn) basic, 1 streak, 2 tens
+      assert.equal(state.getIn(['players', 0, 'gold']), 20+3+Math.floor(3/2)+2);
+    });
+    
   });
   describe('endBattle, prepEndTurn, endTurn', () => {
+    /*
     it('many tests?', () => {
       let state = initEmptyState(2);
       state = endBattle(state, 0, true, 1); // index, winner, winneramount
       state = endBattle(state, 1, false, 1); // index, winner, winneramount
       // Assertion - endTurn should have been run
     });
+    */
   });
 });
 

@@ -7,14 +7,14 @@ const shuffle = require('immutable-shuffle');
  * Update discarded cards from previous shop
  * Add new shop
  */
-exports.updateShop = (stateParam, playerIndex, newShop, newPieceStorage) => {
+exports.updateShop = async (stateParam, playerIndex, newShop, newPieceStorage) => {
   let state = stateParam;
-  const shop = state.getIn(['players', playerIndex, 'shop']);
+  const shop = await state.getIn(['players', playerIndex, 'shop']);
   if (shop.size !== 0) {
-    state = state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
+    state = await state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
   }
-  state = state.setIn(['players', playerIndex, 'shop'], newShop);
-  state = state.set('pieces', newPieceStorage);
+  state = await state.setIn(['players', playerIndex, 'shop'], newShop);
+  state = await state.set('pieces', newPieceStorage);
   return state;
 };
 
