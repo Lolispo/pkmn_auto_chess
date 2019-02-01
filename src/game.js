@@ -264,8 +264,9 @@ function prepEndTurn(state, playerIndex) {
   if (synchronizedPlayers.size === state.get('amountOfPlayers')) {
     const newState = state.set('players', synchronizedPlayers); // Set
     const newRoundState = endTurn(newState);
-    // Send data to users TODO
+    return newRoundState;
   }
+  return state;
 }
 
 /**
@@ -277,18 +278,51 @@ function prepEndTurn(state, playerIndex) {
  *      Calculate amount of hp to lose
  * Parameters: Enemy player index, winningAmount = damage? (units or damage)
  */
-function endBattle(stateParam, playerIndex, winner, winningAmount) {
+async function endBattle(stateParam, playerIndex, winner, hpToRemove) {
   let state = stateParam;
   const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
   if (winner) {
     state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
     state = state.setIn(['players', playerIndex, 'streak'], streak + 1);
   } else {
-    state = state.setIn(['players', playerIndex, 'hp'], state.getIn(['players', playerIndex, 'hp']) - winningAmount);
+    state = await removeHp(state, playerIndex, hpToRemove);
     state = state.setIn(['players', playerIndex, 'streak'], streak - 1);
   }
-  prepEndTurn(state, playerIndex);
-  return state;
+  const round = state.get('round');
+  const potentialEndTurn = await prepEndTurn(state, playerIndex);
+  if (potentialEndTurn.get('round') === round + 1) {
+    // TODO: Send information to users
+
+  }
+  return potentialEndTurn;
+}
+
+/**
+ * Given a list of units, calculate damage to be removed from player
+ * 1 point per level of unit
+ * Units level is currently their cost
+ */
+function calcDamageTaken(units) {
+  // TODO: test me
+  let sum = 0;
+  for (let i = 0; i < units.size; i++) {
+    sum += pokemonJS.getStats(units.name).get('cost');
+  }
+  return sum;
+}
+
+/**
+ * Remove hp from player
+ * Mark player as defeated if hp <= 0
+ */
+async function removeHp(state, playerIndex, hpToRemove) {
+  const currentHp = state.getIn(['players', playerIndex, 'hp']);
+  if (currentHp - hpToRemove <= 0) {
+    // TODO: Mark player as defeated
+    // TODO: Check if there is only one player left
+    return state;
+  }
+  return state.setIn(['players', playerIndex, 'hp'], currentHp - hpToRemove);
 }
 
 exports.start = function () {

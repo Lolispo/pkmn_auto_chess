@@ -135,6 +135,7 @@ describe('game state', () => {
       const gold = state.getIn(['players', 0, 'gold']);
       state = await endBattle(state, 0, true, 1); // index, winner, winneramount
       assert.equal(state.getIn(['players', 0, 'gold']), gold + 1);
+      assert.equal(state.getIn(['players', 1, 'gold']), gold); // Not affected
     });
     it('endBattle lose?', async () => {
       let state = initEmptyState(2);
@@ -195,14 +196,35 @@ describe('game state', () => {
     
   });
   describe('endBattle, prepEndTurn, endTurn', () => {
-    /*
-    it('many tests?', () => {
+    
+    it('many tests?', async () => {
       let state = initEmptyState(2);
-      state = endBattle(state, 0, true, 1); // index, winner, winneramount
-      state = endBattle(state, 1, false, 1); // index, winner, winneramount
+      const hp = state.getIn(['players', 0, 'hp']);
+      const pieces = state.get('pieces');
+      state = await endBattle(state, 0, true, 1); // index, winner, winneramount
+      state = await endBattle(state, 1, false, 1); // index, winner, winneramount
       // Assertion - endTurn should have been run
+      // Player 0 won round, player 1 lost round
+      assert.equal(state.get('income_basic'), 2); // inc by 1
+      assert.equal(state.get('round'), 2);  // 
+      const shop = await state.getIn(['players', 0, 'shop']);
+      const shop2 = await state.getIn(['players', 1, 'shop']);
+      //console.log('\@endTurn Pieces', pieces.get(0))
+      //console.log('@endTurn Shop', shop)
+      //console.log('@endTurn Shop2', shop2)
+      assert.equal(state.getIn(['players', 0, 'exp']), 0);
+      assert.equal(state.getIn(['players', 1, 'exp']), 0);
+      assert.equal(state.getIn(['players', 0, 'level']), 2);
+      assert.equal(state.getIn(['players', 1, 'level']), 2);
+      assert.equal(shop.get(0), pieces.get(0).get(0));
+      assert.equal(shop2.get(0), pieces.get(0).get(5));
+      assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(10));
+      assert.equal(state.getIn(['players', 0, 'gold']), 4); // 3 endTurn, 1 from win
+      assert.equal(state.getIn(['players', 1, 'gold']), 3); // 3 endTurn, 0 from win
+      assert.equal(state.getIn(['players', 0, 'hp']), hp);
+      assert.equal(state.getIn(['players', 1, 'hp']), hp - 1);
     });
-    */
+    
   });
 });
 

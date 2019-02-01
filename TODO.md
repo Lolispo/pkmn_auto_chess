@@ -6,19 +6,21 @@ Cost of dota auto chess upgraded units
     Equal to cost? 
     (3 doom -> doom level 2 -> cost = 12? Sell for 12? )
     Sells for much less but don't know how much
+    3 level 3 becomes 5
+    1 -> 3
+    2 -> 4
+    Increase level by 2 (cost) from level1 to 2
+    Unsure of 2 to 3
 
-How much hp to lose?
+How much hp to lose? 1 point per level of unit
 
 Shuffle deck of pieces when 20 (40?) pieces are discarded? Chance for not all pieces should be in every game
 
 Check exp required for every level
 
-Check gold income basic increase when (every tenth level?)
+Check gold income basic increase when (1-5, max 5)
 
 winstreak math
-
-Check gold early game, how to get 2 gold at level 2 if start at 0, from which rewards
-(does npc victories give a gold?)
 
 ## General
 
