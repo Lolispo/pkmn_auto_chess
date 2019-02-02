@@ -81,6 +81,18 @@ async function refreshShop(state, playerIndex) {
   return await stateLogicJS.updateShop(state, playerIndex, fivePieces, pieceStorage);
 }
 
+function getBoardUnit(name, x, y) {
+  const unitInfo = pokemonJS.getStats(name);
+  return Map({
+    name,
+    display_name: unitInfo.get('display_name'),
+    position: Map({
+      x,
+      y,
+    }),
+  });
+}
+
 /**
  * *Assumed hand not full here
  * *Assumed can afford
@@ -93,19 +105,13 @@ function buyUnit(stateParam, playerIndex, unitID) {
   let state = stateParam;
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(unitID);
-  if (unit !== null) {
-    shop = shop.splice(unitID, 1, null);
+  if (unit !== undefined) {
+    shop = shop.splice(unitID, 1, undefined);
     state = state.setIn(['players', playerIndex, 'shop'], shop);
 
     const hand = state.getIn(['players', playerIndex, 'hand']);
     const unitInfo = pokemonJS.getStats(unit);
-    const unitHand = Map({
-      name: unit,
-      display_name: unitInfo.get('display_name'),
-      position: Map({
-        x: hand.size,
-      }),
-    });
+    const unitHand = getBoardUnit(unit, hand.size);
     state = state.setIn(['players', playerIndex, 'hand'], hand.push(unitHand));
 
     const currentGold = state.getIn(['players', playerIndex, 'gold']);
@@ -169,28 +175,119 @@ function buyExp(state, playerIndex) {
  */
 
 /**
+  * Checks all units on board for player of that piece type
+  * if 3 units are found, remove those 3 units and replace @ position with evolution
+  * No units are added to discarded_pieces
+  */
+async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
+  let state = stateParam;
+  const boardUnits = state.getIn('players', playerIndex, 'board');
+  const name = piece.get('name');
+  let pieceCounter = 0;
+  const positions = List([]);
+  boardUnits.forEach((row) => {
+    row.forEach((unit) => {
+      if (unit.get('name') === name) {
+        pieceCounter += 1;
+        positions.push(unit.get('position'));
+      }
+    });
+  });
+  if (pieceCounter >= 3) { // Upgrade unit @ position
+    for (const pos in positions) { // TODO: Esllint says this could be better, not efficient
+      state = await state.setIn(['players', playerIndex, 'board', pos], undefined);
+    }
+    const evolvesTo = pokemonJS.getStats(name).get('evolves_to');
+    const newPiece = getBoardUnit(evolvesTo.get('name'), position.get('x'), position.get('y'));
+    state = await state.setIn(['players', playerIndex, 'board', position], newPiece);
+  }
+  return await state;
+}
+
+const checkHandUnit = position => position.get('y') === undefined;
+
+/**
  * TODO
  * Place piece
- * Make this functions after!
+ * Swap functionality by default, if something is there already
+ * Make these functions after!
  *  TODO: Withdraw piece (return)
  *      should use this aswell but should use to_position as best possible
- *  TODO: Swap Piece (New!)
  *
- * Handle upgrades!
- *  If 3 of the same exist on board, remove others and replace with evolves_to
  * position: Map{
  *   x ,
  *   y (can be missing -> is on hand, outside of the board)
  * }
  */
-function placePiece(state, playerIndex, from_position, to_position) {
+async function placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') {
+  let piece;
+  let state = stateParam;
+  if (checkHandUnit(fromPosition)) { // from hand
+    piece = state.getIn(['players', playerIndex, 'hand', fromPosition]);
+    state = state.setIn(['players', playerIndex, 'hand', fromPosition], undefined);
+  } else { // from board
+    piece = state.getIn(['players', playerIndex, 'board', fromPosition]);
+    state = state.setIn(['players', playerIndex, 'board', fromPosition], undefined);
+  }
+  let newPiece;
+  if (checkHandUnit(toPosition)) { // to hand
+    newPiece = state.getIn(['players', playerIndex, 'hand', toPosition]);
+    state = state.setIn(['players', playerIndex, 'hand', toPosition], piece);
+  } else { // to board
+    newPiece = state.getIn(['players', playerIndex, 'board', toPosition]);
+    state = state.setIn(['players', playerIndex, 'board', toPosition], piece);
+    state = await checkPieceUpgrade(state, playerIndex, piece, toPosition);
+  }
+  if (shouldSwap) {
+    if (checkHandUnit(fromPosition)) {
+      state = state.setIn(['players', playerIndex, 'hand', fromPosition], newPiece);
+    } else {
+      state = state.setIn(['players', playerIndex, 'board', fromPosition], newPiece);
+      state = await checkPieceUpgrade(state, playerIndex, newPiece, fromPosition);
+    }
+  }
+  return await state;
+}
+
+/**
+ * When units are sold, when level 1, a level 1 unit should be added to discarded_pieces
+ * Level 2 => 3 level 1 units, Level 3 => 9 level 1 units
+ */
+async function discardBaseUnits(state, name, depth = '1') {
+  const unitStats = pokemonJS.getStats(name);
+  const evolutionFrom = unitStats.get('evolution_from');
+  if (unitStats.get('evolution_from') === undefined) { // Base level
+    let discPieces = state.get('discardedCards');
+    for (let i = 0; i < Math.pow(3, depth - 1); i++) {
+      discPieces = await discPieces.push(name);
+    }
+    return await state.set('discardedCards', discPieces);
+  }
+  const newName = evolutionFrom.get('name');
+  return await discardBaseUnits(state, newName, depth + 1);
 }
 
 /**
  * TODO
  * Sell piece
+ * Increase money for player
+ * Remove piece from position
+ * add piece to discarded pieces
  */
-function sellPiece(state, playerIndex, piece_position) {
+async function sellPiece(state, playerIndex, piecePosition) {
+  let piece;
+  if (checkHandUnit(piecePosition)) {
+    piece = state.getIn(['players', playerIndex, 'hand', piecePosition]);
+  } else {
+    piece = state.getIn(['players', playerIndex, 'board', piecePosition]);
+  }
+  const unitStats = pokemonJS.getStats(piece.get('name'));
+  const cost = unitStats.get('cost');
+  const gold = state.getIn(['players', playerIndex, 'gold']);
+  const newState = await state.setIn(['players', playerIndex, 'gold'], gold + cost);
+  const newState2 = await newState.setIn(['players', playerIndex, 'board', piecePosition], undefined);
+  // Add units to discarded Cards, add base level of card
+  return await discardBaseUnits(newState2, piece.get('name'));
 }
 
 /**
@@ -203,6 +300,8 @@ function sellPiece(state, playerIndex, piece_position) {
  *  Calculate order of attacks for all units adjacent to each other
  *  Keep looping Movement -> Attack -> Mana -> Spell -> Check Team Dead
  *  When Team Dead
+ * battle: first movement random, then ->
+ * jump to closets target one team at a time, if in range attack until teams are dead
  */
 function startBattle(state, playerIndex, piece_position) {
 }
@@ -243,7 +342,7 @@ async function playerEndTurn(stateParam, amountPlayers, income_basic) {
     // Min 0 gold interest -> max 5
     const bonusGold = Math.min(Math.floor(gold / 10), 5);
     const streak = state.getIn(['players', i, 'streak']) || 0;
-    const streakGold = Math.min(Math.floor(streak === 0 ? 0 : (Math.abs(streak) / 5) + 1), 3); // TODO: Math
+    const streakGold = Math.min(Math.floor(streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1), 3); // TODO: Math
     // console.log(`@playerEndTurn Gold: p[${i + 1}]: `, `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
     const newGold = gold + income_basic + bonusGold + streakGold;
     state = await state.setIn(['players', i, 'gold'], newGold);
@@ -278,13 +377,15 @@ function prepEndTurn(state, playerIndex) {
  *      Calculate amount of hp to lose
  * Parameters: Enemy player index, winningAmount = damage? (units or damage)
  */
-async function endBattle(stateParam, playerIndex, winner, hpToRemove) {
+async function endBattle(stateParam, playerIndex, winner, enemyPlayerIndex) {
   let state = stateParam;
   const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
   if (winner) {
     state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
     state = state.setIn(['players', playerIndex, 'streak'], streak + 1);
   } else {
+    const boardUnits = state.get(['players', enemyPlayerIndex, 'board']);
+    const hpToRemove = calcDamageTaken(boardUnits);
     state = await removeHp(state, playerIndex, hpToRemove);
     state = state.setIn(['players', playerIndex, 'streak'], streak - 1);
   }
@@ -302,11 +403,14 @@ async function endBattle(stateParam, playerIndex, winner, hpToRemove) {
  * 1 point per level of unit
  * Units level is currently their cost
  */
-function calcDamageTaken(units) {
-  // TODO: test me
+function calcDamageTaken(boardUnits) {
+  // Test me
+  if (boardUnits === undefined) {
+    return 0; // When there are no units left for the enemy, don't lose hp (A tie)
+  }
   let sum = 0;
-  for (let i = 0; i < units.size; i++) {
-    sum += pokemonJS.getStats(units.name).get('cost');
+  for (let i = 0; i < boardUnits.size; i++) {
+    sum += pokemonJS.getStats(boardUnits.get('name')).get('cost');
   }
   return sum;
 }

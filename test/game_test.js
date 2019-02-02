@@ -141,7 +141,8 @@ describe('game state', () => {
       let state = initEmptyState(2);
       const hp = state.getIn(['players', 0, 'hp']);
       state = await endBattle(state, 0, false, 1); // index, winner, winneramount
-      assert.equal(state.getIn(['players', 0, 'hp']), hp - 1);
+      // TODO Test with damage taken (Will be 0 when no enemy units)
+      //assert.equal(state.getIn(['players', 0, 'hp']), hp - 1);
     });
   });
   describe('endTurn', () => {
@@ -196,7 +197,6 @@ describe('game state', () => {
     
   });
   describe('endBattle, prepEndTurn, endTurn', () => {
-    
     it('many tests?', async () => {
       let state = initEmptyState(2);
       const hp = state.getIn(['players', 0, 'hp']);
@@ -219,13 +219,52 @@ describe('game state', () => {
       assert.equal(shop.get(0), pieces.get(0).get(0));
       assert.equal(shop2.get(0), pieces.get(0).get(5));
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(10));
-      assert.equal(state.getIn(['players', 0, 'gold']), 4); // 3 endTurn, 1 from win
-      assert.equal(state.getIn(['players', 1, 'gold']), 3); // 3 endTurn, 0 from win
+      assert.equal(state.getIn(['players', 0, 'gold']), 4); // 1 start, 1 win, 2 basic
+      assert.equal(state.getIn(['players', 1, 'gold']), 3); // 1 start 2 basic
       assert.equal(state.getIn(['players', 0, 'hp']), hp);
-      assert.equal(state.getIn(['players', 1, 'hp']), hp - 1);
+      // TODO Test with damage taken (Will be 0 when no enemy units)
+      //assert.equal(state.getIn(['players', 1, 'hp']), hp - 1);
     });
-    
   });
+  describe('sellPiece', () => {
+    it('sellPiece tests?', async () => {
+      // TODO      
+    });
+  });
+  describe('calcDamageTaken', () => {
+    it('calcDamageTaken tests?', async () => {
+      // TODO     
+    });
+  });
+  describe('removeHp', () => {
+    it('removeHp tests?', async () => {
+      // TODO     
+    });
+  });
+
+  /**
+    * Place piece
+    * Swap functionality by default, if something is there already
+    * Make these functions after!
+    *  TODO: Withdraw piece (return)
+    *      should use this aswell but should use to_position as best possible
+    */
+  describe('placePiece', () => {
+    it('placePiece tests?', async () => {
+      // TODO     
+    });
+  });
+  /**
+   * upgrades a unit of type piece if three exist
+   * Sets new unit at position
+   */
+  describe('checkPieceUpgrade', () => {
+    it('checkPieceUpgrade tests?', async () => {
+      // TODO     
+    });
+  });
+  // checkHandUnit test TODO
+  // discardBaseUnits test TODO
 });
 
 describe('gameconstants', () => {
