@@ -31,7 +31,7 @@ exports.updateShop = async (stateParam, playerIndex, newShop, newPieceStorage) =
  */
 
 
-exports.removeFirst = (state, id) => state.set(id, state.get(id).shift());
+exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());
 
 exports.push = (state, id, value) => state.set(id, state.get(id).push(value));
 

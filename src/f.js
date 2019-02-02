@@ -8,9 +8,8 @@ exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal 
 // console.log(msg + JSON.stringify(obj, null, 2));    // Pretty printed version
 
 exports.getPos = (x, y) => {
-  if(y === undefined){
-    return Map({x});
-  } else {
-    return Map({x, y});
+  if (y === undefined) {
+    return Map({ x });
   }
-}
+  return Map({ x, y });
+};

@@ -21,12 +21,14 @@ const endTurn = fileModule.__get__('endTurn');
 const buildPieceStorage = fileModule.__get__('buildPieceStorage');
 const increaseExp = fileModule.__get__('increaseExp');
 const sellPiece = fileModule.__get__('sellPiece');
+const getBoardUnit = fileModule.__get__('getBoardUnit');
 const calcDamageTaken = fileModule.__get__('calcDamageTaken');
 const removeHp = fileModule.__get__('removeHp'); 
 const placePiece = fileModule.__get__('placePiece');
 const checkPieceUpgrade = fileModule.__get__('checkPieceUpgrade');
 const checkHandUnit = fileModule.__get__('checkHandUnit');
 const discardBaseUnits = fileModule.__get__('discardBaseUnits');
+
 
 describe('game state', () => {
   describe('initEmptyState', () => {
@@ -87,9 +89,6 @@ describe('game state', () => {
       const shop = state.getIn(['players', 0, 'shop']);
       state = await buyUnit(state, 0, 1);
       const hand = state.getIn(['players', 0, 'hand']);
-      console.log(hand)
-      console.log(f.getPos(0))
-      console.log(hand.get(f.getPos(0)))
       assert.equal(hand.get(f.getPos(0)).get('name'), shop.get(1));
       assert.equal(state.getIn(['players', 0, 'shop']).get(1), null);
     });
@@ -253,9 +252,34 @@ describe('game state', () => {
       assert.equal(state.getIn(['players', 0, 'gold']), pokemonJs.getStats(unit.get('name')).get('cost'));
     });
   });
+  describe('getBoardUnit', () => {
+    /**
+     * Input: (name, x, y) 
+     * Output: Map({name: name, display_name: stats, position: f.getPos(x,y)})
+     */
+      it('getBoardUnit tests?', async () => {
+        let board = Map({}).set(f.getPos(2,2), getBoardUnit('rattata', 2, 2));
+        unitBoard = board.get(f.getPos(2,2));
+        unitStats = pokemonJs.getStats('rattata');
+        assert.equal(unitBoard.get('name'), 'rattata');
+        assert.equal(unitBoard.get('display_name'), unitStats.get('display_name'));
+        assert.equal(unitBoard.get('position').get('x'), 2);
+        assert.equal(unitBoard.get('position').get('y'), 2);
+      });
+    });
   describe('calcDamageTaken', () => {
+  /**
+   * Given a list of units, calculate damage to be removed from player
+   * 1 point per level of unit
+   * Units level is currently their cost
+   */
     it('calcDamageTaken tests?', async () => {
-      // TODO     
+      let board = Map({}).set(f.getPos(2,2), getBoardUnit('rattata', 2, 2));
+      const rattataLevel = pokemonJs.getStats('rattata').get('cost');
+      const pikachuLevel = pokemonJs.getStats('pikachu').get('cost');
+      assert.equal(calcDamageTaken(board), rattataLevel);
+      board = board.set(f.getPos(4,4), getBoardUnit('pikachu', 4, 4));
+      assert.equal(calcDamageTaken(board), +rattataLevel + +pikachuLevel);
     });
   });
   describe('removeHp', () => {
@@ -287,6 +311,8 @@ describe('game state', () => {
   });
   // checkHandUnit test TODO
   // discardBaseUnits test TODO
+  // getPieceFromRarity(prob, i, pieceStorage) test TODO
+  // getBoardUnit
 });
 
 describe('gameconstants', () => {

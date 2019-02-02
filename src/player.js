@@ -17,7 +17,7 @@ function Player(i) {
     expToReach: 1,
     gold: 1,
     shop: List([]), // Buys from 5
-    hand: Map({}),  // Sideline, 8 at once
+    hand: Map({}), // Sideline, 8 at once
     board: Map({}), // Placed on board (8x8 area, placeable is 4x8)
     /**
          * Board example

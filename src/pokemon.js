@@ -8,6 +8,7 @@ const { Map } = require('immutable');
  * evolves_from: None Assumed
  * mana_from_hit_given: 10 Assumed
  * mana_from_hit_taken: 10 Assumed
+ * Level is same as cost
  */
 const pokemonMap = new Map({
   bulbasaur: Map({

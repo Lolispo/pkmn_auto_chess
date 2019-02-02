@@ -45,40 +45,63 @@ function initEmptyState(amountPlaying) {
 }
 
 /**
- * Move me
- * Refactor into two methods
+ * Finds correct rarity for piece (random value)
+ * Returns the piece taken from pieceStorage from correct rarity list
+ * i is used to know which rarity it is checking (from 1 to 5)
  */
-async function refreshShop(state, playerIndex) {
-  const level = state.get('players').get(playerIndex).get('level');
-  const prob = gameConstantsJS.getLevelPieceProbability(level);
+async function getPieceFromRarity(prob, i, pieceStorage) {
   const random = Math.random();
-  let probSum = 0.0;
-  let fivePieces = List([]);
-  let pieceStorage = state.get('pieces');
-  for (let i = 0; i < 5; i++) { // TODO: Check if probSum logic works as intended
-    if (probSum += prob.get('1') > random) {
-      const piece = pieceStorage.get(0).get(0);
-      fivePieces = fivePieces.push(piece);
-      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 0);
-    } else if (probSum += prob.get('2') > random) {
-      const piece = pieceStorage.get(1).get(0);
-      fivePieces = fivePieces.push(piece);
-      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 1);
-    } else if (probSum += prob.get('3') > random) {
-      const piece = pieceStorage.get(2).get(0);
-      fivePieces = fivePieces.push(piece);
-      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 2);
-    } else if (probSum += prob.get('4') > random) {
-      const piece = pieceStorage.get(3).get(0);
-      fivePieces = fivePieces.push(piece);
-      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 3);
-    } else if (probSum += prob.get('5') > random) {
-      const piece = pieceStorage.get(0).get(4);
-      fivePieces = fivePieces.push(piece);
-      pieceStorage = stateLogicJS.removeFirst(pieceStorage, 4);
+  let piece;
+  if (prob > random) {
+    // console.log('@getPieceFromRarity', prob, random, pieceStorage.get(i).get(0))
+    piece = await pieceStorage.get(i).get(0);
+  }
+  return piece;
+}
+
+/**
+ * Updates shop with a new piece from getPieceFromRarity
+ * Removes the piece from correct place in pieceStorage
+ */
+async function addPieceToShop(shop, pieces, level) {
+  const prob = gameConstantsJS.getPieceProbabilityNum(level);
+  let newShop = shop;
+  let newPieceStorage = pieces;
+  for (let i = 0; i < 5; i++) { // Loop over levels
+    const piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
+    if (piece !== undefined) {
+      newShop = await newShop.push(piece);
+      newPieceStorage = await stateLogicJS.removeFirst(newPieceStorage, i); // Removes first from correct rarity array
+      break;
     }
   }
-  return await stateLogicJS.updateShop(state, playerIndex, fivePieces, pieceStorage);
+  return { newShop, pieceStorage: newPieceStorage };
+}
+
+/**
+ * Refresh shop
+ * Generate newShop from pieces and update pieces to newPieces
+ * Update discarded cards from previous shop
+ * Add new shop
+ */
+async function refreshShop(stateParam, playerIndex) {
+  let state = stateParam;
+  const level = state.getIn(['players', playerIndex, 'level']);
+  let newShop = List([]);
+  let pieceStorage = state.get('pieces');
+  // TODO: Check if
+  for (let i = 0; i < 5; i++) { // Loop over pieces
+    const obj = await addPieceToShop(newShop, pieceStorage, level);
+    newShop = await obj.newShop;
+    pieceStorage = await obj.pieceStorage;
+  }
+  const shop = await state.getIn(['players', playerIndex, 'shop']);
+  if (shop.size !== 0) {
+    state = await state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
+  }
+  state = await state.setIn(['players', playerIndex, 'shop'], newShop);
+  state = await state.set('pieces', pieceStorage);
+  return state;
 }
 
 function getBoardUnit(name, x, y) {
@@ -86,7 +109,7 @@ function getBoardUnit(name, x, y) {
   return Map({
     name,
     display_name: unitInfo.get('display_name'),
-    position: f.getPos(x, y)
+    position: f.getPos(x, y),
   });
 }
 
@@ -109,7 +132,7 @@ function buyUnit(stateParam, playerIndex, unitID) {
     const hand = state.getIn(['players', playerIndex, 'hand']);
     const unitInfo = pokemonJS.getStats(unit);
     const unitHand = getBoardUnit(unit, hand.size);
-    //console.log('@buyUnit unitHand', unitHand)
+    // console.log('@buyUnit unitHand', unitHand)
     state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
 
     const currentGold = state.getIn(['players', playerIndex, 'gold']);
@@ -193,16 +216,17 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   });
   if (pieceCounter >= 3) { // Upgrade unit @ position
     for (const pos in positions) { // TODO: Esllint says this could be better, not efficient
-      state = await state.setIn(['players', playerIndex, 'board', pos], undefined);
+      const newBoard = await state.getIn(['players', playerIndex, 'board']).delete(pos);
+      state = await state.setIn(['players', playerIndex, 'board'], newBoard);
     }
     const evolvesTo = pokemonJS.getStats(name).get('evolves_to');
     const newPiece = getBoardUnit(evolvesTo.get('name'), position.get('x'), position.get('y'));
     state = await state.setIn(['players', playerIndex, 'board', position], newPiece);
   }
-  return await state;
+  return state;
 }
 
-const checkHandUnit = (position) => position.get('y') === undefined;
+const checkHandUnit = position => position.get('y') === undefined;
 
 /**
  * TODO
@@ -222,10 +246,12 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   let state = stateParam;
   if (checkHandUnit(fromPosition)) { // from hand
     piece = state.getIn(['players', playerIndex, 'hand', fromPosition]);
-    state = state.setIn(['players', playerIndex, 'hand', fromPosition], undefined);
+    const newHand = await state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
+    state = await state.setIn(['players', playerIndex, 'hand'], newHand);
   } else { // from board
     piece = state.getIn(['players', playerIndex, 'board', fromPosition]);
-    state = state.setIn(['players', playerIndex, 'board', fromPosition], undefined);
+    const newBoard = await state.getIn(['players', playerIndex, 'board']).delete(fromPosition);
+    state = await state.setIn(['players', playerIndex, 'board'], newBoard);
   }
   let newPiece;
   if (checkHandUnit(toPosition)) { // to hand
@@ -285,11 +311,11 @@ async function sellPiece(state, playerIndex, piecePosition) {
   const gold = state.getIn(['players', playerIndex, 'gold']);
   let newState = await state.setIn(['players', playerIndex, 'gold'], +gold + +cost); // Required for int addition of strings
   if (checkHandUnit(piecePosition)) {
-    newHand = await newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
+    const newHand = await newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
     newState = await newState.setIn(['players', playerIndex, 'hand'], newHand);
   } else {
-    newHand = await newState.getIn(['players', playerIndex, 'board']).delete(piecePosition);
-    newState = await newState.setIn(['players', playerIndex, 'board'], newHand);
+    const newBoard = await newState.getIn(['players', playerIndex, 'board']).delete(piecePosition);
+    newState = await newState.setIn(['players', playerIndex, 'board'], newBoard);
   }
   // Add units to discarded Cards, add base level of card
   return await discardBaseUnits(newState, piece.get('name'));
@@ -347,14 +373,17 @@ async function playerEndTurn(stateParam, amountPlayers, income_basic) {
     // Min 0 gold interest -> max 5
     const bonusGold = Math.min(Math.floor(gold / 10), 5);
     const streak = state.getIn(['players', i, 'streak']) || 0;
-    const streakGold = Math.min(Math.floor(streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1), 3); // TODO: Math
-    // console.log(`@playerEndTurn Gold: p[${i + 1}]: `, `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
+    const streakGold = Math.min(Math.floor(
+      (streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1),
+    ), 3);
+    // console.log(`@playerEndTurn Gold: p[${i + 1}]: `,
+    // `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
     const newGold = gold + income_basic + bonusGold + streakGold;
     state = await state.setIn(['players', i, 'gold'], newGold);
     // console.log(i, '\n', state.get('pieces').get(0));
     // state = await state.set(i, state.getIn(['players', i]));
   }
-  const newState = await state;
+  const newState = await state; // Promise.all TODO
   return newState;
 }
 
@@ -409,13 +438,17 @@ async function endBattle(stateParam, playerIndex, winner, enemyPlayerIndex) {
  * Units level is currently their cost
  */
 function calcDamageTaken(boardUnits) {
-  // Test me
-  if (boardUnits === undefined) {
+  if (boardUnits === undefined || boardUnits.size === 0) { // boardUnits === undefined
     return 0; // When there are no units left for the enemy, don't lose hp (A tie)
   }
+  const keysIter = boardUnits.keys();
+  const size = boardUnits.size;
+  let tempUnit = keysIter.next();
   let sum = 0;
-  for (let i = 0; i < boardUnits.size; i++) {
-    sum += pokemonJS.getStats(boardUnits.get('name')).get('cost');
+  // console.log('@calcDamageTaken', boardUnits.size)
+  while (!tempUnit.done) {
+    sum += +pokemonJS.getStats(boardUnits.get(tempUnit.value).get('name')).get('cost');
+    tempUnit = keysIter.next();
   }
   return sum;
 }
