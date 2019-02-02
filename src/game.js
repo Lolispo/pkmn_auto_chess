@@ -86,10 +86,7 @@ function getBoardUnit(name, x, y) {
   return Map({
     name,
     display_name: unitInfo.get('display_name'),
-    position: Map({
-      x,
-      y,
-    }),
+    position: f.getPos(x, y)
   });
 }
 
@@ -112,7 +109,8 @@ function buyUnit(stateParam, playerIndex, unitID) {
     const hand = state.getIn(['players', playerIndex, 'hand']);
     const unitInfo = pokemonJS.getStats(unit);
     const unitHand = getBoardUnit(unit, hand.size);
-    state = state.setIn(['players', playerIndex, 'hand'], hand.push(unitHand));
+    //console.log('@buyUnit unitHand', unitHand)
+    state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
 
     const currentGold = state.getIn(['players', playerIndex, 'gold']);
     state = state.setIn(['players', playerIndex, 'gold'], currentGold - unitInfo.get('cost'));
@@ -204,7 +202,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   return await state;
 }
 
-const checkHandUnit = position => position.get('y') === undefined;
+const checkHandUnit = (position) => position.get('y') === undefined;
 
 /**
  * TODO
@@ -257,11 +255,11 @@ async function discardBaseUnits(state, name, depth = '1') {
   const unitStats = pokemonJS.getStats(name);
   const evolutionFrom = unitStats.get('evolution_from');
   if (unitStats.get('evolution_from') === undefined) { // Base level
-    let discPieces = state.get('discardedCards');
+    let discPieces = await state.get('discarded_pieces');
     for (let i = 0; i < Math.pow(3, depth - 1); i++) {
       discPieces = await discPieces.push(name);
     }
-    return await state.set('discardedCards', discPieces);
+    return await state.set('discarded_pieces', discPieces);
   }
   const newName = evolutionFrom.get('name');
   return await discardBaseUnits(state, newName, depth + 1);
@@ -275,19 +273,26 @@ async function discardBaseUnits(state, name, depth = '1') {
  * add piece to discarded pieces
  */
 async function sellPiece(state, playerIndex, piecePosition) {
-  let piece;
-  if (checkHandUnit(piecePosition)) {
-    piece = state.getIn(['players', playerIndex, 'hand', piecePosition]);
+  let pieceTemp;
+  if (checkHandUnit(piecePosition)) { // TODO: Make this into method, taking pos and get/set, if set take argument to set
+    pieceTemp = await state.getIn(['players', playerIndex, 'hand', piecePosition]);
   } else {
-    piece = state.getIn(['players', playerIndex, 'board', piecePosition]);
+    pieceTemp = await state.getIn(['players', playerIndex, 'board', piecePosition]);
   }
-  const unitStats = pokemonJS.getStats(piece.get('name'));
+  const piece = await pieceTemp;
+  const unitStats = await pokemonJS.getStats(piece.get('name'));
   const cost = unitStats.get('cost');
   const gold = state.getIn(['players', playerIndex, 'gold']);
-  const newState = await state.setIn(['players', playerIndex, 'gold'], gold + cost);
-  const newState2 = await newState.setIn(['players', playerIndex, 'board', piecePosition], undefined);
+  let newState = await state.setIn(['players', playerIndex, 'gold'], +gold + +cost); // Required for int addition of strings
+  if (checkHandUnit(piecePosition)) {
+    newHand = await newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
+    newState = await newState.setIn(['players', playerIndex, 'hand'], newHand);
+  } else {
+    newHand = await newState.getIn(['players', playerIndex, 'board']).delete(piecePosition);
+    newState = await newState.setIn(['players', playerIndex, 'board'], newHand);
+  }
   // Add units to discarded Cards, add base level of card
-  return await discardBaseUnits(newState2, piece.get('name'));
+  return await discardBaseUnits(newState, piece.get('name'));
 }
 
 /**

@@ -20,6 +20,13 @@ const endBattle = fileModule.__get__('endBattle');
 const endTurn = fileModule.__get__('endTurn');
 const buildPieceStorage = fileModule.__get__('buildPieceStorage');
 const increaseExp = fileModule.__get__('increaseExp');
+const sellPiece = fileModule.__get__('sellPiece');
+const calcDamageTaken = fileModule.__get__('calcDamageTaken');
+const removeHp = fileModule.__get__('removeHp'); 
+const placePiece = fileModule.__get__('placePiece');
+const checkPieceUpgrade = fileModule.__get__('checkPieceUpgrade');
+const checkHandUnit = fileModule.__get__('checkHandUnit');
+const discardBaseUnits = fileModule.__get__('discardBaseUnits');
 
 describe('game state', () => {
   describe('initEmptyState', () => {
@@ -78,9 +85,12 @@ describe('game state', () => {
       let state = initEmptyState(2);
       state = await refreshShop(state, 0);
       const shop = state.getIn(['players', 0, 'shop']);
-      state = buyUnit(state, 0, 1);
+      state = await buyUnit(state, 0, 1);
       const hand = state.getIn(['players', 0, 'hand']);
-      assert.equal(hand.get(0).get('name'), shop.get(1));
+      console.log(hand)
+      console.log(f.getPos(0))
+      console.log(hand.get(f.getPos(0)))
+      assert.equal(hand.get(f.getPos(0)).get('name'), shop.get(1));
       assert.equal(state.getIn(['players', 0, 'shop']).get(1), null);
     });
   });
@@ -227,8 +237,20 @@ describe('game state', () => {
     });
   });
   describe('sellPiece', () => {
-    it('sellPiece tests?', async () => {
-      // TODO      
+    // TODO Sellpiece from board
+    // TODO Sell higher level piece
+    it('sellPiece from hand?', async () => {
+      let state = initEmptyState(2);
+      state = await refreshShop(state, 0);
+      state = await buyUnit(state, 0, 1);
+      const hand = state.getIn(['players', 0, 'hand']);
+      const gold = state.getIn(['players', 0, 'gold']);
+      const unit = hand.get(f.getPos(0));
+      state = await sellPiece(state, 0, Map({x: 0}));
+      assert.equal(unit.get('name'), state.get('discarded_pieces').get(0));
+      assert.equal(state.getIn(['players', 0, 'hand']).get(f.getPos(0)), undefined);
+      assert.equal(gold, 0);
+      assert.equal(state.getIn(['players', 0, 'gold']), pokemonJs.getStats(unit.get('name')).get('cost'));
     });
   });
   describe('calcDamageTaken', () => {
