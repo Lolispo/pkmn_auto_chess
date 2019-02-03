@@ -4,10 +4,25 @@
 const { Map } = require('immutable');
 
 /**
+ * Default stat variables that are used if nothing is found in specific def
+ */
+const defaultStat = Map({
+  evolves_from: undefined, // None Assumed
+  mana_hit_given: 10,
+  mana_hit_taken: 10,
+  mana: 0,
+  speed: 100, // Temp test, lower = faster (Time between attacks)
+  range: 1, // Restricted for now
+  next_move: 0, // Next move: time for next move
+})
+
+exports.getStatsDefault = stat => {
+  return defaultStat.get(stat);
+}
+
+/**
  * ☆ = &#9734;
- * evolves_from: None Assumed
- * mana_from_hit_given: 10 Assumed
- * mana_from_hit_taken: 10 Assumed
+
  * Level is same as cost
  */
 const pokemonMap = new Map({
@@ -17,7 +32,7 @@ const pokemonMap = new Map({
     type: 'grass',
     cost: '3',
     attack: 15,
-    defence: 15,
+    hp: 15,
     ability: 'razorleaf',
     evolves_to: 'ivysaur',
   }),
@@ -27,7 +42,7 @@ const pokemonMap = new Map({
     type: 'fire',
     cost: '3',
     attack: 15,
-    defence: 15,
+    hp: 15,
     ability: 'ember',
     evolves_to: 'charmeleon',
   }),
@@ -37,7 +52,7 @@ const pokemonMap = new Map({
     type: 'fire',
     cost: '4',
     attack: 15,
-    defence: 15,
+    hp: 15,
     ability: 'ember',
     evolves_from: 'charmander',
     evolves_to: 'charizard',
@@ -48,7 +63,7 @@ const pokemonMap = new Map({
     type: 'fire',
     cost: '5',
     attack: 15,
-    defence: 15,
+    hp: 15,
     ability: 'ember',
     evolves_from: 'charmeleon',
   }),
@@ -58,7 +73,7 @@ const pokemonMap = new Map({
     type: 'water',
     cost: '3',
     attack: 15,
-    defence: 15,
+    hp: 15,
     ability: 'watergun',
     evolves_to: 'wartortle',
   }),
@@ -68,7 +83,7 @@ const pokemonMap = new Map({
     type: 'grass',
     cost: '1',
     attack: 9,
-    defence: 8,
+    hp: 8,
     ability: 'stringshot',
     evolves_to: 'raticate',
   }),
@@ -78,7 +93,7 @@ const pokemonMap = new Map({
     type: 'grass',
     cost: '1',
     attack: 9,
-    defence: 8,
+    hp: 8,
     ability: 'stringshot',
     evolves_to: 'raticate',
   }),
@@ -88,7 +103,7 @@ const pokemonMap = new Map({
     type: 'normal',
     cost: '1',
     attack: 9,
-    defence: 8,
+    hp: 8,
     ability: 'gust',
     evolves_to: 'pidgeotto',
   }),
@@ -98,7 +113,7 @@ const pokemonMap = new Map({
     type: 'normal',
     cost: '3',
     attack: 13,
-    defence: 12,
+    hp: 12,
     ability: 'quickattack',
     evolves_from: 'pidgey',
     evolves_to: 'pidgeot',
@@ -109,7 +124,7 @@ const pokemonMap = new Map({
     type: 'normal',
     cost: '1',
     attack: 9,
-    defence: 8,
+    hp: 8,
     ability: 'quickattack',
     evolves_to: 'raticate',
   }),
@@ -119,7 +134,7 @@ const pokemonMap = new Map({
     type: 'normal',
     cost: '3',
     attack: 9,
-    defence: 8,
+    hp: 8,
     ability: 'quickattack',
     evolves_from: 'rattata',
     evolves_to: 'raticate2',
@@ -130,7 +145,7 @@ const pokemonMap = new Map({
     type: 'normal',
     cost: '5',
     attack: 9,
-    defence: 8,
+    hp: 8,
     ability: 'quickattack',
     evolves_from: 'raticate2',
   }),
@@ -140,7 +155,7 @@ const pokemonMap = new Map({
     type: 'electric',
     cost: '1',
     attack: 10,
-    defence: 10,
+    hp: 10,
     ability: 'thundershock',
     evolves_to: 'pikachu2',
   }),
@@ -150,7 +165,7 @@ const pokemonMap = new Map({
     type: 'electric',
     cost: '3',
     attack: 10,
-    defence: 10,
+    hp: 10,
     ability: 'thundershock',
     evolves_from: 'pikachu',
     evolves_to: 'raichu',
@@ -161,7 +176,7 @@ const pokemonMap = new Map({
     type: 'electric',
     cost: '5',
     attack: 10,
-    defence: 10,
+    hp: 10,
     ability: 'thunderbolt',
     evolves_from: 'pikachu2',
     evolves_to: 'raichu',

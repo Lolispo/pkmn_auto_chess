@@ -11,6 +11,7 @@ Cost of dota auto chess upgraded units
     2 -> 4
     Increase level by 2 (cost) from level1 to 2
     Unsure of 2 to 3
+    not consistent, enc 3 -> 4 cost
 
 How much hp to lose? 1 point per level of unit
 

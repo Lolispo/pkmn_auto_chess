@@ -63,7 +63,6 @@ describe('game state', () => {
       let state = initEmptyState(2);
       const pieces = state.get('pieces');
       state = await refreshShop(state, 0);
-      // Assertion
       const newPieces = state.get('pieces');
       const shop = state.getIn(['players', 0, 'shop']);
       assert.equal(pieces.get(0).get(0), shop.get(0));
@@ -282,9 +281,21 @@ describe('game state', () => {
       assert.equal(calcDamageTaken(board), +rattataLevel + +pikachuLevel);
     });
   });
+  
+  /**  
+    * Remove hp from player
+    * Mark player as defeated if hp <= 0, by removal of player from players
+    * Also decrease amountOfPlayers
+    */
   describe('removeHp', () => {
-    it('removeHp tests?', async () => {
-      // TODO     
+    it('removeHp default?', async () => {
+      // TODO
+    });
+    it('removeHp player defeated (not game over)?', async () => {
+      // TODO
+    });
+    it('removeHp player defeated gameOver?', async () => {
+      // TODO
     });
   });
 
@@ -305,7 +316,10 @@ describe('game state', () => {
    * Sets new unit at position
    */
   describe('checkPieceUpgrade', () => {
-    it('checkPieceUpgrade tests?', async () => {
+    it('checkPieceUpgrade 3 level 1 units?', async () => {
+      // TODO     
+    });
+    it('checkPieceUpgrade 3 level 2 units?', async () => {
       // TODO     
     });
   });
@@ -313,6 +327,8 @@ describe('game state', () => {
   // discardBaseUnits test TODO
   // getPieceFromRarity(prob, i, pieceStorage) test TODO
   // getBoardUnit
+  // Gameover
+  // withdrawPiece
 });
 
 describe('gameconstants', () => {
