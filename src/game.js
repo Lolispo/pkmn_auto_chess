@@ -330,29 +330,35 @@ async function sellPiece(state, playerIndex, piecePosition) {
   return await discardBaseUnits(newState, piece.get('name'));
 }
 
+
+
 /**
  * return enemy pos within range or undefined
- * Temp: Currently assumes range 1
- * TODO: Core: Diagonal attacks add
  */
 function getEnemyWithinRange(board, unitPos, range, team){
   const x = unitPos.get('x');
   const y = unitPos.get('y');
   const enemyTeam = 1 - team;
-  if(board.get(f.getPos(x, y + 1)).get('team') === enemyTeam){
-    return f.getPos(x, y + 1);
-  } else if(board.get(f.getPos(x + 1, y)).get('team') === enemyTeam){
-    return f.getPos(x + 1, y);
-  } else if(board.get(f.getPos(x, y - 1)).get('team') === enemyTeam){
-    return f.getPos(x, y - 1);
-  } else if(board.get(f.getPos(x - 1, y)).get('team') === enemyTeam){
-    return f.getPos(x - 1, y);
-  } else {
-    if(range > 1){
-      // TODO
+  for(let i = 1; i < range; i++){
+    if(!f.isUndefined(board.get(f.getPos(x, y + 1))) && board.get(f.getPos(x, y + 1)).get('team') === enemyTeam){
+      return f.getPos(x, y + 1);
+    } else if(!f.isUndefined(board.get(f.getPos(x + 1, y))) && board.get(f.getPos(x + 1, y)).get('team') === enemyTeam){
+      return f.getPos(x + 1, y);
+    } else if(!f.isUndefined(board.get(f.getPos(x, y - 1))) && board.get(f.getPos(x, y - 1)).get('team') === enemyTeam){
+      return f.getPos(x, y - 1);
+    } else if(!f.isUndefined(board.get(f.getPos(x - 1, y))) && board.get(f.getPos(x - 1, y)).get('team') === enemyTeam){
+      return f.getPos(x - 1, y);
+    } else if(!f.isUndefined(board.get(f.getPos(x + 1, y + 1))) && board.get(f.getPos(x + 1, y + 1)).get('team') === enemyTeam){
+      return f.getPos(x + 1, y + 1);
+    } else if(!f.isUndefined(board.get(f.getPos(x + 1, y - 1))) && board.get(f.getPos(x + 1, y - 1)).get('team') === enemyTeam){
+      return f.getPos(x + 1, y - 1);
+    } else if(!f.isUndefined(board.get(f.getPos(x - 1, y - 1))) && board.get(f.getPos(x - 1, y - 1)).get('team') === enemyTeam){
+      return f.getPos(x - 1, y - 1);
+    } else if(!f.isUndefined(board.get(f.getPos(x - 1, y + 1))) && board.get(f.getPos(x - 1, y + 1)).get('team') === enemyTeam){
+      return f.getPos(x - 1, y + 1);
     }
-    return undefined;
   }
+  return undefined;
 }
 
 /**
@@ -390,7 +396,7 @@ async function manaIncrease(board, unitPos, enemyPos){
  *  if attack is made, increase mana for both units
  * If not, make a move to closets enemy unit
  */
-function nextMove(board, unitPos) {
+async function nextMove(board, unitPos) {
   const unit = board.get(unitPos);
   if(unit.get('mana') === 100){ // Use spell, && withinRange for spell
     // TODO Spell logic
@@ -575,23 +581,38 @@ async function prepareBattle(stateParam, pairing) {
  * * Assumes board contains every player's updated board
  */
 async function battleTime(stateParam) {
-  // TODO: Randomize oppontent pairs
-  // Temp: Always face next player in order, currently broken if a player is defeated
-  const amountOfPlayers = state.get('amountOfPlayers');
+  // TODO: Randomize opponent pairs
+  // Temp: Always face next player in order
   let state = stateParam;
-  // TODO: Core: Remake to use always next player in order but use iterator over players.keys instead
-  for (let i = 0; i < amountOfPlayers; i++) {
-    const index = i;
-    const enemy = (i === amountOfPlayers - 1 ? 0 : i + 1);
+  const playerIter = state.get('players').keys();
+  let tempPlayer = playerIter.next();
+  let nextPlayer;
+  let firstPlayer = tempPlayer;
+  while (true) { // !tempPlayer.done
+    const currentPlayer = tempPlayer.value;
+    if(tempPlayer.done){
+      nextPlayer = firstPlayer;
+    } else {
+      nextPlayer = playerIter.next();
+    }
+    const index = currentPlayer;
+    const enemy = await nextPlayer.value; // (i === amountOfPlayers - 1 ? 0 : i + 1);
     const pairing = Map({ homeID: index, enemyID: enemy });
-    const resultBattle = prepareBattle(state, pairing);
+    const result = prepareBattle(state, pairing);
     //{actionStack: actionStack, board: newBoard, winner: winningTeam}
     // Send actionStack to frontend
     // TODO: resultBattle.get('actionStack');
+    const resultBattle = await result;
+    console.log(resultBattle);
     const winner = (resultBattle.get('winner') === 0 ? true : false);
-    const newBoard = resultBattle.get('board');
-    const newStateAfterBattle = endBattle(newBoard, index, winner, enemy);
-    state = await state.set(homeID, newStateAfterBattle.getIn(['players', index]));
+    const newBoard = resultBattle.get('board'); // TODO: Check, where should we use this?
+    const newStateAfterBattle = await endBattle(state, index, winner, enemy);
+    state = await state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
+    if(nextPlayer.done){
+      break;
+    } else {
+      tempPlayer = nextPlayer;
+    }
   }
   const newState = await state;
   return newState;
@@ -652,11 +673,11 @@ let synchronizedPlayers = Map({});
 /**
  * Builds new state after battles
  */
-function prepEndTurn(state, playerIndex) {
+async function prepEndTurn(state, playerIndex) {
   synchronizedPlayers = synchronizedPlayers.set(playerIndex, state.getIn(['players', playerIndex]));
   if (synchronizedPlayers.size === state.get('amountOfPlayers')) {
     const newState = state.set('players', synchronizedPlayers); // Set
-    const newRoundState = endTurn(newState);
+    const newRoundState = await endTurn(newState);
     return newRoundState;
   }
   return state;
@@ -743,11 +764,13 @@ async function removeHp(state, playerIndex, hpToRemove) {
   return state.setIn(['players', playerIndex, 'hp'], currentHp - hpToRemove);
 }
 
-exports.start = function () {
+exports.start = async () => {
   let state = initEmptyState(2);
-  // f.print(state, '**Initial State: ');
-  state = refreshShop(state, 0);
-  // f.print(state, '**State with shop given to player 0: ');
-  state = buyUnit(state, 0, 1);
-  f.print(state, '**State where player 0 Bought a Unit at index 1: ');
+  //f.print(state, '**Initial State: ');
+  state = await refreshShop(state, 0);
+  //f.print(state, '**State with shop given to player 0: ');
+  state = await buyUnit(state, 0, 1);
+  //f.print(state, '**State where player 0 Bought a Unit at index 1: ');
+  state = await battleTime(state);
+  f.print(state, '**State after battle time with 0 units: ');
 };

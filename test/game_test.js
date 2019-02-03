@@ -302,9 +302,6 @@ describe('game state', () => {
   /**
     * Place piece
     * Swap functionality by default, if something is there already
-    * Make these functions after!
-    *  TODO: Withdraw piece (return)
-    *      should use this aswell but should use to_position as best possible
     */
   describe('placePiece', () => {
     it('placePiece tests?', async () => {
@@ -329,6 +326,18 @@ describe('game state', () => {
   // getBoardUnit
   // Gameover
   // withdrawPiece
+  /**
+   * battleTime
+   * prepareBattle
+   * setRandomFirstMove
+   * startBattle
+   * reverseUnitPos
+   * getUnitWithNextMove
+   * nextMove
+   * manaIncrease
+   * removeHpBattle
+   * getEnemyWithinRange
+   */
 });
 
 describe('gameconstants', () => {

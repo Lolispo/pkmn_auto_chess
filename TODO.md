@@ -14,6 +14,7 @@ Cost of dota auto chess upgraded units
     not consistent, enc 3 -> 4 cost
 
 How much hp to lose? 1 point per level of unit
+Definitely not, 6 level 6 units would be 36 hp, more like 14 damage from them (6-0)
 
 Shuffle deck of pieces when 20 (40?) pieces are discarded? Chance for not all pieces should be in every game
 
