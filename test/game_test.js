@@ -522,12 +522,55 @@ describe('game state', () => {
       // TODO     
     });
   });
-  /**
-   * setRandomFirstMove
-   * prepareBattle
-   * battleTime
-   */
-});
+  describe('getMovePos', () => {
+    /**
+     * Get first available spot at max range away from closest enemy
+     * spot that is at maximal possible range from enemy, otherwise closer
+     * Different favorable positions for S and N team, prioritize your side movement
+     * (Assasins functionality can use enemyTeam as input)
+     * 
+     * (board, closestEnemyPos, range, team)
+     *  TODO
+     */
+    it('getMovePos default both units', async () => {
+      // TODO     
+    });
+  });
+  describe('setRandomFirstMove', () => {
+    /**
+     * Board with first_move: pos set for all units
+     * 
+     */
+    it('setRandomFirstMove(board) default', async () => {
+      // TODO     
+    });
+  });
+  describe('prepareBattle', () => {
+    /**
+     * Spawn opponent in reverse board
+     * Mark owners of units
+     * Start battle
+     * pairing: {
+     *  homeID: 1,
+     *  enemyID: 0
+     * }
+     * Gets finished battle, similar to battleTime in that sense, middleMan
+     * (stateParam, pairing) 
+     */
+    it('prepareBattle', async () => {
+      // TODO     
+    });
+  });
+  describe('battleTime', () => {
+     /**
+       * Randomize Opponents for state
+       * * Assumes board contains every player's updated board
+       * stateParam
+       */
+    it('battleTime TODO big time', async () => {
+      // TODO     
+    });
+  });
 
 describe('gameconstants', () => {
   describe('levelPieceAccurate', () => {

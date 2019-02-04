@@ -70,7 +70,8 @@ async function addPieceToShop(shop, pieces, level) {
     const piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
     if (!f.isUndefined(piece)) {
       newShop = await newShop.push(piece);
-      newPieceStorage = await stateLogicJS.removeFirst(newPieceStorage, i); // Removes first from correct rarity array
+      // Removes first from correct rarity array
+      newPieceStorage = await stateLogicJS.removeFirst(newPieceStorage, i);
       break;
     }
   }
@@ -156,12 +157,13 @@ async function toggleLock(state, playerIndex) {
   return state.setIn(['players', playerIndex, 'locked'], false);
 }
 
-async function increaseExp(stateParam, playerIndex, amount) {
+async function increaseExp(stateParam, playerIndex, amountParam) {
   let state = stateParam;
   let player = state.getIn(['players', playerIndex]);
   let level = player.get('level');
   let exp = player.get('exp');
   let expToReach = player.get('expToReach');
+  let amount = amountParam;
   while (amount >= 0) {
     // console.log(exp, level, expToReach, amount, expToReach > exp + amount);
     if (expToReach > exp + amount) { // not enough exp to level up
@@ -180,7 +182,7 @@ async function increaseExp(stateParam, playerIndex, amount) {
       exp = 0;
     }
   }
-  return await state;
+  return state;
 }
 
 /**
@@ -266,7 +268,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
       state = await checkPieceUpgrade(state, playerIndex, newPiece, fromPosition);
     }
   }
-  return await state;
+  return state;
 }
 
 /**
@@ -296,13 +298,14 @@ async function discardBaseUnits(state, name, depth = '1') {
   const evolutionFrom = unitStats.get('evolution_from');
   if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
     let discPieces = await state.get('discarded_pieces');
-    for (let i = 0; i < Math.pow(3, depth - 1); i++) {
+    const amountOfPieces = 3 ** (depth - 1); // Math.pow
+    for (let i = 0; i < amountOfPieces; i++) {
       discPieces = await discPieces.push(name);
     }
-    return await state.set('discarded_pieces', discPieces);
+    return state.set('discarded_pieces', discPieces);
   }
   const newName = evolutionFrom.get('name');
-  return await discardBaseUnits(state, newName, depth + 1);
+  return discardBaseUnits(state, newName, depth + 1);
 }
 
 /**
@@ -314,7 +317,8 @@ async function discardBaseUnits(state, name, depth = '1') {
  */
 async function sellPiece(state, playerIndex, piecePosition) {
   let pieceTemp;
-  if (checkHandUnit(piecePosition)) { // TODO: Make this into method, taking pos and get/set, if set take argument to set
+  // TODO: Make this into method, taking pos and get/set, if set take argument to set
+  if (checkHandUnit(piecePosition)) {
     pieceTemp = await state.getIn(['players', playerIndex, 'hand', piecePosition]);
   } else {
     pieceTemp = await state.getIn(['players', playerIndex, 'board', piecePosition]);
@@ -323,7 +327,7 @@ async function sellPiece(state, playerIndex, piecePosition) {
   const unitStats = await pokemonJS.getStats(piece.get('name'));
   const cost = unitStats.get('cost');
   const gold = state.getIn(['players', playerIndex, 'gold']);
-  let newState = await state.setIn(['players', playerIndex, 'gold'], +gold + +cost); // Required for int addition of strings
+  let newState = await state.setIn(['players', playerIndex, 'gold'], +gold + +cost);
   if (checkHandUnit(piecePosition)) {
     const newHand = await newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
     newState = await newState.setIn(['players', playerIndex, 'hand'], newHand);
@@ -332,7 +336,7 @@ async function sellPiece(state, playerIndex, piecePosition) {
     newState = await newState.setIn(['players', playerIndex, 'board'], newBoard);
   }
   // Add units to discarded Cards, add base level of card
-  return await discardBaseUnits(newState, piece.get('name'));
+  return discardBaseUnits(newState, piece.get('name'));
 }
 
 /**
@@ -456,12 +460,14 @@ async function manaIncrease(board, unitPos, enemyPos) {
  *  if attack is made, increase mana for both units
  * If not, make a move to closest enemy unit
  *
- * Map({nextMove: Map({action: action, value: value, target: target}), newBoard: newBoard, battleOver: true, allowSameMove: true})
+ * Map({nextMove: Map({action: action, value: value, target: target}),
+ * newBoard: newBoard, battleOver: true, allowSameMove: true})
  */
 async function nextMove(board, unitPos, optPreviousTarget) {
   const unit = board.get(unitPos);
-  if (unit.get('mana') === 100) { // Use spell, && withinRange for spell
+  if (unit.get('mana') === 100 && false) { // Use spell, && withinRange for spell
     // TODO Spell logic
+
   } else {
     const range = unit.get('range') || pokemonJS.getStatsDefault('range');
     const team = unit.get('team');
@@ -515,11 +521,11 @@ async function getUnitWithNextMove(board) {
   let lowestNextMoveValue = board.get(tempUnit.value).get('next_move');
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
-    const nextMove = board.get(unitPos).get('next_move');
-    if (nextMove < lowestNextMoveValue) { // New lowest move
+    const unitNextMove = board.get(unitPos).get('next_move');
+    if (unitNextMove < lowestNextMoveValue) { // New lowest move
       lowestNextMove = List([unitPos]);
-      lowestNextMoveValue = nextMove;
-    } else if (nextMove === lowestNextMoveValue) {
+      lowestNextMoveValue = unitNextMove;
+    } else if (unitNextMove === lowestNextMoveValue) {
       lowestNextMove = lowestNextMove.push(unitPos);
     }
     tempUnit = boardKeysIter.next();
@@ -544,7 +550,7 @@ async function startBattle(boardParam) {
   let actionStack = List([]);
   let unitMoveMap = Map({});
   let board = boardParam;
-  const result = Map({});
+  let result = Map({});
   // TODO First move for all units first
   // First move used for all units (order doesn't matter) and set next_move to + speed accordingly
   while (!result.get('battleOver')) {
@@ -559,7 +565,7 @@ async function startBattle(boardParam) {
     } else {
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove);
     }
-    const result = await nextMoveResult;
+    result = await nextMoveResult;
     actionStack = actionStack.push(result.get('nextMove'));
     if (result.get('allowSameMove')) { // Attack on target in same position for example
       unitMoveMap = unitMoveMap.set(nextUnitToMove, nextMove);
@@ -572,7 +578,7 @@ async function startBattle(boardParam) {
   // Return the winner
   console.log(newBoard);
   console.log(actionStack);
-  const winningTeam = newBoard.getIn([actionStack.get(action.stack.size - 1), 'team']);
+  const winningTeam = newBoard.getIn([actionStack.get(actionStack.size - 1), 'team']);
   return Map({ actionStack, board: newBoard, winner: winningTeam });
 }
 
@@ -605,7 +611,6 @@ async function setRandomFirstMove(board) {
 }
 
 /**
- * TODO
  * Spawn opponent in reverse board
  * Mark owners of units
  * Start battle
@@ -620,7 +625,8 @@ async function prepareBattle(stateParam, pairing) {
   const board1 = state.getIn(['players', pairing.get('homeID'), 'board']);
   const board2 = state.getIn(['players', pairing.get('enemyID'), 'board']);
   // Check to see if a battle is required
-  if (board1.size === 0) { // Lose when empty, even if enemy no units aswell (tie with no damage taken)
+  // Lose when empty, even if enemy no units aswell (tie with no damage taken)
+  if (board1.size === 0) {
     return Map({ actionStack: List([]), winner: 1 });
   } if (board2.size === 0) {
     return Map({ actionStack: List([]), winner: 0 });
@@ -730,7 +736,7 @@ async function endTurn(stateParam) {
   if (round <= 5) {
     state = await state.set('income_basic', income_basic + 1);
   }
-  return await playerEndTurn(state, state.get('amountOfPlayers'), income_basic + 1);
+  return playerEndTurn(state, state.get('amountOfPlayers'), income_basic + 1);
 }
 
 async function playerEndTurn(stateParam, amountPlayers, income_basic) {
