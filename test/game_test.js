@@ -401,24 +401,24 @@ describe('game state', () => {
       // TODO     
     });
   });
-  describe('getEnemyWithinRange', () => {
+  describe('getClosestEnemy', () => {
     /**
      * return enemy pos within range or undefined
      * (board, unitPos, range, team)
      */
-    it('getEnemyWithinRange range 1 with 1 valid target', async () => {
+    it('getClosestEnemy range 1 with 1 valid target', async () => {
       // TODO     
     });
-    it('getEnemyWithinRange range 1 with 2 valid targets (bot, left)', async () => {
+    it('getClosestEnemy range 1 with 2 valid targets (bot, left)', async () => {
       // TODO Should be bot unit
     });
-    it('getEnemyWithinRange range 1 no targets', async () => {
+    it('getClosestEnemy range 1 no targets', async () => {
       // TODO     
     });
-    it('getEnemyWithinRange range 1 target outside range', async () => {
+    it('getClosestEnemy range 1 target outside range', async () => {
       // TODO     
     });
-    it('getEnemyWithinRange range 2 with 1 valid target 2 from top', async () => {
+    it('getClosestEnemy range 2 with 1 valid target 2 from top', async () => {
       // TODO     
     });
   });
