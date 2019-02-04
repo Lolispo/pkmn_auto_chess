@@ -539,7 +539,6 @@ describe('game state', () => {
   describe('setRandomFirstMove', () => {
     /**
      * Board with first_move: pos set for all units
-     * 
      */
     it('setRandomFirstMove(board) default', async () => {
       // TODO     
@@ -571,6 +570,7 @@ describe('game state', () => {
       // TODO     
     });
   });
+});
 
 describe('gameconstants', () => {
   describe('levelPieceAccurate', () => {
@@ -584,6 +584,11 @@ describe('gameconstants', () => {
         // console.error(i);
         assert.equal(Math.round(sum * 100) / 100, 1.0);
       }
+    });
+  });
+  describe('getPieceProbabilityNum', () => {
+    it('getPieceProbabilityNum correct?', () => {
+      // TODO
     });
   });
 });
