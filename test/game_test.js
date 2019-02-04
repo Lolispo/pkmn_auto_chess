@@ -250,6 +250,9 @@ describe('game state', () => {
       assert.equal(gold, 0);
       assert.equal(state.getIn(['players', 0, 'gold']), pokemonJs.getStats(unit.get('name')).get('cost'));
     });
+    it('sellPiece from hand, level 3?', async () => {
+      // TODO
+    });
   });
   describe('getBoardUnit', () => {
     /**
@@ -304,7 +307,16 @@ describe('game state', () => {
     * Swap functionality by default, if something is there already
     */
   describe('placePiece', () => {
-    it('placePiece tests?', async () => {
+    it('placePiece on board to board?', async () => {
+      // TODO     
+    });
+    it('placePiece on board to hand?', async () => {
+      // TODO     
+    });
+    it('placePiece on hand to board?', async () => {
+      // TODO     
+    });
+    it('placePiece swap functionality on board->board?', async () => {
       // TODO     
     });
   });
@@ -320,23 +332,200 @@ describe('game state', () => {
       // TODO     
     });
   });
-  // checkHandUnit test TODO
-  // discardBaseUnits test TODO
-  // getPieceFromRarity(prob, i, pieceStorage) test TODO
-  // getBoardUnit
-  // Gameover
-  // withdrawPiece
+  describe('checkHandUnit', () => {
+    /**
+     * Given a position, returns if it is on hand or board
+     */
+    it('checkHandUnit hand unit?', async () => {
+      // TODO     
+    });
+    it('checkHandUnit board unit?', async () => {
+      // TODO     
+    });
+  });
+  describe('discardBaseUnits', () => {
+    /**
+     * When units are sold, when level 1, a level 1 unit should be added to discarded_pieces
+     * Level 2 => 3 level 1 units, Level 3 => 9 level 1 units
+     */
+    it('discardBaseUnits level 1 unit test?', async () => {
+      // TODO     
+    });
+    it('discardBaseUnits level 2 test?', async () => {
+      // TODO     
+    });
+    it('discardBaseUnits level 3 test?', async () => {
+      // TODO     
+    });
+  });
+  describe('getPieceFromRarity', () => {
+    /**
+     * Finds correct rarity for piece (random value)
+     * Returns the piece taken from pieceStorage from correct rarity list
+     * i is used to know which rarity it is checking (from 1 to 5)
+     * 
+     * getPieceFromRarity(prob, i, pieceStorage)
+     */
+    it('getPieceFromRarity', async () => {
+      // TODO     
+    });
+  });
+  describe('getBoardUnit', () => {
+    /**
+     * Create unit for board/hand placement from name and spawn position
+     */
+    it('getBoardUnit board unit', async () => {
+      // TODO     
+    });
+  });
+  describe('Gameover', () => {
+    /**
+     * Marks the only remaining player as the winner
+     */
+    it('Gameover', async () => {
+      // TODO     
+    });
+  });
+  describe('withdrawPiece', () => {
+    /**
+     * WithdrawPiece from board to best spot on bench
+     * Assumes not bench is full
+     */
+    it('withdrawPiece from board, empty bench', async () => {
+      // TODO     
+    });
+    it('withdrawPiece from board, hand 2 units', async () => {
+      // TODO     
+    });
+    it('withdrawPiece from board, hand has unit at 1 and 3 (should put 2)', async () => {
+      // TODO     
+    });
+  });
+  describe('getEnemyWithinRange', () => {
+    /**
+     * return enemy pos within range or undefined
+     * (board, unitPos, range, team)
+     */
+    it('getEnemyWithinRange range 1 with 1 valid target', async () => {
+      // TODO     
+    });
+    it('getEnemyWithinRange range 1 with 2 valid targets (bot, left)', async () => {
+      // TODO Should be bot unit
+    });
+    it('getEnemyWithinRange range 1 no targets', async () => {
+      // TODO     
+    });
+    it('getEnemyWithinRange range 1 target outside range', async () => {
+      // TODO     
+    });
+    it('getEnemyWithinRange range 2 with 1 valid target 2 from top', async () => {
+      // TODO     
+    });
+  });
+  describe('removeHpBattle', () => {
+    /**
+     * Remove hp from unit
+     * Remove unit if hp <= 0
+     * Return: ({board, unitDied})
+     * (board, unitPos, hpToRemove) 
+     */
+    it('removeHpBattle default lose hp', async () => {
+      // TODO     
+    });
+    it('removeHpBattle unit dies', async () => {
+      // TODO     
+    });
+  });
+  describe('manaIncrease', () => {
+    /**
+     * Increases mana for both units on board
+     * Returns updated board
+     * (board, unitPos, enemyPos)
+     */
+    it('manaIncrease default both units', async () => {
+      // TODO     
+    });
+  });
+  describe('nextMove', () => {
+      /**
+       * Next move calculator
+       * If mana is full use spell
+       *  TODO: Spells logic
+       *  TODO: Conditions for spells
+       * Unit checks if it can attack an enemy, is within unit.range
+       * If it can, attack on closests target position
+       *  If enemy unit dies, check battle over
+       *  if attack is made, increase mana for both units
+       * If not, make a move to closets enemy unit
+       * (board, unitPos)
+       * Return: Map({nextMove: Map({action: action, value: value, target: target}), newBoard: newBoard, battleOver: true})
+       */
+    it('nextMove board 2 units, both full hp, in range, move: attack', async () => {
+      // TODO     
+    });
+    it('nextMove board 3 units, select correct unit, in range, move: attack', async () => {
+      // TODO     
+    });
+    it('nextMove board 2 units, not within range, move: move closer', async () => {
+      // TODO     
+    });
+    it('nextMove board 2 units, low hp on enemy, in range, move: attack, unitDies, battleOver', async () => {
+      // TODO     
+    });
+    it('nextMove Spells test, 100 mana, use spell', async () => {
+      // TODO     
+    });
+  });
+  describe('getUnitWithNextMove', () => {
+    /**
+     * Returns position of unit with the next move
+     */
+    it('getUnitWithNextMove 1 unit, get pos', async () => {
+      // TODO     
+    });
+    it('getUnitWithNextMove 3 units, different next_move, get lowest', async () => {
+      // TODO     
+    });
+    it('getUnitWithNextMove 3 units, 2 same, 1 different next_move, get either of lowest', async () => {
+      // TODO     
+    });
+  });
+  describe('reverseUnitPos', () => {
+    /**
+     * Reverses position, your units position on enemy boards
+     */
+    it('reverseUnitPos 1x1 -> 6x6', async () => {
+      // TODO     
+    });
+    it('reverseUnitPos 5x0 -> 2x7', async () => {
+      // TODO     
+    });
+  });
+  describe('startBattle', () => {
+    /**
+     * Battle:
+     * Grab next unit to move
+     * simulate next move for that unit and calculate new board
+     * add that move to actionStack
+     * Continue until battle over
+     */
+    it('startBattle 2 units fight til death, one starts 10 before', async () => {
+      // TODO     
+    });
+    it('startBattle 2 units fight til death, one higher level, start same number', async () => {
+      // TODO     
+    });
+    it('startBattle 2 units outside of range, one starts 10 before', async () => {
+      // TODO     
+    });
+    it('startBattle 2 units fight til death, one starts 10 before', async () => {
+      // TODO     
+    });
+  });
   /**
-   * battleTime
-   * prepareBattle
    * setRandomFirstMove
-   * startBattle
-   * reverseUnitPos
-   * getUnitWithNextMove
-   * nextMove
-   * manaIncrease
-   * removeHpBattle
-   * getEnemyWithinRange
+   * prepareBattle
+   * battleTime
    */
 });
 

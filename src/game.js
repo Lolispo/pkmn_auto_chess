@@ -74,7 +74,7 @@ async function addPieceToShop(shop, pieces, level) {
       break;
     }
   }
-  return {newShop, pieceStorage: newPieceStorage };
+  return { newShop, pieceStorage: newPieceStorage };
 }
 
 /**
@@ -103,6 +103,9 @@ async function refreshShop(stateParam, playerIndex) {
   return state;
 }
 
+/**
+ * Create unit for board/hand placement from name and spawn position
+ */
 function getBoardUnit(name, x, y) {
   const unitInfo = pokemonJS.getStats(name);
   return Map({
@@ -224,7 +227,9 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   }
   return state;
 }
-
+/**
+ * Given a position, returns if it is on hand or board
+ */
 const checkHandUnit = position => f.isUndefined(position.get('y'));
 
 /**
@@ -268,13 +273,13 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
  * WithdrawPiece from board to best spot on bench
  * * Assumes not bench is full
  */
-async function withdrawPiece(state, playerIndex, piecePosition){
-  const hand = state.getIn(['players', playerIndex, 'hand']); 
+async function withdrawPiece(state, playerIndex, piecePosition) {
+  const hand = state.getIn(['players', playerIndex, 'hand']);
   let benchPosition;
-  for(let i = 0; i < 8; i++){
+  for (let i = 0; i < 8; i++) {
     // Get first available spot on bench
     const pos = f.getPos(i);
-    if(f.isUndefined(hand.get(pos))){
+    if (f.isUndefined(hand.get(pos))) {
       benchPosition = pos;
       break;
     }
@@ -331,30 +336,29 @@ async function sellPiece(state, playerIndex, piecePosition) {
 }
 
 
-
 /**
  * return enemy pos within range or undefined
  */
-function getEnemyWithinRange(board, unitPos, range, team){
+function getEnemyWithinRange(board, unitPos, range, team) {
   const x = unitPos.get('x');
   const y = unitPos.get('y');
   const enemyTeam = 1 - team;
-  for(let i = 1; i < range; i++){
-    if(!f.isUndefined(board.get(f.getPos(x, y + 1))) && board.get(f.getPos(x, y + 1)).get('team') === enemyTeam){
+  for (let i = 1; i < range; i++) {
+    if (!f.isUndefined(board.get(f.getPos(x, y + 1))) && board.get(f.getPos(x, y + 1)).get('team') === enemyTeam) {
       return f.getPos(x, y + 1);
-    } else if(!f.isUndefined(board.get(f.getPos(x + 1, y))) && board.get(f.getPos(x + 1, y)).get('team') === enemyTeam){
+    } if (!f.isUndefined(board.get(f.getPos(x + 1, y))) && board.get(f.getPos(x + 1, y)).get('team') === enemyTeam) {
       return f.getPos(x + 1, y);
-    } else if(!f.isUndefined(board.get(f.getPos(x, y - 1))) && board.get(f.getPos(x, y - 1)).get('team') === enemyTeam){
+    } if (!f.isUndefined(board.get(f.getPos(x, y - 1))) && board.get(f.getPos(x, y - 1)).get('team') === enemyTeam) {
       return f.getPos(x, y - 1);
-    } else if(!f.isUndefined(board.get(f.getPos(x - 1, y))) && board.get(f.getPos(x - 1, y)).get('team') === enemyTeam){
+    } if (!f.isUndefined(board.get(f.getPos(x - 1, y))) && board.get(f.getPos(x - 1, y)).get('team') === enemyTeam) {
       return f.getPos(x - 1, y);
-    } else if(!f.isUndefined(board.get(f.getPos(x + 1, y + 1))) && board.get(f.getPos(x + 1, y + 1)).get('team') === enemyTeam){
+    } if (!f.isUndefined(board.get(f.getPos(x + 1, y + 1))) && board.get(f.getPos(x + 1, y + 1)).get('team') === enemyTeam) {
       return f.getPos(x + 1, y + 1);
-    } else if(!f.isUndefined(board.get(f.getPos(x + 1, y - 1))) && board.get(f.getPos(x + 1, y - 1)).get('team') === enemyTeam){
+    } if (!f.isUndefined(board.get(f.getPos(x + 1, y - 1))) && board.get(f.getPos(x + 1, y - 1)).get('team') === enemyTeam) {
       return f.getPos(x + 1, y - 1);
-    } else if(!f.isUndefined(board.get(f.getPos(x - 1, y - 1))) && board.get(f.getPos(x - 1, y - 1)).get('team') === enemyTeam){
+    } if (!f.isUndefined(board.get(f.getPos(x - 1, y - 1))) && board.get(f.getPos(x - 1, y - 1)).get('team') === enemyTeam) {
       return f.getPos(x - 1, y - 1);
-    } else if(!f.isUndefined(board.get(f.getPos(x - 1, y + 1))) && board.get(f.getPos(x - 1, y + 1)).get('team') === enemyTeam){
+    } if (!f.isUndefined(board.get(f.getPos(x - 1, y + 1))) && board.get(f.getPos(x - 1, y + 1)).get('team') === enemyTeam) {
       return f.getPos(x - 1, y + 1);
     }
   }
@@ -364,24 +368,25 @@ function getEnemyWithinRange(board, unitPos, range, team){
 /**
  * Remove hp from unit
  * Remove unit if hp <= 0
+ * ({board, unitDied})
  */
-async function removeHpBattle(board, unitPos, hpToRemove, team) {
+async function removeHpBattle(board, unitPos, hpToRemove) {
   const currentHp = board.getIn([unitPos, 'hp']);
   if (currentHp - hpToRemove <= 0) {
-    return Map({board: board.delete(unitPos), unitDied: true});
+    return Map({ board: board.delete(unitPos), unitDied: true });
   }
-  return Map({board: board.setIn([unitPos, 'hp'], currentHp - hpToRemove), unitDied: false});
+  return Map({ board: board.setIn([unitPos, 'hp'], currentHp - hpToRemove), unitDied: false });
 }
 
 /**
  * Increases mana for both units on board
  * Returns updated board
  */
-async function manaIncrease(board, unitPos, enemyPos){
+async function manaIncrease(board, unitPos, enemyPos) {
   const unitMana = board.get(unitPos).get('mana');
   const enemyMana = board.get(enemyPos).get('mana');
   const unitManaInc = board.get(unitPos).get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given');
-  const enemyManaInc = board.get(enemyPos).get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'); 
+  const enemyManaInc = board.get(enemyPos).get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken');
   return board.setIn([unitPos, 'mana'], +unitMana + +unitManaInc).setIn([enemyPos, 'mana'], +enemyMana + +enemyManaInc);
 }
 
@@ -395,63 +400,72 @@ async function manaIncrease(board, unitPos, enemyPos){
  *  If enemy unit dies, check battle over
  *  if attack is made, increase mana for both units
  * If not, make a move to closets enemy unit
+ *
+ * Map({nextMove: Map({action: action, value: value, target: target}), newBoard: newBoard, battleOver: true})
  */
 async function nextMove(board, unitPos) {
   const unit = board.get(unitPos);
-  if(unit.get('mana') === 100){ // Use spell, && withinRange for spell
+  if (unit.get('mana') === 100) { // Use spell, && withinRange for spell
     // TODO Spell logic
   } else {
     const range = unit.get('range') || pokemonJS.getStatsDefault('range');
     const team = unit.get('team');
     const enemyPos = getEnemyWithinRange(board, unitPos, range, team);
-    if(!f.isUndefined(enemyPos)){ // Attack action
+    if (!f.isUndefined(enemyPos)) { // Attack action
       const action = 'attack';
       const value = unit.get('attack');
       const target = enemyPos;
+      // TODO: Add weakness/resistance types between attacker/defender
+      // TODO: Check bonuses from players
       // Calculate newBoard from action
-      const removedHPBoard = removeHpBattle(board, target, value, team); // {board, unitDied}
-      let battleOver = false;
-      if(removedHPBoard.get('unitDied')){ // Check if battle ends
-        // TODO: Count amount of enemy units left
-        return Map({nextMove: Map({action: action, value: value, target: target}), newBoard: newBoard, battleOver: true});
-      } else { // Mana increase, return newBoard
-        const newBoard = manaIncrease(removedHPBoard.get('board'), unitPos, target);
-        return Map({nextMove: Map({action: action, value: value, target: target}), newBoard: newBoard});
-      }      
-    } else { // Move action
-      // TODO: path find to closets open pos within range of enemyunit not taken by another unit
-      return Map({nextMove: Map({action: action, value: value, target: target}), newBoard: newBoard});
-    }
+      const removedHPBoard = removeHpBattle(board, target, value); // {board, unitDied}
+      if (removedHPBoard.get('unitDied')) { // Check if battle ends
+        const newBoard = removedHPBoard.get('board');
+        const keysIter = newBoard.keys();
+        let tempUnit = keysIter.next();
+        let battleOver = true;
+        while (!tempUnit.done) {
+          if (newBoard.get(tempUnit.value).get('team') === 1 - team) {
+            battleOver = false;
+            break;
+          }
+          tempUnit = keysIter.next();
+        }
+        return Map({ nextMove: Map({ action, value, target }), newBoard, battleOver });
+      } // Mana increase, return newBoard
+      const newBoard = manaIncrease(removedHPBoard.get('board'), unitPos, target);
+      return Map({ nextMove: Map({ action, value, target }), newBoard });
+    } // Move action
+    // TODO: path find to closets open pos within range of enemyunit not taken by another unit
+    return Map({ nextMove: Map({ action, value, target }), newBoard });
   }
 }
 
 /**
  * Returns position of unit with the next move
  */
-async function getUnitWithNextMove(board){
+async function getUnitWithNextMove(board) {
   const boardKeysIter = board.keys();
   let tempUnit = boardKeysIter.next();
-  let newBoard = board;
   let lowestNextMove = List([tempUnit.value]);
   let lowestNextMoveValue = board.get(tempUnit.value).get('next_move');
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const nextMove = board.get(unitPos).get('next_move');
-    if(nextMove < lowestNextMoveValue){ // New lowest move
+    if (nextMove < lowestNextMoveValue) { // New lowest move
       lowestNextMove = List([unitPos]);
       lowestNextMoveValue = nextMove;
-    } else if(nextMove === lowestNextMoveValue){
+    } else if (nextMove === lowestNextMoveValue) {
       lowestNextMove = lowestNextMove.push(unitPos);
     }
     tempUnit = boardKeysIter.next();
   }
   // Find nextMove unit
-  if(lowestNextMove.size === 1){
+  if (lowestNextMove.size === 1) {
     return lowestNextMove.get(0);
-  } else {
-    // TODO: Decide order of equal next move units
-    return lowestNextMove.get(Math.floor(Math.random() * lowestNextMove.size));
   }
+  // TODO: Decide order of equal next move units
+  return lowestNextMove.get(Math.floor(Math.random() * lowestNextMove.size));
 }
 
 /**
@@ -468,7 +482,7 @@ async function startBattle(boardParam) {
   let result = Map({});
   // TODO First move for all units first
   // First move used for all units (order doesn't matter) and set next_move to + speed accordingly
-  while(!result.get('battleOver')){
+  while (!result.get('battleOver')) {
     const nextUnitToMove = getUnitWithNextMove(board);
     const unit = board.get(nextUnitToMove);
     const nextMoveBoard = board.setIn([nextUnitToMove, 'next_move'], +unit.get('next_move') + +unit.get('speed'));
@@ -481,7 +495,7 @@ async function startBattle(boardParam) {
   console.log(newBoard);
   console.log(actionStack);
   const winningTeam = newBoard.getIn([actionStack.get(action.stack.size - 1), 'team']);
-  return Map({actionStack: actionStack, board: newBoard, winner: winningTeam});
+  return Map({ actionStack, board: newBoard, winner: winningTeam });
 }
 
 /**
@@ -528,10 +542,10 @@ async function prepareBattle(stateParam, pairing) {
   const board1 = state.getIn(['players', pairing.get('homeID'), 'board']);
   const board2 = state.getIn(['players', pairing.get('enemyID'), 'board']);
   // Check to see if a battle is required
-  if(board1.size === 0){ // Lose when empty, even if enemy no units aswell (tie with no damage taken)
-    return Map({actionStack: List([]), winner: 1});
-  } else if(board2.size === 0){
-    return Map({actionStack: List([]), winner: 0});
+  if (board1.size === 0) { // Lose when empty, even if enemy no units aswell (tie with no damage taken)
+    return Map({ actionStack: List([]), winner: 1 });
+  } if (board2.size === 0) {
+    return Map({ actionStack: List([]), winner: 0 });
   }
   // Both players have units, battle required
   const keysIter = board1.keys();
@@ -542,13 +556,13 @@ async function prepareBattle(stateParam, pairing) {
     const unit = board1.get(unitPos);
     const unitStats = pokemonJS.getStats(unit.get('name'));
     const unitWithTeam = unit.set('team', 0).set('attack', unitStats.get('attack')).set('hp', unitStats.get('hp'))
-    .set('type', unitStats.get('type'))
-    .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
-    .set('ability', unitStats.get('ability'))
-    .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))
-    .set('speed', unitStats.get('speed') || pokemonJS.getStatsDefault('speed'))
-    .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
-    .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'));
+      .set('type', unitStats.get('type'))
+      .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
+      .set('ability', unitStats.get('ability'))
+      .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))
+      .set('speed', unitStats.get('speed') || pokemonJS.getStatsDefault('speed'))
+      .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
+      .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'));
     newBoard = await newBoard.set(unitPos, unitWithTeam);
     tempUnit = keysIter.next();
   }
@@ -560,20 +574,20 @@ async function prepareBattle(stateParam, pairing) {
     const unit = board2.get(unitPos);
     const unitStats = pokemonJS.getStats(unit.get('name'));
     const unitWithTeam = unit.set('team', 1).set('attack', unitStats.get('attack')).set('hp', unitStats.get('hp'))
-    .set('type', unitStats.get('type'))
-    .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
-    .set('ability', unitStats.get('ability'))
-    .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))
-    .set('speed', unitStats.get('speed') || pokemonJS.getStatsDefault('speed'))
-    .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
-    .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'));
+      .set('type', unitStats.get('type'))
+      .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
+      .set('ability', unitStats.get('ability'))
+      .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))
+      .set('speed', unitStats.get('speed') || pokemonJS.getStatsDefault('speed'))
+      .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
+      .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'));
     const newUnitWithTeam = unitWithTeam.set('position', newUnitPos);
     newBoard = await newBoard.set(newUnitPos, newUnitWithTeam);
     tempUnit = keysIter2.next();
   }
   const board = await newBoard;
   const boardWithMovement = await setRandomFirstMove(board);
-  return startBattle(boardWithMovement);
+  return startBattle(boardWithMovement).set('startBoard', boardWithMovement);
 }
 
 /**
@@ -587,10 +601,10 @@ async function battleTime(stateParam) {
   const playerIter = state.get('players').keys();
   let tempPlayer = playerIter.next();
   let nextPlayer;
-  let firstPlayer = tempPlayer;
+  const firstPlayer = tempPlayer;
   while (true) { // !tempPlayer.done
     const currentPlayer = tempPlayer.value;
-    if(tempPlayer.done){
+    if (tempPlayer.done) {
       nextPlayer = firstPlayer;
     } else {
       nextPlayer = playerIter.next();
@@ -599,16 +613,17 @@ async function battleTime(stateParam) {
     const enemy = await nextPlayer.value; // (i === amountOfPlayers - 1 ? 0 : i + 1);
     const pairing = Map({ homeID: index, enemyID: enemy });
     const result = prepareBattle(state, pairing);
-    //{actionStack: actionStack, board: newBoard, winner: winningTeam}
-    // Send actionStack to frontend
-    // TODO: resultBattle.get('actionStack');
+    // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
+    // Send actionStack to frontend and startBoard
+    // TODO:  resultBattle.get('actionStack');
+    //        resultBattle.get('startBoard')
     const resultBattle = await result;
     console.log(resultBattle);
-    const winner = (resultBattle.get('winner') === 0 ? true : false);
+    const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board'); // TODO: Check, where should we use this?
     const newStateAfterBattle = await endBattle(state, index, winner, enemy);
     state = await state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
-    if(nextPlayer.done){
+    if (nextPlayer.done) {
       break;
     } else {
       tempPlayer = nextPlayer;
@@ -722,12 +737,11 @@ function calcDamageTaken(boardUnits) {
   if (f.isUndefined(boardUnits) || boardUnits.size === 0) {
     return 0; // When there are no units left for the enemy, don't lose hp (A tie)
   }
-  const size = boardUnits.size;
   let sum = 0;
   // console.log('@calcDamageTaken', boardUnits.size)
   const keysIter = boardUnits.keys();
   let tempUnit = keysIter.next();
-  while (!tempUnit.done) {
+  while (!tempUnit.done) { // while template
     sum += +pokemonJS.getStats(boardUnits.get(tempUnit.value).get('name')).get('cost');
     tempUnit = keysIter.next();
   }
@@ -737,7 +751,7 @@ function calcDamageTaken(boardUnits) {
 /**
  * Marks the only remaining player as the winner
  */
-function gameOver(state){
+function gameOver(state) {
   const winningPlayer = state.get('players').values().next().value;
   // TODO Send this information to everyone
   return state;
@@ -753,9 +767,9 @@ async function removeHp(state, playerIndex, hpToRemove) {
   if (currentHp - hpToRemove <= 0) {
     const newState = state.get('players').delete(playerIndex);
     // TODO: Interfers with index based enemyAllocation (Temp implementation)
-    const removedPlayerState = await newState.set('amountOfPlayers', newState.get('amountOfPlayers') - 1); 
+    const removedPlayerState = await newState.set('amountOfPlayers', newState.get('amountOfPlayers') - 1);
     const amountOfPlayers = await removedPlayerState.get('players').size;
-    if(amountOfPlayers === 1){
+    if (amountOfPlayers === 1) {
       // TODO: Game Over
       return gameOver(removedPlayerState);
     }
@@ -766,11 +780,11 @@ async function removeHp(state, playerIndex, hpToRemove) {
 
 exports.start = async () => {
   let state = initEmptyState(2);
-  //f.print(state, '**Initial State: ');
+  // f.print(state, '**Initial State: ');
   state = await refreshShop(state, 0);
-  //f.print(state, '**State with shop given to player 0: ');
+  // f.print(state, '**State with shop given to player 0: ');
   state = await buyUnit(state, 0, 1);
-  //f.print(state, '**State where player 0 Bought a Unit at index 1: ');
+  // f.print(state, '**State where player 0 Bought a Unit at index 1: ');
   state = await battleTime(state);
   f.print(state, '**State after battle time with 0 units: ');
 };

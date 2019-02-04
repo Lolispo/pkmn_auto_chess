@@ -14,11 +14,9 @@ const defaultStat = Map({
   speed: 100, // Temp test, lower = faster (Time between attacks)
   range: 1, // Restricted for now
   next_move: 0, // Next move: time for next move
-})
+});
 
-exports.getStatsDefault = stat => {
-  return defaultStat.get(stat);
-}
+exports.getStatsDefault = stat => defaultStat.get(stat);
 
 /**
  * ☆ = &#9734;
