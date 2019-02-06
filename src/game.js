@@ -699,7 +699,7 @@ async function prepareBattle(stateParam, pairing) {
       .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
       .set('ability', unitStats.get('ability'))
       .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))
-      .set('speed', unitStats.get('speed') || pokemonJS.getStatsDefault('speed'))
+      .set('speed', pokemonJS.getStatsDefault('upperLimitSpeed') - (unitStats.get('speed') || pokemonJS.getStatsDefault('speed'))) 
       .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
       .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'));
     newBoard = await newBoard.set(unitPos, unitWithTeam);

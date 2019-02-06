@@ -12,6 +12,7 @@ const defaultStat = Map({
   mana_hit_taken: 10,
   mana: 0,
   speed: 100, // Temp test, lower = faster (Time between attacks)
+  upperLimitSpeed: 200,
   range: 1, // Range for unit to reach (diagonals allowed)
   next_move: 0, // Next move: time for next move
 });
@@ -20,7 +21,6 @@ exports.getStatsDefault = stat => defaultStat.get(stat);
 
 /**
  * ☆ = &#9734;
-
  * Level is same as cost
  */
 const pokemonMap = new Map({
