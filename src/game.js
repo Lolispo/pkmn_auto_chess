@@ -664,7 +664,11 @@ async function setRandomFirstMove(board) {
   return newBoard;
 }
 
+/**
+ * Give bonuses from types
+ */
 async function markBoardBonuses(board){
+  return board; // TODO Finish implementation
   const boardKeysIter = board.keys();
   let tempUnit = boardKeysIter.next();
   let buffMap = Map({});
@@ -687,7 +691,8 @@ async function markBoardBonuses(board){
   while (!tempBuff.done) {
     const buff = tempBuff.value;
     const amountBuff = buffMap.get(buff);
-    
+    // TODO: Types
+    // if(amountBuff >= typesJS.)
     tempBuff = buffsKeysIter.next();
   }
   // Apply buff
