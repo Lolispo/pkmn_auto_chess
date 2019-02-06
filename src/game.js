@@ -53,7 +53,7 @@ async function getPieceFromRarity(prob, i, pieceStorage) {
   let piece;
   if (prob > random) {
     // console.log('@getPieceFromRarity', prob, random, pieceStorage.get(i).get(0))
-    piece = await pieceStorage.get(i).get(0);
+    piece = pieceStorage.get(i).get(0);
   }
   return piece;
 }
@@ -69,7 +69,7 @@ async function addPieceToShop(shop, pieces, level) {
   for (let i = 0; i < 5; i++) { // Loop over levels
     const piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
     if (!f.isUndefined(piece)) {
-      newShop = await newShop.push(piece);
+      newShop = newShop.push(piece);
       // Removes first from correct rarity array
       newPieceStorage = await stateLogicJS.removeFirst(newPieceStorage, i);
       break;
@@ -92,15 +92,15 @@ async function refreshShop(stateParam, playerIndex) {
   // TODO: Check if
   for (let i = 0; i < 5; i++) { // Loop over pieces
     const obj = await addPieceToShop(newShop, pieceStorage, level);
-    newShop = await obj.newShop;
-    pieceStorage = await obj.pieceStorage;
+    newShop = obj.newShop;
+    pieceStorage = obj.pieceStorage;
   }
-  const shop = await state.getIn(['players', playerIndex, 'shop']);
+  const shop = state.getIn(['players', playerIndex, 'shop']);
   if (shop.size !== 0) {
-    state = await state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
+    state = state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
   }
-  state = await state.setIn(['players', playerIndex, 'shop'], newShop);
-  state = await state.set('pieces', pieceStorage);
+  state = state.setIn(['players', playerIndex, 'shop'], newShop);
+  state = state.set('pieces', pieceStorage);
   return state;
 }
 
@@ -172,7 +172,7 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
       player = player.set('level', level);
       player = player.set('exp', exp);
       player = player.set('expToReach', expToReach);
-      state = await state.setIn(['players', playerIndex], player);
+      state = state.setIn(['players', playerIndex], player); // await
       break;
     } else { // Leveling up
       level += 1;
@@ -212,7 +212,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   const positions = List([]);
   const keysIter = boardUnits.keys();
   let tempUnit = keysIter.next();
-  while (!tempUnit.done) { // while template
+  while (!tempUnit.done) {
     const unit = boardUnits.get(tempUnit.value);
     if (unit.get('name') === name) {
       pieceCounter += 1;
@@ -225,10 +225,10 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     for(let i = 0; i < positions.size; i++){
       board = board.delete(positions.get(i));
     }
-    state = await state.setIn(['players', playerIndex, 'board'], board);
+    state = state.setIn(['players', playerIndex, 'board'], board);
     const evolvesTo = pokemonJS.getStats(name).get('evolves_to');
     const newPiece = getBoardUnit(evolvesTo, position.get('x'), position.get('y'));
-    state = await state.setIn(['players', playerIndex, 'board', position], newPiece);
+    state = state.setIn(['players', playerIndex, 'board', position], newPiece);
   }
   return state;
 }
@@ -247,12 +247,12 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   let state = stateParam;
   if (checkHandUnit(fromPosition)) { // from hand
     piece = state.getIn(['players', playerIndex, 'hand', fromPosition]).set('position', toPosition);
-    const newHand = await state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
-    state = await state.setIn(['players', playerIndex, 'hand'], newHand);
+    const newHand = state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
+    state = state.setIn(['players', playerIndex, 'hand'], newHand);
   } else { // from board
     piece = state.getIn(['players', playerIndex, 'board', fromPosition]).set('position', toPosition);;
-    const newBoard = await state.getIn(['players', playerIndex, 'board']).delete(fromPosition);
-    state = await state.setIn(['players', playerIndex, 'board'], newBoard);
+    const newBoard = state.getIn(['players', playerIndex, 'board']).delete(fromPosition);
+    state = state.setIn(['players', playerIndex, 'board'], newBoard);
   }
   let newPiece;
   if (checkHandUnit(toPosition)) { // to hand
@@ -300,7 +300,7 @@ async function discardBaseUnits(state, name, depth = '1') {
   const unitStats = pokemonJS.getStats(name);
   const evolutionFrom = unitStats.get('evolution_from');
   if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
-    let discPieces = await state.get('discarded_pieces');
+    let discPieces = state.get('discarded_pieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
     for (let i = 0; i < amountOfPieces; i++) {
       discPieces = await discPieces.push(name);
@@ -322,21 +322,21 @@ async function sellPiece(state, playerIndex, piecePosition) {
   let pieceTemp;
   // TODO: Make this into method, taking pos and get/set, if set take argument to set
   if (checkHandUnit(piecePosition)) {
-    pieceTemp = await state.getIn(['players', playerIndex, 'hand', piecePosition]);
+    pieceTemp = state.getIn(['players', playerIndex, 'hand', piecePosition]);
   } else {
-    pieceTemp = await state.getIn(['players', playerIndex, 'board', piecePosition]);
+    pieceTemp = state.getIn(['players', playerIndex, 'board', piecePosition]);
   }
-  const piece = await pieceTemp;
-  const unitStats = await pokemonJS.getStats(piece.get('name'));
+  const piece = pieceTemp;
+  const unitStats = pokemonJS.getStats(piece.get('name'));
   const cost = unitStats.get('cost');
   const gold = state.getIn(['players', playerIndex, 'gold']);
-  let newState = await state.setIn(['players', playerIndex, 'gold'], +gold + +cost);
+  let newState = state.setIn(['players', playerIndex, 'gold'], +gold + +cost);
   if (checkHandUnit(piecePosition)) {
-    const newHand = await newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
-    newState = await newState.setIn(['players', playerIndex, 'hand'], newHand);
+    const newHand = newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
+    newState = newState.setIn(['players', playerIndex, 'hand'], newHand);
   } else {
-    const newBoard = await newState.getIn(['players', playerIndex, 'board']).delete(piecePosition);
-    newState = await newState.setIn(['players', playerIndex, 'board'], newBoard);
+    const newBoard = newState.getIn(['players', playerIndex, 'board']).delete(piecePosition);
+    newState = newState.setIn(['players', playerIndex, 'board'], newBoard);
   }
   // Add units to discarded Cards, add base level of card
   return discardBaseUnits(newState, piece.get('name'));
@@ -456,8 +456,12 @@ function getClosestEnemy(board, unitPos, range, team) {
 async function removeHpBattle(board, unitPos, hpToRemove) {
   const currentHp = board.getIn([unitPos, 'hp']);
   if (currentHp - hpToRemove <= 0) {
-    console.log('@removeHpBattle UNIT DIED!', currentHp, hpToRemove)
+    console.log('@removeHpBattle UNIT DIED!', currentHp, '-', hpToRemove)
     return Map({ board: board.delete(unitPos), unitDied: true });
+  }
+  if(isNaN(currentHp - hpToRemove)){
+    console.log('Exiting ... ', currentHp, hpToRemove, board.get(unitPos))
+    process.exit()
   }
   return Map({ board: board.setIn([unitPos, 'hp'], currentHp - hpToRemove), unitDied: false });
 }
@@ -498,12 +502,12 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const team = unit.get('team');
     let targetPos;
     if (!f.isUndefined(optPreviousTarget)) {
-      targetPos = await Map({ closestEnemy: optPreviousTarget, withinRange: true });
+      targetPos = Map({ closestEnemy: optPreviousTarget, withinRange: true });
     } else {
-      targetPos = await getClosestEnemy(board, unitPos, range, team);
+      targetPos = getClosestEnemy(board, unitPos, range, team);
     }
-    const enemyPos = await targetPos;
-    console.log('@nextMove enemyPos', enemyPos)
+    const enemyPos = targetPos; // await
+    // console.log('@nextMove enemyPos', enemyPos)
     if (enemyPos.get('withinRange')) { // Attack action
       const action = 'attack';
       const value = unit.get('attack');
@@ -524,15 +528,19 @@ async function nextMove(board, unitPos, optPreviousTarget) {
           }
           tempUnit = keysIter.next();
         }
+        f.printBoard(newBoard, Map({ unitPos, action, value, target }));
         return Map({ nextMove: Map({ unitPos, action, value, target }), newBoard, battleOver });
       } // Mana increase, return newBoard
       const newBoard = manaIncrease(removedHPBoard.get('board'), unitPos, target);
-      return Map({ nextMove: Map({ unitPos, action, value, target }), newBoard, allowSameMove: true });
+      // console.log('new hp for ' + target, removedHPBoard.get('board').get(target).get('hp'));
+      f.printBoard(newBoard, Map({ unitPos, action, value, target }));
+      return Map({ nextMove: Map({ unitPos, action, value, target }), newBoard, allowSameMove: true});
     } // Move action
     const closestEnemyPos = enemyPos.get('closestEnemy');
-    const movePos = await getMovePos(board, closestEnemyPos, range, team);
-    const newBoard = await board.set(movePos, unit.set('position', movePos)).delete(unitPos);
+    const movePos = getMovePos(board, closestEnemyPos, range, team);
+    const newBoard = board.set(movePos, unit.set('position', movePos)).delete(unitPos);
     const action = 'move';
+    f.printBoard(newBoard, Map({ unitPos, action, target: movePos }));
     return Map({ nextMove: Map({ unitPos, action, target: movePos }), newBoard });
   }
 }
@@ -585,19 +593,19 @@ async function startBattle(boardParam) {
     board = await board;
     const nextUnitToMove = await getUnitWithNextMove(board);
     const unit = board.get(nextUnitToMove);
-    console.log('@startbattle 1 - next unit to do action: ', nextUnitToMove); 
+    //console.log('\n@startbattle Next unit to do action: ', nextUnitToMove); 
     const nextMoveBoard = board.setIn([nextUnitToMove, 'next_move'], +unit.get('next_move') + +unit.get('speed'));
     const previousMove = unitMoveMap.get(nextUnitToMove);
     let nextMoveResult;
     if (!f.isUndefined(previousMove)) { // Use same target as last round
-      console.log('previousMove in @startBattle', previousMove.get('target'))
-      const previousTarget = previousMove.get('target');
+      //console.log('previousMove in @startBattle', previousMove.get('nextMove').get('target'))
+      const previousTarget = previousMove.get('nextMove').get('target');
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove, previousTarget);
     } else {
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove);
     }
     result = await nextMoveResult;
-    console.log('@startBattle: ', result.get('nextMove'))
+    //console.log('@startBattle: ', result.get('nextMove'))
     /*
     if(result.get('nextMove').get('action') === 'attack'){
       process.exit()
@@ -606,15 +614,25 @@ async function startBattle(boardParam) {
     if (result.get('allowSameMove')) { // Attack on target in same position for example
       unitMoveMap = unitMoveMap.set(nextUnitToMove, nextMoveResult);
     } else {
-      unitMoveMap = unitMoveMap.delete(nextUnitToMove);
+      // Delete every key mapping to nextMoveResult
+      const keysIter = unitMoveMap.keys();
+      let tempUnit = keysIter.next();
+      while (!tempUnit.done) {
+        const tempPrevMove = unitMoveMap.get(tempUnit.value);
+        if(tempPrevMove.get('target') === nextMoveResult.get('target')){
+          unitMoveMap = unitMoveMap.delete(tempUnit.value)
+        }
+        tempUnit = keysIter.next();
+      }
+    // unitMoveMap = unitMoveMap.delete(nextUnitToMove);
     }
     //console.log('@startBattle 2 -', result.get('newBoard'))
     board = result.get('newBoard');
   }
   const newBoard = await board;
   // Return the winner
-  f.print(newBoard, '@startBattle newBoard after');
-  f.print(actionStack, '@startBattle actionStack after');
+  // f.print(newBoard, '@startBattle newBoard after');
+  // f.print(actionStack, '@startBattle actionStack after');
   const winningTeam = newBoard.getIn([actionStack.get(actionStack.size - 1), 'team']);
   return Map({ actionStack, board: newBoard, winner: winningTeam });
 }
@@ -735,20 +753,20 @@ async function battleTime(stateParam) {
       nextPlayer = iter.value;
     }
     const index = currentPlayer;
-    const enemy = await nextPlayer; // (i === amountOfPlayers - 1 ? 0 : i + 1);
+    const enemy = nextPlayer; // (i === amountOfPlayers - 1 ? 0 : i + 1);
     const pairing = Map({ homeID: index, enemyID: enemy });
-    console.log('@battleTime pairing: ',pairing, nextPlayer);
+    //console.log('@battleTime pairing: ', pairing, nextPlayer);
     const result = prepareBattle(state, pairing);
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     // Send actionStack to frontend and startBoard
     // TODO:  resultBattle.get('actionStack');
     //        resultBattle.get('startBoard')
     const resultBattle = await result;
-    console.log('\n@battleTime - ',resultBattle);
+    // console.log('\n@battleTime - ', resultBattle);
     const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board'); // TODO: Check, where should we use this?
     const newStateAfterBattle = await endBattle(state, index, winner, enemy);
-    state = await state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
+    state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
     if (iter.done) {
       break;
     } else {
@@ -774,9 +792,9 @@ async function endTurn(stateParam) {
   let state = stateParam;
   const income_basic = state.get('income_basic');
   const round = state.get('round');
-  state = await state.set('round', round + 1);
+  state = state.set('round', round + 1);
   if (round <= 5) {
-    state = await state.set('income_basic', income_basic + 1);
+    state = state.set('income_basic', income_basic + 1);
   }
   return playerEndTurn(state, state.get('amountOfPlayers'), income_basic + 1);
 }
@@ -785,13 +803,13 @@ async function playerEndTurn(stateParam, amountPlayers, income_basic) {
   let state = stateParam;
   // console.log('@playerEndTurn\n', state, state.get('amountOfPlayers'));
   for (let i = 0; i < amountPlayers; i++) {
-    const locked = await state.getIn(['players', i, 'locked']);
+    const locked = state.getIn(['players', i, 'locked']);
     if (!locked) {
       state = await refreshShop(state, i);
       // console.log('Not locked for player[' + i + '] \n', state.get('pieces').get(0));
     }
     state = await increaseExp(state, i, 1);
-    const gold = await state.getIn(['players', i, 'gold']);
+    const gold = state.getIn(['players', i, 'gold']);
     // Min 0 gold interest -> max 5
     const bonusGold = Math.min(Math.floor(gold / 10), 5);
     const streak = state.getIn(['players', i, 'streak']) || 0;
@@ -801,9 +819,9 @@ async function playerEndTurn(stateParam, amountPlayers, income_basic) {
     // console.log(`@playerEndTurn Gold: p[${i + 1}]: `,
     // `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
     const newGold = gold + income_basic + bonusGold + streakGold;
-    state = await state.setIn(['players', i, 'gold'], newGold);
+    state = state.setIn(['players', i, 'gold'], newGold);
     // console.log(i, '\n', state.get('pieces').get(0));
-    // state = await state.set(i, state.getIn(['players', i]));
+    // state = state.set(i, state.getIn(['players', i]));
   }
   const newState = await state; // Promise.all TODO
   return newState;
