@@ -206,25 +206,28 @@ function buyExp(state, playerIndex) {
   */
 async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   let state = stateParam;
-  const boardUnits = state.getIn('players', playerIndex, 'board');
+  const boardUnits = state.getIn(['players', playerIndex, 'board']);
   const name = piece.get('name');
   let pieceCounter = 0;
   const positions = List([]);
-  boardUnits.forEach((row) => {
-    row.forEach((unit) => {
-      if (unit.get('name') === name) {
-        pieceCounter += 1;
-        positions.push(unit.get('position'));
-      }
-    });
-  });
-  if (pieceCounter >= 3) { // Upgrade unit @ position
-    for (const pos in positions) { // TODO: Esllint says this could be better, not efficient
-      const newBoard = await state.getIn(['players', playerIndex, 'board']).delete(pos);
-      state = await state.setIn(['players', playerIndex, 'board'], newBoard);
+  const keysIter = boardUnits.keys();
+  let tempUnit = keysIter.next();
+  while (!tempUnit.done) { // while template
+    const unit = boardUnits.get(tempUnit.value);
+    if (unit.get('name') === name) {
+      pieceCounter += 1;
+      positions = positions.push(unit.get('position'));
     }
+    tempUnit = keysIter.next();
+  }
+  if (pieceCounter >= 3) { // Upgrade unit @ position
+    let board = state.getIn(['players', playerIndex, 'board']);
+    for(let i = 0; i < positions.size; i++){
+      board = board.delete(positions.get(i));
+    }
+    state = await state.setIn(['players', playerIndex, 'board'], board);
     const evolvesTo = pokemonJS.getStats(name).get('evolves_to');
-    const newPiece = getBoardUnit(evolvesTo.get('name'), position.get('x'), position.get('y'));
+    const newPiece = getBoardUnit(evolvesTo, position.get('x'), position.get('y'));
     state = await state.setIn(['players', playerIndex, 'board', position], newPiece);
   }
   return state;
@@ -260,7 +263,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     state = state.setIn(['players', playerIndex, 'board', toPosition], piece);
     state = await checkPieceUpgrade(state, playerIndex, piece, toPosition);
   }
-  if (shouldSwap) {
+  if (shouldSwap && !f.isUndefined(newPiece)) {
     if (checkHandUnit(fromPosition)) {
       state = state.setIn(['players', playerIndex, 'hand', fromPosition], newPiece);
     } else {
@@ -854,8 +857,7 @@ async function removeHp(state, playerIndex, hpToRemove) {
     const removedPlayerState = await newState.set('amountOfPlayers', newState.get('amountOfPlayers') - 1);
     const amountOfPlayers = await removedPlayerState.get('players').size;
     if (amountOfPlayers === 1) {
-      // TODO: Game Over
-      return gameOver(removedPlayerState);
+      return await gameOver(removedPlayerState);
     }
     return removedPlayerState;
   }
