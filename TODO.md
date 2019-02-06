@@ -36,6 +36,8 @@ Socket.io connection, simple listeners that connect to the functions
 
 battle: first movement random, then -> jump to closets target one team at a time, if in range attack until teams are dead
 
+check Promise.all alternative for loops
+
 ## Everywhere
 
 Remove unused variables in imports

@@ -146,7 +146,6 @@ function buyUnit(stateParam, playerIndex, unitID) {
 
 
 /**
- * TODO
  * toggleLock for player (setIn)
  */
 async function toggleLock(state, playerIndex) {
@@ -186,7 +185,6 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
 }
 
 /**
- * TODO
  * Buy exp for player (setIn)
  */
 function buyExp(state, playerIndex) {
@@ -312,7 +310,6 @@ async function discardBaseUnits(state, name, depth = '1') {
 }
 
 /**
- * TODO
  * Sell piece
  * Increase money for player
  * Remove piece from position
@@ -570,6 +567,7 @@ async function getUnitWithNextMove(board) {
     return lowestNextMove.get(0);
   }
   // TODO: Decide order of equal next move units
+  // Approved Temp: Random order
   return lowestNextMove.get(Math.floor(Math.random() * lowestNextMove.size));
 }
 
@@ -656,11 +654,53 @@ async function setRandomFirstMove(board) {
     // Temp: 0.5
     const isMoving = Math.random() > 0.5;
     if (isMoving) {
-      // TODO Make logical movement calculation, currently starts default spot
+      // TODO Make logical movement calculation, 
+      // Approved Temp: currently starts default spot, makes no firstmove
     }
     //console.log('\n@setRandomFirstMove', board)
     newBoard = newBoard.setIn([unitPos, 'first_move'], newPos);
     tempUnit = boardKeysIter.next();
+  }
+  return newBoard;
+}
+
+async function markBoardBonuses(board){
+  const boardKeysIter = board.keys();
+  let tempUnit = boardKeysIter.next();
+  let buffMap = Map({});
+  while (!tempUnit.done) {
+    const unitPos = tempUnit.value;
+    const types = board.get(unitPos).get('type'); // Value or List
+    if(f.isUndefined(types.size)) { // List 
+      for(let i = 0; i < types.size; i++){
+        buffMap = buffMap.set(types[i], (buffMap.get(types[i]) || 0) + 1);
+      }
+    } else { // Value
+      buffMap = buffMap.set(types, (buffMap.get(types) || 0) + 1);
+    }
+    tempUnit = boardKeysIter.next();
+  }
+  buffMap = await buffMap;
+  // Find if any bonuses need applying
+  const buffsKeysIter = buffMap.keys();
+  let tempBuff = buffsKeysIter.next();
+  while (!tempBuff.done) {
+    const buff = tempBuff.value;
+    const amountBuff = buffMap.get(buff);
+    
+    tempBuff = buffsKeysIter.next();
+  }
+  // Apply buff
+  const boardKeysIter2 = board.keys();
+  tempUnit = boardKeysIter2.next();
+  let newBoard = board;
+  while (!tempUnit.done) {
+    const unitPos = tempUnit.value;
+    let buff = List([]);
+    
+
+    newBoard = newBoard.setIn([unitPos, 'buff'], buff);
+    tempUnit = boardKeysIter2.next();
   }
   return newBoard;
 }
@@ -675,7 +715,6 @@ async function setRandomFirstMove(board) {
  * }
  */
 async function prepareBattle(stateParam, pairing) {
-  // TODO: Combine boards, mark players units as valid or not
   const state = stateParam;
   const board1 = state.getIn(['players', pairing.get('homeID'), 'board']);
   const board2 = state.getIn(['players', pairing.get('enemyID'), 'board']);
@@ -726,7 +765,8 @@ async function prepareBattle(stateParam, pairing) {
   }
   const board = await newBoard;
   //f.print(board, '@prepareBattle')
-  const boardWithMovement = await setRandomFirstMove(board);
+  const boardWithBonuses = await markBoardBonuses(board);
+  const boardWithMovement = await setRandomFirstMove(boardWithBonuses);
   const result = await startBattle(boardWithMovement);
   return result.set('startBoard', boardWithMovement);
 }
@@ -736,7 +776,7 @@ async function prepareBattle(stateParam, pairing) {
  * * Assumes board contains every player's updated board
  */
 async function battleTime(stateParam) {
-  // TODO: Randomize opponent pairs
+  // TODO: Randomize opponent pairs, shuffle indexes before iterator
   // Temp: Always face next player in order
   let state = stateParam;
   const playerIter = state.get('players').keys();
@@ -758,13 +798,13 @@ async function battleTime(stateParam) {
     //console.log('@battleTime pairing: ', pairing, nextPlayer);
     const result = prepareBattle(state, pairing);
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
-    // Send actionStack to frontend and startBoard
-    // TODO:  resultBattle.get('actionStack');
+    // TODO:  Send actionStack to frontend and startBoard
+    //        resultBattle.get('actionStack');
     //        resultBattle.get('startBoard')
     const resultBattle = await result;
     // console.log('\n@battleTime - ', resultBattle);
     const winner = (resultBattle.get('winner') === 0);
-    const newBoard = resultBattle.get('board'); // TODO: Check, where should we use this?
+    const newBoard = resultBattle.get('board'); // TODO: Check, where to use this?
     const newStateAfterBattle = await endBattle(state, index, winner, enemy);
     state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
     if (iter.done) {
@@ -778,7 +818,6 @@ async function battleTime(stateParam) {
 }
 
 /**
- * TODO
  * *This is not a player made action, time based event for all players
  * *When last battle is over this method shall be called
  * Increase players exp by 1
@@ -786,7 +825,7 @@ async function battleTime(stateParam) {
  * Gold:
  *  Interest for 10 gold
  *  Increasing throughout the game basic income
- *  Win streak / lose streak (TODO)
+ *  Win streak / lose streak
  */
 async function endTurn(stateParam) {
   let state = stateParam;
@@ -823,7 +862,7 @@ async function playerEndTurn(stateParam, amountPlayers, income_basic) {
     // console.log(i, '\n', state.get('pieces').get(0));
     // state = state.set(i, state.getIn(['players', i]));
   }
-  const newState = await state; // Promise.all TODO
+  const newState = await state;
   return newState;
 }
 
