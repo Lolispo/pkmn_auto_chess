@@ -28,7 +28,7 @@ const placePiece = fileModule.__get__('placePiece');
 const checkPieceUpgrade = fileModule.__get__('checkPieceUpgrade');
 const checkHandUnit = fileModule.__get__('checkHandUnit');
 const discardBaseUnits = fileModule.__get__('discardBaseUnits');
-
+const battleTime = fileModule.__get__('battleTime');
 const withdrawPiece = fileModule.__get__('withdrawPiece');
 
 
@@ -294,13 +294,24 @@ describe('game state', () => {
     */
   describe('removeHp', () => {
     it('removeHp default?', async () => {
-      // TODO
+      let state = initEmptyState(2);
+      state = await removeHp(state, 0, 5);
+      assert.equal(state.getIn(['players', 0, 'hp']), 95);
     });
     it('removeHp player defeated (not game over)?', async () => {
-      // TODO
+      let state = initEmptyState(3);
+      state = state.setIn(['players', 0, 'hp'], 5);
+      state = await removeHp(state, 0, 5);
+      assert.equal(state.getIn(['players', 0]), undefined);
+      assert.equal(state.get('amountOfPlayers'), 2);
     });
     it('removeHp player defeated gameOver?', async () => {
       // TODO
+      let state = initEmptyState(2);
+      state = state.setIn(['players', 0, 'hp'], 5);
+      state = await removeHp(state, 0, 5);
+      assert.equal(state.getIn(['players', 0]), undefined);
+      assert.equal(state.get('amountOfPlayers'), 1);
     });
   });
 
@@ -318,6 +329,8 @@ describe('game state', () => {
       state = await placePiece(state, 0, f.getPos(1,1), f.getPos(4,4));
       const board = state.getIn(['players', 0, 'board'])
       assert.equal(board.get(f.getPos(4,4)).get('name'), unit);
+      assert.equal(board.get(f.getPos(4,4)).get('position').get('x'), 4);
+      assert.equal(board.get(f.getPos(4,4)).get('position').get('y'), 4);
       assert.equal(board.get(f.getPos(1,1)), undefined);
     });
     it('placePiece on board to hand?', async () => {
@@ -377,7 +390,22 @@ describe('game state', () => {
       assert.equal(board.get(f.getPos(1,1)), undefined);
     });
     it('checkPieceUpgrade 3 level 2 units?', async () => {
-      // TODO     
+      let state = initEmptyState(2);
+      const unit = getBoardUnit('pikachu2', 2, 2)
+      const newBoard = Map({})
+      .set(f.getPos(1,1), getBoardUnit('pikachu2', 1, 1))
+      .set(f.getPos(1,2), getBoardUnit('pikachu2', 1, 2))
+      .set(f.getPos(1,3), getBoardUnit('pikachu', 1, 3))
+      .set(f.getPos(1,4), getBoardUnit('pikachu', 1, 4))
+      .set(f.getPos(2,2), unit);
+      state = state.setIn(['players', 0, 'board'], newBoard);
+      state = await checkPieceUpgrade(state, 0, unit, f.getPos(2,2));
+      const board = state.getIn(['players', 0, 'board'])
+      assert.equal(board.get(f.getPos(2,2)).get('name'), 'raichu');
+      assert.equal(board.get(f.getPos(1,2)), undefined);
+      assert.equal(board.get(f.getPos(1,1)), undefined); 
+      assert.equal(board.get(f.getPos(1,3)).get('name'), 'pikachu'); 
+      assert.equal(board.get(f.getPos(1,4)).get('name'), 'pikachu'); 
     });
   });
   describe('checkHandUnit', () => {
@@ -385,10 +413,10 @@ describe('game state', () => {
      * Given a position, returns if it is on hand or board
      */
     it('checkHandUnit hand unit?', async () => {
-      // TODO     
+      assert.equal(checkHandUnit(f.getPos(2)), true);
     });
     it('checkHandUnit board unit?', async () => {
-      // TODO     
+      assert.equal(checkHandUnit(f.getPos(2,2)), false);
     });
   });
   describe('discardBaseUnits', () => {
@@ -679,8 +707,17 @@ describe('game state', () => {
     it('battleTime TODO big time', async () => {
       let state = initEmptyState(2);
       state = await refreshShop(state, 0);
+      state = await refreshShop(state, 1);
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
+      state = await endTurn(state);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.getPos(0), f.getPos(1,1))
+      state = await placePiece(state, 0, f.getPos(1), f.getPos(2,2))
+      state = await placePiece(state, 1, f.getPos(0), f.getPos(1,1))
+      state = await placePiece(state, 1, f.getPos(1), f.getPos(2,2))
+      state = await battleTime(state);
     });
   });
 });
