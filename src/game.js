@@ -6,6 +6,7 @@ const pokemonJS = require('./pokemon');
 const deckJS = require('./deck');
 const f = require('./f');
 const playerJS = require('./player');
+const typesJS = require('./types');
 const stateLogicJS = require('./state_logic');
 const gameConstantsJS = require('./game_constants');
 
@@ -220,7 +221,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   }
   if (pieceCounter >= 3) { // Upgrade unit @ position
     let board = state.getIn(['players', playerIndex, 'board']);
-    for(let i = 0; i < positions.size; i++){
+    for (let i = 0; i < positions.size; i++) {
       board = board.delete(positions.get(i));
     }
     state = state.setIn(['players', playerIndex, 'board'], board);
@@ -248,7 +249,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     const newHand = state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'hand'], newHand);
   } else { // from board
-    piece = state.getIn(['players', playerIndex, 'board', fromPosition]).set('position', toPosition);;
+    piece = state.getIn(['players', playerIndex, 'board', fromPosition]).set('position', toPosition);
     const newBoard = state.getIn(['players', playerIndex, 'board']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'board'], newBoard);
   }
@@ -398,13 +399,13 @@ function getMovePos(board, closestEnemyPos, range, team) {
  * Map({closestEnemy, withinRange})
  */
 function getClosestEnemy(board, unitPos, range, team) {
-  //f.print(board, '@getClosestEnemy board')
+  // f.print(board, '@getClosestEnemy board')
   const x = unitPos.get('x');
   const y = unitPos.get('y');
   const enemyTeam = 1 - team;
   for (let i = 1; i <= 8; i++) {
     const withinRange = i <= range;
-    //console.log(withinRange, x, y, i, (x-i), (y-i))
+    // console.log(withinRange, x, y, i, (x-i), (y-i))
     for (let j = x - i; j <= x + i; j++) {
       if (!f.isUndefined(board.get(f.getPos(j, y - i))) && board.get(f.getPos(j, y - i)).get('team') === enemyTeam) { // SW
         return Map({ closestEnemy: f.getPos(j, y - i), withinRange });
@@ -424,26 +425,6 @@ function getClosestEnemy(board, unitPos, range, team) {
   console.log('@getClosestEnemy Returning undefined: ', x, y, range, team);
   return undefined;
 }
-/**
-    if (!f.isUndefined(board.get(f.getPos(x, y + i))) && board.get(f.getPos(x, y + i)).get('team') === enemyTeam) { // N
-      return Map({ closestEnemy: f.getPos(x, y + i), withinRange });
-    } if (!f.isUndefined(board.get(f.getPos(x + i, y))) && board.get(f.getPos(x + i, y)).get('team') === enemyTeam) { // E
-      return Map({ closestEnemy: f.getPos(x + i, y), withinRange });
-    } if (!f.isUndefined(board.get(f.getPos(x, y - i))) && board.get(f.getPos(x, y - i)).get('team') === enemyTeam) { // S
-      return Map({ closestEnemy: f.getPos(x, y - i), withinRange });
-    } if (!f.isUndefined(board.get(f.getPos(x - i, y))) && board.get(f.getPos(x - i, y)).get('team') === enemyTeam) { // W
-      return Map({ closestEnemy: f.getPos(x - i, y), withinRange });
-    } if (!f.isUndefined(board.get(f.getPos(x + i, y + i))) && board.get(f.getPos(x + i, y + i)).get('team') === enemyTeam) { // NE
-      return Map({ closestEnemy: f.getPos(x + i, y + i), withinRange });
-    } if (!f.isUndefined(board.get(f.getPos(x + i, y - i))) && board.get(f.getPos(x + i, y - i)).get('team') === enemyTeam) { // SE
-      return Map({ closestEnemy: f.getPos(x + i, y - i), withinRange });
-    } if (!f.isUndefined(board.get(f.getPos(x - i, y - i))) && board.get(f.getPos(x - i, y - i)).get('team') === enemyTeam) { // SW
-      return Map({ closestEnemy: f.getPos(x - i, y - i), withinRange });
-    } if (!f.isUndefined(board.get(f.getPos(x - i, y + i))) && board.get(f.getPos(x - i, y + i)).get('team') === enemyTeam) { // NW
-      return Map({ closestEnemy: f.getPos(x - i, y + i), withinRange });
-    }
-*/
-
 
 /**
  * Remove hp from unit
@@ -453,12 +434,13 @@ function getClosestEnemy(board, unitPos, range, team) {
 async function removeHpBattle(board, unitPos, hpToRemove) {
   const currentHp = board.getIn([unitPos, 'hp']);
   if (currentHp - hpToRemove <= 0) {
-    console.log('@removeHpBattle UNIT DIED!', currentHp, '-', hpToRemove)
+    console.log('@removeHpBattle UNIT DIED!', currentHp, '-', hpToRemove);
     return Map({ board: board.delete(unitPos), unitDied: true });
   }
-  if(isNaN(currentHp - hpToRemove)){
-    console.log('Exiting ... ', currentHp, hpToRemove, board.get(unitPos))
-    process.exit()
+  // Caused a crash
+  if (isNaN(currentHp - hpToRemove)) {
+    console.log('Exiting ... ', currentHp, hpToRemove, board.get(unitPos));
+    process.exit();
   }
   return Map({ board: board.setIn([unitPos, 'hp'], currentHp - hpToRemove), unitDied: false });
 }
@@ -500,8 +482,10 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     let targetPos;
     if (!f.isUndefined(optPreviousTarget)) {
       targetPos = Map({ closestEnemy: optPreviousTarget, withinRange: true });
+      // console.log('Using previous target', optPreviousTarget)
     } else {
       targetPos = getClosestEnemy(board, unitPos, range, team);
+      // console.log('targeting new enemy')
     }
     const enemyPos = targetPos; // await
     // console.log('@nextMove enemyPos', enemyPos)
@@ -510,7 +494,6 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       const value = unit.get('attack');
       const target = enemyPos.get('closestEnemy');
       // TODO: Add weakness/resistance types between attacker/defender
-      // TODO: Check bonuses from players
       // Calculate newBoard from action
       const removedHPBoard = await removeHpBattle(board, target, value); // {board, unitDied}
       if (removedHPBoard.get('unitDied')) { // Check if battle ends
@@ -525,13 +508,29 @@ async function nextMove(board, unitPos, optPreviousTarget) {
           }
           tempUnit = keysIter.next();
         }
-        f.printBoard(newBoard, Map({ unitPos, action, value, target }));
-        return Map({ nextMove: Map({ unitPos, action, value, target }), newBoard, battleOver });
+        f.printBoard(newBoard, Map({
+          unitPos, action, value, target,
+        }));
+        return Map({
+          nextMove: Map({
+            unitPos, action, value, target,
+          }),
+          newBoard,
+          battleOver,
+        });
       } // Mana increase, return newBoard
       const newBoard = manaIncrease(removedHPBoard.get('board'), unitPos, target);
       // console.log('new hp for ' + target, removedHPBoard.get('board').get(target).get('hp'));
-      f.printBoard(newBoard, Map({ unitPos, action, value, target }));
-      return Map({ nextMove: Map({ unitPos, action, value, target }), newBoard, allowSameMove: true});
+      f.printBoard(newBoard, Map({
+        unitPos, action, value, target,
+      }));
+      return Map({
+        nextMove: Map({
+          unitPos, action, value, target,
+        }),
+        newBoard,
+        allowSameMove: true,
+      });
     } // Move action
     const closestEnemyPos = enemyPos.get('closestEnemy');
     const movePos = getMovePos(board, closestEnemyPos, range, team);
@@ -546,7 +545,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
  * Returns position of unit with the next move
  */
 async function getUnitWithNextMove(board) {
-  //console.log('@getUnitWithNextMove',board)
+  // console.log('@getUnitWithNextMove',board)
   const boardKeysIter = board.keys();
   let tempUnit = boardKeysIter.next();
   let lowestNextMove = List([tempUnit.value]);
@@ -582,7 +581,7 @@ async function startBattle(boardParam) {
   let actionStack = List([]);
   let unitMoveMap = Map({});
   let board = boardParam;
-  //f.print(board, '@startBattle')
+  // f.print(board, '@startBattle')
   let result = Map({});
   // TODO First move for all units first
   // Remove first_move from all units when doing first movement
@@ -591,40 +590,46 @@ async function startBattle(boardParam) {
     board = await board;
     const nextUnitToMove = await getUnitWithNextMove(board);
     const unit = board.get(nextUnitToMove);
-    //console.log('\n@startbattle Next unit to do action: ', nextUnitToMove); 
+    // console.log('\n@startbattle Next unit to do action: ', nextUnitToMove);
     const nextMoveBoard = board.setIn([nextUnitToMove, 'next_move'], +unit.get('next_move') + +unit.get('speed'));
     const previousMove = unitMoveMap.get(nextUnitToMove);
+    // console.log(' --- ', (f.isUndefined(previousMove) ? '' : previousMove.get('nextMove').get('target')), nextUnitToMove)
     let nextMoveResult;
     if (!f.isUndefined(previousMove)) { // Use same target as last round
-      //console.log('previousMove in @startBattle', previousMove.get('nextMove').get('target'))
+      // console.log('previousMove in @startBattle', previousMove.get('nextMove').get('target'));
       const previousTarget = previousMove.get('nextMove').get('target');
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove, previousTarget);
     } else {
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove);
     }
     result = await nextMoveResult;
-    //console.log('@startBattle: ', result.get('nextMove'))
+    // console.log('@startBattle: ', result.get('nextMove'))
     /*
     if(result.get('nextMove').get('action') === 'attack'){
       process.exit()
-    }*/
+    } */
     actionStack = actionStack.push(result.get('nextMove').set('time', unit.get('next_move')));
     if (result.get('allowSameMove')) { // Attack on target in same position for example
       unitMoveMap = unitMoveMap.set(nextUnitToMove, nextMoveResult);
+      // console.log(' allowing same move, setting for', nextUnitToMove, unitMoveMap.get(nextUnitToMove).get('nextMove').get('target'))
     } else {
       // Delete every key mapping to nextMoveResult
+      // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
       const keysIter = unitMoveMap.keys();
       let tempUnit = keysIter.next();
       while (!tempUnit.done) {
         const tempPrevMove = unitMoveMap.get(tempUnit.value);
-        if(tempPrevMove.get('target') === nextMoveResult.get('target')){
-          unitMoveMap = unitMoveMap.delete(tempUnit.value)
+        const target = tempPrevMove.get('nextMove').get('target');
+        const invalidPrevTarget = nextMoveResult.get('nextMove').get('target');
+        if (target.get('x') === invalidPrevTarget.get('x') && target.get('y') === invalidPrevTarget.get('y')) {
+          unitMoveMap = await unitMoveMap.delete(tempUnit.value);
+          // console.log('Deleting prevMove for: ', tempUnit.value, nextMoveResult.get('nextMove').get('target'))
         }
         tempUnit = keysIter.next();
       }
     // unitMoveMap = unitMoveMap.delete(nextUnitToMove);
     }
-    //console.log('@startBattle 2 -', result.get('newBoard'))
+    // console.log('@startBattle 2 -', result.get('newBoard'))
     board = result.get('newBoard');
   }
   const newBoard = await board;
@@ -654,10 +659,10 @@ async function setRandomFirstMove(board) {
     // Temp: 0.5
     const isMoving = Math.random() > 0.5;
     if (isMoving) {
-      // TODO Make logical movement calculation, 
+      // TODO Make logical movement calculation,
       // Approved Temp: currently starts default spot, makes no firstmove
     }
-    //console.log('\n@setRandomFirstMove', board)
+    // console.log('\n@setRandomFirstMove', board)
     newBoard = newBoard.setIn([unitPos, 'first_move'], newPos);
     tempUnit = boardKeysIter.next();
   }
@@ -666,17 +671,17 @@ async function setRandomFirstMove(board) {
 
 /**
  * Give bonuses from types
+ * Type bonus is either only for those of that type or all units
  */
-async function markBoardBonuses(board){
-  return board; // TODO Finish implementation
+async function markBoardBonuses(board) {
   const boardKeysIter = board.keys();
   let tempUnit = boardKeysIter.next();
   let buffMap = Map({});
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const types = board.get(unitPos).get('type'); // Value or List
-    if(f.isUndefined(types.size)) { // List 
-      for(let i = 0; i < types.size; i++){
+    if (f.isUndefined(types.size)) { // List
+      for (let i = 0; i < types.size; i++) {
         buffMap = buffMap.set(types[i], (buffMap.get(types[i]) || 0) + 1);
       }
     } else { // Value
@@ -685,14 +690,23 @@ async function markBoardBonuses(board){
     tempUnit = boardKeysIter.next();
   }
   buffMap = await buffMap;
+  let typeBuffMapSolo = Map({}); // Solo buffs, only for that type
+  let typeBuffMapAll = Map({}); // For all buff
   // Find if any bonuses need applying
   const buffsKeysIter = buffMap.keys();
   let tempBuff = buffsKeysIter.next();
   while (!tempBuff.done) {
     const buff = tempBuff.value;
     const amountBuff = buffMap.get(buff);
-    // TODO: Types
-    // if(amountBuff >= typesJS.)
+    for (let i = 1; i <= 3; i++) {
+      if (amountBuff >= typesJS.getTypeReq(buff, i)) {
+        if (typesJS.isSoloBuff(buff)) {
+          typeBuffMapSolo = typeBuffMapSolo.set(buff, (typeBuffMapSolo.get(buff) || 0) + typesJS.getBonusAmount(buff, i));
+        } else {
+          typeBuffMapAll = typeBuffMapAll.set(buff, (typeBuffMapAll.get(buff) || 0) + typesJS.getBonusAmount(buff, i));
+        }
+      }
+    }
     tempBuff = buffsKeysIter.next();
   }
   // Apply buff
@@ -701,10 +715,34 @@ async function markBoardBonuses(board){
   let newBoard = board;
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
-    let buff = List([]);
-    
-
-    newBoard = newBoard.setIn([unitPos, 'buff'], buff);
+    const unit = board.get(unitPos);
+    // Solo buffs
+    const types = board.get(unitPos).get('type'); // Value or List
+    if (f.isUndefined(types.size)) { // List
+      for (let i = 0; i < types.size; i++) {
+        if (f.isUndefined(typeBuffMapSolo.get(types[i]))) {
+          const newUnit = typesJS.getBuffFuncSolo(types[i])(unit, typeBuffMapSolo.get(types[i]))
+            .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types[i]).get('name'))); // Add buff to unit
+          newBoard = await newBoard.set(unitPos, newUnit);
+        }
+      }
+    } else { // Value
+      if (f.isUndefined(typeBuffMapSolo.get(types))) {
+        const newUnit = typesJS.getBuffFuncSolo(types)(unit, typeBuffMapSolo.get(types))
+          .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types).get('name'))); // Add buff to unit
+        newBoard = await newBoard.set(unitPos, newUnit);
+      }
+    }
+    // All buffs
+    const allBuffIter = typeBuffMapAll.keys();
+    let tempBuffAll = allBuffIter.next();
+    while (!tempBuffAll.done) {
+      const buff = tempBuffAll.value;
+      const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), typeBuffMapAll.get(buff))
+        .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(typesJS.getType(buff).get('name'))); // Add buff to unit
+      newBoard = await newBoard.set(unitPos, newUnit);
+      tempBuffAll = boardKeysIter2.next();
+    }
     tempUnit = boardKeysIter2.next();
   }
   return newBoard;
@@ -743,7 +781,7 @@ async function prepareBattle(stateParam, pairing) {
       .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
       .set('ability', unitStats.get('ability'))
       .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))
-      .set('speed', pokemonJS.getStatsDefault('upperLimitSpeed') - (unitStats.get('speed') || pokemonJS.getStatsDefault('speed'))) 
+      .set('speed', pokemonJS.getStatsDefault('upperLimitSpeed') - (unitStats.get('speed') || pokemonJS.getStatsDefault('speed')))
       .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
       .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'));
     newBoard = await newBoard.set(unitPos, unitWithTeam);
@@ -769,8 +807,9 @@ async function prepareBattle(stateParam, pairing) {
     tempUnit = keysIter2.next();
   }
   const board = await newBoard;
-  //f.print(board, '@prepareBattle')
+  // f.print(board, '@prepareBattle')
   const boardWithBonuses = await markBoardBonuses(board);
+  // f.print(boardWithBonuses);
   const boardWithMovement = await setRandomFirstMove(boardWithBonuses);
   const result = await startBattle(boardWithMovement);
   return result.set('startBoard', boardWithMovement);
@@ -800,7 +839,7 @@ async function battleTime(stateParam) {
     const index = currentPlayer;
     const enemy = nextPlayer; // (i === amountOfPlayers - 1 ? 0 : i + 1);
     const pairing = Map({ homeID: index, enemyID: enemy });
-    //console.log('@battleTime pairing: ', pairing, nextPlayer);
+    // console.log('@battleTime pairing: ', pairing, nextPlayer);
     const result = prepareBattle(state, pairing);
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     // TODO:  Send actionStack to frontend and startBoard
