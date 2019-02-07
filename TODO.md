@@ -38,6 +38,8 @@ battle: first movement random, then -> jump to closets target one team at a time
 
 check Promise.all alternative for loops
 
+.has instead of !f.isUndefined
+
 ## Everywhere
 
 Remove unused variables in imports

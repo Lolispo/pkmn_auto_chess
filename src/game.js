@@ -1,6 +1,6 @@
 // Author: Petter Andersson
 
-const { Map, List } = require('immutable');
+const { Map, List, Set } = require('immutable');
 
 const pokemonJS = require('./pokemon');
 const deckJS = require('./deck');
@@ -113,7 +113,7 @@ function getBoardUnit(name, x, y) {
   return Map({
     name,
     display_name: unitInfo.get('display_name'),
-    position: f.getPos(x, y),
+    position: f.pos(x, y),
   });
 }
 
@@ -282,7 +282,7 @@ async function withdrawPiece(state, playerIndex, piecePosition) {
   let benchPosition;
   for (let i = 0; i < 8; i++) {
     // Get first available spot on bench
-    const pos = f.getPos(i);
+    const pos = f.pos(i);
     if (f.isUndefined(hand.get(pos))) {
       benchPosition = pos;
       break;
@@ -351,40 +351,40 @@ function getMovePos(board, closestEnemyPos, range, team) {
   const y = closestEnemyPos.get('y');
   for (let i = range; i >= 1; i--) {
     if (team === 0) { // S team
-      if (f.isUndefined(board.get(f.getPos(x, y - i)))) { // S
-        return f.getPos(x, y - i);
-      } if (f.isUndefined(board.get(f.getPos(x - i, y - i)))) { // SW
-        return f.getPos(x - i, y - i);
-      } if (f.isUndefined(board.get(f.getPos(x + i, y - i)))) { // SE
-        return f.getPos(x + i, y - i);
-      } if (f.isUndefined(board.get(f.getPos(x - i, y)))) { // W
-        return f.getPos(x - i, y);
-      } if (f.isUndefined(board.get(f.getPos(x + i, y)))) { // E
-        return f.getPos(x + i, y);
-      } if (f.isUndefined(board.get(f.getPos(x, y + i)))) { // N
-        return f.getPos(x, y + i);
-      } if (f.isUndefined(board.get(f.getPos(x - i, y + i)))) { // NW
-        return f.getPos(x - i, y + i);
-      } if (f.isUndefined(board.get(f.getPos(x + i, y + i)))) { // NE
-        return f.getPos(x + i, y + i);
+      if (f.isUndefined(board.get(f.pos(x, y - i)))) { // S
+        return f.pos(x, y - i);
+      } if (f.isUndefined(board.get(f.pos(x - i, y - i)))) { // SW
+        return f.pos(x - i, y - i);
+      } if (f.isUndefined(board.get(f.pos(x + i, y - i)))) { // SE
+        return f.pos(x + i, y - i);
+      } if (f.isUndefined(board.get(f.pos(x - i, y)))) { // W
+        return f.pos(x - i, y);
+      } if (f.isUndefined(board.get(f.pos(x + i, y)))) { // E
+        return f.pos(x + i, y);
+      } if (f.isUndefined(board.get(f.pos(x, y + i)))) { // N
+        return f.pos(x, y + i);
+      } if (f.isUndefined(board.get(f.pos(x - i, y + i)))) { // NW
+        return f.pos(x - i, y + i);
+      } if (f.isUndefined(board.get(f.pos(x + i, y + i)))) { // NE
+        return f.pos(x + i, y + i);
       }
     } else { // N team
-      if (f.isUndefined(board.get(f.getPos(x, y + i)))) { // N
-        return f.getPos(x, y + i);
-      } if (f.isUndefined(board.get(f.getPos(x + i, y + i)))) { // NE
-        return f.getPos(x + i, y + i);
-      } if (f.isUndefined(board.get(f.getPos(x - i, y + i)))) { // NW
-        return f.getPos(x - i, y + i);
-      } if (f.isUndefined(board.get(f.getPos(x + i, y)))) { // E
-        return f.getPos(x + i, y);
-      } if (f.isUndefined(board.get(f.getPos(x - i, y)))) { // W
-        return f.getPos(x - i, y);
-      } if (f.isUndefined(board.get(f.getPos(x, y - i)))) { // S
-        return f.getPos(x, y - i);
-      } if (f.isUndefined(board.get(f.getPos(x + i, y - i)))) { // SE
-        return f.getPos(x + i, y - i);
-      } if (f.isUndefined(board.get(f.getPos(x - i, y - i)))) { // SW
-        return f.getPos(x - i, y - i);
+      if (f.isUndefined(board.get(f.pos(x, y + i)))) { // N
+        return f.pos(x, y + i);
+      } if (f.isUndefined(board.get(f.pos(x + i, y + i)))) { // NE
+        return f.pos(x + i, y + i);
+      } if (f.isUndefined(board.get(f.pos(x - i, y + i)))) { // NW
+        return f.pos(x - i, y + i);
+      } if (f.isUndefined(board.get(f.pos(x + i, y)))) { // E
+        return f.pos(x + i, y);
+      } if (f.isUndefined(board.get(f.pos(x - i, y)))) { // W
+        return f.pos(x - i, y);
+      } if (f.isUndefined(board.get(f.pos(x, y - i)))) { // S
+        return f.pos(x, y - i);
+      } if (f.isUndefined(board.get(f.pos(x + i, y - i)))) { // SE
+        return f.pos(x + i, y - i);
+      } if (f.isUndefined(board.get(f.pos(x - i, y - i)))) { // SW
+        return f.pos(x - i, y - i);
       }
     }
   }
@@ -407,17 +407,17 @@ function getClosestEnemy(board, unitPos, range, team) {
     const withinRange = i <= range;
     // console.log(withinRange, x, y, i, (x-i), (y-i))
     for (let j = x - i; j <= x + i; j++) {
-      if (!f.isUndefined(board.get(f.getPos(j, y - i))) && board.get(f.getPos(j, y - i)).get('team') === enemyTeam) { // SW
-        return Map({ closestEnemy: f.getPos(j, y - i), withinRange });
-      } if (!f.isUndefined(board.get(f.getPos(j, y + i))) && board.get(f.getPos(j, y + i)).get('team') === enemyTeam) { // NW
-        return Map({ closestEnemy: f.getPos(j, y + i), withinRange });
+      if (!f.isUndefined(board.get(f.pos(j, y - i))) && board.get(f.pos(j, y - i)).get('team') === enemyTeam) { // SW
+        return Map({ closestEnemy: f.pos(j, y - i), withinRange });
+      } if (!f.isUndefined(board.get(f.pos(j, y + i))) && board.get(f.pos(j, y + i)).get('team') === enemyTeam) { // NW
+        return Map({ closestEnemy: f.pos(j, y + i), withinRange });
       }
     }
     for (let j = y - i + 1; j < y + i; j++) {
-      if (!f.isUndefined(board.get(f.getPos(x - i, j))) && board.get(f.getPos(x - i, j)).get('team') === enemyTeam) { // SW
-        return Map({ closestEnemy: f.getPos(x - i, j), withinRange });
-      } if (!f.isUndefined(board.get(f.getPos(x + i, j))) && board.get(f.getPos(x + i, j)).get('team') === enemyTeam) { // NW
-        return Map({ closestEnemy: f.getPos(x + i, j), withinRange });
+      if (!f.isUndefined(board.get(f.pos(x - i, j))) && board.get(f.pos(x - i, j)).get('team') === enemyTeam) { // SW
+        return Map({ closestEnemy: f.pos(x - i, j), withinRange });
+      } if (!f.isUndefined(board.get(f.pos(x + i, j))) && board.get(f.pos(x + i, j)).get('team') === enemyTeam) { // NW
+        return Map({ closestEnemy: f.pos(x + i, j), withinRange });
       }
     }
   }
@@ -479,15 +479,15 @@ async function nextMove(board, unitPos, optPreviousTarget) {
   } else {
     const range = unit.get('range') || pokemonJS.getStatsDefault('range');
     const team = unit.get('team');
-    let targetPos;
+    let tarpos;
     if (!f.isUndefined(optPreviousTarget)) {
-      targetPos = Map({ closestEnemy: optPreviousTarget, withinRange: true });
+      tarpos = Map({ closestEnemy: optPreviousTarget, withinRange: true });
       // console.log('Using previous target', optPreviousTarget)
     } else {
-      targetPos = getClosestEnemy(board, unitPos, range, team);
+      tarpos = getClosestEnemy(board, unitPos, range, team);
       // console.log('targeting new enemy')
     }
-    const enemyPos = targetPos; // await
+    const enemyPos = tarpos; // await
     // console.log('@nextMove enemyPos', enemyPos)
     if (enemyPos.get('withinRange')) { // Attack action
       const action = 'attack';
@@ -668,107 +668,135 @@ async function setRandomFirstMove(board) {
   }
   return newBoard;
 }
+/*
+  // While temp
+  const iter = map.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+
+    temp = iter.next();
+  }
+*/
+
+/**
+ * Counts unique occurences of piece on board connected to each team
+ * Puts them in a map and returns it
+ * Map({0: Map({grass: 3, fire: 2}), 1: Map({normal: 5})})
+ * Set(['pikachu']) (no more pikachus or raichus)
+ */
+async function countUniqueOccurences(board) {
+  const boardKeysIter = board.keys();
+  let tempUnit = boardKeysIter.next();
+  let buffMap = Map({ 0: Map({}), 1: Map({}) });
+  let unique = Map({ 0: Set([]), 1: Set([]) });
+  while (!tempUnit.done) {
+    const unitPos = tempUnit.value;
+    const unit = board.get(unitPos);
+    const name = unit.get('name');
+    const team = await unit.get('team');
+    // console.log(unique, team, unit, unitPos)
+    // console.log('@countUniqueOccurences', unique.get(String(team)), pokemonJS.getBasePokemon(name))
+    if (!unique.get(String(team)).has(pokemonJS.getBasePokemon(name))) { // TODO: Check
+      const newSet = await unique.get(String(team)).add(name);
+      unique = await unique.set(team, newSet); // Store unique version, only count each once
+      const types = unit.get('type'); // Value or List
+      if (!f.isUndefined(types.size)) { // List
+        for (let i = 0; i < types.size; i++) {
+          buffMap = buffMap.setIn([String(team), types[i]], (buffMap.getIn([String(team), types[i]]) || 0) + 1);
+        }
+      } else { // Value
+        buffMap = buffMap.setIn([String(team), types], (buffMap.getIn([String(team), types]) || 0) + 1);
+        // console.log('adding type occurence', name, team, buffMap.getIn([String(team), types]))
+      }
+    }
+    tempUnit = boardKeysIter.next();
+  }
+  return buffMap;
+}
 
 /**
  * Give bonuses from types
  * Type bonus is either only for those of that type or all units
  */
 async function markBoardBonuses(board) {
-  const boardKeysIter = board.keys();
-  let tempUnit = boardKeysIter.next();
-  let buffMap = Map({});
-  while (!tempUnit.done) {
-    const unitPos = tempUnit.value;
-    const types = board.get(unitPos).get('type'); // Value or List
-    if (f.isUndefined(types.size)) { // List
-      for (let i = 0; i < types.size; i++) {
-        buffMap = buffMap.set(types[i], (buffMap.get(types[i]) || 0) + 1);
-      }
-    } else { // Value
-      buffMap = buffMap.set(types, (buffMap.get(types) || 0) + 1);
-    }
-    tempUnit = boardKeysIter.next();
-  }
-  buffMap = await buffMap;
-  let typeBuffMapSolo = Map({}); // Solo buffs, only for that type
-  let typeBuffMapAll = Map({}); // For all buff
+  const buffMap = await countUniqueOccurences(board);
+
+  // Map({0: Map({grass: 40})})
+  let typeBuffMapSolo = Map({ 0: Map({}), 1: Map({}) }); // Solo buffs, only for that type
+  let typeBuffMapAll = Map({ 0: Map({}), 1: Map({}) }); // For all buff
   // Find if any bonuses need applying
-  const buffsKeysIter = buffMap.keys();
-  let tempBuff = buffsKeysIter.next();
-  while (!tempBuff.done) {
-    const buff = tempBuff.value;
-    const amountBuff = buffMap.get(buff);
-    for (let i = 1; i <= 3; i++) {
-      if (amountBuff >= typesJS.getTypeReq(buff, i)) {
-        if (typesJS.isSoloBuff(buff)) {
-          typeBuffMapSolo = typeBuffMapSolo.set(buff, (typeBuffMapSolo.get(buff) || 0) + typesJS.getBonusAmount(buff, i));
+  for (let i = 0; i <= 1; i++) {
+    const buffsKeysIter = buffMap.get(String(i)).keys();
+    let tempBuff = buffsKeysIter.next();
+    while (!tempBuff.done) {
+      const buff = tempBuff.value;
+      const amountBuff = buffMap.get(String(i)).get(buff);
+      for (let j = 1; j <= 3; j++) {
+        if (amountBuff >= typesJS.getTypeReq(buff, j)) {
+          // console.log('@markBoardBonuses', amountBuff, typesJS.getTypeReq(buff, i))
+          if (typesJS.isSoloBuff(buff)) {
+            typeBuffMapSolo = typeBuffMapSolo.setIn([String(i), buff], (typeBuffMapSolo.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+          } else {
+            typeBuffMapAll = typeBuffMapAll.setIn([String(i), buff], (typeBuffMapAll.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+          }
         } else {
-          typeBuffMapAll = typeBuffMapAll.set(buff, (typeBuffMapAll.get(buff) || 0) + typesJS.getBonusAmount(buff, i));
+          break;
         }
       }
+      tempBuff = buffsKeysIter.next();
     }
-    tempBuff = buffsKeysIter.next();
   }
+
   // Apply buff
-  const boardKeysIter2 = board.keys();
-  tempUnit = boardKeysIter2.next();
+  const boardKeysIter = board.keys();
+  tempUnit = boardKeysIter.next();
   let newBoard = board;
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);
+    const team = unit.get('team');
     // Solo buffs
     const types = board.get(unitPos).get('type'); // Value or List
-    if (f.isUndefined(types.size)) { // List
+    if (!f.isUndefined(types.size)) { // List
       for (let i = 0; i < types.size; i++) {
-        if (f.isUndefined(typeBuffMapSolo.get(types[i]))) {
-          const newUnit = typesJS.getBuffFuncSolo(types[i])(unit, typeBuffMapSolo.get(types[i]))
+        if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types[i]))) {
+          const newUnit = typesJS.getBuffFuncSolo(types[i])(unit, typeBuffMapSolo.get(String(team)).get(types[i]))
             .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types[i]).get('name'))); // Add buff to unit
           newBoard = await newBoard.set(unitPos, newUnit);
         }
       }
     } else { // Value
-      if (f.isUndefined(typeBuffMapSolo.get(types))) {
-        const newUnit = typesJS.getBuffFuncSolo(types)(unit, typeBuffMapSolo.get(types))
+      // console.log(typeBuffMapSolo.get(String(team)), typeBuffMapSolo.get(String(team)).get(types), types, team)
+      if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types))) {
+        // console.log(typesJS.getBuffFuncSolo(types))
+        const newUnit = typesJS.getBuffFuncSolo(types)(unit, typeBuffMapSolo.get(String(team)).get(types))
           .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types).get('name'))); // Add buff to unit
         newBoard = await newBoard.set(unitPos, newUnit);
       }
     }
+
     // All buffs
-    const allBuffIter = typeBuffMapAll.keys();
-    let tempBuffAll = allBuffIter.next();
-    while (!tempBuffAll.done) {
-      const buff = tempBuffAll.value;
-      const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), typeBuffMapAll.get(buff))
-        .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(typesJS.getType(buff).get('name'))); // Add buff to unit
-      newBoard = await newBoard.set(unitPos, newUnit);
-      tempBuffAll = boardKeysIter2.next();
+    for (let i = 0; i <= 1; i++) {
+      const allBuffIter = typeBuffMapAll.get(String(i)).keys();
+      let tempBuffAll = allBuffIter.next();
+      while (!tempBuffAll.done) {
+        const buff = tempBuffAll.value;
+        const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), typeBuffMapAll.get(String(i)).get(buff))
+          .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(typesJS.getType(buff).get('name'))); // Add buff to unit
+        newBoard = await newBoard.set(unitPos, newUnit);
+        tempBuffAll = allBuffIter.next();
+      }
     }
-    tempUnit = boardKeysIter2.next();
+    tempUnit = boardKeysIter.next();
   }
   return newBoard;
 }
 
 /**
- * Spawn opponent in reverse board
- * Mark owners of units
- * Start battle
- * pairing: {
- *  homeID: 1,
- *  enemyID: 0
- * }
+ * Combines two boards into one for battle
+ * Adds all relevant stats for the unit to the unit
  */
-async function prepareBattle(stateParam, pairing) {
-  const state = stateParam;
-  const board1 = state.getIn(['players', pairing.get('homeID'), 'board']);
-  const board2 = state.getIn(['players', pairing.get('enemyID'), 'board']);
-  // Check to see if a battle is required
-  // Lose when empty, even if enemy no units aswell (tie with no damage taken)
-  if (board1.size === 0) {
-    return Map({ actionStack: List([]), winner: 1 });
-  } if (board2.size === 0) {
-    return Map({ actionStack: List([]), winner: 0 });
-  }
-  // Both players have units, battle required
+async function combineBoards(board1, board2) {
   const keysIter = board1.keys();
   let tempUnit = keysIter.next();
   let newBoard = Map({});
@@ -806,7 +834,32 @@ async function prepareBattle(stateParam, pairing) {
     newBoard = await newBoard.set(newUnitPos, newUnitWithTeam);
     tempUnit = keysIter2.next();
   }
-  const board = await newBoard;
+  return newBoard;
+}
+
+/**
+ * Spawn opponent in reverse board
+ * Mark owners of units
+ * Start battle
+ * pairing: {
+ *  homeID: 1,
+ *  enemyID: 0
+ * }
+ */
+async function prepareBattle(stateParam, pairing) {
+  const state = stateParam;
+  const board1 = state.getIn(['players', pairing.get('homeID'), 'board']);
+  const board2 = state.getIn(['players', pairing.get('enemyID'), 'board']);
+  // Check to see if a battle is required
+  // Lose when empty, even if enemy no units aswell (tie with no damage taken)
+  if (board1.size === 0) {
+    return Map({ actionStack: List([]), winner: 1 });
+  } if (board2.size === 0) {
+    return Map({ actionStack: List([]), winner: 0 });
+  }
+
+  // Both players have units, battle required
+  const board = await combineBoards(board1, board2);
   // f.print(board, '@prepareBattle')
   const boardWithBonuses = await markBoardBonuses(board);
   // f.print(boardWithBonuses);

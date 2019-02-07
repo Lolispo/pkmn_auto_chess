@@ -2,7 +2,7 @@
 
 
 const { Map } = require('immutable');
-
+const f = require('./f');
 /**
  * Default stat variables that are used if nothing is found in specific def
  */
@@ -18,6 +18,17 @@ const defaultStat = Map({
 });
 
 exports.getStatsDefault = stat => defaultStat.get(stat);
+
+const getBasePokemonLocal = (name) => {
+  const unitStats = pokemonMap.get(name.toLowerCase());
+  if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
+    return unitStats.get('name');
+  }
+  // Go down a level
+  return getBasePokemonLocal(unitStats.get('evolution_from').get('name'));
+};
+
+exports.getBasePokemon = name => getBasePokemonLocal(name);
 
 /**
  * ☆ = &#9734;
@@ -146,6 +157,26 @@ const pokemonMap = new Map({
     hp: 50,
     ability: 'quickattack',
     evolves_from: 'raticate2',
+  }),
+  spearow: Map({
+    name: 'spearow',
+    display_name: 'Spearow☆',
+    type: 'normal',
+    cost: '1',
+    attack: 9,
+    hp: 50,
+    ability: 'gust',
+    evolves_to: 'fearow',
+  }),
+  fearow: Map({
+    name: 'fearow',
+    display_name: 'Fearow☆',
+    type: 'normal',
+    cost: '3',
+    attack: 20,
+    hp: 90,
+    ability: 'gust',
+    evolves_from: 'spearow',
   }),
   pikachu: Map({
     name: 'pikachu',

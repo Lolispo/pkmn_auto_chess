@@ -5,8 +5,8 @@ const { Map, List } = require('immutable');
 const f = require('./f');
 
 const increaseSpeed = (unit, bonus) => unit.set('speed', unit.get('speed') - bonus); // Lower speed = better
-const increaseHp = (unit, bonus) => unit.set('hp', unit.get('hp') + bonus);
-const increaseAttack = (unit, bonus) => unit.set('attack', unit.get('attack') + bonus);
+const increaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') + +bonus);
+const increaseAttack = (unit, bonus) => unit.set('attack', +unit.get('attack') + +bonus);
 
 /**
  * req: Required amount of units to receive bonus
@@ -42,8 +42,8 @@ const typeMap = new Map({
     bonusAmount: List([15, 30, 45]),
     allBonus: (unit, bonus) => increaseAttack(unit, bonus),
   }),
-  electricity: Map({
-    name: 'electricity',
+  electric: Map({
+    name: 'electric',
     desc: 'Increases speed for all',
     req: List([3, 6, 9]),
     bonusAmount: List([20, 40, 60]),
@@ -53,7 +53,7 @@ const typeMap = new Map({
 
 exports.getType = name => typeMap.get(name);
 
-exports.getBonus = (name, level) => typeMap.get(name).get('bonusAmount').get(level - 1);
+exports.getBonusAmount = (name, level) => typeMap.get(name).get('bonusAmount').get(level - 1);
 
 exports.getBuffFuncSolo = name => typeMap.get(name).get('bonus');
 

@@ -5,7 +5,7 @@ const { Map } = require('immutable');
 exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
 
 // exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal version
-exports.print = (obj, msg='') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
+exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
 
 exports.printBoard = async (boardParam, moveParam) => {
   const board = await boardParam;
@@ -38,7 +38,7 @@ exports.printBoard = async (boardParam, moveParam) => {
  *   y (if missing -> is on hand, outside of the board)
  * }
  */
-exports.getPos = (x, y) => {
+exports.pos = (x, y) => {
   if (y === undefined) {
     return Map({ x });
   }
