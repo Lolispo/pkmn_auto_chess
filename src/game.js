@@ -558,8 +558,10 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     // console.log('@nextMove enemyPos', enemyPos)
     if (enemyPos.get('withinRange')) { // Attack action
       const action = 'attack';
-      const value = unit.get('attack');
       const target = enemyPos.get('closestEnemy');
+      // Temp: (TODO: Decide) Primary type is attacker type
+      const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type')); 
+      const value = await calcDamage(unit.get('attack'), target.get('defense'), attackerType, enemyPos.get('type')); 
       // TODO: Add weakness/resistance types between attacker/defender
       // Calculate newBoard from action
       const removedHPBoard = await removeHpBattle(board, target, value); // {board, unitDied}
