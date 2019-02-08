@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 
-const { Map, List } = require('immutable');
+const { Map, List, fromJS } = require('immutable');
 const f = require('./f');
 /**
  * Default stat variables that are used if nothing is found in specific def
@@ -31,8 +31,24 @@ const getBasePokemonLocal = (name) => {
 exports.getBasePokemon = name => getBasePokemonLocal(name);
 
 /**
+ * Convert type, either string or stringArray to string / immutable list
+ * "[grass, poison]" input
+ * ['grass', 'poison'] output
+ * grass input => grass output
+ */
+exports.getType = string => {
+  if(string.charAt(0) === '['){ // 
+    const stringToSplit = string.substring(1, string.length - 1); // Remove outer []
+    const strings = stringToSplit.split(','); // List over strings
+    return fromJS(strings); // Convert to Immutable List([])
+  }
+  return string;
+}
+
+/**
  * ☆ = &#9734;
  * Level is same as cost
+ * TODO: Add read from json file
  */
 const pokemonMap = new Map({
   bulbasaur: Map({

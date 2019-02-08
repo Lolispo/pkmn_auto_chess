@@ -254,7 +254,13 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     }
     state = state.setIn(['players', playerIndex, 'board'], board);
     const evolvesTo = pokemonJS.getStats(name).get('evolves_to');
-    const newPiece = getBoardUnit(evolvesTo, position.get('x'), position.get('y'));
+    // Check if multiple evolutions exist, random between
+    let newPiece;
+    if (!f.isUndefined(evolvesTo.size)) { // List
+      newPiece = await getBoardUnit(evolvesTo.get(f.getRandomInt(evolvesTo.size)), position.get('x'), position.get('y'));
+    } else { // Value
+      newPiece = await getBoardUnit(evolvesTo, position.get('x'), position.get('y'));
+    }
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
   }
   return state;
@@ -483,6 +489,39 @@ async function manaIncrease(board, unitPos, enemyPos) {
   const unitManaInc = board.get(unitPos).get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given');
   const enemyManaInc = board.get(enemyPos).get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken');
   return board.setIn([unitPos, 'mana'], +unitMana + +unitManaInc).setIn([enemyPos, 'mana'], +enemyMana + +enemyManaInc);
+}
+
+/**
+ * Returns type factor for attack
+ * 2 if attackType is effective against defenseType
+ * 0.5 if defenseType is resistance against attackType
+ */
+async function calcTypeFactor(attackType, defenseType){
+  return typesJS.isStrongAgainst(attackerType, defenseType) * typesJS.isIneffectiveAgainst(attackType, defenseType);
+}
+
+/**
+ * Calculate amount of damage to be dealt to defender
+ * Take defense of defender into account
+ * Take type differences into account
+ * Calculate factor against both defending types (if super effective against both, 4x damage)
+ * Attack should use one type, main one preferrbly
+ * Temp: Assumed typesAttacker is one type
+ * Power might be wanted
+ */
+async function calcDamage(attack, defense, typesAttacker, typesDefender){
+  const factor = 0.5 * attack * (attack/defense);
+  if(!f.isUndefined(typesDefender.size)){ // 2 Defending types
+    let typeFactorList = List([1, 1]);
+    for(let i = 0; i < typesDefender.size; i++){
+      typeFactorList = typeFactorList.set(i, calcTypeFactor(typesAttacker, typesDefender.get(i)));
+    }
+    const typeFactor = typeFactorList.get(0) * typeFactorList.get(1);
+    return factor * typeFactor + 1;
+  } else { // 1 type
+    const typeFactor = calcTypeFactor(typesAttacker, typesDefender.get(i));
+    return factor * typeFactor + 1;
+  }
 }
 
 /**

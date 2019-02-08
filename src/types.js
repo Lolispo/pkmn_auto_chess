@@ -9,6 +9,22 @@ const increaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') + +bonus);
 const increaseAttack = (unit, bonus) => unit.set('attack', +unit.get('attack') + +bonus);
 
 /**
+ * Type matchup, check for strong against defenseType
+ */
+async function isStrongAgainst(attackerType, defenseType){
+  const strongAgainst = typeMap.get(attackerType).get('strongAgainst');
+  return (!f.isUndefined(strongAgainst.get(defenseType))? 2.0 : 1.0);
+}
+
+/**
+ * Type matchup, check for ineffective against defenseType
+ */
+async function isIneffectiveAgainst(attackType, defenseType){
+  const ineffectiveAgainst = typeMap.get(attackerType).get('ineffectiveAgainst');
+  return (!f.isUndefined(ineffectiveAgainst.get(defenseType))? 0.5 : 1.0);
+}
+
+/**
  * req: Required amount of units to receive bonus
  * bonus: function effect for buffs only for units with type
  * allBonus: function effect for buffs for entire team
