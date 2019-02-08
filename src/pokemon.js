@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 
-const { Map } = require('immutable');
+const { Map, List } = require('immutable');
 const f = require('./f');
 /**
  * Default stat variables that are used if nothing is found in specific def
@@ -109,7 +109,7 @@ const pokemonMap = new Map({
   pidgey: Map({
     name: 'pidgey',
     display_name: 'Pidgey☆',
-    type: 'normal',
+    type: List(['normal']),
     cost: '1',
     attack: 9,
     hp: 50,

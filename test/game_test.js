@@ -720,6 +720,7 @@ describe('game state', () => {
       state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
       state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
       state = await battleTime(state);
+      f.print(state)
     });
   });
   describe('markBoardBonuses', () => {

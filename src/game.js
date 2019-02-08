@@ -13,7 +13,6 @@ const gameConstantsJS = require('./game_constants');
 /**
  * File used for game logic
  */
-
 function buildPieceStorage() {
   let availablePieces = List([List([]), List([]), List([]), List([]), List([])]);
   const decks = deckJS.getDecks();
@@ -48,13 +47,21 @@ function initEmptyState(amountPlaying) {
  * Finds correct rarity for piece (random value)
  * Returns the piece taken from pieceStorage from correct rarity list
  * i is used to know which rarity it is checking (from 1 to 5)
+ * Temp: If a rarity doesn't exist, adds piece of next available rarity
+ * Currently lack level 2 rarities for early game
  */
-async function getPieceFromRarity(prob, i, pieceStorage) {
+async function getPieceFromRarity(prob, levelIndex, pieceStorage) {
   const random = Math.random();
   let piece;
   if (prob > random) {
-    // console.log('@getPieceFromRarity', prob, random, pieceStorage.get(i).get(0))
-    piece = pieceStorage.get(i).get(0);
+    /*
+    if(pieceStorage.get(levelIndex).size === 0){
+      console.log(pieceStorage)
+      console.log('@getPieceFromRarity, pieceStorage is empty, shouldnt happen (Check #pieces and #players)');
+      process.exit();      
+    }*/
+    // console.log('@getPieceFromRarity', prob, random, levelIndex, pieceStorage.get(levelIndex).get(0), pieceStorage.get(levelIndex))
+    piece = pieceStorage.get(levelIndex).get(0);
   }
   return piece;
 }
@@ -67,8 +74,10 @@ async function addPieceToShop(shop, pieces, level) {
   const prob = gameConstantsJS.getPieceProbabilityNum(level);
   let newShop = shop;
   let newPieceStorage = pieces;
-  for (let i = 0; i < 5; i++) { // Loop over levels
-    const piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
+  console.log('addPieceToShop LEVEL ', level, prob)
+  for (let i = 0; i < 5; i++) { // Loop over levels 
+    const piece = await getPieceFromRarity(prob[i], level - 1, newPieceStorage);
+    console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
       newShop = newShop.push(piece);
       // Removes first from correct rarity array
@@ -77,6 +86,21 @@ async function addPieceToShop(shop, pieces, level) {
     }
   }
   return { newShop, pieceStorage: newPieceStorage };
+}
+
+/**
+ * Fills pieceStorage with discardedPieces
+ * When
+ */
+async function refillPieces(pieces, discardedPieces){
+  let pieceStorage = pieces;
+  console.log('@refillPieces', pieceStorage, discardedPieces)
+  for(let i = 0; i < discardedPieces.size; i++){
+    const name = discardedPieces.get(i);
+    const cost = pokemonJS.getStats(discardedPieces.get(i)).get('cost');
+    pieceStorage = await stateLogicJS.push(pieceStorage, cost - 1, name);
+  }
+  return pieceStorage;
 }
 
 /**
@@ -90,15 +114,19 @@ async function refreshShop(stateParam, playerIndex) {
   const level = state.getIn(['players', playerIndex, 'level']);
   let newShop = List([]);
   let pieceStorage = state.get('pieces');
-  // TODO: Check if
   for (let i = 0; i < 5; i++) { // Loop over pieces
+    // If any piece storage goes empty -> put all discarded pieces in pieces
+    if(pieceStorage.get(level - 1).size === 0){
+      pieceStorage = await refillPieces(pieceStorage, state.get('discarded_pieces'));
+      state = state.set('discarded_pieces', List([]));
+    }
     const obj = await addPieceToShop(newShop, pieceStorage, level);
     newShop = obj.newShop;
     pieceStorage = obj.pieceStorage;
   }
   const shop = state.getIn(['players', playerIndex, 'shop']);
   if (shop.size !== 0) {
-    state = state.set('discarded_pieces', state.get('discarded_pieces').concat(shop));
+    state = state.set('discarded_pieces', state.get('discarded_pieces').concat(shop.filter(piece => !f.isUndefined(piece))));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
   state = state.set('pieces', pieceStorage);
@@ -702,7 +730,7 @@ async function countUniqueOccurences(board) {
       const types = unit.get('type'); // Value or List
       if (!f.isUndefined(types.size)) { // List
         for (let i = 0; i < types.size; i++) {
-          buffMap = buffMap.setIn([String(team), types[i]], (buffMap.getIn([String(team), types[i]]) || 0) + 1);
+          buffMap = buffMap.setIn([String(team), types.get(i)], (buffMap.getIn([String(team), types.get(i)]) || 0) + 1);
         }
       } else { // Value
         buffMap = buffMap.setIn([String(team), types], (buffMap.getIn([String(team), types]) || 0) + 1);
@@ -759,9 +787,9 @@ async function markBoardBonuses(board) {
     const types = board.get(unitPos).get('type'); // Value or List
     if (!f.isUndefined(types.size)) { // List
       for (let i = 0; i < types.size; i++) {
-        if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types[i]))) {
-          const newUnit = typesJS.getBuffFuncSolo(types[i])(unit, typeBuffMapSolo.get(String(team)).get(types[i]))
-            .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types[i]).get('name'))); // Add buff to unit
+        if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types.get(i)))) {
+          const newUnit = typesJS.getBuffFuncSolo(types.get(i))(unit, typeBuffMapSolo.get(String(team)).get(types.get(i)))
+            .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types.get(i)).get('name'))); // Add buff to unit
           newBoard = await newBoard.set(unitPos, newUnit);
         }
       }
