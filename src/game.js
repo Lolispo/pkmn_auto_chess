@@ -50,7 +50,7 @@ async function initEmptyState(amountPlaying) {
  * Temp: If a rarity doesn't exist, adds piece of next available rarity
  * Currently lack level 2 rarities for early game
  */
-async function getPieceFromRarity(prob, levelIndex, pieceStorage) {
+async function getPieceFromRarity(prob, index, pieceStorage) {
   const random = Math.random();
   let piece;
   if (prob > random) {
@@ -60,8 +60,8 @@ async function getPieceFromRarity(prob, levelIndex, pieceStorage) {
       console.log('@getPieceFromRarity, pieceStorage is empty, shouldnt happen (Check #pieces and #players)');
       process.exit();      
     }*/
-    // console.log('@getPieceFromRarity', prob, random, levelIndex, pieceStorage.get(levelIndex).get(0), pieceStorage.get(levelIndex))
-    piece = pieceStorage.get(levelIndex).get(0);
+    // console.log('@getPieceFromRarity', prob, random, index, pieceStorage.get(index).get(0)); //, pieceStorage.get(levelIndex))
+    piece = pieceStorage.get(index).get(0);
   }
   return piece;
 }
@@ -76,7 +76,7 @@ async function addPieceToShop(shop, pieces, level) {
   let newPieceStorage = pieces;
   // console.log('addPieceToShop LEVEL ', level, prob)
   for (let i = 0; i < 5; i++) { // Loop over levels 
-    const piece = await getPieceFromRarity(prob[i], level - 1, newPieceStorage);
+    const piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
       newShop = newShop.push(piece);
@@ -523,11 +523,13 @@ async function calcDamage(attack, defense, typesAttacker, typesDefender){
       typeFactorList = typeFactorList.set(i, await calcTypeFactor(typesAttacker, typesDefender.get(i)));
     }
     const typeFactor = typeFactorList.get(0) * typeFactorList.get(1);
-    // console.log('@calcDamage1 returning: ', typeFactor, factor, factor * typeFactor + 1)
+    console.log('@calcDamage1 returning: ', typeFactor, '(', typesAttacker, '->', typesDefender.get(0), ',', typesDefender.get(1), ') ' +
+              factor, '(', attack, ',', defense , ') =', Math.round(factor * typeFactor + 1));
     return Math.round(factor * typeFactor + 1);
   } else { // 1 type
     const typeFactor = await calcTypeFactor(typesAttacker, typesDefender);
-    // console.log('@calcDamage2 returning: ',  typeFactor, factor, factor * typeFactor + 1)
+    console.log('@calcDamage2 returning: ', typeFactor, '(', typesAttacker, '->', typesDefender, ') ' +
+                        factor, '(', attack, ',', defense , ') =', Math.round(factor * typeFactor + 1));
     return Math.round(factor * typeFactor + 1);
   }
 }

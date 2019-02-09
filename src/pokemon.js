@@ -52,15 +52,6 @@ async function loadImmutablePokemonJSON(){
   let pokemonJSON = JSON.parse(fs.readFileSync('pokemon.json', 'utf8'))
   let immutablePokemon = await fromJS(pokemonJSON);
   // f.print(immutablePokemon)
-  /*
-  const iter = immutablePokemon.keys();
-  let temp = iter.next();
-  while (!temp.done) {
-    const newType = await getType(immutablePokemon.getIn([temp.value, 'type']));
-    immutablePokemon = await immutablePokemon.setIn([temp.value, 'type'], newType);
-    temp = iter.next();
-  }*/
-  // console.log('@immutablePokemon init', immutablePokemon)
   return immutablePokemon;
 }
 

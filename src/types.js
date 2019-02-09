@@ -25,9 +25,7 @@ exports.isIneffectiveAgainst = async (attackType, defenseType) => {
   return (!f.isUndefined(ineffectiveAgainst.get(defenseType))? 0.5 : 1.0);
 }
 
-const typesMapLoad = fromJS(JSON.parse(fs.readFileSync('pokemonTypes.json', 'utf8')));
-
-// console.log('@LOAD', typesMapLoad)
+// const typesMapLoad = fromJS(JSON.parse(fs.readFileSync('pokemonTypes.json', 'utf8')));
 
 /**
  * req: Required amount of units to receive bonus

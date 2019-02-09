@@ -17,7 +17,8 @@ exports.printBoard = async (boardParam, moveParam) => {
   while (!tempUnit.done) {
     const x = tempUnit.value.get('x');
     const y = tempUnit.value.get('y');
-    const builtString = `{${x},${y}}: ${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')}`;
+    const builtString = `${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: ` +
+    `${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')}`;
     let resultString = builtString;
     if ((move.get('unitPos').get('x') === x && move.get('unitPos').get('y') === y)
     || (move.get('action') === 'move' && move.get('target').get('x') === x && move.get('target').get('y') === y)) {
