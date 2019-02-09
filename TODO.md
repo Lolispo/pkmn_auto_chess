@@ -20,7 +20,7 @@ Shuffle deck of pieces when 20 (40?) pieces are discarded? Chance for not all pi
 
 Check exp required for every level
 
-Check gold income basic increase when (1-5, max 5)
+Check how many pieces in auto chess
 
 winstreak math
 
@@ -39,6 +39,48 @@ battle: first movement random, then -> jump to closets target one team at a time
 check Promise.all alternative for loops
 
 .has instead of !f.isUndefined
+
+cleanup async usage, using Promise.all in places where multíple calculations are needed
+ makes it bottleneck on the slowest one
+    example: 
+    // Promise.all() allows us to send all requests at the same time. 
+    let results = await Promise.all([ getValueA, getValueB, getValueC ]); 
+
+Find a way of choosing pokemon in play
+    shouldn't play all 151 at once
+
+Alternatives:
+    Auto chess: Jynx1 jynx2 jynx3
+        drawbacks: jynx2 jynx3
+        Jynx2 = jynx level 50, Jynx3 = jynx level 100
+    Some kind of class bonus for base no evollution (jynx scyther)
+        drawbacks: all jynxs are equal
+    Xp system?
+
+eevee:
+    Evolution based on amount of unit types on board
+
+## Npc rounds / Item rounds
+
+Gym leader rounds:
+    gives special item money,
+    max 3 hp round loss
+    can give item (low chance)
+
+Shop rounds: 
+    Buy items for item money in item shop
+
+## Items
+
+1 item per pokemon
+
+X-speed, attack etc
+
+Rare Candy - 2 less pokemon required for 
+
+leftovers/lifesteal functionality
+    item / type buff
+
 
 ## Everywhere
 
