@@ -3,6 +3,7 @@
 
 const { Map, List, fromJS } = require('immutable');
 const f = require('./f');
+const fs = require('fs');
 /**
  * Default stat variables that are used if nothing is found in specific def
  */
@@ -13,20 +14,12 @@ const defaultStat = Map({
   mana: 0,
   speed: 100, // Temp test, lower = faster (Time between attacks)
   upperLimitSpeed: 200,
+  defense: 50,
   range: 1, // Range for unit to reach (diagonals allowed)
   next_move: 0, // Next move: time for next move
 });
 
 exports.getStatsDefault = stat => defaultStat.get(stat);
-
-const getBasePokemonLocal = (name) => {
-  const unitStats = pokemonMap.get(name.toLowerCase());
-  if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
-    return unitStats.get('name');
-  }
-  // Go down a level
-  return getBasePokemonLocal(unitStats.get('evolution_from').get('name'));
-};
 
 exports.getBasePokemon = name => getBasePokemonLocal(name);
 
@@ -36,7 +29,7 @@ exports.getBasePokemon = name => getBasePokemonLocal(name);
  * ['grass', 'poison'] output
  * grass input => grass output
  */
-exports.getType = string => {
+async function getType(string) {
   if(string.charAt(0) === '['){ // 
     const stringToSplit = string.substring(1, string.length - 1); // Remove outer []
     const strings = stringToSplit.split(','); // List over strings
@@ -45,189 +38,48 @@ exports.getType = string => {
   return string;
 }
 
+// const pokemonMap = fromJS(JSON.parse(fs.readFileSync('pokemon.json', 'utf8')));
+// console.log('@LOAD', pokemonMap)
+
+
 /**
  * ☆ = &#9734;
  * Level is same as cost
  * TODO: Add read from json file
  */
-const pokemonMap = new Map({
-  bulbasaur: Map({
-    name: 'bulbasaur',
-    display_name: 'Bulbasaur☆',
-    type: 'grass',
-    cost: '3',
-    attack: 15,
-    hp: 80,
-    ability: 'razorleaf',
-    evolves_to: 'ivysaur',
-  }),
-  charmander: Map({
-    name: 'charmander',
-    display_name: 'Charmander☆',
-    type: 'fire',
-    cost: '3',
-    attack: 15,
-    hp: 80,
-    ability: 'ember',
-    evolves_to: 'charmeleon',
-  }),
-  charmeleon: Map({
-    name: 'charmeleon',
-    display_name: 'Charmeleon☆☆',
-    type: 'fire',
-    cost: '4',
-    attack: 15,
-    hp: 80,
-    ability: 'ember',
-    evolves_from: 'charmander',
-    evolves_to: 'charizard',
-  }),
-  charizard: Map({
-    name: 'charizard',
-    display_name: 'Charizard☆☆☆',
-    type: 'fire',
-    cost: '5',
-    attack: 15,
-    hp: 80,
-    ability: 'ember',
-    evolves_from: 'charmeleon',
-  }),
-  squirtle: Map({
-    name: 'squirtle',
-    display_name: 'Squirtle☆',
-    type: 'water',
-    cost: '3',
-    attack: 15,
-    hp: 80,
-    ability: 'watergun',
-    evolves_to: 'wartortle',
-  }),
-  caterpie: Map({
-    name: 'caterpie',
-    display_name: 'Caterpie☆',
-    type: 'grass',
-    cost: '1',
-    attack: 9,
-    hp: 50,
-    ability: 'stringshot',
-    evolves_to: 'raticate',
-  }),
-  weedle: Map({
-    name: 'weedle',
-    display_name: 'Weedle☆',
-    type: 'grass',
-    cost: '1',
-    attack: 9,
-    hp: 50,
-    ability: 'stringshot',
-    evolves_to: 'raticate',
-  }),
-  pidgey: Map({
-    name: 'pidgey',
-    display_name: 'Pidgey☆',
-    type: List(['normal']),
-    cost: '1',
-    attack: 9,
-    hp: 50,
-    ability: 'gust',
-    evolves_to: 'pidgeotto',
-  }),
-  pidgeotto: Map({
-    name: 'pidgeotto',
-    display_name: 'Pidgeotto☆☆',
-    type: 'normal',
-    cost: '3',
-    attack: 13,
-    hp: 12,
-    ability: 'quickattack',
-    evolves_from: 'pidgey',
-    evolves_to: 'pidgeot',
-  }),
-  rattata: Map({
-    name: 'rattata',
-    display_name: 'Rattata☆',
-    type: 'normal',
-    cost: '1',
-    attack: 9,
-    hp: 50,
-    ability: 'quickattack',
-    evolves_to: 'raticate',
-  }),
-  raticate: Map({
-    name: 'raticate',
-    display_name: 'Raticate☆☆',
-    type: 'normal',
-    cost: '3',
-    attack: 9,
-    hp: 50,
-    ability: 'quickattack',
-    evolves_from: 'rattata',
-    evolves_to: 'raticate2',
-  }),
-  raticate2: Map({
-    name: 'raticate2',
-    display_name: 'Raticate☆☆☆',
-    type: 'normal',
-    cost: '5',
-    attack: 9,
-    hp: 50,
-    ability: 'quickattack',
-    evolves_from: 'raticate2',
-  }),
-  spearow: Map({
-    name: 'spearow',
-    display_name: 'Spearow☆',
-    type: 'normal',
-    cost: '1',
-    attack: 9,
-    hp: 50,
-    ability: 'gust',
-    evolves_to: 'fearow',
-  }),
-  fearow: Map({
-    name: 'fearow',
-    display_name: 'Fearow☆',
-    type: 'normal',
-    cost: '3',
-    attack: 20,
-    hp: 90,
-    ability: 'gust',
-    evolves_from: 'spearow',
-  }),
-  pikachu: Map({
-    name: 'pikachu',
-    display_name: 'Pikachu☆',
-    type: 'electric',
-    cost: '1',
-    attack: 10,
-    hp: 60,
-    ability: 'thundershock',
-    evolves_to: 'pikachu2',
-  }),
-  pikachu2: Map({
-    name: 'pikachu2',
-    display_name: 'Pikachu☆☆',
-    type: 'electric',
-    cost: '3',
-    attack: 10,
-    hp: 60,
-    ability: 'thundershock',
-    evolves_from: 'pikachu',
-    evolves_to: 'raichu',
-  }),
-  raichu: Map({
-    name: 'raichu',
-    display_name: 'Raichu☆☆☆',
-    type: 'electric',
-    cost: '5',
-    attack: 10,
-    hp: 60,
-    ability: 'thunderbolt',
-    evolves_from: 'pikachu2',
-    evolves_to: 'raichu',
-  }),
-});
 
-exports.getStats = name => pokemonMap.get(name.toLowerCase());
+async function loadImmutablePokemonJSON(){
+  let pokemonJSON = JSON.parse(fs.readFileSync('pokemon.json', 'utf8'))
+  let immutablePokemon = await fromJS(pokemonJSON);
+  // f.print(immutablePokemon)
+  /*
+  const iter = immutablePokemon.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const newType = await getType(immutablePokemon.getIn([temp.value, 'type']));
+    immutablePokemon = await immutablePokemon.setIn([temp.value, 'type'], newType);
+    temp = iter.next();
+  }*/
+  // console.log('@immutablePokemon init', immutablePokemon)
+  return immutablePokemon;
+}
 
-exports.getMap = () => pokemonMap;
+const pokemonMap = loadImmutablePokemonJSON();
+
+exports.getStats = async (name) => {
+  const pokeMap = await pokemonMap;
+  // console.log('getStats', name, pokeMap.get(name.toLowerCase()));
+  return pokeMap.get(name.toLowerCase());
+}
+
+const getBasePokemonLocal = async (name) => {
+  const pokeMap = await pokemonMap;
+  const unitStats = pokeMap.get(name.toLowerCase());
+  if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
+    return unitStats.get('name');
+  }
+  // Go down a level
+  return getBasePokemonLocal(unitStats.get('evolution_from').get('name'));
+};
+
+exports.getMap = async () => await pokemonMap;

@@ -7,7 +7,10 @@
     "attack": 49,
     "defense": 49,
     "speed": 45,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_to": "ivysaur"
   },
   "ivysaur": {
@@ -18,7 +21,10 @@
     "attack": 62,
     "defense": 63,
     "speed": 60,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_from": "bulbasaur",
     "evolves_to": "venusaur"
   },
@@ -30,7 +36,10 @@
     "attack": 82,
     "defense": 83,
     "speed": 80,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_from": "ivysaur"
   },
   "charmander": {
@@ -64,7 +73,10 @@
     "attack": 84,
     "defense": 78,
     "speed": 100,
-    "type": "[fire,flying]",
+    "type": [
+      "fire",
+      "flying"
+    ],
     "evolves_from": "charmeleon"
   },
   "squirtle": {
@@ -132,7 +144,10 @@
     "attack": 45,
     "defense": 50,
     "speed": 70,
-    "type": "[bug,flying]",
+    "type": [
+      "bug",
+      "flying"
+    ],
     "evolves_from": "metapod"
   },
   "weedle": {
@@ -143,7 +158,10 @@
     "attack": 35,
     "defense": 30,
     "speed": 50,
-    "type": "[bug,poison]",
+    "type": [
+      "bug",
+      "poison"
+    ],
     "evolves_to": "kakuna"
   },
   "kakuna": {
@@ -154,7 +172,10 @@
     "attack": 25,
     "defense": 50,
     "speed": 35,
-    "type": "[bug,poison]",
+    "type": [
+      "bug",
+      "poison"
+    ],
     "evolves_from": "weedle",
     "evolves_to": "beedrill"
   },
@@ -166,7 +187,10 @@
     "attack": 80,
     "defense": 40,
     "speed": 75,
-    "type": "[bug,poison]",
+    "type": [
+      "bug",
+      "poison"
+    ],
     "evolves_from": "kakuna"
   },
   "pidgey": {
@@ -177,7 +201,10 @@
     "attack": 45,
     "defense": 40,
     "speed": 56,
-    "type": "[normal,flying]",
+    "type": [
+      "normal",
+      "flying"
+    ],
     "evolves_to": "pidgeotto"
   },
   "pidgeotto": {
@@ -188,7 +215,10 @@
     "attack": 60,
     "defense": 55,
     "speed": 71,
-    "type": "[normal,flying]",
+    "type": [
+      "normal",
+      "flying"
+    ],
     "evolves_from": "pidgey",
     "evolves_to": "pidgeot"
   },
@@ -200,7 +230,10 @@
     "attack": 80,
     "defense": 75,
     "speed": 91,
-    "type": "[normal,flying]",
+    "type": [
+      "normal",
+      "flying"
+    ],
     "evolves_from": "pidgeotto"
   },
   "rattata": {
@@ -233,7 +266,10 @@
     "attack": 60,
     "defense": 30,
     "speed": 70,
-    "type": "[normal,flying]",
+    "type": [
+      "normal",
+      "flying"
+    ],
     "evolves_to": "fearow"
   },
   "fearow": {
@@ -244,7 +280,10 @@
     "attack": 90,
     "defense": 65,
     "speed": 100,
-    "type": "[normal,flying]",
+    "type": [
+      "normal",
+      "flying"
+    ],
     "evolves_from": "spearow"
   },
   "ekans": {
@@ -344,7 +383,10 @@
     "attack": 82,
     "defense": 87,
     "speed": 76,
-    "type": "[poison,ground]",
+    "type": [
+      "poison",
+      "ground"
+    ],
     "evolves_from": "nidorina"
   },
   "nidoran ♂": {
@@ -378,7 +420,10 @@
     "attack": 92,
     "defense": 77,
     "speed": 85,
-    "type": "[poison,ground]",
+    "type": [
+      "poison",
+      "ground"
+    ],
     "evolves_from": "nidorino"
   },
   "clefairy": {
@@ -455,7 +500,10 @@
     "attack": 45,
     "defense": 35,
     "speed": 55,
-    "type": "[poison,flying]",
+    "type": [
+      "poison",
+      "flying"
+    ],
     "evolves_to": "golbat"
   },
   "golbat": {
@@ -466,7 +514,10 @@
     "attack": 80,
     "defense": 70,
     "speed": 90,
-    "type": "[poison,flying]",
+    "type": [
+      "poison",
+      "flying"
+    ],
     "evolves_from": "zubat"
   },
   "oddish": {
@@ -477,7 +528,10 @@
     "attack": 50,
     "defense": 55,
     "speed": 30,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_to": "gloom"
   },
   "gloom": {
@@ -488,7 +542,10 @@
     "attack": 65,
     "defense": 70,
     "speed": 40,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_from": "oddish",
     "evolves_to": "vileplume"
   },
@@ -500,7 +557,10 @@
     "attack": 80,
     "defense": 85,
     "speed": 50,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_from": "gloom"
   },
   "paras": {
@@ -511,7 +571,10 @@
     "attack": 70,
     "defense": 55,
     "speed": 25,
-    "type": "[bug,grass]",
+    "type": [
+      "bug",
+      "grass"
+    ],
     "evolves_to": "parasect"
   },
   "parasect": {
@@ -522,7 +585,10 @@
     "attack": 95,
     "defense": 80,
     "speed": 30,
-    "type": "[bug,grass]",
+    "type": [
+      "bug",
+      "grass"
+    ],
     "evolves_from": "paras"
   },
   "venonat": {
@@ -533,7 +599,10 @@
     "attack": 55,
     "defense": 50,
     "speed": 45,
-    "type": "[bug,poison]",
+    "type": [
+      "bug",
+      "poison"
+    ],
     "evolves_to": "venomoth"
   },
   "venomoth": {
@@ -544,7 +613,10 @@
     "attack": 65,
     "defense": 60,
     "speed": 90,
-    "type": "[bug,poison]",
+    "type": [
+      "bug",
+      "poison"
+    ],
     "evolves_from": "venonat"
   },
   "diglett": {
@@ -688,7 +760,10 @@
     "attack": 85,
     "defense": 95,
     "speed": 70,
-    "type": "[water,fighting]",
+    "type": [
+      "water",
+      "fighting"
+    ],
     "evolves_from": "poliwhirl"
   },
   "abra": {
@@ -767,7 +842,10 @@
     "attack": 75,
     "defense": 35,
     "speed": 40,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_to": "weepinbell"
   },
   "weepinbell": {
@@ -778,7 +856,10 @@
     "attack": 90,
     "defense": 50,
     "speed": 55,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_from": "bellsprout",
     "evolves_to": "victreebel"
   },
@@ -790,7 +871,10 @@
     "attack": 105,
     "defense": 65,
     "speed": 70,
-    "type": "[grass,poison]",
+    "type": [
+      "grass",
+      "poison"
+    ],
     "evolves_from": "weepinbell"
   },
   "tentacool": {
@@ -801,7 +885,10 @@
     "attack": 40,
     "defense": 35,
     "speed": 70,
-    "type": "[water,poison]",
+    "type": [
+      "water",
+      "poison"
+    ],
     "evolves_to": "tentacruel"
   },
   "tentacruel": {
@@ -812,7 +899,10 @@
     "attack": 70,
     "defense": 65,
     "speed": 100,
-    "type": "[water,poison]",
+    "type": [
+      "water",
+      "poison"
+    ],
     "evolves_from": "tentacool"
   },
   "geodude": {
@@ -823,7 +913,10 @@
     "attack": 80,
     "defense": 100,
     "speed": 20,
-    "type": "[rock,ground]",
+    "type": [
+      "rock",
+      "ground"
+    ],
     "evolves_to": "graveler"
   },
   "graveler": {
@@ -834,7 +927,10 @@
     "attack": 95,
     "defense": 115,
     "speed": 35,
-    "type": "[rock,ground]",
+    "type": [
+      "rock",
+      "ground"
+    ],
     "evolves_from": "geodude",
     "evolves_to": "golem"
   },
@@ -846,7 +942,10 @@
     "attack": 110,
     "defense": 130,
     "speed": 45,
-    "type": "[rock,ground]",
+    "type": [
+      "rock",
+      "ground"
+    ],
     "evolves_from": "graveler"
   },
   "ponyta": {
@@ -879,7 +978,10 @@
     "attack": 65,
     "defense": 65,
     "speed": 15,
-    "type": "[water,psychic]",
+    "type": [
+      "water",
+      "psychic"
+    ],
     "evolves_to": "slowbro"
   },
   "slowbro": {
@@ -890,7 +992,10 @@
     "attack": 75,
     "defense": 110,
     "speed": 30,
-    "type": "[water,psychic]",
+    "type": [
+      "water",
+      "psychic"
+    ],
     "evolves_from": "slowpoke"
   },
   "magnemite": {
@@ -901,7 +1006,10 @@
     "attack": 35,
     "defense": 70,
     "speed": 45,
-    "type": "[electric,steel]",
+    "type": [
+      "electric",
+      "steel"
+    ],
     "evolves_to": "magneton"
   },
   "magneton": {
@@ -912,7 +1020,10 @@
     "attack": 60,
     "defense": 95,
     "speed": 70,
-    "type": "[electric,steel]",
+    "type": [
+      "electric",
+      "steel"
+    ],
     "evolves_from": "magnemite"
   },
   "farfetch'd": {
@@ -923,7 +1034,10 @@
     "attack": 65,
     "defense": 55,
     "speed": 60,
-    "type": "[normal,flying]"
+    "type": [
+      "normal",
+      "flying"
+    ]
   },
   "doduo": {
     "name": "doduo",
@@ -933,7 +1047,10 @@
     "attack": 85,
     "defense": 45,
     "speed": 75,
-    "type": "[normal,flying]",
+    "type": [
+      "normal",
+      "flying"
+    ],
     "evolves_to": "dodrio"
   },
   "dodrio": {
@@ -944,7 +1061,10 @@
     "attack": 110,
     "defense": 70,
     "speed": 100,
-    "type": "[normal,flying]",
+    "type": [
+      "normal",
+      "flying"
+    ],
     "evolves_from": "doduo"
   },
   "seel": {
@@ -966,7 +1086,10 @@
     "attack": 70,
     "defense": 80,
     "speed": 70,
-    "type": "[water,ice]",
+    "type": [
+      "water",
+      "ice"
+    ],
     "evolves_from": "seel"
   },
   "grimer": {
@@ -1010,7 +1133,10 @@
     "attack": 90,
     "defense": 180,
     "speed": 70,
-    "type": "[water,ice]",
+    "type": [
+      "water",
+      "ice"
+    ],
     "evolves_from": "shellder"
   },
   "gastly": {
@@ -1021,7 +1147,10 @@
     "attack": 35,
     "defense": 30,
     "speed": 80,
-    "type": "[ghost,poison]",
+    "type": [
+      "ghost",
+      "poison"
+    ],
     "evolves_to": "haunter"
   },
   "haunter": {
@@ -1032,7 +1161,10 @@
     "attack": 50,
     "defense": 45,
     "speed": 95,
-    "type": "[ghost,poison]",
+    "type": [
+      "ghost",
+      "poison"
+    ],
     "evolves_from": "gastly",
     "evolves_to": "gengar"
   },
@@ -1044,7 +1176,10 @@
     "attack": 65,
     "defense": 60,
     "speed": 110,
-    "type": "[ghost,poison]",
+    "type": [
+      "ghost",
+      "poison"
+    ],
     "evolves_from": "haunter"
   },
   "onix": {
@@ -1055,7 +1190,10 @@
     "attack": 45,
     "defense": 160,
     "speed": 70,
-    "type": "[rock,ground]"
+    "type": [
+      "rock",
+      "ground"
+    ]
   },
   "drowzee": {
     "name": "drowzee",
@@ -1131,7 +1269,10 @@
     "attack": 40,
     "defense": 80,
     "speed": 40,
-    "type": "[grass,psychic]",
+    "type": [
+      "grass",
+      "psychic"
+    ],
     "evolves_to": "exeggutor"
   },
   "exeggutor": {
@@ -1142,7 +1283,10 @@
     "attack": 95,
     "defense": 85,
     "speed": 55,
-    "type": "[grass,psychic]",
+    "type": [
+      "grass",
+      "psychic"
+    ],
     "evolves_from": "exeggcute"
   },
   "cubone": {
@@ -1227,7 +1371,10 @@
     "attack": 85,
     "defense": 95,
     "speed": 25,
-    "type": "[ground,rock]",
+    "type": [
+      "ground",
+      "rock"
+    ],
     "evolves_to": "rhydon"
   },
   "rhydon": {
@@ -1238,7 +1385,10 @@
     "attack": 130,
     "defense": 120,
     "speed": 40,
-    "type": "[ground,rock]",
+    "type": [
+      "ground",
+      "rock"
+    ],
     "evolves_from": "rhyhorn"
   },
   "chansey": {
@@ -1334,7 +1484,10 @@
     "attack": 75,
     "defense": 85,
     "speed": 115,
-    "type": "[water,psychic]",
+    "type": [
+      "water",
+      "psychic"
+    ],
     "evolves_from": "staryu"
   },
   "mr. mime": {
@@ -1355,7 +1508,10 @@
     "attack": 110,
     "defense": 80,
     "speed": 105,
-    "type": "[bug,flying]"
+    "type": [
+      "bug",
+      "flying"
+    ]
   },
   "jynx": {
     "name": "jynx",
@@ -1365,7 +1521,10 @@
     "attack": 50,
     "defense": 35,
     "speed": 95,
-    "type": "[ice,psychic]"
+    "type": [
+      "ice",
+      "psychic"
+    ]
   },
   "electabuzz": {
     "name": "electabuzz",
@@ -1426,7 +1585,10 @@
     "attack": 125,
     "defense": 79,
     "speed": 81,
-    "type": "[water,flying]",
+    "type": [
+      "water",
+      "flying"
+    ],
     "evolves_from": "magikarp"
   },
   "lapras": {
@@ -1437,7 +1599,10 @@
     "attack": 85,
     "defense": 80,
     "speed": 60,
-    "type": "[water,ice]"
+    "type": [
+      "water",
+      "ice"
+    ]
   },
   "ditto": {
     "name": "ditto",
@@ -1458,7 +1623,11 @@
     "defense": 50,
     "speed": 55,
     "type": "normal",
-    "evolves_to": "List([vaporeon, jolteon, flareon])"
+    "evolves_to": [
+      "List([vaporeon",
+      "jolteon",
+      "flareon])"
+    ]
   },
   "vaporeon": {
     "name": "vaporeon",
@@ -1511,7 +1680,10 @@
     "attack": 40,
     "defense": 100,
     "speed": 35,
-    "type": "[rock,water]",
+    "type": [
+      "rock",
+      "water"
+    ],
     "evolves_to": "omastar"
   },
   "omastar": {
@@ -1522,7 +1694,10 @@
     "attack": 60,
     "defense": 125,
     "speed": 55,
-    "type": "[rock,water]",
+    "type": [
+      "rock",
+      "water"
+    ],
     "evolves_from": "omanyte"
   },
   "kabuto": {
@@ -1533,7 +1708,10 @@
     "attack": 80,
     "defense": 90,
     "speed": 55,
-    "type": "[rock,water]",
+    "type": [
+      "rock",
+      "water"
+    ],
     "evolves_to": "kabutops"
   },
   "kabutops": {
@@ -1544,7 +1722,10 @@
     "attack": 115,
     "defense": 105,
     "speed": 80,
-    "type": "[rock,water]",
+    "type": [
+      "rock",
+      "water"
+    ],
     "evolves_from": "kabuto"
   },
   "aerodactyl": {
@@ -1555,7 +1736,10 @@
     "attack": 105,
     "defense": 65,
     "speed": 130,
-    "type": "[rock,flying]"
+    "type": [
+      "rock",
+      "flying"
+    ]
   },
   "snorlax": {
     "name": "snorlax",
@@ -1575,7 +1759,10 @@
     "attack": 85,
     "defense": 100,
     "speed": 85,
-    "type": "[ice,flying]"
+    "type": [
+      "ice",
+      "flying"
+    ]
   },
   "zapdos": {
     "name": "zapdos",
@@ -1585,7 +1772,10 @@
     "attack": 90,
     "defense": 85,
     "speed": 100,
-    "type": "[electric,flying]"
+    "type": [
+      "electric",
+      "flying"
+    ]
   },
   "moltres": {
     "name": "moltres",
@@ -1595,7 +1785,10 @@
     "attack": 100,
     "defense": 90,
     "speed": 90,
-    "type": "[fire,flying]"
+    "type": [
+      "fire",
+      "flying"
+    ]
   },
   "dratini": {
     "name": "dratini",
@@ -1628,7 +1821,10 @@
     "attack": 134,
     "defense": 95,
     "speed": 80,
-    "type": "[dragon,flying]",
+    "type": [
+      "dragon",
+      "flying"
+    ],
     "evolves_from": "dragonair"
   },
   "mewtwo": {
@@ -1650,6 +1846,5 @@
     "defense": 100,
     "speed": 100,
     "type": "psychic"
-  },
-  "": {}
+  }
 }

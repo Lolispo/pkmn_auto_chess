@@ -26,6 +26,7 @@
   "dependencies": {
     "eslint": "^5.6.0",
     "express": "^4.16.4",
+    "fs": "0.0.1-security",
     "http": "0.0.0",
     "immutable": "^4.0.0-rc.12",
     "immutable-shuffle": "^1.0.3",

@@ -7,7 +7,7 @@ const { Map, List, fromJS } = require('immutable');
 
 const fileModule = rewire('../src/game.js');
 const fileModule2 = rewire('../src/game_constants.js');
-const pokemonJs = rewire('../src/pokemon.js');
+const pokemonJS = rewire('../src/pokemon.js');
 
 const f = require('../src/f');
 
@@ -36,8 +36,8 @@ const markBoardBonuses = fileModule.__get__('markBoardBonuses');
 
 describe('game state', () => {
   describe('initEmptyState', () => {
-    it('initEmptyState is correct?', () => {
-      let state = initEmptyState(2);
+    it('initEmptyState is correct?', async () => {
+      let state = await initEmptyState(2);
       assert.equal(state.get('round'), 1);
       assert.equal(state.get('income_basic'), 1);
       assert.equal(state.get('discarded_pieces').size, 0);
@@ -48,8 +48,8 @@ describe('game state', () => {
     });
   });
   describe('buildPieceStorage', () => {
-    it('buildPieceStorage is correct?', () => {
-      let pieces = buildPieceStorage();
+    it('buildPieceStorage is correct?', async () => {
+      let pieces = await buildPieceStorage();
       /*
       // Enable test when all rarities exist
       let sum = 0;
@@ -58,13 +58,15 @@ describe('game state', () => {
       }
       assert.equal(pieces.size, sum);
       */
-      assert.equal(pokemonJs.getStats(pieces.get(0).get(0)).get('cost'), 1);
-      assert.equal(pokemonJs.getStats(pieces.get(2).get(0)).get('cost'), 3);
+      const stats = await pokemonJS.getStats(pieces.get(0).get(0));
+      const stats2 = await pokemonJS.getStats(pieces.get(2).get(0))
+      assert.equal(stats.get('cost'), 1);
+      assert.equal(stats2.get('cost'), 3);
     });
   });
   describe('refreshShop', () => {
     it('does refreshShop remove current shop?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       const pieces = state.get('pieces');
       state = await refreshShop(state, 0);
       const newPieces = state.get('pieces');
@@ -87,7 +89,7 @@ describe('game state', () => {
     *  Amount of money = getUnit(unitId).cost
     */
     it('buyunit default?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const shop = state.getIn(['players', 0, 'shop']);
       state = await buyUnit(state, 0, 1);
@@ -98,7 +100,7 @@ describe('game state', () => {
   });
   describe('increaseExp', () => {
     it('increaseExp default?', async() => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       assert.equal(state.getIn(['players', 0, 'level']), 1);
       assert.equal(state.getIn(['players', 0, 'exp']), 0);
       state = await increaseExp(state, 0, 1);
@@ -110,7 +112,7 @@ describe('game state', () => {
   });
   describe('buyExp', () => {
     it('does buyexp increase level correctly?', async() => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await buyExp(state, 0);
       // Buy 5 exp from level 1, 0exp:
       // 1(^1) + 1(^2) + 2(^3) + 1(4) = Level 4, 1 exp
@@ -121,12 +123,12 @@ describe('game state', () => {
   });
   describe('toggleLock', () => {
     it('toggleLock false -> true', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await toggleLock(state, 0);
       assert.equal(state.getIn(['players', 0, 'locked']), true);
     });
     it('toggleLock false -> true -> false', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await toggleLock(state, 0);
       assert.equal(state.getIn(['players', 0, 'locked']), true);
       state = await toggleLock(state, 0);
@@ -143,14 +145,14 @@ describe('game state', () => {
     *      Calculate amount of hp to lose
     */
     it('endBattle win?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       const gold = state.getIn(['players', 0, 'gold']);
       state = await endBattle(state, 0, true, 1); // index, winner, winneramount
       assert.equal(state.getIn(['players', 0, 'gold']), gold + 1);
       assert.equal(state.getIn(['players', 1, 'gold']), gold); // Not affected
     });
     it('endBattle lose?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       const hp = state.getIn(['players', 0, 'hp']);
       state = await endBattle(state, 0, false, 1); // index, winner, winneramount
       // TODO Test with damage taken (Will be 0 when no enemy units)
@@ -167,7 +169,7 @@ describe('game state', () => {
     *  Win streak / lose streak (TODO)
     */
     it('endTurn default?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       const pieces = await state.get('pieces');
       assert.equal(state.getIn(['players', 0, 'gold']), 1);
       state = await endTurn(state);
@@ -189,7 +191,7 @@ describe('game state', () => {
     });
     
     it('endTurn with locked player?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await toggleLock(state, 0);
       const pieces = state.get('pieces');
       state = await endTurn(state);
@@ -198,7 +200,7 @@ describe('game state', () => {
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(5));
     });
     it('endTurn higher gold?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = state.setIn(['players', 0, 'gold'], 20);
       state = state.setIn(['players', 0, 'streak'], 3);
       state = state.set('income_basic', 2);
@@ -210,7 +212,7 @@ describe('game state', () => {
   });
   describe('endBattle, prepEndTurn, endTurn', () => {
     it('many tests?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       const hp = state.getIn(['players', 0, 'hp']);
       const pieces = state.get('pieces');
       state = await endBattle(state, 0, true, 1); // index, winner, winneramount
@@ -242,7 +244,7 @@ describe('game state', () => {
     // TODO Sellpiece from board
     // TODO Sell higher level piece
     it('sellPiece from hand?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       state = await buyUnit(state, 0, 1);
       const hand = state.getIn(['players', 0, 'hand']);
@@ -252,7 +254,8 @@ describe('game state', () => {
       assert.equal(unit.get('name'), state.get('discarded_pieces').get(0));
       assert.equal(state.getIn(['players', 0, 'hand']).get(f.pos(0)), undefined);
       assert.equal(gold, 0);
-      assert.equal(state.getIn(['players', 0, 'gold']), pokemonJs.getStats(unit.get('name')).get('cost'));
+      const stats = await pokemonJS.getStats(unit.get('name'));
+      assert.equal(state.getIn(['players', 0, 'gold']), stats.get('cost'));
     });
     it('sellPiece from hand, level 3?', async () => {
       // TODO
@@ -264,9 +267,10 @@ describe('game state', () => {
      * Output: Map({name: name, display_name: stats, position: f.pos(x,y)})
      */
       it('getBoardUnit tests?', async () => {
-        let board = Map({}).set(f.pos(2,2), getBoardUnit('rattata', 2, 2));
+        const unit = await getBoardUnit('rattata', 2, 2);
+        let board = Map({}).set(f.pos(2,2), unit);
         unitBoard = board.get(f.pos(2,2));
-        unitStats = pokemonJs.getStats('rattata');
+        unitStats = await pokemonJS.getStats('rattata');
         assert.equal(unitBoard.get('name'), 'rattata');
         assert.equal(unitBoard.get('display_name'), unitStats.get('display_name'));
         assert.equal(unitBoard.get('position').get('x'), 2);
@@ -280,12 +284,16 @@ describe('game state', () => {
    * Units level is currently their cost
    */
     it('calcDamageTaken tests?', async () => {
-      let board = Map({}).set(f.pos(2,2), getBoardUnit('rattata', 2, 2));
-      const rattataLevel = pokemonJs.getStats('rattata').get('cost');
-      const pikachuLevel = pokemonJs.getStats('pikachu').get('cost');
-      assert.equal(calcDamageTaken(board), rattataLevel);
-      board = board.set(f.pos(4,4), getBoardUnit('pikachu', 4, 4));
-      assert.equal(calcDamageTaken(board), +rattataLevel + +pikachuLevel);
+      const unit = await getBoardUnit('rattata', 2, 2);
+      let board = Map({}).set(f.pos(2,2), unit);
+      const rStats = await pokemonJS.getStats('rattata');
+      const pStats = await pokemonJS.getStats('pikachu');
+      const rattataLevel = rStats.get('cost');
+      const pikachuLevel = pStats.get('cost');
+      const valueDamageTaken = await calcDamageTaken(board);
+      assert.equal(valueDamageTaken, rattataLevel);
+      board = board.set(f.pos(4,4), await getBoardUnit('pikachu', 4, 4));
+      assert.equal(await calcDamageTaken(board), +rattataLevel + +pikachuLevel);
     });
   });
   
@@ -296,12 +304,12 @@ describe('game state', () => {
     */
   describe('removeHp', () => {
     it('removeHp default?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await removeHp(state, 0, 5);
       assert.equal(state.getIn(['players', 0, 'hp']), 95);
     });
     it('removeHp player defeated (not game over)?', async () => {
-      let state = initEmptyState(3);
+      let state = await initEmptyState(3);
       state = state.setIn(['players', 0, 'hp'], 5);
       state = await removeHp(state, 0, 5);
       assert.equal(state.getIn(['players', 0]), undefined);
@@ -309,7 +317,7 @@ describe('game state', () => {
     });
     it('removeHp player defeated gameOver?', async () => {
       // TODO
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = state.setIn(['players', 0, 'hp'], 5);
       state = await removeHp(state, 0, 5);
       assert.equal(state.getIn(['players', 0]), undefined);
@@ -323,7 +331,7 @@ describe('game state', () => {
     */
   describe('placePiece', () => {
     it('placePiece on board to board?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
@@ -336,7 +344,7 @@ describe('game state', () => {
       assert.equal(board.get(f.pos(1,1)), undefined);
     });
     it('placePiece on board to hand?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
@@ -347,7 +355,7 @@ describe('game state', () => {
       assert.equal(hand.get(f.pos(1,1)), undefined);   
     });
     it('placePiece on hand to board?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
@@ -356,7 +364,7 @@ describe('game state', () => {
       assert.equal(board.get(f.pos(1,1)).get('name'), unit);
    });
     it('placePiece swap functionality on board->board?', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       const unit2 = state.getIn(['players', 0, 'shop']).get(2);
@@ -378,32 +386,32 @@ describe('game state', () => {
     */
   describe('checkPieceUpgrade', () => {
     it('checkPieceUpgrade 3 level 1 units?', async () => {
-      let state = initEmptyState(2);
-      const unit = getBoardUnit('pikachu', 2, 2)
+      let state = await initEmptyState(2);
+      const unit = await getBoardUnit('charmander', 2, 2)
       const newBoard = Map({})
-      .set(f.pos(1,1), getBoardUnit('pikachu', 1, 1))
-      .set(f.pos(1,2), getBoardUnit('pikachu', 1, 2))
+      .set(f.pos(1,1), await getBoardUnit('charmander', 1, 1))
+      .set(f.pos(1,2), await getBoardUnit('charmander', 1, 2))
       .set(f.pos(2,2), unit);
       state = state.setIn(['players', 0, 'board'], newBoard);
       state = await checkPieceUpgrade(state, 0, unit, f.pos(2,2));
       const board = state.getIn(['players', 0, 'board'])
-      assert.equal(board.get(f.pos(2,2)).get('name'), 'pikachu2');
+      assert.equal(board.get(f.pos(2,2)).get('name'), 'charmeleon');
       assert.equal(board.get(f.pos(1,2)), undefined);
       assert.equal(board.get(f.pos(1,1)), undefined);
     });
     it('checkPieceUpgrade 3 level 2 units?', async () => {
-      let state = initEmptyState(2);
-      const unit = getBoardUnit('pikachu2', 2, 2)
+      let state = await initEmptyState(2);
+      const unit = await getBoardUnit('charmeleon', 2, 2)
       const newBoard = Map({})
-      .set(f.pos(1,1), getBoardUnit('pikachu2', 1, 1))
-      .set(f.pos(1,2), getBoardUnit('pikachu2', 1, 2))
-      .set(f.pos(1,3), getBoardUnit('pikachu', 1, 3))
-      .set(f.pos(1,4), getBoardUnit('pikachu', 1, 4))
+      .set(f.pos(1,1), await getBoardUnit('charmeleon', 1, 1))
+      .set(f.pos(1,2), await getBoardUnit('charmeleon', 1, 2))
+      .set(f.pos(1,3), await getBoardUnit('pikachu', 1, 3))
+      .set(f.pos(1,4), await getBoardUnit('pikachu', 1, 4))
       .set(f.pos(2,2), unit);
       state = state.setIn(['players', 0, 'board'], newBoard);
       state = await checkPieceUpgrade(state, 0, unit, f.pos(2,2));
       const board = state.getIn(['players', 0, 'board'])
-      assert.equal(board.get(f.pos(2,2)).get('name'), 'raichu');
+      assert.equal(board.get(f.pos(2,2)).get('name'), 'charizard');
       assert.equal(board.get(f.pos(1,2)), undefined);
       assert.equal(board.get(f.pos(1,1)), undefined); 
       assert.equal(board.get(f.pos(1,3)).get('name'), 'pikachu'); 
@@ -453,7 +461,7 @@ describe('game state', () => {
      * Create unit for board/hand placement from name and spawn position
      */
     it('getBoardUnit board unit', async () => {
-      const unit = getBoardUnit('pikachu', 0, 1);
+      const unit = await getBoardUnit('pikachu', 0, 1);
       assert.equal(unit.get('name'), 'pikachu');
       assert.equal(unit.get('position').get('x'), 0);
       assert.equal(unit.get('position').get('y'), 1);
@@ -473,7 +481,7 @@ describe('game state', () => {
      * Assumes not bench is full
      */
     it('withdrawPiece from board, empty bench', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
@@ -485,7 +493,7 @@ describe('game state', () => {
       assert.equal(hand.get(f.pos(0)).get('name'), unit);   
     });
     it('withdrawPiece from board, hand 2 units', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       const unit2 = state.getIn(['players', 0, 'shop']).get(2);
@@ -503,7 +511,7 @@ describe('game state', () => {
       assert.equal(hand.get(f.pos(2)).get('name'), unit3); 
     });
     it('withdrawPiece from board, hand has unit at 1 and 3 (should put 2)', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       const unit2 = state.getIn(['players', 0, 'shop']).get(2);
@@ -521,7 +529,7 @@ describe('game state', () => {
       assert.equal(hand.get(f.pos(2)).get('name'), unit3);   
     });
     it('withdrawPiece from board, change hand spot 2 and 3', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       const unit2 = state.getIn(['players', 0, 'shop']).get(2);
@@ -707,7 +715,7 @@ describe('game state', () => {
        * stateParam
        */
     it('battleTime TODO more', async () => {
-      let state = initEmptyState(2);
+      let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       state = await refreshShop(state, 1);
       state = await buyUnit(state, 0, 1);
@@ -729,10 +737,13 @@ describe('game state', () => {
      * Type bonus is either only for those of that type or all units
      */
    it('markBoardBonuses 3 normal types', async () => {
+     const unit = await getBoardUnit('rattata', 1, 1);
+     const unit2 = await getBoardUnit('pidgey', 1, 2);
+     const unit3 = await getBoardUnit('spearow', 1, 3);
      const newBoard = Map({})
-     .set(f.pos(1,1), getBoardUnit('rattata', 1, 1).set('team', 0).set('type', 'normal').set('hp', '100'))
-     .set(f.pos(1,2), getBoardUnit('pidgey', 1, 2).set('team', 0).set('type', 'normal').set('hp', '100'))
-     .set(f.pos(1,3), getBoardUnit('spearow', 1, 3).set('team', 0).set('type', 'normal').set('hp', '100'))
+     .set(f.pos(1,1), unit.set('team', 0).set('type', 'normal').set('hp', '100'))
+     .set(f.pos(1,2), unit2.set('team', 0).set('type', 'normal').set('hp', '100'))
+     .set(f.pos(1,3), unit3.set('team', 0).set('type', 'normal').set('hp', '100'))
      const xdBoard = await markBoardBonuses(newBoard);
      assert.equal(xdBoard.get(f.pos(1,1)).get('buff').get(0), 'normal');
      assert.equal(xdBoard.get(f.pos(1,2)).get('buff').get(0), 'normal');

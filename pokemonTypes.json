@@ -1,0 +1,232 @@
+{
+  "normal": {
+    "name": "normal",
+    "ineffectiveAgainst": [
+      "Rock",
+      "Steel"
+    ]
+  },
+  "fire": {
+    "name": "fire",
+    "strongAgainst": [
+      "Grass",
+      "Ice",
+      "Bug",
+      "Steel"
+    ],
+    "ineffectiveAgainst": [
+      "Fire",
+      "Water",
+      "Rock",
+      "Dragon"
+    ]
+  },
+  "water": {
+    "name": "water",
+    "strongAgainst": [
+      "Fire",
+      "Ground",
+      "Rock"
+    ],
+    "ineffectiveAgainst": [
+      "Water",
+      "Grass",
+      "Dragon"
+    ]
+  },
+  "electric": {
+    "name": "electric",
+    "strongAgainst": [
+      "Water",
+      "Flying"
+    ],
+    "ineffectiveAgainst": [
+      "Electric",
+      "Grass",
+      "Dragon"
+    ]
+  },
+  "grass": {
+    "name": "grass",
+    "strongAgainst": [
+      "Water",
+      "Ground",
+      "Rock"
+    ],
+    "ineffectiveAgainst": [
+      "Fire",
+      "Grass",
+      "Poison",
+      "Flying",
+      "Bug",
+      "Dragon",
+      "Steel"
+    ]
+  },
+  "ice": {
+    "name": "ice",
+    "strongAgainst": [
+      "Grass",
+      "Ground",
+      "Flying",
+      "Dragon"
+    ],
+    "ineffectiveAgainst": [
+      "Fire",
+      "Water",
+      "Ice",
+      "Steel"
+    ]
+  },
+  "fighting": {
+    "name": "fighting",
+    "strongAgainst": [
+      "Normal",
+      "Ice",
+      "Rock",
+      "Dark",
+      "Steel"
+    ],
+    "ineffectiveAgainst": [
+      "Poison",
+      "Flying",
+      "Psychic",
+      "Bug",
+      "Fairy"
+    ]
+  },
+  "poison": {
+    "name": "poison",
+    "strongAgainst": [
+      "Grass",
+      "Fairy"
+    ],
+    "ineffectiveAgainst": [
+      "Poison",
+      "Ground",
+      "Rock",
+      "Ghost"
+    ]
+  },
+  "ground": {
+    "name": "ground",
+    "strongAgainst": [
+      "Fire",
+      "Electric",
+      "Poison",
+      "Rock",
+      "Steel"
+    ],
+    "ineffectiveAgainst": [
+      "Grass",
+      "Bug"
+    ]
+  },
+  "flying": {
+    "name": "flying",
+    "strongAgainst": [
+      "Grass",
+      "Fighting",
+      "Bug"
+    ],
+    "ineffectiveAgainst": [
+      "Electric",
+      "Rock",
+      "Steel"
+    ]
+  },
+  "psychic": {
+    "name": "psychic",
+    "strongAgainst": [
+      "Fighting",
+      "Poison"
+    ],
+    "ineffectiveAgainst": [
+      "Psychic",
+      "Steel"
+    ]
+  },
+  "bug": {
+    "name": "bug",
+    "strongAgainst": [
+      "Grass",
+      "Psychic",
+      "Dark"
+    ],
+    "ineffectiveAgainst": [
+      "Fire",
+      "Fighting",
+      "Poison",
+      "Flying",
+      "Ghost",
+      "Steel",
+      "Fairy"
+    ]
+  },
+  "rock": {
+    "name": "rock",
+    "strongAgainst": [
+      "Fire",
+      "Ice",
+      "Flying",
+      "Bug"
+    ],
+    "ineffectiveAgainst": [
+      "Fighting",
+      "Ground",
+      "Steel"
+    ]
+  },
+  "ghost": {
+    "name": "ghost",
+    "strongAgainst": [
+      "Psychic",
+      "Ghost"
+    ],
+    "ineffectiveAgainst": "Dark"
+  },
+  "dragon": {
+    "name": "dragon",
+    "strongAgainst": "Dragon",
+    "ineffectiveAgainst": "Steel"
+  },
+  "dark": {
+    "name": "dark",
+    "strongAgainst": [
+      "Psychic",
+      "Ghost"
+    ],
+    "ineffectiveAgainst": [
+      "Fighting",
+      "Dark",
+      "Fairy"
+    ]
+  },
+  "steel": {
+    "name": "steel",
+    "strongAgainst": [
+      "Ice",
+      "Rock",
+      "Fairy"
+    ],
+    "ineffectiveAgainst": [
+      "Fire",
+      "Water",
+      "Electric",
+      "Steel"
+    ]
+  },
+  "fairy": {
+    "name": "fairy",
+    "strongAgainst": [
+      "Fighting",
+      "Dragon",
+      "Dark"
+    ],
+    "ineffectiveAgainst": [
+      "Fire",
+      "Poison",
+      "Steel"
+    ]
+  }
+}
