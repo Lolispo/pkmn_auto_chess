@@ -57,10 +57,10 @@ async function getPieceFromRarity(prob, index, pieceStorage) {
     /*
     if(pieceStorage.get(levelIndex).size === 0){
       console.log(pieceStorage)
-      console.log('@getPieceFromRarity, pieceStorage is empty, shouldnt happen (Check #pieces and #players)');
-      process.exit();      
-    }*/
-    // console.log('@getPieceFromRarity', prob, random, index, pieceStorage.get(index).get(0)); //, pieceStorage.get(levelIndex))
+      console.log('@getPieceFromRarity, pieceStorage is empty (Check #pieces and #players)');
+      process.exit();
+    } */
+    // console.log('@getPieceFromRarity', prob, random, index, pieceStorage.get(index).get(0));
     piece = pieceStorage.get(index).get(0);
   }
   return piece;
@@ -75,7 +75,7 @@ async function addPieceToShop(shop, pieces, level) {
   let newShop = shop;
   let newPieceStorage = pieces;
   // console.log('addPieceToShop LEVEL ', level, prob)
-  for (let i = 0; i < 5; i++) { // Loop over levels 
+  for (let i = 0; i < 5; i++) { // Loop over levels
     const piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
@@ -92,10 +92,10 @@ async function addPieceToShop(shop, pieces, level) {
  * Fills pieceStorage with discardedPieces
  * When
  */
-async function refillPieces(pieces, discardedPieces){
+async function refillPieces(pieces, discardedPieces) {
   let pieceStorage = pieces;
-  console.log('@refillPieces', pieceStorage, discardedPieces)
-  for(let i = 0; i < discardedPieces.size; i++){
+  console.log('@refillPieces', pieceStorage, discardedPieces);
+  for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     const cost = pokemonJS.getStats(discardedPieces.get(i)).get('cost');
     pieceStorage = await stateLogicJS.push(pieceStorage, cost - 1, name);
@@ -116,7 +116,7 @@ async function refreshShop(stateParam, playerIndex) {
   let pieceStorage = state.get('pieces');
   for (let i = 0; i < 5; i++) { // Loop over pieces
     // If any piece storage goes empty -> put all discarded pieces in pieces
-    if(pieceStorage.get(level - 1).size === 0){
+    if (pieceStorage.get(level - 1).size === 0) {
       pieceStorage = await refillPieces(pieceStorage, state.get('discarded_pieces'));
       state = state.set('discarded_pieces', List([]));
     }
@@ -498,7 +498,7 @@ async function manaIncrease(board, unitPos, enemyPos) {
  * 2 if attackType is effective against defenseType
  * 0.5 if defenseType is resistance against attackType
  */
-async function calcTypeFactor(attackType, defenseType){
+async function calcTypeFactor(attackType, defenseType) {
   const strengthRatio = await typesJS.isStrongAgainst(attackType, defenseType);
   const ineffectiveRatio = await typesJS.isIneffectiveAgainst(attackType, defenseType);
   // console.log('@calcTypeFactor', attackType, defenseType, strengthRatio, ineffectiveRatio);
@@ -514,24 +514,23 @@ async function calcTypeFactor(attackType, defenseType){
  * Temp: Assumed typesAttacker is one type
  * Power might be wanted
  */
-async function calcDamage(attack, defense, typesAttacker, typesDefender){
-  const factor = 0.125 * attack * (attack/defense);
+async function calcDamage(attack, defense, typesAttacker, typesDefender) {
+  const factor = 0.125 * attack * (attack / defense);
   // console.log('@calcDamage', typesDefender, typesAttacker, attack, defense)
-  if(!f.isUndefined(typesDefender.size)){ // 2 Defending types
+  if (!f.isUndefined(typesDefender.size)) { // 2 Defending types
     let typeFactorList = List([1, 1]);
-    for(let i = 0; i < typesDefender.size; i++){
+    for (let i = 0; i < typesDefender.size; i++) {
       typeFactorList = typeFactorList.set(i, await calcTypeFactor(typesAttacker, typesDefender.get(i)));
     }
     const typeFactor = typeFactorList.get(0) * typeFactorList.get(1);
-    console.log('@calcDamage1 returning: ', typeFactor, '(', typesAttacker, '->', typesDefender.get(0), ',', typesDefender.get(1), ') ' +
-              factor, '(', attack, ',', defense , ') =', Math.round(factor * typeFactor + 1));
+    console.log('@calcDamage1 returning: ', typeFactor, '(', typesAttacker, '->', typesDefender.get(0), ',', typesDefender.get(1), `) ${
+      factor}`, '(', attack, ',', defense, ') =', Math.round(factor * typeFactor + 1));
     return Math.round(factor * typeFactor + 1);
-  } else { // 1 type
-    const typeFactor = await calcTypeFactor(typesAttacker, typesDefender);
-    console.log('@calcDamage2 returning: ', typeFactor, '(', typesAttacker, '->', typesDefender, ') ' +
-                        factor, '(', attack, ',', defense , ') =', Math.round(factor * typeFactor + 1));
-    return Math.round(factor * typeFactor + 1);
-  }
+  } // 1 type
+  const typeFactor = await calcTypeFactor(typesAttacker, typesDefender);
+  console.log('@calcDamage2 returning: ', typeFactor, '(', typesAttacker, '->', typesDefender, `) ${
+    factor}`, '(', attack, ',', defense, ') =', Math.round(factor * typeFactor + 1));
+  return Math.round(factor * typeFactor + 1);
 }
 
 /**
@@ -570,8 +569,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       const action = 'attack';
       const target = enemyPos.get('closestEnemy');
       // Temp: (TODO: Decide) Primary type is attacker type
-      const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type')); 
-      const value = await calcDamage(unit.get('attack'), board.get(target).get('defense'), attackerType, board.get(target).get('type')); 
+      const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type'));
+      const value = await calcDamage(unit.get('attack'), board.get(target).get('defense'), attackerType, board.get(target).get('type'));
       // TODO: Add weakness/resistance types between attacker/defender
       // Calculate newBoard from action
       const removedHPBoard = await removeHpBattle(board, target, value); // {board, unitDied}
@@ -962,7 +961,7 @@ async function battleTime(stateParam) {
   let iter;
   let nextPlayer;
   const firstPlayer = tempPlayer.value;
-  while (true) { // !tempPlayer.done
+  while (true) {
     const currentPlayer = tempPlayer.value;
     iter = playerIter.next();
     if (iter.done) {
@@ -1131,7 +1130,7 @@ async function removeHp(state, playerIndex, hpToRemove) {
     const amountOfPlayers = newState.get('amountOfPlayers') - 1;
     const removedPlayerState = newState.set('amountOfPlayers', amountOfPlayers);
     if (amountOfPlayers === 1) {
-      return await gameOver(removedPlayerState);
+      return gameOver(removedPlayerState);
     }
     return removedPlayerState;
   }

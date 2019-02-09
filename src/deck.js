@@ -13,9 +13,9 @@ async function buildDecks(pokemonParam) {
   const pokemonIterator = pokemon.values();
   let tempPokemon = pokemonIterator.next();
   while (!tempPokemon.done) {
-    const pokemon = tempPokemon.value;
+    const pokemonVar = tempPokemon.value;
     // console.log(pokemon.get('evolves_from'))
-    if (f.isUndefined(pokemon.get('evolves_from'))) { // Only add base level
+    if (f.isUndefined(pokemonVar.get('evolves_from'))) { // Only add base level
       decks = stateLogicJS.push(decks, tempPokemon.value.get('cost') - 1, tempPokemon.value);
     }
     tempPokemon = pokemonIterator.next();

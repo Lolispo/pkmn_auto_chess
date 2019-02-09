@@ -20,17 +20,17 @@ function Player(i) {
     hand: Map({}), // Sideline, 8 at once
     board: Map({}), // Placed on board (8x8 area, placeable is 4x8)
     /**
-         * Board example
-         *      Map({ (Check OrderedMap in immutable)
-         *          'x,y': unit,
-         *          '6,4': Map({name: 'Pidor'})
-         *          default: empty
-         *      })
-         */
+     * Board example
+     *      Map({ (Check OrderedMap in immutable)
+     *          'x,y': unit,
+     *          '6,4': Map({name: 'Pidor'})
+     *          default: empty
+     *      })
+     */
   });
 }
 
-exports.initPlayers = function (state, peoplePlaying) {
+exports.initPlayers = (state, peoplePlaying) => {
   let players = Map({});
   for (let i = 0; i < peoplePlaying; i++) {
     const player = new Player(i);
