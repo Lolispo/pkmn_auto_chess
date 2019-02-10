@@ -1,32 +1,23 @@
 // Author: Petter Andersson
 
 
-const { Map } = require('immutable');
+const { fromJS } = require('immutable');
 
 /**
- * Mana cost: 100 assumed
- */
-const abilitiesMap = new Map({
-  thundershock: {
-    name: 'Thundershock',
-    type: 'electric',
-    attack: 15,
-  },
-  gust: {
-    name: 'Gust',
-    type: 'normal',
-    attack: 15,
-  },
-  quickattack: {
-    name: 'Quick Attack',
-    type: 'normal',
-    attack: 18,
-  },
-  stringshot: {
-    name: 'String Shot',
-    type: 'grass',
-    attack: 18,
-  },
-});
+  * Read from json file
+  * Convert to immutable Map structure
+  * accuracy doesn't matter: Default 100
+  * power def 0
+  * noTarget, lifesteal, aoe default false
+  * mana default 100
+  * noTargetEffect
+  * unique TODO
+  */
+ async function loadImmutableAbilitiesJSON() {
+  const pokemonJSON = JSON.parse(fs.readFileSync('pokemonAbilities.json', 'utf8'));
+  return fromJS(pokemonJSON);
+}
+
+const abilitiesMap = loadImmutableAbilitiesJSON();
 
 exports.getMap = () => abilitiesMap;

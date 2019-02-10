@@ -53,12 +53,15 @@ Alternatives:
     Auto chess: Jynx1 jynx2 jynx3
         drawbacks: jynx2 jynx3
         Jynx2 = jynx level 50, Jynx3 = jynx level 100
-    Some kind of class bonus for base no evollution (jynx scyther)
+        Find math for getting a better version of one pokemon that is balanced and comparable to others evolving
+    /*Some kind of class bonus for base no evollution (jynx scyther)
         drawbacks: all jynxs are equal
-    Xp system?
+    Xp system?*/
 
 eevee:
     Evolution based on amount of unit types on board
+
+prevent getting more units of same type if you have max of that type
 
 ## Npc rounds / Item rounds
 

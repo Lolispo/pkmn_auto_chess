@@ -28,9 +28,7 @@ const defaultStat = Map({
   */
 async function loadImmutablePokemonJSON() {
   const pokemonJSON = JSON.parse(fs.readFileSync('pokemon.json', 'utf8'));
-  const immutablePokemon = await fromJS(pokemonJSON);
-  // f.print(immutablePokemon)
-  return immutablePokemon;
+  return fromJS(pokemonJSON);
 }
 
 const pokemonMap = loadImmutablePokemonJSON();
