@@ -202,6 +202,9 @@ const typeMap = new Map({
       'Steel',
       'Fairy',
     ]),
+    /* 
+    
+    */
   }),
   rock: Map({
     name: 'rock',
@@ -274,7 +277,7 @@ const typeMap = new Map({
 /**
  * Type matchup, check for strong against defenseType
  */
-exports.isStrongAgainst = async (attackType, defenseType) => {
+const isStrongAgainst = async (attackType, defenseType) => {
   const strongAgainst = typeMap.get(attackType).get('strongAgainst');
   return (!f.isUndefined(strongAgainst) && !f.isUndefined(strongAgainst.get(defenseType)) ? 2.0 : 1.0);
 };
@@ -282,10 +285,37 @@ exports.isStrongAgainst = async (attackType, defenseType) => {
 /**
  * Type matchup, check for ineffective against defenseType
  */
-exports.isIneffectiveAgainst = async (attackType, defenseType) => {
+const isIneffectiveAgainst = async (attackType, defenseType) => {
   const ineffectiveAgainst = typeMap.get(attackType).get('ineffectiveAgainst');
   return (!f.isUndefined(ineffectiveAgainst.get(defenseType)) ? 0.5 : 1.0);
 };
+
+/**
+ * Returns type factor for attack
+ * 2 if attackType is effective against defenseType
+ * 0.5 if defenseType is resistance against attackType
+ */
+const calcTypeFactor = async (attackType, defenseType) => {
+  const strengthRatio = await isStrongAgainst(attackType, defenseType);
+  const ineffectiveRatio = await isIneffectiveAgainst(attackType, defenseType);
+  // console.log('@calcTypeFactor', attackType, defenseType, strengthRatio, ineffectiveRatio);
+  return strengthRatio * ineffectiveRatio;
+}
+
+/**
+ * Returns typefactor from attacktype to defenseType
+ */
+exports.getTypeFactor = async (attackType, typesDefender) => {
+  // console.log('@getTypeFactor', attackType, typesDefender)
+  if (!f.isUndefined(typesDefender.size)) { // 2 Defending types
+    let typeFactorList = List([1, 1]);
+    for (let i = 0; i < typesDefender.size; i++) {
+      typeFactorList = typeFactorList.set(i, await calcTypeFactor(attackType, typesDefender.get(i)));
+    }
+    return typeFactorList.get(0) * typeFactorList.get(1);
+  } // 1 type
+  return calcTypeFactor(attackType, typesDefender);
+}
 
 exports.getType = name => typeMap.get(name);
 

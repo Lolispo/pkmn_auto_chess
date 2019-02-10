@@ -15,14 +15,15 @@ exports.printBoard = async (boardParam, moveParam) => {
   // console.log(move)
   console.log();
   while (!tempUnit.done) {
+    // console.log('@printBoard', tempUnit.value, board, moveParam)
     const x = tempUnit.value.get('x');
     const y = tempUnit.value.get('y');
     const builtString = `${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: `
-    + `${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')}`;
+    + `${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')} mana: ${board.get(tempUnit.value).get('mana')}`;
     let resultString = builtString;
     if ((move.get('unitPos').get('x') === x && move.get('unitPos').get('y') === y)
     || (move.get('action') === 'move' && move.get('target').get('x') === x && move.get('target').get('y') === y)) {
-      resultString = `${builtString} : ${move.get('action')}(target: {${move.get('target').get('x')},${
+      resultString = `${builtString} : ${move.get('action')}(${(move.get('abilityName') ? move.get('abilityName') + ', ' : '')}target: {${move.get('target').get('x')},${
         move.get('target').get('y')}} ${
         typeof move.get('value') === 'undefined' ? '' : `dmg: ${move.get('value')}`
       }${move.get('action') === 'move' ? `from: {${move.get('unitPos').get('x')},${move.get('unitPos').get('y')}}` : ''})`;

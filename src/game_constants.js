@@ -51,6 +51,12 @@ const expRequiredPerLevel = Map({
   9: 40,
 });
 
+const damageFactorType = Map({
+  'attack': 0.125,
+  'spell': 0.5
+});
+
+exports.getDamageFactorType = actionType => damageFactorType.get(actionType);
 
 // index - 1, Handles 0-4 indexes, send cost directly
 exports.getRarityAmount = index => rarityAmount.get(index - 1);
