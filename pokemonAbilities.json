@@ -2,7 +2,8 @@
   "ember": {
     "name": "ember",
     "type": "fire",
-    "power": 40
+    "power": 40,
+    "dot": 0.1
   },
   "earthquake": {
     "name": "earthquake",
@@ -27,7 +28,8 @@
   "flamethrower ": {
     "name": "flamethrower ",
     "type": "fire",
-    "power": 90
+    "power": 90,
+    "dot": 0.1
   },
   "psychic": {
     "name": "psychic",
@@ -59,7 +61,7 @@
     "name": "poisonSting",
     "type": "poison",
     "power": 15,
-    "dot": 30
+    "dot": 0.3
   },
   "megaDrain": {
     "name": "megaDrain",
@@ -232,7 +234,7 @@
     "name": "sludgeBomb",
     "type": "poison",
     "power": 90,
-    "dot": 30
+    "dot": 0.3
   },
   "megaPunch": {
     "name": "megaPunch",

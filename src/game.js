@@ -546,7 +546,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
     const accuracy = (!f.isUndefined(dot.size) ? dot.get(0) : dot);
     const dmg = (!f.isUndefined(dot.size) ? dot.get(1) : abilitiesJS.getAbilityDefault('dotDamage'));
     if (dot > newBoard.getIn([unitPos, 'dot'])) {
-      if (Math.random() > accuracy) { // Successfully puts poison
+      if (Math.random() < accuracy) { // Successfully puts poison
         newBoard = await newBoard.setIn([unitPos, 'dot'], dmg);
       }
     }
@@ -575,6 +575,7 @@ async function isBattleOver(board, team) {
 /**
  * Gives new board after dot damage is handled for unit
  * Returns Map({board, damage, battleOver})
+ * TODO: Go: Check damage does % damage
  */
 async function handleDotDamage(board, unitPos, team) {
   const dot = board.getIn([unitPos, 'dot']);
@@ -788,7 +789,8 @@ async function startBattle(boardParam) {
   // Return the winner
   // f.print(newBoard, '@startBattle newBoard after');
   // f.print(actionStack, '@startBattle actionStack after');
-  const winningTeam = newBoard.getIn([actionStack.get(actionStack.size - 1), 'team']);
+  const team = newBoard.get(newBoard.keys().next().value).get('team');
+  const winningTeam = team;
   return Map({ actionStack, board: newBoard, winner: winningTeam });
 }
 
@@ -874,8 +876,9 @@ async function markBoardBonuses(board) {
   const buffMap = await countUniqueOccurences(board);
 
   // Map({0: Map({grass: 40})})
-  let typeBuffMapSolo = Map({ 0: Map({}), 1: Map({}) }); // Solo buffs, only for that type
-  let typeBuffMapAll = Map({ 0: Map({}), 1: Map({}) }); // For all buff
+  let typeBuffMapSolo = Map({ 0: Map({}), 1: Map({}) });    // Solo buffs, only for that type
+  let typeBuffMapAll = Map({ 0: Map({}), 1: Map({}) });     // For all buff
+  let typeEnemyDebuffMap = Map({ 0: Map({}), 1: Map({}) }); // For all enemies debuffs  
   // Find if any bonuses need applying
   for (let i = 0; i <= 1; i++) {
     const buffsKeysIter = buffMap.get(String(i)).keys();
@@ -886,10 +889,19 @@ async function markBoardBonuses(board) {
       for (let j = 1; j <= 3; j++) {
         if (typesJS.hasBonus(buff) && amountBuff >= typesJS.getTypeReq(buff, j)) {
           // console.log('@markBoardBonuses', amountBuff, typesJS.getTypeReq(buff, i))
-          if (typesJS.isSoloBuff(buff)) {
-            typeBuffMapSolo = typeBuffMapSolo.setIn([String(i), buff], (typeBuffMapSolo.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
-          } else {
-            typeBuffMapAll = typeBuffMapAll.setIn([String(i), buff], (typeBuffMapAll.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+          switch(typesJS.getBonusType(buff)){
+            case 'bonus':
+              typeBuffMapSolo = typeBuffMapSolo.setIn([String(i), buff], (typeBuffMapSolo.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+              break;
+            case 'allBonus':
+              typeBuffMapAll = typeBuffMapAll.setIn([String(i), buff], (typeBuffMapAll.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+              break;
+            case 'enemyDebuff':
+              typeEnemyDebuffMap = typeEnemyDebuffMap.setIn([String(i), buff], (typeEnemyDebuffMap.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+              break;
+            default:
+              console.log('Ability bonus type error ... Error found for ' + typesJS.getBonusType(buff));
+              process.exit();
           }
         } else {
           break;
@@ -928,16 +940,30 @@ async function markBoardBonuses(board) {
     }
 
     // All buffs
-    for (let i = 0; i <= 1; i++) {
-      const allBuffIter = typeBuffMapAll.get(String(i)).keys();
-      let tempBuffAll = allBuffIter.next();
-      while (!tempBuffAll.done) {
-        const buff = tempBuffAll.value;
-        const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), typeBuffMapAll.get(String(i)).get(buff))
-          .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(typesJS.getType(buff).get('name'))); // Add buff to unit
-        newBoard = await newBoard.set(unitPos, newUnit);
-        tempBuffAll = allBuffIter.next();
-      }
+    const allBuffIter = typeBuffMapAll.get(String(team)).keys();
+    let tempBuffAll = allBuffIter.next();
+    while (!tempBuffAll.done) {
+      const buff = tempBuffAll.value;
+      const bonusValue = typeBuffMapAll.get(String(team)).get(buff);
+      const buffText = buff + ' +' + bonusValue;
+      const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), bonusValue)
+        .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
+      newBoard = await newBoard.set(unitPos, newUnit);
+      tempBuffAll = allBuffIter.next();
+    }
+
+    // Enemy buffs
+    const enemyTeam = 1 - team;
+    const enemyDebuffIter = typeEnemyDebuffMap.get(String(enemyTeam)).keys();
+    let tempEnemy = enemyDebuffIter.next();
+    while (!tempEnemy.done) {
+      const buff = tempEnemy.value;
+      const bonusValue = typeBuffMapAll.get(String(enemyTeam)).get(buff);
+      const buffText = buff + ' -' + bonusValue;
+      const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), bonusValue)
+        .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
+      newBoard = await newBoard.set(unitPos, newUnit);
+      tempEnemy = enemyDebuffIter.next();
     }
     tempUnit = boardKeysIter.next();
   }
@@ -1049,11 +1075,13 @@ async function battleTime(stateParam) {
     // console.log('@battleTime pairing: ', pairing, nextPlayer);
     const result = prepareBattle(state, pairing);
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
-    // TODO:  Send actionStack to frontend and startBoard
-    //        resultBattle.get('actionStack');
-    //        resultBattle.get('startBoard')
     const resultBattle = await result;
-    // console.log('\n@battleTime - ', resultBattle);
+    
+    // TODO:  Send actionStack to frontend and startBoard
+    const actionStack = resultBattle.get('actionStack');
+    const startBoard = resultBattle.get('startBoard');
+
+
     const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board'); // TODO: Check, where to use this?
     const newStateAfterBattle = await endBattle(state, index, winner, enemy);
@@ -1134,15 +1162,14 @@ async function prepEndTurn(state, playerIndex) {
 
 /**
  * TODO
- * winner:
- *  Gain 1 gold
- * loser:
- *  Lose hp
+ * winner: Gain 1 gold
+ * loser: Lose hp
  *      Calculate amount of hp to lose
  * Parameters: Enemy player index, winningAmount = damage? (units or damage)
  */
 async function endBattle(stateParam, playerIndex, winner, enemyPlayerIndex) {
   let state = stateParam;
+  // console.log('@endBattle', state, playerIndex, winner, enemyPlayerIndex);
   const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
   if (winner) {
     state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);

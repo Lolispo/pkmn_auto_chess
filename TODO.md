@@ -31,10 +31,6 @@ Abilities:
 Test dot damage functionality
 Test lifesteal functionality
 
-## Bugs
-
-JSON from docs -> pokemon remove empty object at end
-
 ## General
 
 Mapper: Json object to transfer to fron-end with relevant information
