@@ -460,10 +460,15 @@ function getClosestEnemy(board, unitPos, range, team) {
  * Remove unit if hp <= 0
  * ({board, unitDied})
  */
-async function removeHpBattle(board, unitPos, hpToRemove) {
+async function removeHpBattle(board, unitPos, hpToRemove, percent=false) {
   const currentHp = board.getIn([unitPos, 'hp']);
-  if (currentHp - hpToRemove <= 0) {
-    console.log('@removeHpBattle UNIT DIED!', currentHp, '-', hpToRemove);
+  let newHp = currentHp - hpToRemove;
+  if(percent){
+    const maxHp = (await pokemonJS.getStats(board.get(unitPos).get('name'))).get('hp');
+    newHp = await currentHp - (maxHp * hpToRemove); // HptoRemove is percentage to remove
+  }
+  if (newHp <= 0) {
+    console.log('@removeHpBattle UNIT DIED!', currentHp, '->', (percent ? newHp + '(%)': newHp + '(-)'));
     return Map({ board: board.delete(unitPos), unitDied: true });
   }
   // Caused a crash
@@ -471,7 +476,7 @@ async function removeHpBattle(board, unitPos, hpToRemove) {
     console.log('Exiting (removeHpBattle) ... ', currentHp, hpToRemove, board.get(unitPos));
     process.exit();
   }
-  return Map({ board: board.setIn([unitPos, 'hp'], currentHp - hpToRemove), unitDied: false });
+  return Map({ board: board.setIn([unitPos, 'hp'], newHp), unitDied: false });
 }
 
 /**
