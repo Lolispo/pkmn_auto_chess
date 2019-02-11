@@ -202,8 +202,8 @@ const typeMap = new Map({
       'Steel',
       'Fairy',
     ]),
-    /* 
-    
+    /*
+
     */
   }),
   rock: Map({
@@ -300,7 +300,7 @@ const calcTypeFactor = async (attackType, defenseType) => {
   const ineffectiveRatio = await isIneffectiveAgainst(attackType, defenseType);
   // console.log('@calcTypeFactor', attackType, defenseType, strengthRatio, ineffectiveRatio);
   return strengthRatio * ineffectiveRatio;
-}
+};
 
 /**
  * Returns typefactor from attacktype to defenseType
@@ -315,7 +315,7 @@ exports.getTypeFactor = async (attackType, typesDefender) => {
     return typeFactorList.get(0) * typeFactorList.get(1);
   } // 1 type
   return calcTypeFactor(attackType, typesDefender);
-}
+};
 
 exports.getType = name => typeMap.get(name);
 

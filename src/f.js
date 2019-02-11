@@ -23,7 +23,7 @@ exports.printBoard = async (boardParam, moveParam) => {
     let resultString = builtString;
     if ((move.get('unitPos').get('x') === x && move.get('unitPos').get('y') === y)
     || (move.get('action') === 'move' && move.get('target').get('x') === x && move.get('target').get('y') === y)) {
-      resultString = `${builtString} : ${move.get('action')}(${(move.get('abilityName') ? move.get('abilityName') + ', ' : '')}target: {${move.get('target').get('x')},${
+      resultString = `${builtString} : ${move.get('action')}(${(move.get('abilityName') ? `${move.get('abilityName')}, ` : '')}target: {${move.get('target').get('x')},${
         move.get('target').get('y')}} ${
         typeof move.get('value') === 'undefined' ? '' : `dmg: ${move.get('value')}`
       }${move.get('action') === 'move' ? `from: {${move.get('unitPos').get('x')},${move.get('unitPos').get('y')}}` : ''})`;

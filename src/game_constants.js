@@ -52,8 +52,8 @@ const expRequiredPerLevel = Map({
 });
 
 const damageFactorType = Map({
-  'attack': 0.125,
-  'spell': 0.5
+  attack: 0.125,
+  spell: 0.5,
 });
 
 exports.getDamageFactorType = actionType => damageFactorType.get(actionType);
