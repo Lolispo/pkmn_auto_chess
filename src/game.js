@@ -585,7 +585,7 @@ async function isBattleOver(board, team) {
 async function handleDotDamage(board, unitPos, team) {
   const dot = board.getIn([unitPos, 'dot']);
   if (!f.isUndefined(dot)) {
-    const removedHPBoard = await removeHpBattle(board, unitPos, dot); // {board, unitDied}
+    const removedHPBoard = await removeHpBattle(board, unitPos, dot, true); // {board, unitDied}
     const newBoard = removedHPBoard.get('board');
     let battleOver = false;
     if (removedHPBoard.get('unitDied')) { // Check if battle ends
