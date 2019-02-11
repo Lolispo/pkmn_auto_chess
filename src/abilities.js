@@ -33,7 +33,7 @@ async function loadImmutableAbilitiesJSON() {
 const abilitiesMap = loadImmutableAbilitiesJSON();
 
 exports.getAbility = async (name) => {
-  console.log(name);
+  // console.log('@abilties.getAbility', name);
   const ability = (await pokemonJS.getStats(name)).get('ability');
   return (await abilitiesMap).get(ability);
 };

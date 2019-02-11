@@ -365,7 +365,7 @@
     "defense": 85,
     "speed": 40,
     "type": "ground",
-    "ability": "scrath",
+    "ability": "scratch",
     "evolves_to": "sandslash"
   },
   "sandslash": {

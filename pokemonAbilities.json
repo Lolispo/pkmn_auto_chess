@@ -166,8 +166,7 @@
   "harden": {
     "name": "harden",
     "type": "normal",
-    "noTarget": true,
-    "noTargetBuff": [
+    "noTarget": [
       "defense",
       1
     ]

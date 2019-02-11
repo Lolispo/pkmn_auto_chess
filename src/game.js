@@ -48,20 +48,12 @@ async function initEmptyState(amountPlaying) {
  * Finds correct rarity for piece (random value)
  * Returns the piece taken from pieceStorage from correct rarity list
  * i is used to know which rarity it is checking (from 1 to 5)
- * Temp: If a rarity doesn't exist, adds piece of next available rarity
- * Currently lack level 2 rarities for early game
+ * Made sure after method that rarity contain pieces
  */
 async function getPieceFromRarity(prob, index, pieceStorage) {
   const random = Math.random();
   let piece;
   if (prob > random) {
-    /*
-    if(pieceStorage.get(levelIndex).size === 0){
-      console.log(pieceStorage)
-      console.log('@getPieceFromRarity, pieceStorage is empty (Check #pieces and #players)');
-      process.exit();
-    } */
-    // console.log('@getPieceFromRarity', prob, random, index, pieceStorage.get(index).get(0));
     piece = pieceStorage.get(index).get(0);
   }
   return piece;
@@ -755,7 +747,6 @@ async function startBattle(boardParam) {
     }
     const result = await nextMoveResult;
     battleOver = result.get('battleOver');
-    console.log('r', result.get('newBoard'));
     f.printBoard(result.get('newBoard'), result.get('nextMove'));
 
     actionStack = actionStack.push(result.get('nextMove').set('time', unit.get('next_move')));
@@ -782,9 +773,8 @@ async function startBattle(boardParam) {
     board = result.get('newBoard');
     // TODO: Dot damage
     const dotObj = await handleDotDamage(board, nextUnitToMove, board.getIn([nextUnitToMove, 'team']));
-    // console.log('dotobj', dotObj)
-    board = dotObj.get('board');
     if (!f.isUndefined(dotObj.get('damage'))) {
+      board = dotObj.get('board');
       battleOver = battleOver || dotObj.get('battleOver');
       const action = 'dotDamage';
       const dotDamage = dotObj.get('damage');
