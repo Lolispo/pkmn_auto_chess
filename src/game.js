@@ -14,6 +14,11 @@ const abilitiesJS = require('./abilities');
 /**
  * File used for game logic
  */
+
+ /**
+  * Builds deck of pokemon loaded from pokemon.js
+  * TODO: Optional parameter to choose pokemon for deck (mainly for testing)
+  */
 async function buildPieceStorage() {
   let availablePieces = List([List([]), List([]), List([]), List([]), List([])]);
   const decks = await deckJS.getDecks();

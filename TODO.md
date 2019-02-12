@@ -33,6 +33,8 @@ Test lifesteal functionality
 
 ## General
 
+Aoe damage logic
+
 Mapper: Json object to transfer to fron-end with relevant information
 
 Socket.io connection, simple listeners that connect to the functions

@@ -575,7 +575,7 @@ describe('game state', () => {
      * Remove hp from unit
      * Remove unit if hp <= 0
      * Return: ({board, unitDied})
-     * (board, unitPos, hpToRemove) 
+     * (board, unitPos, hpToRemove, percentage) 
      */
     it('removeHpBattle default lose hp', async () => {
       // TODO     
@@ -715,6 +715,22 @@ describe('game state', () => {
        * stateParam
        */
     it('battleTime TODO more', async () => {
+      let state = await initEmptyState(2);
+      state = await refreshShop(state, 0);
+      state = await refreshShop(state, 1);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await endTurn(state);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
+      state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
+      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
+      state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
+      state = await battleTime(state);
+      f.print(state)
+    });
+    it('battleTime Weedle battle', async () => {
       let state = await initEmptyState(2);
       state = await refreshShop(state, 0);
       state = await refreshShop(state, 1);
