@@ -50,6 +50,20 @@ async function initEmptyState(amountPlaying) {
 }
 
 /**
+ * Fills pieceStorage with discardedPieces
+ */
+async function refillPieces(pieces, discardedPieces) {
+  let pieceStorage = pieces;
+  console.log('@refillPieces', pieceStorage, discardedPieces);
+  for (let i = 0; i < discardedPieces.size; i++) {
+    const name = discardedPieces.get(i);
+    const cost = pokemonJS.getStats(discardedPieces.get(i)).get('cost');
+    pieceStorage = await stateLogicJS.push(pieceStorage, cost - 1, name);
+  }
+  return pieceStorage;
+}
+
+/**
  * Finds correct rarity for piece (random value)
  * Returns the piece taken from pieceStorage from correct rarity list
  * i is used to know which rarity it is checking (from 1 to 5)
@@ -68,13 +82,31 @@ async function getPieceFromRarity(prob, index, pieceStorage) {
  * Updates shop with a new piece from getPieceFromRarity
  * Removes the piece from correct place in pieceStorage
  */
-async function addPieceToShop(shop, pieces, level) {
+async function addPieceToShop(shop, pieces, level, discPieces) {
   const prob = gameConstantsJS.getPieceProbabilityNum(level);
   let newShop = shop;
   let newPieceStorage = pieces;
+  let newDiscPieces = discPieces;
   // console.log('addPieceToShop LEVEL ', level, prob)
   for (let i = 0; i < 5; i++) { // Loop over levels
-    const piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
+    // If any piece storage goes empty -> put all discarded pieces in pieces
+    if (newPieceStorage.get(i).size === 0) {
+      newPieceStorage = await refillPieces(newPieceStorage, discPieces);
+      newDiscPieces = List([]);
+    }
+    // TODO: In theory, pieces might still be empty here, if not enough pieces were in the deck.
+    // Temp: If still empty for that level, try a level below
+    let piece;
+    if (newPieceStorage.get(i).size === 0) {
+      if(i != 0){
+        piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
+      } else {
+        console.log('Not enough pieces of lower rarity, and current rarity not found');
+        process.exit();
+      }
+    } else {
+      piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
+    }
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
       newShop = newShop.push(piece);
@@ -83,22 +115,7 @@ async function addPieceToShop(shop, pieces, level) {
       break;
     }
   }
-  return { newShop, pieceStorage: newPieceStorage };
-}
-
-/**
- * Fills pieceStorage with discardedPieces
- * When
- */
-async function refillPieces(pieces, discardedPieces) {
-  let pieceStorage = pieces;
-  console.log('@refillPieces', pieceStorage, discardedPieces);
-  for (let i = 0; i < discardedPieces.size; i++) {
-    const name = discardedPieces.get(i);
-    const cost = pokemonJS.getStats(discardedPieces.get(i)).get('cost');
-    pieceStorage = await stateLogicJS.push(pieceStorage, cost - 1, name);
-  }
-  return pieceStorage;
+  return { newShop, pieceStorage: newPieceStorage, discPieces: newDiscPieces};
 }
 
 /**
@@ -112,19 +129,16 @@ async function refreshShop(stateParam, playerIndex) {
   const level = state.getIn(['players', playerIndex, 'level']);
   let newShop = List([]);
   let pieceStorage = state.get('pieces');
+  let discPieces = state.get('discarded_pieces');
   for (let i = 0; i < 5; i++) { // Loop over pieces
-    // If any piece storage goes empty -> put all discarded pieces in pieces
-    if (pieceStorage.get(level - 1).size === 0) {
-      pieceStorage = await refillPieces(pieceStorage, state.get('discarded_pieces'));
-      state = state.set('discarded_pieces', List([]));
-    }
-    const obj = await addPieceToShop(newShop, pieceStorage, level);
+    const obj = await addPieceToShop(newShop, pieceStorage, level, discPieces);
     newShop = obj.newShop;
     pieceStorage = obj.pieceStorage;
+    discPieces = obj.discPieces;
   }
   const shop = state.getIn(['players', playerIndex, 'shop']);
   if (shop.size !== 0) {
-    state = state.set('discarded_pieces', state.get('discarded_pieces').concat(shop.filter(piece => !f.isUndefined(piece))));
+    state = state.set('discarded_pieces', discPieces.concat(shop.filter(piece => !f.isUndefined(piece))));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
   state = state.set('pieces', pieceStorage);
