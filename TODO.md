@@ -70,12 +70,17 @@ Gym leader rounds:
     can give item (low chance)
     10: Rock: Geodude, Onix
     15: Water: Staryu, Starmie
-    20: Electric: raichu
-    25: Grass: vileplume
-    30: Poison: 
-    35: Psychic: 
-    40: Normal: Nidoking
-    TODO: Find more
+    20: Electric: voltorb, pikachu, raichu
+    25: Grass: victreebel, tangela, vileplume
+    30: Poison: koffing, muk, koffing, weezing
+    35: Psychic: kadabra, mr. mime, venomoth, alakazam
+    40: Fire: Growlithe, ponyta, rapidash, arcanine
+    45: Ground: rhyhorn, dugtrio, nidoqueen, nidoking, rhydon
+    50: Ice: dewgong, cloyster, slowbro, jynx, lapras
+    55: Fighting + Onix: Onix, hitmonlee, hitmonchan, onix, machamp
+    60: Ghost + goldbat/arbok: Gengar, golbat, haunter, arbok, gengar
+    65: Flying + Dragon: Gyarados, Dragonair, aerodactyl, dragonite
+    70: Final Boss: Pidgeot, alakazam, rhydon, arcanine, exeggutor, blastoise
 
 Shop rounds: 
     Buy items for item money in item shop
