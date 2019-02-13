@@ -15,7 +15,7 @@ const increaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense'
  * allBonus: function effect for buffs for entire team
  * TODO: Add for enemy: enemyDebuff: func
  * bonusType: bonus, allBonus, enemyDebuff
- * 
+ *
  * strongAgainst: Assumed Empty
  */
 const typeMap = new Map({
@@ -209,7 +209,7 @@ const typeMap = new Map({
     ]),
     /*
     sandshrew (nidoking/queen) diglett geodude onix cubone rhyhorn
-    [3, 6, 9] 
+    [3, 6, 9]
     [2, 4, 6] might be too strong
 
     */
@@ -230,7 +230,7 @@ const typeMap = new Map({
     Increases speed for all flyers
     [3, 6, 9]
     [4, 7, 10]
-    charizard, butterfree, pidgey, spearow, zubat, farfetchd, doduo, 
+    charizard, butterfree, pidgey, spearow, zubat, farfetchd, doduo,
     scyther gyarados aerodactyl 3xbirds dragonite
     */
   }),

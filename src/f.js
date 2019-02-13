@@ -18,15 +18,23 @@ exports.printBoard = async (boardParam, moveParam) => {
     // console.log('@printBoard', tempUnit.value, board, moveParam)
     const x = tempUnit.value.get('x');
     const y = tempUnit.value.get('y');
+    const action = move.get('action');
+    const target = move.get('target');
+    const unitPos = move.get('unitPos');
+    const effect = move.get('effect');
+    // Unit start string
     const builtString = `${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: `
     + `${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')} mana: ${board.get(tempUnit.value).get('mana')}`;
     let resultString = builtString;
-    if ((move.get('unitPos').get('x') === x && move.get('unitPos').get('y') === y)
-    || (move.get('action') === 'move' && move.get('target').get('x') === x && move.get('target').get('y') === y)) {
-      resultString = `${builtString} : ${move.get('action')}(${(move.get('abilityName') ? `${move.get('abilityName')}, ` : '')}target: {${move.get('target').get('x')},${
-        move.get('target').get('y')}} ${
+    // Move string TODO Print dot damage here as well
+    if ((unitPos.get('x') === x && unitPos.get('y') === y)
+    || (action === 'move' && target.get('x') === x && target.get('y') === y)) {
+      resultString = `${builtString} : ${action}(`
+      + `${(move.get('abilityName') ? `${move.get('abilityName')}, `
+      + `${(effect && effect.size > 0 ? (effect.get(target) ? effect.get(target).get('dot') + ', ' : effect.get(unitPos).get('heal') + ', ') : '')}` : '')}`
+      + `target: {${target.get('x')},${target.get('y')}} ${
         typeof move.get('value') === 'undefined' ? '' : `dmg: ${move.get('value')}`
-      }${move.get('action') === 'move' ? `from: {${move.get('unitPos').get('x')},${move.get('unitPos').get('y')}}` : ''})`;
+      }${action === 'move' ? `from: {${unitPos.get('x')},${unitPos.get('y')}}` : ''})`;
     }
     console.log(resultString);
     tempUnit = keysIter.next();

@@ -35,6 +35,15 @@ Test lifesteal functionality
 
 Aoe damage logic
 
+Rival: Rival battle when playing against a certain opponent
+    > 3 battles
+    Alt1: Either when playing against the person you played the most
+        Temp implementation makes this irrelevant
+    Alt2: The person you lost to the most 
+        Problem: People won't be rivals against each other
+    Revamp over enemy matchups should be done to make this interesting
+
+
 Mapper: Json object to transfer to fron-end with relevant information
 
 Socket.io connection, simple listeners that connect to the functions
