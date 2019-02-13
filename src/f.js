@@ -31,7 +31,7 @@ exports.printBoard = async (boardParam, moveParam) => {
     || (action === 'move' && target.get('x') === x && target.get('y') === y)) {
       resultString = `${builtString} : ${action}(`
       + `${(move.get('abilityName') ? `${move.get('abilityName')}, `
-      + `${(effect && effect.size > 0 ? (effect.get(target) ? effect.get(target).get('dot') + ', ' : effect.get(unitPos).get('heal') + ', ') : '')}` : '')}`
+      + `${(effect && effect.size > 0 ? (effect.get(target) ? 'Dot applied: ' + effect.get(target).get('dot') + ', ' : 'Healed: ' + effect.get(unitPos).get('heal') + ', ') : '')}` : '')}`
       + `target: {${target.get('x')},${target.get('y')}} ${
         typeof move.get('value') === 'undefined' ? '' : `dmg: ${move.get('value')}`
       }${action === 'move' ? `from: {${unitPos.get('x')},${unitPos.get('y')}}` : ''})`;

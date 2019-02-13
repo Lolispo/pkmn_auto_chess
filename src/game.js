@@ -630,7 +630,7 @@ async function handleDotDamage(board, unitPos, team) {
     const newBoard = removedHPBoard.get('board');
     let battleOver = false;
     if (removedHPBoard.get('unitDied')) { // Check if battle ends
-      battleOver = await isBattleOver(newBoard, team);
+      battleOver = await isBattleOver(newBoard, 1 - team);
     }
     return Map({ board: newBoard, damage: dmgHp, battleOver });
   }
@@ -663,7 +663,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const enemyPos = await getClosestEnemy(board, unitPos, (ability.get('range') || abilitiesJS.getAbilityDefault('range')), team);
     const action = 'spell';
     const target = await enemyPos.get('closestEnemy');
-    //  console.log('enemyPos', enemyPos)
+    (f.isUndefined(target) ? console.log('@nextmove - enemyPos', enemyPos) : 1);
     const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), ability.get('type'));
     const abilityName = ability.get('name');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
@@ -825,12 +825,13 @@ async function startBattle(boardParam) {
     const dotObj = await handleDotDamage(board, nextUnitToMove, board.getIn([nextUnitToMove, 'team']));
     if (!f.isUndefined(dotObj.get('damage'))) {
       board = await dotObj.get('board');
+      console.log('@dotDamage battleover', battleOver, dotObj.get('battleOver'), battleOver || dotObj.get('battleOver'));
       battleOver = battleOver || dotObj.get('battleOver');
       const action = 'dotDamage';
       const dotDamage = dotObj.get('damage');
       const move = await Map({ unitPos: nextUnitToMove, action, value: dotDamage, target: nextUnitToMove});
       // console.log('dot damage dealt!', board);
-      console.log('@dotDamage', dotDamage);
+      // console.log('@dotDamage', dotDamage);
       f.printBoard(board, move);
       actionStack = actionStack.push(Map({ nextMove: move, newBoard: board }).set('time', unit.get('next_move')));
     }
@@ -839,6 +840,7 @@ async function startBattle(boardParam) {
   // Return the winner
   // f.print(newBoard, '@startBattle newBoard after');
   // f.print(actionStack, '@startBattle actionStack after');
+  console.log('@Last - Check', newBoard.get(newBoard.keys().next().value));
   const team = newBoard.get(newBoard.keys().next().value).get('team');
   const winningTeam = team;
   return Map({ actionStack, board: newBoard, winner: winningTeam });
@@ -1111,6 +1113,7 @@ async function battleTime(stateParam) {
   let iter;
   let nextPlayer;
   const firstPlayer = tempPlayer.value;
+  // TODO: Future: All battles calculate concurrently
   while (true) {
     const currentPlayer = tempPlayer.value;
     iter = playerIter.next();

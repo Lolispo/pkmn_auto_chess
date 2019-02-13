@@ -369,15 +369,21 @@ const typeMap = new Map({
  */
 const isStrongAgainst = async (attackType, defenseType) => {
   const strongAgainst = typeMap.get(attackType).get('strongAgainst');
-  return (!f.isUndefined(strongAgainst) && !f.isUndefined(strongAgainst.get(defenseType)) ? 2.0 : 1.0);
+  if(!f.isUndefined(strongAgainst)){
+    const lowerCase = strongAgainst.map(v => v.toLowerCase());
+    return (strongAgainst.includes(defenseType) ? 2.0 : 1.0);
+  }
+  return 1.0;
 };
 
 /**
  * Type matchup, check for ineffective against defenseType
+ * TODO List to lowercase
  */
 const isIneffectiveAgainst = async (attackType, defenseType) => {
-  const ineffectiveAgainst = typeMap.get(attackType).get('ineffectiveAgainst');
-  return (!f.isUndefined(ineffectiveAgainst.get(defenseType)) ? 0.5 : 1.0);
+  const ineffectiveAgainst = typeMap.get(attackType).get('ineffectiveAgainst').map(v => v.toLowerCase());
+  // console.log('@inefective', ineffectiveAgainst.includes(defenseType), !f.isUndefined(ineffectiveAgainst.get(defenseType)), ineffectiveAgainst);
+  return (ineffectiveAgainst.includes(defenseType) ? 0.5 : 1.0);
 };
 
 /**

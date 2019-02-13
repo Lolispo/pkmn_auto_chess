@@ -750,32 +750,52 @@ describe('game state', () => {
       state = await battleTime(state);
       f.print(state)
     });
+    it('battleTime Weedle battle', async () => {
+      let state = await initEmptyState(2, List(['charmander', 'oddish', 'paras', 'ponyta', 'vulpix', 'caterpie', 'weedle']));
+      state = await startGame(state);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await endTurn(state);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
+      state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
+      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
+      state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
+      state = await battleTime(state);
+      f.print(state)
+    });
   });
   describe('markBoardBonuses', () => {
     /**
      * Give bonuses from types
      * Type bonus is either only for those of that type or all units
      */
-   it('markBoardBonuses 3 normal types', async () => {
-     const unit = await getBoardUnit('rattata', 1, 1);
-     const unit2 = await getBoardUnit('pidgey', 1, 2);
-     const unit3 = await getBoardUnit('spearow', 1, 3);
-     const newBoard = Map({})
-     .set(f.pos(1,1), unit.set('team', 0).set('type', 'normal').set('hp', '100'))
-     .set(f.pos(1,2), unit2.set('team', 0).set('type', 'normal').set('hp', '100'))
-     .set(f.pos(1,3), unit3.set('team', 0).set('type', 'normal').set('hp', '100'))
-     const xdBoard = await markBoardBonuses(newBoard);
-     assert.equal(xdBoard.get(f.pos(1,1)).get('buff').get(0), 'normal');
-     assert.equal(xdBoard.get(f.pos(1,2)).get('buff').get(0), 'normal');
-     assert.equal(xdBoard.get(f.pos(1,3)).get('buff').get(0), 'normal');
-   });
-   it('markBoardBonuses team impact', async () => {
-    // TODO
+    it('markBoardBonuses 3 normal types', async () => {
+      // TODO Use new createBattleUnit
+      const unit = await createBattleUnit((await getBoardUnit('rattata', 1, 1)), f.pos(1,1), 0);
+      const unit2 = await createBattleUnit((await getBoardUnit('pidgey', 1, 2)), f.pos(1,2), 0);
+      const unit3 = await createBattleUnit((await getBoardUnit('spearow', 1, 3)), f.pos(1,3), 0);
+      const newBoard = Map({})
+      .set(f.pos(1,1), unit)
+      .set(f.pos(1,2), unit2)
+      .set(f.pos(1,3), unit3);
+      const markedBoard = await markBoardBonuses(newBoard);
+      assert.equal(markedBoard.get(f.pos(1,1)).get('buff').get(0), 'normal');
+      assert.equal(markedBoard.get(f.pos(1,2)).get('buff').get(0), 'normal');
+      assert.equal(markedBoard.get(f.pos(1,3)).get('buff').get(0), 'normal');
+      // TODO: Check that the normal buff is applied
+      assert.equal(markedBoard.get(f.pos(1,1)).get('hp'), (await pokemonJS.getStats('rattata')).get('hp') + 20);
+      assert.equal(markedBoard.get(f.pos(1,2)).get('hp'), (await pokemonJS.getStats('pidgey')).get('hp') + 20);
+      assert.equal(markedBoard.get(f.pos(1,3)).get('hp'), (await pokemonJS.getStats('spearow')).get('hp') + 20);
+    });
+    it('markBoardBonuses team impact', async () => {
+      // TODO
+    });
+    it('markBoardBonuses rattatas / raticates counts as 1 ', async () => {
+      // TODO
+    });
   });
-  it('markBoardBonuses rattatas / raticates counts as 1 ', async () => {
-    // TODO
-  });
- });
 });
 
 describe('gameconstants', () => {
