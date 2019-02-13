@@ -1295,6 +1295,7 @@ async function removeHp(state, playerIndex, hpToRemove) {
 /**
  * Initialize all shops for all players
  * Round already set to 1
+ * TODO: Use in more testcases
  */
 async function startGame(stateParam) {
   let state = stateParam;
