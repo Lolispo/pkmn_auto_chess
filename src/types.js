@@ -369,7 +369,7 @@ const typeMap = new Map({
  */
 const isStrongAgainst = async (attackType, defenseType) => {
   const strongAgainst = typeMap.get(attackType).get('strongAgainst');
-  if(!f.isUndefined(strongAgainst)){
+  if (!f.isUndefined(strongAgainst)) {
     const lowerCase = strongAgainst.map(v => v.toLowerCase());
     return (strongAgainst.includes(defenseType) ? 2.0 : 1.0);
   }

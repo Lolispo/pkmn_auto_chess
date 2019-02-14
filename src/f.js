@@ -23,7 +23,7 @@ exports.printBoard = async (boardParam, moveParam) => {
     const unitPos = move.get('unitPos');
     const effect = move.get('effect');
     // Unit start string
-    const builtString = `${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: `
+    const builtString = `${move.get('time') + ': '}${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: `
     + `${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')} mana: ${board.get(tempUnit.value).get('mana')}`;
     let resultString = builtString;
     // Move string TODO Print dot damage here as well
@@ -31,7 +31,7 @@ exports.printBoard = async (boardParam, moveParam) => {
     || (action === 'move' && target.get('x') === x && target.get('y') === y)) {
       resultString = `${builtString} : ${action}(`
       + `${(move.get('abilityName') ? `${move.get('abilityName')}, `
-      + `${(effect && effect.size > 0 ? (effect.get(target) ? 'Dot applied: ' + effect.get(target).get('dot') + ', ' : 'Healed: ' + effect.get(unitPos).get('heal') + ', ') : '')}` : '')}`
+      + `${(effect && effect.size > 0 ? (effect.get(target) ? `Dot applied: ${effect.get(target).get('dot')}, ` : `Healed: ${effect.get(unitPos).get('heal')}, `) : '')}` : '')}`
       + `target: {${target.get('x')},${target.get('y')}} ${
         typeof move.get('value') === 'undefined' ? '' : `dmg: ${move.get('value')}`
       }${action === 'move' ? `from: {${unitPos.get('x')},${unitPos.get('y')}}` : ''})`;
