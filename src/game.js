@@ -1382,12 +1382,20 @@ async function startGame(stateParam) {
 }
 
 exports.start = async () => {
-  let state = initEmptyState(2);
+  /*
+  let state = await initEmptyState(2);
   // f.print(state, '**Initial State: ');
-  state = await refreshShop(state, 0);
+  state = await startGame(state);
+  // state = await refreshShop(state, 0);
   // f.print(state, '**State with shop given to player 0: ');
   state = await buyUnit(state, 0, 1);
   // f.print(state, '**State where player 0 Bought a Unit at index 1: ');
   state = await battleTime(state);
   f.print(state, '**State after battle time with 0 units: ');
+  */
 };
+
+exports._startGame = async () => {
+  let state = await initEmptyState(2);
+  return await startGame(state);
+}

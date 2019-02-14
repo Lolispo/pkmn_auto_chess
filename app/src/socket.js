@@ -14,6 +14,7 @@ const configureSocket = dispatch => {
   // the different actions that our socket/client will emit
   // is catched by these listeners
   socket.on('UPDATED_PIECES', state => {
+    console.log('Updating pieces');
     dispatch({ type: 'NEW_PIECES', newState: state});
   });
   return socket;
@@ -23,5 +24,8 @@ const configureSocket = dispatch => {
 // to emit actions to everyone connected to our web socket
 export const sendNameToServer = name =>
   socket.emit('SEND_NAME_TO_SERVER', name);
+
+export const ready = name =>
+  socket.emit('READY', name);
 
 export default configureSocket;
