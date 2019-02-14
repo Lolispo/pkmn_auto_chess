@@ -13,7 +13,7 @@ exports.printBoard = async (boardParam, moveParam) => {
   const keysIter = board.keys();
   let tempUnit = keysIter.next();
   // console.log(move)
-  console.log();
+  console.log(` -- Move @${move.get('time')}: `);
   while (!tempUnit.done) {
     // console.log('@printBoard', tempUnit.value, board, moveParam)
     const x = tempUnit.value.get('x');
@@ -23,7 +23,7 @@ exports.printBoard = async (boardParam, moveParam) => {
     const unitPos = move.get('unitPos');
     const effect = move.get('effect');
     // Unit start string
-    const builtString = `${move.get('time') + ': '}${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: `
+    const builtString = `${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: `
     + `${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')} mana: ${board.get(tempUnit.value).get('mana')}`;
     let resultString = builtString;
     // Move string TODO Print dot damage here as well
@@ -39,6 +39,7 @@ exports.printBoard = async (boardParam, moveParam) => {
     console.log(resultString);
     tempUnit = keysIter.next();
   }
+  console.log();
 };
 
 /**

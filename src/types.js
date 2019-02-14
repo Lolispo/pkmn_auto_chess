@@ -33,7 +33,8 @@ const typeMap = new Map({
     /*
     All stages of game, 15 max ish (Could remove some, farfetchd, ditto, porygon)
     [4, 7, 10] hp for all
-    pidgey rattata spearow clefairy jigglypuff meowth farfetchd doduo lickitung chansey kangaskhan tauros ditto eevee porygon snorlax
+    pidgey rattata spearow clefairy jigglypuff meowth farfetchd doduo
+    lickitung chansey kangaskhan tauros ditto eevee porygon snorlax
     */
   }),
   fire: Map({
@@ -371,7 +372,7 @@ const isStrongAgainst = async (attackType, defenseType) => {
   const strongAgainst = typeMap.get(attackType).get('strongAgainst');
   if (!f.isUndefined(strongAgainst)) {
     const lowerCase = strongAgainst.map(v => v.toLowerCase());
-    return (strongAgainst.includes(defenseType) ? 2.0 : 1.0);
+    return (lowerCase.includes(defenseType) ? 2.0 : 1.0);
   }
   return 1.0;
 };
@@ -382,7 +383,7 @@ const isStrongAgainst = async (attackType, defenseType) => {
  */
 const isIneffectiveAgainst = async (attackType, defenseType) => {
   const ineffectiveAgainst = typeMap.get(attackType).get('ineffectiveAgainst').map(v => v.toLowerCase());
-  // console.log('@inefective', ineffectiveAgainst.includes(defenseType), !f.isUndefined(ineffectiveAgainst.get(defenseType)), ineffectiveAgainst);
+  // console.log('@inefective', ineffectiveAgainst.includes(defenseType), ineffectiveAgainst);
   return (ineffectiveAgainst.includes(defenseType) ? 0.5 : 1.0);
 };
 
@@ -404,11 +405,11 @@ const calcTypeFactor = async (attackType, defenseType) => {
 exports.getTypeFactor = async (attackType, typesDefender) => {
   // console.log('@getTypeFactor', attackType, typesDefender)
   if (!f.isUndefined(typesDefender.size)) { // 2 Defending types
-    let typeFactorList = List([1, 1]);
+    let typeList = List([1, 1]);
     for (let i = 0; i < typesDefender.size; i++) {
-      typeFactorList = typeFactorList.set(i, await calcTypeFactor(attackType, typesDefender.get(i)));
+      typeList = typeList.set(i, await calcTypeFactor(attackType, typesDefender.get(i)));
     }
-    return typeFactorList.get(0) * typeFactorList.get(1);
+    return typeList.get(0) * typeList.get(1);
   } // 1 type
   return calcTypeFactor(attackType, typesDefender);
 };

@@ -93,7 +93,7 @@ describe('game state', () => {
     */
     it('buyunit default?', async () => {
       let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      state = await startGame(state);
       const shop = state.getIn(['players', 0, 'shop']);
       state = await buyUnit(state, 0, 1);
       const hand = state.getIn(['players', 0, 'hand']);
@@ -250,7 +250,7 @@ describe('game state', () => {
     // TODO Sell higher level piece
     it('sellPiece from hand?', async () => {
       let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      state = await startGame(state);
       state = await buyUnit(state, 0, 1);
       const hand = state.getIn(['players', 0, 'hand']);
       const gold = state.getIn(['players', 0, 'gold']);
@@ -336,8 +336,8 @@ describe('game state', () => {
     */
   describe('placePiece', () => {
     it('placePiece on board to board?', async () => {
-      let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      let state = await initEmptyState(2);      
+      state = await startGame(state);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
@@ -350,7 +350,7 @@ describe('game state', () => {
     });
     it('placePiece on board to hand?', async () => {
       let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      state = await startGame(state);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
@@ -361,7 +361,7 @@ describe('game state', () => {
     });
     it('placePiece on hand to board?', async () => {
       let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      state = await startGame(state);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
@@ -370,7 +370,7 @@ describe('game state', () => {
    });
     it('placePiece swap functionality on board->board?', async () => {
       let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      state = await startGame(state);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       const unit2 = state.getIn(['players', 0, 'shop']).get(2);
       state = await buyUnit(state, 0, 1);
@@ -487,7 +487,7 @@ describe('game state', () => {
      */
     it('withdrawPiece from board, empty bench', async () => {
       let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      state = await startGame(state);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
@@ -535,7 +535,7 @@ describe('game state', () => {
     });
     it('withdrawPiece from board, change hand spot 2 and 3', async () => {
       let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
+      state = await startGame(state);
       const unit = state.getIn(['players', 0, 'shop']).get(1);
       const unit2 = state.getIn(['players', 0, 'shop']).get(2);
       const unit3 = state.getIn(['players', 0, 'shop']).get(3);
@@ -719,25 +719,9 @@ describe('game state', () => {
        * * Assumes board contains every player's updated board
        * stateParam
        */
-    it('battleTime TODO more', async () => {
-      let state = await initEmptyState(2);
-      state = await refreshShop(state, 0);
-      state = await refreshShop(state, 1);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await endTurn(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
-      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
-      state = await battleTime(state);
-      f.print(state)
-    });
-    it('battleTime Weedle battle', async () => {
-      let state = await initEmptyState(2, List(['weedle', 'nidoran ♀', 'ekans']));
-      state = await startGame(state);
+      it('battleTime Poison battle', async () => {
+        let state = await initEmptyState(2, List(['weedle', 'nidoran ♀', 'ekans']));
+        state = await startGame(state);
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
       state = await endTurn(state);
@@ -762,6 +746,33 @@ describe('game state', () => {
       state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
       state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
+      state = await battleTime(state);
+      f.print(state)
+    });
+    it('battleTime Big', async () => {
+      let state = await initEmptyState(2);
+      state = await startGame(state);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await endTurn(state);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
+      state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
+      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
+      state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
+      state = await battleTime(state);
+      f.print(state)
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
+      state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
+      state = await battleTime(state);
+      f.print(state)
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
+      state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
       state = await battleTime(state);
       f.print(state)
     });

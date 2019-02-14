@@ -3,33 +3,40 @@
     "name": "ember",
     "type": "fire",
     "power": 40,
-    "dot": 0.1
+    "effect": [
+      "dot",
+      0.1,
+      0.125
+    ]
   },
   "earthquake": {
     "name": "earthquake",
     "type": "ground",
     "power": 100,
-    "aoe": true,
+    "effect": "aoe",
     "mana": 130
   },
   "rockThrow": {
     "name": "rockThrow",
     "type": "rock",
     "power": 50,
-    "accuracy": 0.9
+    "acc_range": 0.9
   },
   "rollout": {
     "name": "rollout",
     "type": "rock",
     "power": 30,
-    "accuracy": 0.9,
-    "unique": true
+    "acc_range": 0.9
   },
   "flamethrower ": {
     "name": "flamethrower ",
     "type": "fire",
     "power": 90,
-    "dot": 0.1
+    "effect": [
+      "dot",
+      0.1,
+      0.125
+    ]
   },
   "psychic": {
     "name": "psychic",
@@ -49,8 +56,7 @@
   "splash": {
     "name": "splash",
     "type": "water",
-    "noTarget": true,
-    "unique": true
+    "effect": "noTarget"
   },
   "confusion": {
     "name": "confusion",
@@ -61,27 +67,30 @@
     "name": "poisonSting",
     "type": "poison",
     "power": 15,
-    "dot": 0.3
+    "effect": [
+      "dot",
+      0.3
+    ]
   },
   "megaDrain": {
     "name": "megaDrain",
     "type": "grass",
     "power": 75,
-    "lifesteal": true
+    "effect": "lifesteal"
   },
   "hydroPump": {
     "name": "hydroPump",
     "type": "water",
     "power": 110,
-    "accuracy": 0.8,
+    "acc_range": 0.8,
     "mana": 150
   },
   "furyAttack": {
     "name": "furyAttack",
     "type": "normal",
     "power": 15,
-    "accuracy": 0.85,
-    "unique": true
+    "acc_range": 0.85,
+    "effect": "multiStrike"
   },
   "quickAttack": {
     "name": "quickAttack",
@@ -111,34 +120,32 @@
   "transform": {
     "name": "transform",
     "type": "normal",
-    "unique": true
+    "effect": "transform"
   },
   "dragonTail": {
     "name": "dragonTail",
     "type": "dragon",
     "power": 60,
-    "accuracy": 0.9,
-    "unique": true
+    "acc_range": 0.9
   },
   "dragonRage": {
     "name": "dragonRage",
     "type": "dragon",
-    "power": 40,
-    "unique": true
+    "power": 40
   },
   "hyperBeam": {
     "name": "hyperBeam",
     "type": "normal",
     "power": 150,
-    "accuracy": 0.9,
+    "acc_range": 0.9,
     "mana": 150
   },
   "blizzard": {
     "name": "blizzard",
     "type": "ice",
     "power": 110,
-    "accuracy": 0.7,
-    "aoe": true,
+    "acc_range": 0.7,
+    "effect": "aoe",
     "mana": 150
   },
   "waterfall": {
@@ -146,14 +153,12 @@
     "type": "water",
     "power": 80
   },
-  "": {
-    "power": "power",
-    "accuracy": "accuracy",
-    "noTarget": "noTarget",
-    "lifesteal": "lifesteal",
-    "aoe": "aoe",
-    "dot": "dot",
-    "unique": "unique"
+  "doubleSlap": {
+    "name": "doubleSlap",
+    "type": "normal",
+    "power": 15,
+    "acc_range": 0.85,
+    "effect": "multiStrike"
   },
   "karateChop": {
     "name": "karateChop",
@@ -168,7 +173,8 @@
   "harden": {
     "name": "harden",
     "type": "normal",
-    "noTarget": [
+    "effect": [
+      "buff",
       "defense",
       1
     ]
@@ -177,7 +183,7 @@
     "name": "absorb",
     "type": "grass",
     "power": 40,
-    "lifesteal": true
+    "effect": "lifesteal"
   },
   "wingAttack": {
     "name": "wingAttack",
@@ -188,30 +194,35 @@
     "name": "leechLife",
     "type": "bug",
     "power": 80,
-    "lifesteal": true
+    "effect": "lifesteal"
   },
   "scratch": {
     "name": "scratch",
     "type": "normal",
     "power": 40
   },
+  "": {
+    "power": "power",
+    "acc_range": "accuracy",
+    "effect": "effect"
+  },
   "dynamicPunch": {
     "name": "dynamicPunch",
     "type": "fighting",
     "power": 100,
-    "accuracy": 0.5
+    "acc_range": 0.5
   },
   "razorLeaf": {
     "name": "razorLeaf",
     "type": "grass",
     "power": 55,
-    "accuracy": 0.95
+    "acc_range": 0.95
   },
   "solarBeam": {
     "name": "solarBeam",
     "type": "grass",
     "power": 200,
-    "aoe": true,
+    "effect": "aoe",
     "mana": 150
   },
   "seismicToss": {
@@ -227,38 +238,40 @@
   "teleport": {
     "name": "teleport",
     "type": "psychic",
-    "noTarget": true,
-    "unique": true
+    "effect": "teleport"
   },
   "sludgeBomb": {
     "name": "sludgeBomb",
     "type": "poison",
     "power": 90,
-    "dot": 0.3
+    "effect": [
+      "dot",
+      0.3
+    ]
   },
   "megaPunch": {
     "name": "megaPunch",
     "type": "normal",
     "power": 80,
-    "accuracy": 0.85
+    "acc_range": 0.85
   },
   "megaKick": {
     "name": "megaKick",
     "type": "normal",
     "power": 120,
-    "accuracy": 0.75
+    "acc_range": 0.75
   },
   "boneClub": {
     "name": "boneClub",
     "type": "ground",
     "power": 65,
-    "accuracy": 0.85
+    "acc_range": 0.85
   },
   "bonemerang": {
     "name": "bonemerang",
     "type": "ground",
     "power": 50,
-    "accuracy": 0.9
+    "acc_range": 0.9
   },
   "shadowBall": {
     "name": "shadowBall",

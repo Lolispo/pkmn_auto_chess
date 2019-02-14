@@ -564,33 +564,58 @@ async function healUnit(board, unitPos, heal) {
 async function useAbility(board, ability, damage, unitPos, target) {
   const manaCost = ability.get('mana') || abilitiesJS.getAbilityDefault('mana');
   let newBoard = board.setIn([unitPos, 'mana'], board.getIn([unitPos, 'mana']) - manaCost);
-  let effect = Map({});
-  if (!f.isUndefined(ability.get('noTarget'))) { // noTarget = true
-    const noTarget = ability.get('noTarget');
-    if (!f.isUndefined(noTarget.size)) { // If list, means buff, use buff on self on board [buffType, amount]
-      newBoard = newBoard.setIn([unitPos, noTarget.get(0)], newBoard.getIn([unitPos, noTarget.get(0)]) + noTarget.get(1));
+  let effectMap = Map({});
+  if(!f.isUndefined(ability.get('effect'))){
+    const effect = ability.get('effect');
+    const mode = (f.isUndefined(effect.size) ? effect : effect.get(0));
+    const args = (f.isUndefined(effect.size) ? undefined : effect.shift(0));
+    console.log('@useAbility mode', mode, ', args', args);
+    switch(mode){
+      case 'buff':
+        if (!f.isUndefined(args)) { // Args: Use buff on self on board [buffType, amount]
+          newBoard = newBoard.setIn([unitPos, args.get(0)], newBoard.getIn([unitPos, args.get(0)]) + args.get(1));
+        }
+      case 'teleport':
+      case 'transform':
+      case 'noTarget':
+        console.log('@useAbility - noTarget return for mode =', mode);
+        return Map({ board: Map({ board: newBoard }) })
+      case 'lifesteal':
+        const lsFactor = (!f.isUndefined(args) ? args.get(0) : abilitiesJS.getAbilityDefault('lifestealValue'));  
+        newBoard = await healUnit(newBoard, unitPos, lsFactor * damage);
+        effectMap = effectMap.setIn([unitPos, 'heal'], lsFactor * damage);
+        break;
+      case 'dot':
+        const accuracy = (!f.isUndefined(args) ? args.get(0) : abilitiesJS.getAbilityDefault('dotAccuracy'));
+        const dmg = (!f.isUndefined(args) ? args.get(1) : abilitiesJS.getAbilityDefault('dotDamage'));
+        if (dmg > (newBoard.getIn([target, 'dot']) || 0)) {
+          if (Math.random() < accuracy) { // Successfully puts poison
+            console.log(' --- Poison hit on ', target);
+            newBoard = await newBoard.setIn([target, 'dot'], dmg);
+            effectMap = effectMap.setIn([target, 'dot'], dmg);
+          }
+        }
+        break;
+      case 'aoe':
+        // TODO - Can it even be checked here first? Probably before this stage
+        break;
+      case 'multiStrike':
+        const percentages = abilitiesJS.getAbilityDefault('multiStrikePercentage');
+        const r = Math.random();
+        let sum = 0;
+        for(let i = 0; i < 4; i++){
+          sum += percentages.get(i);
+          if(r <= sum){ // 
+            damage = damage * (2+i);
+            break;
+          }
+        }
+        break;
+      default: 
+        console.log('@useAbility - default, mode =', mode);
     }
-    return newBoard;
-  } // Requires target
-  if (!f.isUndefined(ability.get('lifesteal'))) {
-    const ls = ability.get('lifesteal');
-    const lsFactor = (!f.isUndefined(ls.size) ? ls.get(1) : abilitiesJS.getAbilityDefault('lifestealValue'));
-    newBoard = await healUnit(newBoard, unitPos, lsFactor * damage);
-    effect = effect.setIn([unitPos, 'heal'], lsFactor * damage);
   }
-  if (!f.isUndefined(ability.get('dot'))) {
-    const dot = ability.get('dot');
-    const accuracy = (!f.isUndefined(dot.size) ? dot.get(0) : dot);
-    const dmg = (!f.isUndefined(dot.size) ? dot.get(1) : abilitiesJS.getAbilityDefault('dotDamage'));
-    if (dot > (newBoard.getIn([target, 'dot']) || 0)) {
-      if (Math.random() < accuracy) { // Successfully puts poison
-        console.log(' --- Poison hit on ', target);
-        newBoard = await newBoard.setIn([target, 'dot'], dmg);
-        effect = effect.setIn([target, 'dot'], dmg);
-      }
-    }
-  }
-  return (!f.isUndefined(ability.get('power')) ? Map({ board: (await removeHpBattle(newBoard, target, damage)), effect }) : Map({ board: Map({ board: newBoard }) }));
+  return Map({ board: (await removeHpBattle(newBoard, target, damage)), effect: effectMap});
 }
 
 /**
@@ -677,8 +702,10 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const team = unit.get('team');
     const ability = await abilitiesJS.getAbility(unit.get('name'));
     // TODO Check aoe / notarget here instead
-    // console.log('@spell ability', ability)
-    const enemyPos = await getClosestEnemy(board, unitPos, (ability.get('range') || abilitiesJS.getAbilityDefault('range')), team);
+    console.log('@spell ability', ability)
+    const range = (!f.isUndefined(ability.get('acc_range')) && !f.isUndefined(ability.get('acc_range').size) ? 
+      ability.get('acc_range').get(1) : abilitiesJS.getAbilityDefault('range'));
+    const enemyPos = await getClosestEnemy(board, unitPos, range, team);
     const action = 'spell';
     const target = await enemyPos.get('closestEnemy');
     (f.isUndefined(target) ? console.log('@nextmove - enemyPos', enemyPos) : 1);
@@ -845,7 +872,7 @@ async function startBattle(boardParam) {
       unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove'));
     }
     board = result.get('newBoard');
-    if(battleOver) break; // Breaks if battleover (no dot damage if last unit standing)
+    if (battleOver) break; // Breaks if battleover (no dot damage if last unit standing)
     // Dot damage
     const team = board.getIn([nextUnitToMove, 'team']);
     const dotObj = await handleDotDamage(board, nextUnitToMove, team);

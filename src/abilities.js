@@ -1,16 +1,18 @@
 // Author: Petter Andersson
 
 
-const { Map, fromJS } = require('immutable');
+const { Map, List, fromJS } = require('immutable');
 const fs = require('fs');
 const pokemonJS = require('./pokemon');
 
 const abilityDefaults = Map({
   mana: 100,
   lifestealValue: 0.5,
+  dotAccuracy: 1.0,
   dotDamage: 1 / 16,
   aoeRange: 1,
   range: 8,
+  multiStrikePercentage: List([0.375, 0.375, 0.125, 0.125]),
 });
 
 exports.getAbilityDefault = name => abilityDefaults.get(name);
