@@ -566,25 +566,25 @@ async function useAbility(board, ability, damage, unitPos, target) {
   const manaCost = ability.get('mana') || abilitiesJS.getAbilityDefault('mana');
   let newBoard = board.setIn([unitPos, 'mana'], board.getIn([unitPos, 'mana']) - manaCost);
   let effectMap = Map({});
-  if(!f.isUndefined(ability.get('effect'))){
+  if (!f.isUndefined(ability.get('effect'))) {
     const effect = ability.get('effect');
     const mode = (f.isUndefined(effect.size) ? effect : effect.get(0));
     const args = (f.isUndefined(effect.size) ? undefined : effect.shift(0));
     console.log('@useAbility mode', mode, ', args', args);
-    switch(mode){
+    switch (mode) {
       case 'buff':
         if (!f.isUndefined(args)) { // Args: Use buff on self on board [buffType, amount]
           const buffValue = newBoard.getIn([unitPos, args.get(0)]) + args.get(1);
           newBoard = newBoard.setIn([unitPos, args.get(0)], buffValue);
-          effectMap = effectMap.setIn([unitPos, 'buff'+args.get(0)], buffValue);
+          effectMap = effectMap.setIn([unitPos, `buff${args.get(0)}`], buffValue);
         }
       case 'teleport':
       case 'transform':
       case 'noTarget':
         console.log('@useAbility - noTarget return for mode =', mode);
-        return Map({ board: Map({ board: newBoard }) })
+        return Map({ board: Map({ board: newBoard }) });
       case 'lifesteal':
-        const lsFactor = (!f.isUndefined(args) ? args.get(0) : abilitiesJS.getAbilityDefault('lifestealValue'));  
+        const lsFactor = (!f.isUndefined(args) ? args.get(0) : abilitiesJS.getAbilityDefault('lifestealValue'));
         newBoard = await healUnit(newBoard, unitPos, lsFactor * damage);
         effectMap = effectMap.setIn([unitPos, 'heal'], lsFactor * damage);
         break;
@@ -606,20 +606,20 @@ async function useAbility(board, ability, damage, unitPos, target) {
         const percentages = abilitiesJS.getAbilityDefault('multiStrikePercentage');
         const r = Math.random();
         let sum = 0;
-        for(let i = 0; i < 4; i++){
+        for (let i = 0; i < 4; i++) {
           sum += percentages.get(i);
-          if(r <= sum){ // 2-5 hits
-            damage = damage * (2+i);
-            effectMap = effectMap.setIn([unitPos, 'multiStrike'], (2+i));
+          if (r <= sum) { // 2-5 hits
+            damage *= (2 + i);
+            effectMap = effectMap.setIn([unitPos, 'multiStrike'], (2 + i));
             break;
           }
         }
         break;
-      default: 
+      default:
         console.log('@useAbility - default, mode =', mode);
     }
   }
-  return Map({ board: (await removeHpBattle(newBoard, target, damage)), effect: effectMap});
+  return Map({ board: (await removeHpBattle(newBoard, target, damage)), effect: effectMap });
 }
 
 /**
@@ -705,8 +705,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const ability = await abilitiesJS.getAbility(unit.get('name'));
     // TODO Check aoe / notarget here instead
     // console.log('@spell ability', ability)
-    const range = (!f.isUndefined(ability.get('acc_range')) && !f.isUndefined(ability.get('acc_range').size) ? 
-      ability.get('acc_range').get(1) : abilitiesJS.getAbilityDefault('range'));
+    const range = (!f.isUndefined(ability.get('acc_range')) && !f.isUndefined(ability.get('acc_range').size)
+      ? ability.get('acc_range').get(1) : abilitiesJS.getAbilityDefault('range'));
     const enemyPos = await getClosestEnemy(board, unitPos, range, team);
     const action = 'spell';
     const target = await enemyPos.get('closestEnemy');
@@ -872,10 +872,10 @@ async function startBattle(boardParam) {
     } else {
       // Delete every key mapping to nextMoveResult
       const nextMoveAction = nextMoveResult.get('nextMove').get('action');
-      if(nextMoveAction === 'attack' || nextMoveAction === 'spell'){ // Unit attacked died
+      if (nextMoveAction === 'attack' || nextMoveAction === 'spell') { // Unit attacked died
         // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
-        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove').get('target')); 
-      } else if(nextMoveAction === 'move'){ // Unit moved, remove units that used to attack him
+        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove').get('target'));
+      } else if (nextMoveAction === 'move') { // Unit moved, remove units that used to attack him
         // console.log('Deleting all keys connected to this: ', nextUnitToMove)
         unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
       }
