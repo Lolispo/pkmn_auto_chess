@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { sendNameToServer, ready } from './socket';
+import { connect } from 'react-redux';
 
 class App extends Component {
   // Event listener example, can be attached to example buttons
@@ -18,22 +19,18 @@ class App extends Component {
   render() {
     return <div>
       <button onClick={this.exampleEvent}>The button of ready</button>
-      <p>State: {this.state}</p>
-      <p>State: {this.props.test}</p>
+      <div>State: {this.props.test}</div>
+      <p>Pieces:{this.props.pieces}</p>
     </div>;
   }
 }
 
 const mapStateToProps = state => ({
-  pot: state.pot,
-  name: state.name,
-  names: state.names,
-  snackbarIsOpen: state.snackbarIsOpen,
-  mode: state.mode,
-  whoDidIt: state.whoDidIt
+  pieces: state.pieces,
+  test: state.test,
 });
 
-// export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(App);
 // TODO: Add react code here to connect to the reducer (state)
 
-export default App;
+//export default App;

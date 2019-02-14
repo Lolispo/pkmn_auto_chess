@@ -12,7 +12,9 @@ const reducer = (
       // Update state with incoming data from server
       state = { ...state, pieces: action.newState.pieces};
       state = { ...state, test: 'im updated'};
+      console.log(action.newState)
       console.log(state);
+      
       // Send state to server
       socket && socket.emit('UPDATE_STATE', state); 
       break;
