@@ -608,7 +608,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
         let sum = 0;
         for(let i = 0; i < 4; i++){
           sum += percentages.get(i);
-          if(r <= sum){ // 
+          if(r <= sum){ // 2-5 hits
             damage = damage * (2+i);
             effectMap = effectMap.setIn([unitPos, 'multiStrike'], (2+i));
             break;
@@ -687,8 +687,6 @@ async function deleteNextMoveResultEntries(unitMoveMapParam, targetToRemove) {
 /**
  * Next move calculator
  * If mana is full use spell
- *  TODO: Spells logic
- *  TODO: Conditions for spells
  * Unit checks if it can attack an enemy, is within unit.range
  * If it can, attack on closests target position
  *  If enemy unit dies, check battle over
@@ -706,14 +704,13 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const team = unit.get('team');
     const ability = await abilitiesJS.getAbility(unit.get('name'));
     // TODO Check aoe / notarget here instead
-    console.log('@spell ability', ability)
+    // console.log('@spell ability', ability)
     const range = (!f.isUndefined(ability.get('acc_range')) && !f.isUndefined(ability.get('acc_range').size) ? 
       ability.get('acc_range').get(1) : abilitiesJS.getAbilityDefault('range'));
     const enemyPos = await getClosestEnemy(board, unitPos, range, team);
     const action = 'spell';
     const target = await enemyPos.get('closestEnemy');
-    (f.isUndefined(target) ? console.log('@nextmove - enemyPos', enemyPos) : 1);
-    console.log('@nextmove - ability target: ', target, enemyPos)
+    // console.log('@nextmove - ability target: ', target, enemyPos)
     const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), ability.get('type'));
     const abilityName = ability.get('name');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
@@ -749,7 +746,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const action = 'attack';
     const target = enemyPos.get('closestEnemy');
     const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type'));
-    console.log('@nextmove - normal attack target: ', target, enemyPos)
+    // console.log('@nextmove - normal attack target: ', target, enemyPos)
     const value = await calcDamage(action, unit.get('attack'), unit, board.get(target), attackerType);
     // Calculate newBoard from action
     const removedHPBoard = await removeHpBattle(board, target, value); // {board, unitDied}
@@ -806,7 +803,7 @@ async function getUnitWithNextMove(board) {
   if (lowestNextMove.size === 1) {
     return lowestNextMove.get(0);
   }
-  // TODO: Decide order of equal next move units
+  // Decide order of equal next move units
   // Approved Temp: Random order
   return lowestNextMove.get(Math.floor(Math.random() * lowestNextMove.size));
 }
@@ -824,7 +821,8 @@ async function startBattle(boardParam) {
   let board = boardParam;
   // f.print(board, '@startBattle')
   let battleOver = false;
-  // TODO First move for all units first
+
+  // First move for all units first
   // Remove first_move from all units when doing first movement
   // First move used for all units (order doesn't matter) and set next_move to + speed accordingly
   // Update actionStack and board accordingly
@@ -845,6 +843,7 @@ async function startBattle(boardParam) {
     board = board.set(unitPos, newUnit);
     temp = iter.next();
   }
+  // Start battle
   while (!battleOver) {
     board = await board;
     const nextUnitToMove = await getUnitWithNextMove(board);
@@ -874,10 +873,10 @@ async function startBattle(boardParam) {
       // Delete every key mapping to nextMoveResult
       const nextMoveAction = nextMoveResult.get('nextMove').get('action');
       if(nextMoveAction === 'attack' || nextMoveAction === 'spell'){ // Unit attacked died
-        console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
+        // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
         unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove').get('target')); 
       } else if(nextMoveAction === 'move'){ // Unit moved, remove units that used to attack him
-        console.log('Deleting all keys connected to this: ', nextUnitToMove)
+        // console.log('Deleting all keys connected to this: ', nextUnitToMove)
         unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
       }
     }
@@ -1322,11 +1321,13 @@ async function endBattle(stateParam, playerIndex, winner, finishedBoard, enemyPl
   const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
   if (winner) {
     state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
-    state = state.setIn(['players', playerIndex, 'streak'], streak + 1);
+    const newStreak = (streak < 0 ? 0 : +streak + 1);
+    state = state.setIn(['players', playerIndex, 'streak'], newStreak);
   } else {
     const hpToRemove = await calcDamageTaken(finishedBoard);
     state = await removeHp(state, playerIndex, hpToRemove);
-    state = state.setIn(['players', playerIndex, 'streak'], streak - 1);
+    const newStreak = (streak > 0 ? 0 : +streak - 1);
+    state = state.setIn(['players', playerIndex, 'streak'], newStreak);
   }
   const round = state.get('round');
   const potentialEndTurn = await prepEndTurn(state, playerIndex);
