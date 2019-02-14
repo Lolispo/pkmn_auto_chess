@@ -371,7 +371,7 @@ async function discardBaseUnits(state, name, depth = '1') {
  */
 async function sellPiece(state, playerIndex, piecePosition) {
   let pieceTemp;
-  // TODO: Make this into method, taking pos and get/set, if set take argument to set
+  // Make this into method, taking pos and get/set, if set take argument to set
   if (checkHandUnit(piecePosition)) {
     pieceTemp = state.getIn(['players', playerIndex, 'hand', piecePosition]);
   } else {
@@ -558,6 +558,7 @@ async function healUnit(board, unitPos, heal) {
  * Temp: Move noTarget out of here
  * Doesn't support aoe currently
  * TODO: Go: Mark the specific information in move
+ *    Attempt fix by effectMap
  * currently: returns board
  * new: {board, effect} where effect = abilityTriggers contain heals or dot
  */
@@ -573,7 +574,9 @@ async function useAbility(board, ability, damage, unitPos, target) {
     switch(mode){
       case 'buff':
         if (!f.isUndefined(args)) { // Args: Use buff on self on board [buffType, amount]
-          newBoard = newBoard.setIn([unitPos, args.get(0)], newBoard.getIn([unitPos, args.get(0)]) + args.get(1));
+          const buffValue = newBoard.getIn([unitPos, args.get(0)]) + args.get(1);
+          newBoard = newBoard.setIn([unitPos, args.get(0)], buffValue);
+          effectMap = effectMap.setIn([unitPos, 'buff'+args.get(0)], buffValue);
         }
       case 'teleport':
       case 'transform':
@@ -607,6 +610,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
           sum += percentages.get(i);
           if(r <= sum){ // 
             damage = damage * (2+i);
+            effectMap = effectMap.setIn([unitPos, 'multiStrike'], (2+i));
             break;
           }
         }
@@ -1197,7 +1201,7 @@ async function battleTime(stateParam) {
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     const resultBattle = await result;
 
-    // TODO:  Send actionStack to frontend and startBoard
+    // TODO: Send actionStack to frontend and startBoard
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
 
@@ -1307,7 +1311,6 @@ async function calcDamageTaken(boardUnits) {
 }
 
 /**
- * TODO
  * winner: Gain 1 gold
  * loser: Lose hp
  *      Calculate amount of hp to lose
@@ -1365,7 +1368,6 @@ async function removeHp(state, playerIndex, hpToRemove) {
 /**
  * Initialize all shops for all players
  * Round already set to 1
- * TODO: Use in more testcases
  */
 async function startGame(stateParam) {
   let state = stateParam;
