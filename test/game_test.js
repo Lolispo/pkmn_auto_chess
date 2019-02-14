@@ -765,14 +765,14 @@ describe('game state', () => {
       f.print(state)
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
-      state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
+      state = await placePiece(state, 0, f.pos(0), f.pos(1,2))
+      state = await placePiece(state, 1, f.pos(0), f.pos(1,2))
       state = await battleTime(state);
       f.print(state)
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
-      state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
+      state = await placePiece(state, 0, f.pos(0), f.pos(2,1))
+      state = await placePiece(state, 1, f.pos(0), f.pos(2,1))
       state = await battleTime(state);
       f.print(state)
     });

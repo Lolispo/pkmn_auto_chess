@@ -662,15 +662,15 @@ async function handleDotDamage(board, unitPos, team) {
  * Deletes all entries for a unit so allowed same move cant be used to attack those units
  * If a unit dies, the people that previously attacked that unit have to select new target
  */
-async function deleteNextMoveResultEntries(unitMoveMapParam, moveMade) {
-  // console.log('@deleteNextMoveResultEntries', moveMade)
+async function deleteNextMoveResultEntries(unitMoveMapParam, targetToRemove) {
+  // console.log('@deleteNextMoveResultEntries', targetToRemove)
   let unitMoveMap = unitMoveMapParam;
   const keysIter = unitMoveMap.keys();
   let tempUnit = keysIter.next();
   while (!tempUnit.done) {
     const tempPrevMove = unitMoveMap.get(tempUnit.value);
     const target = tempPrevMove.get('nextMove').get('target');
-    const invalidPrevTarget = moveMade.get('target');
+    const invalidPrevTarget = targetToRemove;
     if (target.get('x') === invalidPrevTarget.get('x') && target.get('y') === invalidPrevTarget.get('y')) {
       unitMoveMap = await unitMoveMap.delete(tempUnit.value);
       // console.log('Deleting prevMove for: ', tempUnit.value, nextMoveResult.get('nextMove').get('target'))
@@ -709,7 +709,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const action = 'spell';
     const target = await enemyPos.get('closestEnemy');
     (f.isUndefined(target) ? console.log('@nextmove - enemyPos', enemyPos) : 1);
-    // console.log('@nextmove - ability target: ', target, enemyPos)
+    console.log('@nextmove - ability target: ', target, enemyPos)
     const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), ability.get('type'));
     const abilityName = ability.get('name');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
@@ -745,7 +745,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const action = 'attack';
     const target = enemyPos.get('closestEnemy');
     const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type'));
-    // console.log('@nextmove - normal attack target: ', target, enemyPos)
+    console.log('@nextmove - normal attack target: ', target, enemyPos)
     const value = await calcDamage(action, unit.get('attack'), unit, board.get(target), attackerType);
     // Calculate newBoard from action
     const removedHPBoard = await removeHpBattle(board, target, value); // {board, unitDied}
@@ -868,8 +868,14 @@ async function startBattle(boardParam) {
       // console.log(' allowing same move, setting for', nextUnitToMove, unitMoveMap.get(nextUnitToMove).get('nextMove').get('target'))
     } else {
       // Delete every key mapping to nextMoveResult
-      // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
-      unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove'));
+      const nextMoveAction = nextMoveResult.get('nextMove').get('action');
+      if(nextMoveAction === 'attack' || nextMoveAction === 'spell'){ // Unit attacked died
+        console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
+        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove').get('target')); 
+      } else if(nextMoveAction === 'move'){ // Unit moved, remove units that used to attack him
+        console.log('Deleting all keys connected to this: ', nextUnitToMove)
+        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
+      }
     }
     board = result.get('newBoard');
     if (battleOver) break; // Breaks if battleover (no dot damage if last unit standing)
