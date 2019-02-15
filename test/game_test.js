@@ -828,27 +828,23 @@ describe('game state', () => {
       state = await placePiece(state, 0, f.pos(0), f.pos(2,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(2,2))
       state = await battleSetup(state);
-      f.print(state)
+      // f.print(state)
       state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
       state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
       state = await battleSetup(state);
-      f.print(state)
-      /*
+      // f.print(state)
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(1,2))
       state = await battleSetup(state);
       f.print(state)
-      console.log('@test', state.getIn(['players', 0, 'hand']))
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
-      console.log('@test', state.getIn(['players', 0, 'hand']))
       state = await placePiece(state, 0, f.pos(0), f.pos(2,1))
       state = await placePiece(state, 1, f.pos(0), f.pos(2,1))
       state = await battleSetup(state);
       f.print(state)
-      */
     });
   });
 });

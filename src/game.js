@@ -570,8 +570,8 @@ async function calcDamage(actionType, power, unit, target, attackerType) { // at
  * Heals unit at unitPos by heal amount, not over max hp
  */
 async function healUnit(board, unitPos, heal) {
-  const maxHp = pokemonJS.getStats(board.get(unitPos).get('name')).get('hp');
-  const newHp = (board.getIn([unitPos, 'hp'] + heal >= maxHp ? maxHp : board.getIn([unitPos, 'hp']) + heal));
+  const maxHp = (await pokemonJS.getStats(board.get(unitPos).get('name'))).get('hp');
+  const newHp = (board.getIn([unitPos, 'hp']) + heal >= maxHp ? maxHp : board.getIn([unitPos, 'hp']) + heal);
   return board.setIn([unitPos, 'hp'], newHp);
 }
 
@@ -730,7 +730,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const ability = await abilitiesJS.getAbility(unit.get('name'));
     // TODO Check aoe / notarget here instead
     // console.log('@spell ability', ability)
-    // TODO: Some ability still crashes
+    // TODO: Some ability still crashes - oddish fixed
     if(f.isUndefined(ability)){
       console.log(unit.get('name') + ' buggy ability')
     }
@@ -939,7 +939,7 @@ async function startBattle(boardParam) {
   // Return the winner
   // f.print(newBoard, '@startBattle newBoard after');
   // f.print(actionStack, '@startBattle actionStack after');
-  console.log('@Last - Survivor', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value).get('name'));
+  console.log('@Last - A Survivor', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value).get('name'));
   const team = newBoard.get(newBoard.keys().next().value).get('team');
   const winningTeam = team;
   return Map({ actionStack, board: newBoard, winner: winningTeam });
@@ -1320,10 +1320,12 @@ async function fixTooManyUnits(state, playerIndex){
   }
   // Withdraw if possible unit, otherwise sell
   let newState;
+  // TODO: Inform Client about update
   if(state.getIn(['players', playerIndex, 'hand']).size < 8){
-    console.log('WITHDRAWING PIECE', chosenUnit)
+    console.log('WITHDRAWING PIECE', board.get(chosenUnit).get('name'))
     newState = await withdrawPiece(state, playerIndex, chosenUnit);
   } else {
+    console.log('SELLING PIECE', board.get(chosenUnit).get('name'))
     newState = await sellPiece(state, playerIndex, chosenUnit);
   }
   const newBoard = newState.getIn(['players', playerIndex, 'board']);
@@ -1347,7 +1349,6 @@ async function battleSetup(stateParam) {
     const board = state.getIn(['players', playerIndex, 'board']);
     const level = state.getIn(['players', playerIndex, 'level']);
     if(board.size > level) {
-      console.log(board);
       const newPlayer = await fixTooManyUnits(state, playerIndex);
       state = state.setIn(['players', playerIndex], newPlayer);
     }

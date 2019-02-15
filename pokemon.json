@@ -574,7 +574,7 @@
       "grass",
       "poison"
     ],
-    "ability": "absorb ",
+    "ability": "absorb",
     "evolves_to": "gloom"
   },
   "gloom": {
