@@ -198,8 +198,8 @@ async function buyUnit(stateParam, playerIndex, unitID) {
 
     const hand = state.getIn(['players', playerIndex, 'hand']);
     const unitInfo = await pokemonJS.getStats(unit);
-    const handIndex = hand.size; // TODO: Go: Get first best hand index
-    const unitHand = await getBoardUnit(unit, handIndex);
+    const handIndex = await getFirstAvailableSpot(state, playerIndex); // TODO: Go: Get first best hand index
+    const unitHand = await getBoardUnit(unit, handIndex.get('x'));
     // console.log('@buyUnit unitHand', unitHand)
     state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
 
@@ -345,20 +345,27 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
 }
 
 /**
- * WithdrawPiece from board to best spot on bench
- * * Assumes not bench is full
+ * Get first available spot on hand
  */
-async function withdrawPiece(state, playerIndex, piecePosition) {
+async function getFirstAvailableSpot(state, playerIndex){
   const hand = state.getIn(['players', playerIndex, 'hand']);
-  let benchPosition;
   for (let i = 0; i < 8; i++) {
     // Get first available spot on bench
     const pos = f.pos(i);
     if (f.isUndefined(hand.get(pos))) {
-      benchPosition = pos;
-      break;
+      return pos;
     }
   }
+  // Returns undefined if hand is full
+  return undefined;
+}
+
+/**
+ * WithdrawPiece from board to best spot on bench
+ * * Assumes not bench is full
+ */
+async function withdrawPiece(state, playerIndex, piecePosition) {
+  let benchPosition = await getFirstAvailableSpot(state, playerIndex);
   return placePiece(state, playerIndex, piecePosition, benchPosition, false);
 }
 
@@ -575,7 +582,7 @@ async function healUnit(board, unitPos, heal) {
  * Damage unit if have power
  * Temp: Move noTarget out of here
  * Doesn't support aoe currently
- * TODO: Go: Mark the specific information in move
+ * TODO: Mark the specific information in move
  *    Attempt fix by effectMap
  * currently: returns board
  * new: {board, effect} where effect = abilityTriggers contain heals or dot
@@ -932,7 +939,7 @@ async function startBattle(boardParam) {
   // Return the winner
   // f.print(newBoard, '@startBattle newBoard after');
   // f.print(actionStack, '@startBattle actionStack after');
-  console.log('@Last - Check', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value));
+  console.log('@Last - Survivor', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value).get('name'));
   const team = newBoard.get(newBoard.keys().next().value).get('team');
   const winningTeam = team;
   return Map({ actionStack, board: newBoard, winner: winningTeam });
@@ -1223,8 +1230,13 @@ async function battleTime(stateParam) {
     const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board');
     // console.log('@battleTime newBoard, finished board result', newBoard); // Good print, finished board
-    const newStateAfterBattle = await endBattle(state, index, winner, newBoard, enemy);
-    state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
+    const round = state.get('round');
+    const newStateAfterBattle = await endBattle(state, index, winner, newBoard, true, enemy);
+    if(newStateAfterBattle.get('round') === round + 1){
+      state = newStateAfterBattle;
+    } else {
+      state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
+    }
     // Store rivals logic
     const prevRivals = state.getIn(['players', index, 'rivals']);
     state = state.setIn(['players', index, 'rivals'], prevRivals.set(enemy, (prevRivals.get(enemy) || 0) + 1));
@@ -1259,8 +1271,13 @@ async function npcRound(stateParam, npcBoard) {
     const newBoard = resultBattle.get('board');
 
     // TODO Npc: Give bonuses for beating npcs, special money or something
-    const newStateAfterBattle = await endBattle(state, currentPlayer, winner, newBoard);
-    state = state.setIn(['players', currentPlayer], newStateAfterBattle.getIn(['players', currentPlayer]));
+    const round = state.get('round');
+    const newStateAfterBattle = await endBattle(state, currentPlayer, winner, newBoard, false);
+    if(newStateAfterBattle.get('round') === round + 1){
+      state = newStateAfterBattle;
+    } else {
+      state = state.setIn(['players', currentPlayer], newStateAfterBattle.getIn(['players', currentPlayer]));
+    }
     tempPlayer = playerIter.next();
   }
   // Post battle state
@@ -1361,19 +1378,14 @@ async function battleSetup(stateParam) {
  */
 async function endTurn(stateParam) {
   let state = stateParam;
-  const income_basic = state.get('income_basic');
+  const income_basic = state.get('income_basic') + 1;
   const round = state.get('round');
   state = state.set('round', round + 1);
   if (round <= 5) {
-    state = state.set('income_basic', income_basic + 1);
+    state = state.set('income_basic', income_basic);
   }
-  return playerEndTurn(state, state.get('amountOfPlayers'), income_basic + 1);
-}
 
-async function playerEndTurn(stateParam, amountPlayers, income_basic) {
-  let state = stateParam;
-  // console.log('@playerEndTurn\n', state, state.get('amountOfPlayers'));
-  for (let i = 0; i < amountPlayers; i++) {
+  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
     const locked = state.getIn(['players', i, 'locked']);
     if (!locked) {
       state = await refreshShop(state, i);
@@ -1407,6 +1419,7 @@ async function prepEndTurn(state, playerIndex) {
   synchronizedPlayers = synchronizedPlayers.set(playerIndex, state.getIn(['players', playerIndex]));
   if (synchronizedPlayers.size === state.get('amountOfPlayers')) {
     const newState = state.set('players', synchronizedPlayers); // Set
+    synchronizedPlayers = Map({});
     const newRoundState = await endTurn(newState);
     return newRoundState;
   }
@@ -1441,23 +1454,25 @@ async function calcDamageTaken(boardUnits) {
  * loser: Lose hp
  *      Calculate amount of hp to lose
  * Parameters: Enemy player index, winningAmount = damage? (units or damage)
- * TODO: Go: Make sure the real state update is stored where endBattle is called
  */
-async function endBattle(stateParam, playerIndex, winner, finishedBoard, enemyPlayerIndex) {
+async function endBattle(stateParam, playerIndex, winner, finishedBoard, isPvP, enemyPlayerIndex) {
   let state = stateParam;
   // console.log('@endBattle', state, playerIndex, winner, enemyPlayerIndex);
-  const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
-  if (winner) {
-    state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
-    const newStreak = (streak < 0 ? 0 : +streak + 1);
-    state = state.setIn(['players', playerIndex, 'streak'], newStreak);
-  } else {
-    const hpToRemove = await calcDamageTaken(finishedBoard);
-    state = await removeHp(state, playerIndex, hpToRemove);
-    const newStreak = (streak > 0 ? 0 : +streak - 1);
-    state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+  if(isPvP){
+    const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
+    if (winner) {
+      state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
+      const newStreak = (streak < 0 ? 0 : +streak + 1);
+      state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+    } else {
+      const hpToRemove = await calcDamageTaken(finishedBoard);
+      state = await removeHp(state, playerIndex, hpToRemove);
+      const newStreak = (streak > 0 ? 0 : +streak - 1);
+      state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+    }
   }
   const round = state.get('round');
+  // console.log('@endBattle prep', stateParam.get('players'));
   const potentialEndTurn = await prepEndTurn(state, playerIndex);
   if (potentialEndTurn.get('round') === round + 1) {
     // TODO: Send information to users

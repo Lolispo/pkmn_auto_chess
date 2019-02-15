@@ -99,6 +99,8 @@ describe('game state', () => {
       const shop = state.getIn(['players', 0, 'shop']);
       state = await buyUnit(state, 0, 1);
       const hand = state.getIn(['players', 0, 'hand']);
+      console.log(hand)
+      console.log(hand.get(f.pos(0)))
       assert.equal(hand.get(f.pos(0)).get('name'), shop.get(1));
       assert.equal(state.getIn(['players', 0, 'shop']).get(1), null);
     });
@@ -153,7 +155,7 @@ describe('game state', () => {
       let state = await initEmptyState(2);
       const gold = state.getIn(['players', 0, 'gold']);
       const unit = await createBattleUnit((await getBoardUnit('rattata', 2, 2)), f.pos(2,2), 0);
-      state = await endBattle(state, 0, true, Map({}).set(f.pos(2,2), unit), 1);
+      state = await endBattle(state, 0, true, Map({}).set(f.pos(2,2), unit), true, 1); 
       assert.equal(state.getIn(['players', 0, 'gold']), gold + 1);
       assert.equal(state.getIn(['players', 1, 'gold']), gold); // Not affected
     });
@@ -161,7 +163,7 @@ describe('game state', () => {
       let state = await initEmptyState(2);
       const hp = state.getIn(['players', 0, 'hp']);
       const unit = await createBattleUnit((await getBoardUnit('rattata', 2, 2)), f.pos(2,2), 1);
-      state = await endBattle(state, 0, false, Map({}).set(f.pos(2,2), unit), 1);
+      state = await endBattle(state, 0, false, Map({}).set(f.pos(2,2), unit), true, 1);
       // TODO Test with damage taken (Will be 0 when no enemy units)
       assert.equal(state.getIn(['players', 0, 'hp']), hp - (await pokemonJS.getStats(unit.get('name'))).get('cost'));
     });
@@ -223,8 +225,8 @@ describe('game state', () => {
       const hp = state.getIn(['players', 0, 'hp']); // Both have same start hp
       const pieces = state.get('pieces');
       const unit = await createBattleUnit((await getBoardUnit('squirtle', 2, 2)), f.pos(2,2), 0);
-      state = await endBattle(state, 0, true, Map({}).set(f.pos(2,2), unit), 1);
-      state = await endBattle(state, 1, false, Map({}).set(f.pos(2,2), unit), 0);
+      state = await endBattle(state, 0, true, Map({}).set(f.pos(2,2), unit), true, 1);
+      state = await endBattle(state, 1, false, Map({}).set(f.pos(2,2), unit), true, 0);
       // Assertion - endTurn should have been run
       // Player 0 won round, player 1 lost round
       assert.equal(state.get('income_basic'), 2); // inc by 1
