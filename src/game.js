@@ -169,16 +169,16 @@ async function getBoardUnit(name, x, y) {
  */
 exports.createBattleBoard = async (inputList) => {
   let board = Map({});
-  for(let i = 0; i < inputList.size; i++){
+  for (let i = 0; i < inputList.size; i++) {
     const el = inputList.get(i);
     const pokemon = el.get('name');
     const x = el.get('x');
     const y = el.get('y');
     const unit = await getBoardUnit(pokemon, x, y);
-    board = await board.set(f.pos(x,y), unit)
+    board = await board.set(f.pos(x, y), unit);
   }
   return board;
-}
+};
 
 /**
  * *Assumed hand not full here
@@ -198,7 +198,8 @@ async function buyUnit(stateParam, playerIndex, unitID) {
 
     const hand = state.getIn(['players', playerIndex, 'hand']);
     const unitInfo = await pokemonJS.getStats(unit);
-    const unitHand = await getBoardUnit(unit, hand.size);
+    const handIndex = hand.size; // TODO: Go: Get first best hand index
+    const unitHand = await getBoardUnit(unit, handIndex);
     // console.log('@buyUnit unitHand', unitHand)
     state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
 
@@ -722,6 +723,10 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const ability = await abilitiesJS.getAbility(unit.get('name'));
     // TODO Check aoe / notarget here instead
     // console.log('@spell ability', ability)
+    // TODO: Some ability still crashes
+    if(f.isUndefined(ability)){
+      console.log(unit.get('name') + ' buggy ability')
+    }
     const range = (!f.isUndefined(ability.get('acc_range')) && !f.isUndefined(ability.get('acc_range').size)
       ? ability.get('acc_range').get(1) : abilitiesJS.getAbilityDefault('range'));
     const enemyPos = await getClosestEnemy(board, unitPos, range, team);
@@ -1237,27 +1242,26 @@ async function battleTime(stateParam) {
 async function npcRound(stateParam, npcBoard) {
   let state = stateParam;
   const playerIter = state.get('players').keys();
-  let tempPlayer = playerIter.next();
-  let iter;
+  const tempPlayer = playerIter.next();
   // TODO: Future: All battles calculate concurrently
-  while (!iter.done) {
+  while (!tempPlayer.done) {
     const currentPlayer = tempPlayer.value;
     const board1 = state.getIn(['players', currentPlayer, 'board']);
     const result = prepareBattle(board1, npcBoard);
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     const resultBattle = await result;
-    
+
     // TODO: Send actionStack to frontend and startBoard
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
-    
+
     const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board');
-    
+
     // TODO Npc: Give bonuses for beating npcs, special money or something
-    const newStateAfterBattle = await endBattle(state, index, winner, newBoard, enemy);
-    state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
-    iter = playerIter.next();
+    const newStateAfterBattle = await endBattle(state, currentPlayer, winner, newBoard);
+    state = state.setIn(['players', currentPlayer], newStateAfterBattle.getIn(['players', currentPlayer]));
+    tempPlayer = playerIter.next();
   }
   // Post battle state
   const newState = await state;
@@ -1265,19 +1269,83 @@ async function npcRound(stateParam, npcBoard) {
 }
 
 /**
+ * Board for player with playerIndex have too many units
+ * Try to withdraw the cheapest unit
+ * if hand is full, sell cheapest unit
+ * Do this until board.size == level
+ */
+async function fixTooManyUnits(state, playerIndex){
+  const board = state.getIn(['players', playerIndex, 'board']);
+  // Find cheapest unit
+  const iter = board.keys();
+  let temp = iter.next();
+  let cheapestCost = 100;
+  let cheapestCostIndex = List([]);
+  while (!temp.done) {
+    const unitPos = temp.value;
+    const cost = (await pokemonJS.getStats(board.get(unitPos).get('name'))).get('cost');
+    if(cost < cheapestCost){
+      cheapestCost = cost;
+      cheapestCostIndex = List([unitPos]);
+    } else if(cost == cheapestCost) {
+      cheapestCostIndex = cheapestCostIndex.push(unitPos)
+    }
+    temp = iter.next();
+  }
+  let chosenUnit;
+  if(cheapestCostIndex.size === 1){
+    chosenUnit = cheapestCostIndex.get(0);
+  } else {
+    // TODO Check the one that provides fewest combos
+    // Temp: Random from cheapest
+    const chosenIndex = Math.random() * cheapestCostIndex.size;
+    chosenUnit = cheapestCostIndex.get(chosenIndex); 
+  }
+  // Withdraw if possible unit, otherwise sell
+  let newState;
+  if(state.getIn(['players', playerIndex, 'hand']).size < 8){
+    console.log('WITHDRAWING PIECE', chosenUnit)
+    newState = await withdrawPiece(state, playerIndex, chosenUnit);
+  } else {
+    newState = await sellPiece(state, playerIndex, chosenUnit);
+  }
+  const newBoard = newState.getIn(['players', playerIndex, 'board']);
+  const level = newState.getIn(['players', playerIndex, 'level']);
+  if(newBoard.size > level) {
+    return fixTooManyUnits(newState, playerIndex);
+  }
+  return newState.getIn(['players', playerIndex]);
+}
+
+/**
+ * Check not too many units on board
  * Calculate battle for given board, either pvp or npc/gym round
  */
-async function battleSetup(state){
+async function battleSetup(stateParam) {
+  let state = stateParam;
+  const iter = state.get('players').keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const playerIndex = temp.value;
+    const board = state.getIn(['players', playerIndex, 'board']);
+    const level = state.getIn(['players', playerIndex, 'level']);
+    if(board.size > level) {
+      console.log(board);
+      const newPlayer = await fixTooManyUnits(state, playerIndex);
+      state = state.setIn(['players', playerIndex], newPlayer);
+    }
+    temp = iter.next();
+  }
   const round = state.get('round');
-  switch(gameConstantsJS.getRoundType(round)){
+  switch (gameConstantsJS.getRoundType(round)) {
     case 'pvp':
       return battleTime(state);
     case 'npc':
-      const board = gameConstantsJS.getSetRound(round);
-      return npcRound(state, board);
+      const boardNpc = await gameConstantsJS.getSetRound(round);
+      return npcRound(state, boardNpc);
     case 'gym':
-      const board = gameConstantsJS.getSetRound(round);
-      return npcRound(state, board);
+      const boardGym = await gameConstantsJS.getSetRound(round);
+      return npcRound(state, boardGym);
   }
 }
 
@@ -1373,6 +1441,7 @@ async function calcDamageTaken(boardUnits) {
  * loser: Lose hp
  *      Calculate amount of hp to lose
  * Parameters: Enemy player index, winningAmount = damage? (units or damage)
+ * TODO: Go: Make sure the real state update is stored where endBattle is called
  */
 async function endBattle(stateParam, playerIndex, winner, finishedBoard, enemyPlayerIndex) {
   let state = stateParam;
@@ -1455,6 +1524,6 @@ exports.start = async () => {
 };
 
 exports._startGame = async () => {
-  let state = await initEmptyState(2);
+  const state = await initEmptyState(2);
   return await startGame(state);
-}
+};

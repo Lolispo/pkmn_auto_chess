@@ -33,6 +33,8 @@ const withdrawPiece = fileModule.__get__('withdrawPiece');
 const markBoardBonuses = fileModule.__get__('markBoardBonuses');
 const createBattleUnit = fileModule.__get__('createBattleUnit');
 const startGame = fileModule.__get__('startGame');
+const battleSetup = fileModule.__get__('battleSetup');
+
 
 
 
@@ -713,6 +715,35 @@ describe('game state', () => {
       // TODO     
     });
   });
+  describe('markBoardBonuses', () => {
+    /**
+     * Give bonuses from types
+     * Type bonus is either only for those of that type or all units
+     */
+    it('markBoardBonuses 3 normal types', async () => {
+      const unit = await createBattleUnit((await getBoardUnit('rattata', 1, 1)), f.pos(1,1), 0);
+      const unit2 = await createBattleUnit((await getBoardUnit('pidgey', 1, 2)), f.pos(1,2), 0);
+      const unit3 = await createBattleUnit((await getBoardUnit('spearow', 1, 3)), f.pos(1,3), 0);
+      const newBoard = Map({})
+      .set(f.pos(1,1), unit)
+      .set(f.pos(1,2), unit2)
+      .set(f.pos(1,3), unit3);
+      const markedBoard = await markBoardBonuses(newBoard);
+      assert.equal(markedBoard.get(f.pos(1,1)).get('buff').get(0), 'normal');
+      assert.equal(markedBoard.get(f.pos(1,2)).get('buff').get(0), 'normal');
+      assert.equal(markedBoard.get(f.pos(1,3)).get('buff').get(0), 'normal');
+      // TODO: Check that the normal buff is applied
+      assert.equal(markedBoard.get(f.pos(1,1)).get('hp'), (await pokemonJS.getStats('rattata')).get('hp') + 20);
+      assert.equal(markedBoard.get(f.pos(1,2)).get('hp'), (await pokemonJS.getStats('pidgey')).get('hp') + 20);
+      assert.equal(markedBoard.get(f.pos(1,3)).get('hp'), (await pokemonJS.getStats('spearow')).get('hp') + 20);
+    });
+    it('markBoardBonuses team impact', async () => {
+      // TODO
+    });
+    it('markBoardBonuses rattatas / raticates counts as 1 ', async () => {
+      // TODO
+    });
+  });
   describe('battleTime', () => {
     /**
      * Randomize Opponents for state
@@ -777,33 +808,45 @@ describe('game state', () => {
       f.print(state)
     });
   });
-  describe('markBoardBonuses', () => {
+  describe('battleSetup', () => {
     /**
-     * Give bonuses from types
-     * Type bonus is either only for those of that type or all units
+     * Randomize Opponents for state
+     * * Assumes board contains every player's updated board
+     * stateParam
      */
-    it('markBoardBonuses 3 normal types', async () => {
-      const unit = await createBattleUnit((await getBoardUnit('rattata', 1, 1)), f.pos(1,1), 0);
-      const unit2 = await createBattleUnit((await getBoardUnit('pidgey', 1, 2)), f.pos(1,2), 0);
-      const unit3 = await createBattleUnit((await getBoardUnit('spearow', 1, 3)), f.pos(1,3), 0);
-      const newBoard = Map({})
-      .set(f.pos(1,1), unit)
-      .set(f.pos(1,2), unit2)
-      .set(f.pos(1,3), unit3);
-      const markedBoard = await markBoardBonuses(newBoard);
-      assert.equal(markedBoard.get(f.pos(1,1)).get('buff').get(0), 'normal');
-      assert.equal(markedBoard.get(f.pos(1,2)).get('buff').get(0), 'normal');
-      assert.equal(markedBoard.get(f.pos(1,3)).get('buff').get(0), 'normal');
-      // TODO: Check that the normal buff is applied
-      assert.equal(markedBoard.get(f.pos(1,1)).get('hp'), (await pokemonJS.getStats('rattata')).get('hp') + 20);
-      assert.equal(markedBoard.get(f.pos(1,2)).get('hp'), (await pokemonJS.getStats('pidgey')).get('hp') + 20);
-      assert.equal(markedBoard.get(f.pos(1,3)).get('hp'), (await pokemonJS.getStats('spearow')).get('hp') + 20);
-    });
-    it('markBoardBonuses team impact', async () => {
-      // TODO
-    });
-    it('markBoardBonuses rattatas / raticates counts as 1 ', async () => {
-      // TODO
+    it('battleSetup Big', async () => {
+      let state = await initEmptyState(2);
+      state = await startGame(state);
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
+      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
+      state = await buyUnit(state, 0, 2);
+      state = await buyUnit(state, 1, 2);
+      state = await placePiece(state, 0, f.pos(0), f.pos(2,2))
+      state = await placePiece(state, 1, f.pos(0), f.pos(2,2))
+      state = await battleSetup(state);
+      f.print(state)
+      state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
+      state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
+      state = await battleSetup(state);
+      f.print(state)
+      /*
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      state = await placePiece(state, 0, f.pos(0), f.pos(1,2))
+      state = await placePiece(state, 1, f.pos(0), f.pos(1,2))
+      state = await battleSetup(state);
+      f.print(state)
+      console.log('@test', state.getIn(['players', 0, 'hand']))
+      state = await buyUnit(state, 0, 1);
+      state = await buyUnit(state, 1, 1);
+      console.log('@test', state.getIn(['players', 0, 'hand']))
+      state = await placePiece(state, 0, f.pos(0), f.pos(2,1))
+      state = await placePiece(state, 1, f.pos(0), f.pos(2,1))
+      state = await battleSetup(state);
+      f.print(state)
+      */
     });
   });
 });
@@ -825,6 +868,32 @@ describe('gameconstants', () => {
   describe('getPieceProbabilityNum', () => {
     it('getPieceProbabilityNum correct?', () => {
       // TODO
+    });
+  });
+  describe('getRoundType', () => {
+    it('getRoundType correct?', () => {
+      assert.equal(fileModule2.getRoundType(1), 'npc');
+      assert.equal(fileModule2.getRoundType(2), 'npc');
+      assert.equal(fileModule2.getRoundType(3), 'npc');
+      assert.equal(fileModule2.getRoundType(4), 'pvp');
+      assert.equal(fileModule2.getRoundType(5), 'pvp');
+      assert.equal(fileModule2.getRoundType(8), 'pvp');
+      assert.equal(fileModule2.getRoundType(10), 'gym');
+      assert.equal(fileModule2.getRoundType(20), 'gym');
+      assert.equal(fileModule2.getRoundType(21), 'shop');
+
+    });
+  });
+  describe('getSetRound', () => {
+    it('getSetRound 1?', async () => {
+      const board = await fileModule2.getSetRound(1)
+      const unit = board.get(f.pos(3,1))
+      assert.equal('weedle', unit.get('name'))
+    });
+    it('getSetRound 3?', async () => {
+      const board = await fileModule2.getSetRound(3)
+      assert.equal('rattata', board.get(f.pos(3,1)).get('name'))
+      assert.equal('rattata', board.get(f.pos(4,1)).get('name'))
     });
   });
 });

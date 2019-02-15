@@ -81,220 +81,81 @@ exports.getDamageFactorType = actionType => damageFactorType.get(actionType);
     70: Final Boss: Pidgeot, alakazam, rhydon, arcanine, exeggutor, blastoise
  */
 const roundSetConfiguration = Map({
-  1: gameJS.createBattleBoard(List([
-    Map({ name: 'caterpie', x: 3, y: 1 }),
+  1: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'weedle', x: 3, y: 1 }),
   ])),
-  2: gameJS.createBattleBoard(List([
-    Map({
-      name: 'pidgey',
-      x: 3,
-      y: 1,
-    }),
+  2: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'pidgey', x: 3, y: 1 }),
   ])),
-  3: gameJS.createBattleBoard(List([
-    Map({
-      name: 'rattata',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'rattata',
-      x: 4,
-      y: 1,
-    }),
+  3: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'rattata', x: 3, y: 1 }),
+    Map({ name: 'rattata', x: 4, y: 1 }),
   ])),
-  10: gameJS.createBattleBoard(List([
-    Map({
-      name: 'geodude',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'onix',
-      x: 4,
-      y: 1,
-    }),
+  10: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'geodude', x: 3, y: 1 }),
+    Map({ name: 'onix', x: 4, y: 1 }),
   ])),
-  15: gameJS.createBattleBoard(List([
-    Map({
-      name: 'staryu',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'starmie',
-      x: 4,
-      y: 1,
-    }),
+  15: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'staryu', x: 3, y: 1 }),
+    Map({ name: 'starmie', x: 4, y: 1 }),
   ])),
-  20: gameJS.createBattleBoard(List([
-    Map({
-      name: 'voltorb',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'pikachu',
-      x: 4,
-      y: 1,
-    }),
-    Map({
-      name: 'raichu',
-      x: 5,
-      y: 1,
-    }),
+  20: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'voltorb', x: 3, y: 1 }),
+    Map({ name: 'pikachu', x: 4, y: 1 }),
+    Map({ name: 'raichu', x: 5, y: 1 }),
   ])),
-  25: gameJS.createBattleBoard(List([
-    Map({
-      name: 'victreebel',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'tangela',
-      x: 4,
-      y: 1,
-    }),
-    Map({
-      name: 'vileplume',
-      x: 5,
-      y: 1,
-    }),
+  25: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'victreebel', x: 3, y: 1 }),
+    Map({ name: 'tangela', x: 4, y: 1 }),
+    Map({ name: 'vileplume', x: 5, y: 1 }),
   ])),
-  30: gameJS.createBattleBoard(List([
-    Map({
-      name: 'koffing',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'muk',
-      x: 4,
-      y: 1,
-    }),
-    Map({
-      name: 'weezing',
-      x: 5,
-      y: 1,
-    }),
-    Map({
-      name: 'koffing',
-      x: 6,
-      y: 1,
-    }),
+  30: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'koffing', x: 3, y: 1 }),
+    Map({ name: 'muk', x: 4, y: 1 }),
+    Map({ name: 'weezing', x: 5, y: 1 }),
+    Map({ name: 'koffing', x: 6, y: 1 }),
   ])),
-  35: gameJS.createBattleBoard(List([
-    Map({
-      name: 'kadabra',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'venomoth',
-      x: 4,
-      y: 1,
-    }),
-    Map({
-      name: 'alakazam',
-      x: 5,
-      y: 1,
-    }),
-    Map({
-      name: 'mr. mime',
-      x: 6,
-      y: 1,
-    }),
+  35: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'kadabra', x: 3, y: 1 }),
+    Map({ name: 'venomoth', x: 4, y: 1 }),
+    Map({ name: 'alakazam', x: 5, y: 1 }),
+    Map({ name: 'mr. mime', x: 6, y: 1 }),
   ])),
-  40: gameJS.createBattleBoard(List([
-    Map({
-      name: 'growlithe',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'ponyta',
-      x: 4,
-      y: 1,
-    }),
-    Map({
-      name: 'rapidash',
-      x: 5,
-      y: 1,
-    }),
-    Map({
-      name: 'arcanine',
-      x: 6,
-      y: 1,
-    }),
+  40: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'growlithe', x: 3, y: 1 }),
+    Map({ name: 'ponyta', x: 4, y: 1 }),
+    Map({ name: 'rapidash', x: 5, y: 1 }),
+    Map({ name: 'arcanine', x: 6, y: 1 }),
   ])),
-  45: gameJS.createBattleBoard(List([
-    Map({
-      name: 'rhyhorn',
-      x: 3,
-      y: 1,
-    }),
-    Map({
-      name: 'dugtrio',
-      x: 4,
-      y: 1,
-    }),
-    Map({
-      name: 'nidoqueen',
-      x: 5,
-      y: 1,
-    }),
-    Map({
-      name: 'nidoking',
-      x: 6,
-      y: 1,
-    }),
-    Map({
-      name: 'rhydon',
-      x: 2,
-      y: 1,
-    }),
+  45: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'rhyhorn', x: 3, y: 1 }),
+    Map({ name: 'dugtrio', x: 4, y: 1 }),
+    Map({ name: 'nidoqueen', x: 5, y: 1 }),
+    Map({ name: 'nidoking', x: 6, y: 1 }),
+    Map({ name: 'rhydon', x: 2, y: 1 }),
   ])),
 });
 
-exports.getSetRound = round => {
-  const board = roundSetConfiguration.get(round);
-  if(f.isUndefined(board)){
+exports.getSetRound = async (round) => {
+  const board = await roundSetConfiguration.get(String(round))();
+  // console.log('@getSetRound', board);
+  if (f.isUndefined(board)) {
     return gameJS.createBattleBoard(List([
-      Map({
-        name: 'rhyhorn',
-        x: 3,
-        y: 1,
-      }),
-      Map({
-        name: 'dugtrio',
-        x: 4,
-        y: 1,
-      }),
-      Map({
-        name: 'nidoqueen',
-        x: 5,
-        y: 1,
-      }),
-      Map({
-        name: 'nidoking',
-        x: 6,
-        y: 1,
-      }),
-      Map({
-        name: 'rhydon',
-        x: 2,
-        y: 1,
-      }),
+      Map({ name: 'rhyhorn', x: 3, y: 1 }),
+      Map({ name: 'dugtrio', x: 4, y: 1 }),
+      Map({ name: 'nidoqueen', x: 5, y: 1 }),
+      Map({ name: 'nidoking', x: 6, y: 1 }),
+      Map({ name: 'rhydon', x: 2, y: 1 }),
     ]));
   }
   return board;
-}
+};
 
 exports.getRoundType = (round) => {
   if (round <= 3) {
     return 'npc';
   }
-  if (round % 5 === 0) {
+  if (round % 5 === 0 && round > 5) {
     return 'gym';
   }
   if (round === 21 || round === 31 || round === 41 || round === 51) {
