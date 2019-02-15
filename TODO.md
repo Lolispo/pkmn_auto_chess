@@ -117,3 +117,44 @@ Cleanup comments, better structure
 More tests
 
 Potential to use more functional code, map/filter
+
+
+## Communication
+
+Client                  Server
+player ready ->
+            <- Amount of players ready
+player unready ->
+            <- Amount of players ready
+startGame ->    
+        <- Create initial state (init&start)
+        <- Send it to all connected users
+            Match socket with playerindex
+            Mark time when it is battle time 
+                (currentTime + 60)
+toggleShop ->
+    <- state
+buyUnit ->
+    <- state
+refreshShop ->
+    <- state
+placePiece ->
+    <- state
+withdrawPiece ->
+    <- state
+When timer is out
+Send state to server ->
+        Build new state given from all users
+        Decide what kind of battle is happening
+        (pvp, pve, gymbattle)
+        calculate battles, with opponents, and store moves
+Meanwhile: Have a timer for like 5 sec or something show
+        Calculate latest time to finish battle
+    <-  Send moves to server
+Timer=reached, assuming battle states are achieved,
+Visualize battle
+TODO: Check visualization speed is reasonable (multiply by factor otherwise)
+Sounds etc
+        time=reached => 
+            <- State after battle, marked next battle time
+                Check if players lost, mark correctly etc
