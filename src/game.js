@@ -7,9 +7,9 @@ const deckJS = require('./deck');
 const f = require('./f');
 const playerJS = require('./player');
 const typesJS = require('./types');
-const stateLogicJS = require('./state_logic');
 const gameConstantsJS = require('./game_constants');
 const abilitiesJS = require('./abilities');
+
 
 /**
  * File used for game logic
@@ -30,11 +30,11 @@ async function buildPieceStorage(optList) {
         const rarityAmount = gameConstantsJS.getRarityAmount(pokemon.get('cost'));
         // console.log('Adding', rarityAmount, pokemon.get('name'), 'to', pokemon.get('cost'));
         for (let l = 0; l < rarityAmount; l++) {
-          availablePieces = stateLogicJS.push(availablePieces, i, pokemon.get('name'));
+          availablePieces = f.push(availablePieces, i, pokemon.get('name'));
         }
       }
     }
-    availablePieces = stateLogicJS.shuffle(availablePieces, i);
+    availablePieces = f.shuffle(availablePieces, i);
   }
   // console.log('\n@buildPieceStorage: availablePieces', availablePieces)
   return availablePieces;
@@ -63,7 +63,7 @@ async function refillPieces(pieces, discardedPieces) {
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     const cost = (await pokemonJS.getStats(discardedPieces.get(i))).get('cost');
-    pieceStorage = await stateLogicJS.push(pieceStorage, cost - 1, name);
+    pieceStorage = await f.push(pieceStorage, cost - 1, name);
   }
   return pieceStorage;
 }
@@ -116,7 +116,7 @@ async function addPieceToShop(shop, pieces, level, discPieces) {
     if (!f.isUndefined(piece)) {
       newShop = newShop.push(piece);
       // Removes first from correct rarity array
-      newPieceStorage = await stateLogicJS.removeFirst(newPieceStorage, i);
+      newPieceStorage = await f.removeFirst(newPieceStorage, i);
       break;
     }
   }
@@ -161,6 +161,23 @@ async function getBoardUnit(name, x, y) {
     display_name: unitInfo.get('display_name'),
     position: f.pos(x, y),
   });
+}
+
+/**
+ * Help function in creating battle boards
+ * Use together with combine boards
+ */
+exports.createBattleBoard = async (inputList) => {
+  let board = Map({});
+  for(let i = 0; i < inputList.size; i++){
+    const el = inputList.get(i);
+    const pokemon = el.get('name');
+    const x = el.get('x');
+    const y = el.get('y');
+    const unit = await getBoardUnit(pokemon, x, y);
+    board = await board.set(f.pos(x,y), unit)
+  }
+  return board;
 }
 
 /**
@@ -1142,15 +1159,8 @@ async function combineBoards(board1, board2) {
  * Spawn opponent in reverse board
  * Mark owners of units
  * Start battle
- * pairing: {
- *  homeID: 1,
- *  enemyID: 0
- * }
  */
-async function prepareBattle(stateParam, pairing) {
-  const state = stateParam;
-  const board1 = state.getIn(['players', pairing.get('homeID'), 'board']);
-  const board2 = state.getIn(['players', pairing.get('enemyID'), 'board']);
+async function prepareBattle(board1, board2) {
   // Check to see if a battle is required
   // Lose when empty, even if enemy no units aswell (tie with no damage taken)
   if (board1.size === 0) {
@@ -1193,10 +1203,11 @@ async function battleTime(stateParam) {
       nextPlayer = iter.value;
     }
     const index = currentPlayer;
-    const enemy = nextPlayer; // (i === amountOfPlayers - 1 ? 0 : i + 1);
-    const pairing = Map({ homeID: index, enemyID: enemy });
+    const enemy = nextPlayer;
     // console.log('@battleTime pairing: ', pairing, nextPlayer);
-    const result = prepareBattle(state, pairing);
+    const board1 = state.getIn(['players', index, 'board']);
+    const board2 = state.getIn(['players', enemy, 'board']);
+    const result = prepareBattle(board1, board2);
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     const resultBattle = await result;
 
@@ -1218,8 +1229,56 @@ async function battleTime(stateParam) {
       tempPlayer = iter;
     }
   }
+  // Post battle state
   const newState = await state;
   return newState;
+}
+
+async function npcRound(stateParam, npcBoard) {
+  let state = stateParam;
+  const playerIter = state.get('players').keys();
+  let tempPlayer = playerIter.next();
+  let iter;
+  // TODO: Future: All battles calculate concurrently
+  while (!iter.done) {
+    const currentPlayer = tempPlayer.value;
+    const board1 = state.getIn(['players', currentPlayer, 'board']);
+    const result = prepareBattle(board1, npcBoard);
+    // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
+    const resultBattle = await result;
+    
+    // TODO: Send actionStack to frontend and startBoard
+    const actionStack = resultBattle.get('actionStack');
+    const startBoard = resultBattle.get('startBoard');
+    
+    const winner = (resultBattle.get('winner') === 0);
+    const newBoard = resultBattle.get('board');
+    
+    // TODO Npc: Give bonuses for beating npcs, special money or something
+    const newStateAfterBattle = await endBattle(state, index, winner, newBoard, enemy);
+    state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
+    iter = playerIter.next();
+  }
+  // Post battle state
+  const newState = await state;
+  return newState;
+}
+
+/**
+ * Calculate battle for given board, either pvp or npc/gym round
+ */
+async function battleSetup(state){
+  const round = state.get('round');
+  switch(gameConstantsJS.getRoundType(round)){
+    case 'pvp':
+      return battleTime(state);
+    case 'npc':
+      const board = gameConstantsJS.getSetRound(round);
+      return npcRound(state, board);
+    case 'gym':
+      const board = gameConstantsJS.getSetRound(round);
+      return npcRound(state, board);
+  }
 }
 
 /**

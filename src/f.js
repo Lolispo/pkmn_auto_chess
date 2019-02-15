@@ -1,6 +1,7 @@
 // Author: Petter Andersson
 
 const { Map } = require('immutable');
+const shuffle = require('immutable-shuffle');
 
 exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
 
@@ -57,3 +58,9 @@ exports.pos = (x, y) => {
 };
 
 exports.isUndefined = obj => (typeof obj === 'undefined');
+
+exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());
+
+exports.push = (state, id, value) => state.set(id, state.get(id).push(value));
+
+exports.shuffle = (state, id) => state.set(id, shuffle(state.get(id)));

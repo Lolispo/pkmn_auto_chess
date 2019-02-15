@@ -20,7 +20,7 @@ module.exports = function (socket, io) {
 
   socket.on('READY', async () => {
     state = await gameJS._startGame();
-    console.log('SOMEONES READY')
+    console.log('SOMEONES READY');
     socket.emit('UPDATED_PIECES', state);
   });
 

@@ -714,14 +714,14 @@ describe('game state', () => {
     });
   });
   describe('battleTime', () => {
-     /**
-       * Randomize Opponents for state
-       * * Assumes board contains every player's updated board
-       * stateParam
-       */
-      it('battleTime Poison battle', async () => {
-        let state = await initEmptyState(2, List(['weedle', 'nidoran ♀', 'ekans']));
-        state = await startGame(state);
+    /**
+     * Randomize Opponents for state
+     * * Assumes board contains every player's updated board
+     * stateParam
+     */
+    it('battleTime Poison battle', async () => {
+      let state = await initEmptyState(2, List(['weedle', 'nidoran ♀', 'ekans']));
+      state = await startGame(state);
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
       state = await endTurn(state);
@@ -783,7 +783,6 @@ describe('game state', () => {
      * Type bonus is either only for those of that type or all units
      */
     it('markBoardBonuses 3 normal types', async () => {
-      // TODO Use new createBattleUnit
       const unit = await createBattleUnit((await getBoardUnit('rattata', 1, 1)), f.pos(1,1), 0);
       const unit2 = await createBattleUnit((await getBoardUnit('pidgey', 1, 2)), f.pos(1,2), 0);
       const unit3 = await createBattleUnit((await getBoardUnit('spearow', 1, 3)), f.pos(1,3), 0);

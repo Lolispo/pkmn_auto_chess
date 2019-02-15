@@ -33,6 +33,8 @@ Test lifesteal functionality
 
 ## General
 
+Only have same amount of units on board for battle as level
+
 Aoe damage logic
 
 Rival: Rival battle when playing against a certain opponent

@@ -4,7 +4,6 @@
 const { List } = require('immutable');
 const f = require('./f');
 const pokemonJS = require('./pokemon');
-const stateLogicJS = require('./state_logic');
 
 async function buildDecks(pokemonParam) {
   const pokemon = await pokemonParam;
@@ -16,7 +15,7 @@ async function buildDecks(pokemonParam) {
     const pokemonVar = tempPokemon.value;
     // console.log(pokemon.get('evolves_from'))
     if (f.isUndefined(pokemonVar.get('evolves_from'))) { // Only add base level
-      decks = stateLogicJS.push(decks, tempPokemon.value.get('cost') - 1, tempPokemon.value);
+      decks = f.push(decks, tempPokemon.value.get('cost') - 1, tempPokemon.value);
     }
     tempPokemon = pokemonIterator.next();
   }
