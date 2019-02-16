@@ -72,6 +72,7 @@ Auto chess: Jynx1 jynx2 jynx3
 
 eevee:
     Evolution based on amount of unit types on board
+    Placement of eevees decides evolution!
 
 prevent getting more units of same type if you have max of that type
 

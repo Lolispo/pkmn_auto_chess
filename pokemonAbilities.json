@@ -122,16 +122,11 @@
     "type": "normal",
     "effect": "transform"
   },
-  "dragonTail": {
-    "name": "dragonTail",
+  "twister": {
+    "name": "twister",
     "type": "dragon",
-    "power": 60,
-    "acc_range": 0.9
-  },
-  "dragonRage": {
-    "name": "dragonRage",
-    "type": "dragon",
-    "power": 40
+    "power": 40,
+    "effect": "aoe"
   },
   "hyperBeam": {
     "name": "hyperBeam",
@@ -200,11 +195,6 @@
     "name": "scratch",
     "type": "normal",
     "power": 40
-  },
-  "": {
-    "power": "power",
-    "acc_range": "accuracy",
-    "effect": "effect"
   },
   "dynamicPunch": {
     "name": "dynamicPunch",
@@ -292,5 +282,45 @@
     "name": "dig",
     "type": "ground",
     "power": 80
+  },
+  "ironHead": {
+    "name": "ironHead",
+    "type": "steel",
+    "power": 80
+  },
+  "dragonPulse": {
+    "name": "dragonPulse",
+    "type": "dragon",
+    "power": 85,
+    "effect": "aoe"
+  },
+  "bodySlam": {
+    "name": "bodySlam",
+    "type": "normal",
+    "power": 85
+  },
+  "pound": {
+    "name": "pound",
+    "type": "normal",
+    "power": 40
+  },
+  "zapCannon": {
+    "name": "zapCannon",
+    "type": "electric",
+    "power": 120,
+    "acc_range": 0.5,
+    "mana": 150
+  },
+  "fireBlast": {
+    "name": "fireBlast",
+    "type": "fire",
+    "power": 110,
+    "acc_range": 0.85,
+    "effect": [
+      "dot",
+      0.3,
+      0.125
+    ],
+    "mana": 120
   }
 }

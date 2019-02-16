@@ -886,12 +886,17 @@ describe('gameconstants', () => {
     it('getSetRound 1?', async () => {
       const board = await fileModule2.getSetRound(1)
       const unit = board.get(f.pos(3,1))
-      assert.equal('weedle', unit.get('name'))
+      assert.equal('magikarp', unit.get('name'))
+    });
+    it('getSetRound 2?', async () => {
+      const board = await fileModule2.getSetRound(2)
+      assert.equal('rattata', board.get(f.pos(3,1)).get('name'))
+      assert.equal('rattata', board.get(f.pos(4,1)).get('name'))
     });
     it('getSetRound 3?', async () => {
       const board = await fileModule2.getSetRound(3)
-      assert.equal('rattata', board.get(f.pos(3,1)).get('name'))
-      assert.equal('rattata', board.get(f.pos(4,1)).get('name'))
+      assert.equal('pidgey', board.get(f.pos(3,1)).get('name'))
+      assert.equal('pidgeotto', board.get(f.pos(4,1)).get('name'))
     });
   });
 });

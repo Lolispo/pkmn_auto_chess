@@ -460,22 +460,35 @@
     "ability": "earthquake",
     "evolves_from": "nidorino"
   },
+  "cleffa": {
+    "name": "cleffa",
+    "display_name": "Cleffa☆",
+    "cost": 1,
+    "hp": 50,
+    "attack": 25,
+    "defense": 28,
+    "speed": 15,
+    "type": "normal",
+    "ability": "pound",
+    "evolves_to": "clefairy"
+  },
   "clefairy": {
     "name": "clefairy",
-    "display_name": "Clefairy☆",
-    "cost": 2,
+    "display_name": "Clefairy☆☆",
+    "cost": 3,
     "hp": 70,
     "attack": 45,
     "defense": 48,
     "speed": 35,
     "type": "normal",
     "ability": "doubleSlap",
+    "evolves_from": "cleffa",
     "evolves_to": "clefable"
   },
   "clefable": {
     "name": "clefable",
-    "display_name": "Clefable☆☆",
-    "cost": 4,
+    "display_name": "Clefable☆☆☆",
+    "cost": 5,
     "hp": 95,
     "attack": 70,
     "defense": 73,
@@ -508,22 +521,35 @@
     "ability": "flamethrower",
     "evolves_from": "vulpix"
   },
+  "igglybuff": {
+    "name": "igglybuff",
+    "display_name": "Igglybuff☆",
+    "cost": 1,
+    "hp": 90,
+    "attack": 30,
+    "defense": 15,
+    "speed": 15,
+    "type": "normal",
+    "ability": "pound",
+    "evolves_to": "jigglypuff"
+  },
   "jigglypuff": {
     "name": "jigglypuff",
-    "display_name": "Jigglypuff☆",
-    "cost": 2,
+    "display_name": "Jigglypuff☆☆",
+    "cost": 3,
     "hp": 115,
     "attack": 45,
     "defense": 20,
     "speed": 20,
     "type": "normal",
     "ability": "doubleSlap",
+    "evolves_from": "igglybuff",
     "evolves_to": "wigglytuff"
   },
   "wigglytuff": {
     "name": "wigglytuff",
-    "display_name": "Wigglytuff☆☆",
-    "cost": 4,
+    "display_name": "Wigglytuff☆☆☆",
+    "cost": 5,
     "hp": 140,
     "attack": 70,
     "defense": 45,
@@ -560,7 +586,20 @@
       "flying"
     ],
     "ability": "wingAttack",
-    "evolves_from": "zubat"
+    "evolves_from": "zubat",
+    "evolves_to": "crobat"
+  },
+  "crobat": {
+    "name": "crobat",
+    "display_name": "Crobat☆☆☆",
+    "cost": 6,
+    "hp": 85,
+    "attack": 90,
+    "defense": 80,
+    "speed": 130,
+    "type": "electric",
+    "ability": "wingAttack",
+    "evolves_from": "golbat"
   },
   "oddish": {
     "name": "oddish",
@@ -637,36 +676,6 @@
     ],
     "ability": "megaDrain",
     "evolves_from": "paras"
-  },
-  "venonat": {
-    "name": "venonat",
-    "display_name": "Venonat☆",
-    "cost": 2,
-    "hp": 60,
-    "attack": 55,
-    "defense": 50,
-    "speed": 45,
-    "type": [
-      "bug",
-      "poison"
-    ],
-    "ability": "leechLife",
-    "evolves_to": "venomoth"
-  },
-  "venomoth": {
-    "name": "venomoth",
-    "display_name": "Venomoth☆☆",
-    "cost": 4,
-    "hp": 70,
-    "attack": 65,
-    "defense": 60,
-    "speed": 90,
-    "type": [
-      "bug",
-      "poison"
-    ],
-    "ability": "leechLife",
-    "evolves_from": "venonat"
   },
   "diglett": {
     "name": "diglett",
@@ -767,7 +776,7 @@
   "growlithe": {
     "name": "growlithe",
     "display_name": "Growlithe☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 55,
     "attack": 70,
     "defense": 45,
@@ -779,7 +788,7 @@
   "arcanine": {
     "name": "arcanine",
     "display_name": "Arcanine☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 90,
     "attack": 110,
     "defense": 80,
@@ -868,7 +877,7 @@
   "machop": {
     "name": "machop",
     "display_name": "Machop☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 70,
     "attack": 80,
     "defense": 50,
@@ -880,7 +889,7 @@
   "machoke": {
     "name": "machoke",
     "display_name": "Machoke☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 80,
     "attack": 100,
     "defense": 70,
@@ -893,7 +902,7 @@
   "machamp": {
     "name": "machamp",
     "display_name": "Machamp☆☆☆",
-    "cost": 7,
+    "cost": 8,
     "hp": 90,
     "attack": 130,
     "defense": 80,
@@ -947,36 +956,6 @@
     ],
     "ability": "solarBeam",
     "evolves_from": "weepinbell"
-  },
-  "tentacool": {
-    "name": "tentacool",
-    "display_name": "Tentacool☆",
-    "cost": 2,
-    "hp": 40,
-    "attack": 40,
-    "defense": 35,
-    "speed": 70,
-    "type": [
-      "water",
-      "poison"
-    ],
-    "ability": "waterGun",
-    "evolves_to": "tentacruel"
-  },
-  "tentacruel": {
-    "name": "tentacruel",
-    "display_name": "Tentacruel☆☆",
-    "cost": 4,
-    "hp": 80,
-    "attack": 70,
-    "defense": 65,
-    "speed": 100,
-    "type": [
-      "water",
-      "poison"
-    ],
-    "ability": "waterGun",
-    "evolves_from": "tentacool"
   },
   "geodude": {
     "name": "geodude",
@@ -1051,7 +1030,7 @@
   "slowpoke": {
     "name": "slowpoke",
     "display_name": "Slowpoke☆",
-    "cost": 2,
+    "cost": 3,
     "hp": 90,
     "attack": 65,
     "defense": 65,
@@ -1066,7 +1045,7 @@
   "slowbro": {
     "name": "slowbro",
     "display_name": "Slowbro☆☆",
-    "cost": 4,
+    "cost": 5,
     "hp": 95,
     "attack": 75,
     "defense": 110,
@@ -1076,12 +1055,25 @@
       "psychic"
     ],
     "ability": "surf",
-    "evolves_from": "slowpoke"
+    "evolves_from": "slowpoke",
+    "evolves_to": "slowking"
+  },
+  "slowking": {
+    "name": "slowking",
+    "display_name": "Slowking☆☆☆",
+    "cost": 7,
+    "hp": 95,
+    "attack": 75,
+    "defense": 80,
+    "speed": 30,
+    "type": "fire",
+    "ability": "psychic",
+    "evolves_from": "slowbro"
   },
   "magnemite": {
     "name": "magnemite",
     "display_name": "Magnemite☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 25,
     "attack": 35,
     "defense": 70,
@@ -1096,7 +1088,7 @@
   "magneton": {
     "name": "magneton",
     "display_name": "Magneton☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 50,
     "attack": 60,
     "defense": 95,
@@ -1108,19 +1100,17 @@
     "ability": "thunderBolt",
     "evolves_from": "magnemite"
   },
-  "farfetch'd": {
-    "name": "farfetch'd",
-    "display_name": "Farfetch'd☆",
-    "cost": 3,
-    "hp": 52,
-    "attack": 65,
-    "defense": 55,
+  "magnezone": {
+    "name": "magnezone",
+    "display_name": "Magnezone☆☆☆",
+    "cost": 8,
+    "hp": 70,
+    "attack": 70,
+    "defense": 115,
     "speed": 60,
-    "type": [
-      "normal",
-      "flying"
-    ],
-    "ability": "furyAttack"
+    "type": "fire",
+    "ability": "zapCannon",
+    "evolves_from": "magneton"
   },
   "doduo": {
     "name": "doduo",
@@ -1179,30 +1169,6 @@
     "ability": "waterfall",
     "evolves_from": "seel"
   },
-  "grimer": {
-    "name": "grimer",
-    "display_name": "Grimer☆",
-    "cost": 2,
-    "hp": 80,
-    "attack": 80,
-    "defense": 50,
-    "speed": 25,
-    "type": "poison",
-    "ability": "sludgeBomb",
-    "evolves_to": "muk"
-  },
-  "muk": {
-    "name": "muk",
-    "display_name": "Muk☆☆",
-    "cost": 4,
-    "hp": 105,
-    "attack": 105,
-    "defense": 75,
-    "speed": 50,
-    "type": "poison",
-    "ability": "sludgeBomb",
-    "evolves_from": "grimer"
-  },
   "shellder": {
     "name": "shellder",
     "display_name": "Shellder☆",
@@ -1233,7 +1199,7 @@
   "gastly": {
     "name": "gastly",
     "display_name": "Gastly☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 30,
     "attack": 35,
     "defense": 30,
@@ -1248,7 +1214,7 @@
   "haunter": {
     "name": "haunter",
     "display_name": "Haunter☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 45,
     "attack": 50,
     "defense": 45,
@@ -1264,7 +1230,7 @@
   "gengar": {
     "name": "gengar",
     "display_name": "Gengar☆☆☆",
-    "cost": 7,
+    "cost": 8,
     "hp": 60,
     "attack": 65,
     "defense": 60,
@@ -1276,24 +1242,10 @@
     "ability": "shadowBall",
     "evolves_from": "haunter"
   },
-  "onix": {
-    "name": "onix",
-    "display_name": "Onix☆",
-    "cost": 4,
-    "hp": 35,
-    "attack": 45,
-    "defense": 160,
-    "speed": 70,
-    "type": [
-      "rock",
-      "ground"
-    ],
-    "ability": "rockThrow"
-  },
   "drowzee": {
     "name": "drowzee",
     "display_name": "Drowzee☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 60,
     "attack": 48,
     "defense": 45,
@@ -1305,7 +1257,7 @@
   "hypno": {
     "name": "hypno",
     "display_name": "Hypno☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 85,
     "attack": 73,
     "defense": 70,
@@ -1313,30 +1265,6 @@
     "type": "psychic",
     "ability": "psychic",
     "evolves_from": "drowzee"
-  },
-  "krabby": {
-    "name": "krabby",
-    "display_name": "Krabby☆",
-    "cost": 3,
-    "hp": 30,
-    "attack": 105,
-    "defense": 90,
-    "speed": 50,
-    "type": "water",
-    "ability": "bubbleBeam",
-    "evolves_to": "kingler"
-  },
-  "kingler": {
-    "name": "kingler",
-    "display_name": "Kingler☆☆",
-    "cost": 5,
-    "hp": 55,
-    "attack": 130,
-    "defense": 115,
-    "speed": 75,
-    "type": "water",
-    "ability": "bubbleBeam",
-    "evolves_from": "krabby"
   },
   "voltorb": {
     "name": "voltorb",
@@ -1416,62 +1344,35 @@
     "ability": "bonemerang",
     "evolves_from": "cubone"
   },
-  "hitmonlee": {
-    "name": "hitmonlee",
-    "display_name": "Hitmonlee☆",
+  "onix": {
+    "name": "onix",
+    "display_name": "Onix☆",
     "cost": 4,
-    "hp": 50,
-    "attack": 120,
-    "defense": 53,
-    "speed": 87,
-    "type": "fighting",
-    "ability": "megaKick"
+    "hp": 35,
+    "attack": 45,
+    "defense": 160,
+    "speed": 70,
+    "type": [
+      "rock",
+      "ground"
+    ],
+    "ability": "rockThrow",
+    "evolves_to": "steelix"
   },
-  "hitmonchan": {
-    "name": "hitmonchan",
-    "display_name": "Hitmonchan☆",
-    "cost": 4,
-    "hp": 50,
-    "attack": 105,
-    "defense": 79,
-    "speed": 76,
-    "type": "fighting",
-    "ability": "megaPunch"
-  },
-  "lickitung": {
-    "name": "lickitung",
-    "display_name": "Lickitung☆",
-    "cost": 4,
-    "hp": 90,
-    "attack": 55,
-    "defense": 75,
+  "steelix": {
+    "name": "steelix",
+    "display_name": "Steelix☆☆",
+    "cost": 6,
+    "hp": 75,
+    "attack": 85,
+    "defense": 200,
     "speed": 30,
-    "type": "normal",
-    "ability": "lick"
-  },
-  "koffing": {
-    "name": "koffing",
-    "display_name": "Koffing☆",
-    "cost": 2,
-    "hp": 40,
-    "attack": 65,
-    "defense": 95,
-    "speed": 35,
-    "type": "poison",
-    "ability": "sludgeBomb",
-    "evolves_to": "weezing"
-  },
-  "weezing": {
-    "name": "weezing",
-    "display_name": "Weezing☆☆",
-    "cost": 4,
-    "hp": 65,
-    "attack": 90,
-    "defense": 120,
-    "speed": 60,
-    "type": "poison",
-    "ability": "sludgeBomb",
-    "evolves_from": "koffing"
+    "type": [
+      "steel",
+      "ground"
+    ],
+    "ability": "ironHead",
+    "evolves_from": "onix"
   },
   "rhyhorn": {
     "name": "rhyhorn",
@@ -1503,43 +1404,10 @@
     "ability": "earthquake",
     "evolves_from": "rhyhorn"
   },
-  "chansey": {
-    "name": "chansey",
-    "display_name": "Chansey☆",
-    "cost": 4,
-    "hp": 250,
-    "attack": 5,
-    "defense": 5,
-    "speed": 50,
-    "type": "normal",
-    "ability": "doubleSlap"
-  },
-  "tangela": {
-    "name": "tangela",
-    "display_name": "Tangela☆",
-    "cost": 4,
-    "hp": 65,
-    "attack": 55,
-    "defense": 115,
-    "speed": 60,
-    "type": "grass",
-    "ability": "megaDrain"
-  },
-  "kangaskhan": {
-    "name": "kangaskhan",
-    "display_name": "Kangaskhan☆",
-    "cost": 4,
-    "hp": 105,
-    "attack": 95,
-    "defense": 80,
-    "speed": 90,
-    "type": "normal",
-    "ability": "megaPunch"
-  },
   "horsea": {
     "name": "horsea",
     "display_name": "Horsea☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 30,
     "attack": 40,
     "defense": 70,
@@ -1551,38 +1419,30 @@
   "seadra": {
     "name": "seadra",
     "display_name": "Seadra☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 55,
     "attack": 65,
     "defense": 95,
     "speed": 85,
     "type": "water",
     "ability": "bubbleBeam",
-    "evolves_from": "horsea"
+    "evolves_from": "horsea",
+    "evolves_to": "kingdra"
   },
-  "goldeen": {
-    "name": "goldeen",
-    "display_name": "Goldeen☆",
-    "cost": 2,
-    "hp": 45,
-    "attack": 67,
-    "defense": 60,
-    "speed": 63,
-    "type": "water",
-    "ability": "waterfall",
-    "evolves_to": "seaking"
-  },
-  "seaking": {
-    "name": "seaking",
-    "display_name": "Seaking☆☆",
-    "cost": 4,
-    "hp": 80,
-    "attack": 92,
-    "defense": 65,
-    "speed": 68,
-    "type": "water",
-    "ability": "waterfall",
-    "evolves_from": "goldeen"
+  "kingdra": {
+    "name": "kingdra",
+    "display_name": "Kingdra☆☆☆",
+    "cost": 8,
+    "hp": 75,
+    "attack": 95,
+    "defense": 95,
+    "speed": 85,
+    "type": [
+      "water",
+      "dragon"
+    ],
+    "ability": "dragonPulse",
+    "evolves_from": "seadra"
   },
   "staryu": {
     "name": "staryu",
@@ -1611,17 +1471,6 @@
     "ability": "bubbleBeam",
     "evolves_from": "staryu"
   },
-  "mr. mime": {
-    "name": "mr. mime",
-    "display_name": "Mr. Mime☆",
-    "cost": 4,
-    "hp": 40,
-    "attack": 45,
-    "defense": 65,
-    "speed": 90,
-    "type": "psychic",
-    "ability": "psychic"
-  },
   "scyther": {
     "name": "scyther",
     "display_name": "Scyther☆",
@@ -1634,12 +1483,43 @@
       "bug",
       "flying"
     ],
-    "ability": "slash"
+    "ability": "slash",
+    "evolves_to": "scizor"
+  },
+  "scizor": {
+    "name": "scizor",
+    "display_name": "Scizor☆☆",
+    "cost": 6,
+    "hp": 70,
+    "attack": 130,
+    "defense": 100,
+    "speed": 65,
+    "type": [
+      "bug",
+      "steel"
+    ],
+    "ability": "ironHead",
+    "evolves_from": "scyther"
+  },
+  "smoochum": {
+    "name": "smoochum",
+    "display_name": "Smoochum☆",
+    "cost": 3,
+    "hp": 45,
+    "attack": 30,
+    "defense": 15,
+    "speed": 65,
+    "type": [
+      "ice",
+      "psychic"
+    ],
+    "ability": "confusion",
+    "evolves_to": "jynx"
   },
   "jynx": {
     "name": "jynx",
     "display_name": "Jynx☆",
-    "cost": 4,
+    "cost": 5,
     "hp": 65,
     "attack": 50,
     "defense": 35,
@@ -1648,56 +1528,85 @@
       "ice",
       "psychic"
     ],
-    "ability": "blizzard"
+    "ability": "blizzard",
+    "evolves_from": "smoochum"
+  },
+  "elekid": {
+    "name": "elekid",
+    "display_name": "Elekid☆",
+    "cost": 4,
+    "hp": 45,
+    "attack": 63,
+    "defense": 37,
+    "speed": 95,
+    "type": "electric",
+    "ability": "thunderShock",
+    "evolves_to": "electabuzz"
   },
   "electabuzz": {
     "name": "electabuzz",
     "display_name": "Electabuzz☆",
-    "cost": 4,
+    "cost": 6,
     "hp": 65,
     "attack": 83,
     "defense": 57,
     "speed": 105,
     "type": "electric",
-    "ability": "thunderBolt"
+    "ability": "thunderBolt",
+    "evolves_from": "elekid"
+  },
+  "electivire": {
+    "name": "electivire",
+    "display_name": "Electivire☆☆☆",
+    "cost": 8,
+    "hp": 75,
+    "attack": 123,
+    "defense": 67,
+    "speed": 95,
+    "type": "electric",
+    "ability": "zapCannon",
+    "evolves_from": "electabuzz"
+  },
+  "magby": {
+    "name": "magby",
+    "display_name": "Magby☆",
+    "cost": 4,
+    "hp": 45,
+    "attack": 75,
+    "defense": 37,
+    "speed": 83,
+    "type": "fire",
+    "ability": "ember",
+    "evolves_to": "magmar"
   },
   "magmar": {
     "name": "magmar",
     "display_name": "Magmar☆",
-    "cost": 4,
+    "cost": 6,
     "hp": 65,
     "attack": 95,
     "defense": 57,
     "speed": 93,
     "type": "fire",
-    "ability": "flamethrower"
+    "ability": "flamethrower",
+    "evolves_from": "magby"
   },
-  "pinsir": {
-    "name": "pinsir",
-    "display_name": "Pinsir☆",
-    "cost": 4,
-    "hp": 65,
-    "attack": 125,
-    "defense": 100,
-    "speed": 85,
-    "type": "bug",
-    "ability": "slash"
-  },
-  "tauros": {
-    "name": "tauros",
-    "display_name": "Tauros☆",
-    "cost": 4,
+  "magmortar": {
+    "name": "magmortar",
+    "display_name": "Magmortar☆☆☆",
+    "cost": 8,
     "hp": 75,
-    "attack": 100,
-    "defense": 95,
-    "speed": 110,
-    "type": "normal",
-    "ability": "hornAttack"
+    "attack": 95,
+    "defense": 67,
+    "speed": 83,
+    "type": "fire",
+    "ability": "fireBlast",
+    "evolves_from": "magmar"
   },
   "magikarp": {
     "name": "magikarp",
     "display_name": "Magikarp☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 20,
     "attack": 10,
     "defense": 55,
@@ -1709,7 +1618,7 @@
   "gyarados": {
     "name": "gyarados",
     "display_name": "Gyarados☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 95,
     "attack": 125,
     "defense": 79,
@@ -1720,31 +1629,6 @@
     ],
     "ability": "hydroPump",
     "evolves_from": "magikarp"
-  },
-  "lapras": {
-    "name": "lapras",
-    "display_name": "Lapras☆",
-    "cost": 4,
-    "hp": 130,
-    "attack": 85,
-    "defense": 80,
-    "speed": 60,
-    "type": [
-      "water",
-      "ice"
-    ],
-    "ability": "surf"
-  },
-  "ditto": {
-    "name": "ditto",
-    "display_name": "Ditto☆",
-    "cost": 3,
-    "hp": 48,
-    "attack": 48,
-    "defense": 48,
-    "speed": 48,
-    "type": "normal",
-    "ability": "transform"
   },
   "eevee": {
     "name": "eevee",
@@ -1797,17 +1681,6 @@
     "type": "fire",
     "ability": "ember",
     "evolves_from": "eevee"
-  },
-  "porygon": {
-    "name": "porygon",
-    "display_name": "Porygon☆",
-    "cost": 4,
-    "hp": 65,
-    "attack": 60,
-    "defense": 70,
-    "speed": 40,
-    "type": "normal",
-    "ability": "hyperBeam"
   },
   "omanyte": {
     "name": "omanyte",
@@ -1869,30 +1742,29 @@
     "ability": "slash",
     "evolves_from": "kabuto"
   },
-  "aerodactyl": {
-    "name": "aerodactyl",
-    "display_name": "Aerodactyl☆",
+  "munchlax": {
+    "name": "munchlax",
+    "display_name": "Munchlax☆",
     "cost": 5,
-    "hp": 80,
-    "attack": 105,
-    "defense": 65,
-    "speed": 130,
-    "type": [
-      "rock",
-      "flying"
-    ],
-    "ability": "wingAttack"
+    "hp": 135,
+    "attack": 85,
+    "defense": 40,
+    "speed": 5,
+    "type": "normal",
+    "ability": "bodySlam",
+    "evolves_to": "snorlax"
   },
   "snorlax": {
     "name": "snorlax",
     "display_name": "Snorlax☆",
-    "cost": 5,
+    "cost": 7,
     "hp": 160,
     "attack": 110,
     "defense": 65,
     "speed": 30,
     "type": "normal",
-    "ability": "hyperBeam"
+    "ability": "hyperBeam",
+    "evolves_from": "snorlax"
   },
   "articuno": {
     "name": "articuno",
@@ -1945,7 +1817,7 @@
     "defense": 45,
     "speed": 50,
     "type": "dragon",
-    "ability": "dragonRage",
+    "ability": "twister",
     "evolves_to": "dragonair"
   },
   "dragonair": {
@@ -1957,7 +1829,7 @@
     "defense": 65,
     "speed": 70,
     "type": "dragon",
-    "ability": "dragonRage",
+    "ability": "twister",
     "evolves_from": "dratini",
     "evolves_to": "dragonite"
   },
@@ -1973,7 +1845,7 @@
       "dragon",
       "flying"
     ],
-    "ability": "dragonTail",
+    "ability": "dragonPulse",
     "evolves_from": "dragonair"
   },
   "mewtwo": {

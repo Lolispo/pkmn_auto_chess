@@ -81,7 +81,7 @@ const typeMap = new Map({
     allBonus: (unit, bonus) => increaseAttack(unit, bonus),
     /*
     All bonus (something) defense/attack
-    18 units: Remove, goldeen, horsea, (krabby, slowpoke, tentacool)
+    18 units: Remove, goldeen, krabby, tentacool
     [4, 7, 10]
     psyduck poliwag tentacool slowpoke krabby omanyte kabuto
     squirtle, seel, shellder, horsea, goldeen, staryu, magikarp, vaporeon, lapras

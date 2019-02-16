@@ -82,14 +82,15 @@ exports.getDamageFactorType = actionType => damageFactorType.get(actionType);
  */
 const roundSetConfiguration = Map({
   1: async () => gameJS.createBattleBoard(List([
-    Map({ name: 'weedle', x: 3, y: 1 }),
+    Map({ name: 'magikarp', x: 3, y: 1 }),
   ])),
   2: async () => gameJS.createBattleBoard(List([
-    Map({ name: 'pidgey', x: 3, y: 1 }),
-  ])),
-  3: async () => gameJS.createBattleBoard(List([
     Map({ name: 'rattata', x: 3, y: 1 }),
     Map({ name: 'rattata', x: 4, y: 1 }),
+  ])),
+  3: async () => gameJS.createBattleBoard(List([
+    Map({ name: 'pidgey', x: 3, y: 1 }),
+    Map({ name: 'pidgeotto', x: 4, y: 1 }),
   ])),
   10: async () => gameJS.createBattleBoard(List([
     Map({ name: 'geodude', x: 3, y: 1 }),

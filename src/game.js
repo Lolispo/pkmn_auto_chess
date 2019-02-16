@@ -155,7 +155,7 @@ async function refreshShop(stateParam, playerIndex) {
  */
 async function getBoardUnit(name, x, y) {
   const unitInfo = await pokemonJS.getStats(name);
-  // console.log('getBoardUnit', unitInfo)
+  // console.log('@getBoardUnit', name, unitInfo)
   return Map({
     name,
     display_name: unitInfo.get('display_name'),
