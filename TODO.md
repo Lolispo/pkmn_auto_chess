@@ -65,6 +65,12 @@ Find a way of choosing pokemon in play
     1: Ban base types in beginning
     2: Choose (20-40) units to start with
 
+Alt: 
+    Focus on many units with many evolutions
+    Pro: Doesn't require manual labour of setting stats
+    Easier to say if evolution exist or not
+    Interesting gameplay aspect?
+    Might want 2 levels for some (Level 5 units)
 Auto chess: Jynx1 jynx2 jynx3
     drawbacks: jynx2 jynx3
     Jynx2 = jynx level 50, Jynx3 = jynx level 100

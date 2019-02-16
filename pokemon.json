@@ -597,7 +597,10 @@
     "attack": 90,
     "defense": 80,
     "speed": 130,
-    "type": "electric",
+    "type": [
+      "poison",
+      "flying"
+    ],
     "ability": "wingAttack",
     "evolves_from": "golbat"
   },
@@ -1066,7 +1069,10 @@
     "attack": 75,
     "defense": 80,
     "speed": 30,
-    "type": "fire",
+    "type": [
+      "water",
+      "psychic"
+    ],
     "ability": "psychic",
     "evolves_from": "slowbro"
   },
@@ -1108,7 +1114,10 @@
     "attack": 70,
     "defense": 115,
     "speed": 60,
-    "type": "fire",
+    "type": [
+      "electric",
+      "steel"
+    ],
     "ability": "zapCannon",
     "evolves_from": "magneton"
   },
@@ -1319,30 +1328,6 @@
     ],
     "ability": "confusion",
     "evolves_from": "exeggcute"
-  },
-  "cubone": {
-    "name": "cubone",
-    "display_name": "Cubone☆",
-    "cost": 3,
-    "hp": 50,
-    "attack": 50,
-    "defense": 95,
-    "speed": 35,
-    "type": "ground",
-    "ability": "boneClub",
-    "evolves_to": "marowak"
-  },
-  "marowak": {
-    "name": "marowak",
-    "display_name": "Marowak☆☆",
-    "cost": 5,
-    "hp": 60,
-    "attack": 80,
-    "defense": 110,
-    "speed": 45,
-    "type": "ground",
-    "ability": "bonemerang",
-    "evolves_from": "cubone"
   },
   "onix": {
     "name": "onix",
