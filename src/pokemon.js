@@ -35,7 +35,7 @@ const pokemonMap = loadImmutablePokemonJSON();
 
 exports.getStats = async (name) => {
   const pokeMap = await pokemonMap;
-  // console.log('getStats', name, pokeMap.get(name.toLowerCase()));
+  // console.log('getStats', name);//, pokeMap.get(name.toLowerCase()));
   return pokeMap.get(name.toLowerCase());
 };
 

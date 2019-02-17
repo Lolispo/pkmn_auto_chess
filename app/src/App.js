@@ -53,7 +53,8 @@ class App extends Component {
     // You have enough money to buy this unit
     // Unit != null
     // Hand is not full
-    if(this.props.gold >= 2){
+    console.log('@buyUnitEvent', this.props.myShop[this.pos(index)].cost)
+    if(this.props.gold >= this.props.myShop[this.pos(index)].cost){
       buyUnit(this.props.storedState, index);
     } else{
       this.updateMessage('Not enough gold!');
@@ -77,6 +78,15 @@ class App extends Component {
     // Hand is not full
   }
 
+  isUndefined = obj => (typeof obj === 'undefined');
+
+  pos = (x,y) => {
+    if(this.isUndefined(y)){
+      return 'Map { "x": ' + x + ' }'
+    }
+    return 'Map { "x": ' + x + ', "y": ' + y + ' }';
+  }
+
   render() {
     return <div>
       <div> 
@@ -88,14 +98,14 @@ class App extends Component {
         <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
         <button onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
         <button onClick={this.refreshShopEvent}>Refresh Shop</button>
-        <button onClick={() => this.buyUnitEvent(0)}>{this.props.myShop[0]}</button>
-        <button onClick={() => this.buyUnitEvent(1)}>{this.props.myShop[1]}</button>
-        <button onClick={() => this.buyUnitEvent(2)}>{this.props.myShop[2]}</button>
-        <button onClick={() => this.buyUnitEvent(3)}>{this.props.myShop[3]}</button>
-        <button onClick={() => this.buyUnitEvent(4)}>{this.props.myShop[4]}</button>
+        <button onClick={() => this.buyUnitEvent(0)}>{(!this.isUndefined(this.props.myShop[this.pos(0)]) ? this.props.myShop[this.pos(0)].display_name + this.props.myShop[this.pos(0)].cost : 'Empty')}</button>
+        <button onClick={() => this.buyUnitEvent(1)}>{(!this.isUndefined(this.props.myShop[this.pos(1)]) ? this.props.myShop[this.pos(1)].display_name + this.props.myShop[this.pos(1)].cost : 'Empty')}</button>
+        <button onClick={() => this.buyUnitEvent(2)}>{(!this.isUndefined(this.props.myShop[this.pos(2)]) ? this.props.myShop[this.pos(2)].display_name + this.props.myShop[this.pos(2)].cost : 'Empty')}</button>
+        <button onClick={() => this.buyUnitEvent(3)}>{(!this.isUndefined(this.props.myShop[this.pos(3)]) ? this.props.myShop[this.pos(3)].display_name + this.props.myShop[this.pos(3)].cost : 'Empty')}</button>
+        <button onClick={() => this.buyUnitEvent(4)}>{(!this.isUndefined(this.props.myShop[this.pos(4)]) ? this.props.myShop[this.pos(4)].display_name + this.props.myShop[this.pos(4)].cost : 'Empty')}</button>
       </div>
-      <div>{JSON.stringify(this.props.myBoard, null, 2)}</div>
-      <div>{JSON.stringify(this.props.myHand[{x:0}], null, 2)}</div>
+      <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
+      <div>{'Hand: ' + JSON.stringify(this.props.myHand[{x:0}], null, 2)}</div>
       <div>State: {this.props.message}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>

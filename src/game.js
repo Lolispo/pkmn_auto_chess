@@ -114,7 +114,12 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
     }
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
-      newShop = newShop.set(pos, piece);
+      const unitStats = await pokemonJS.getStats(piece);
+      newShop = newShop.set(pos, Map({
+        name: piece, 
+        display_name: unitStats.get('display_name'),
+        cost: unitStats.get('cost'),
+      }));
       // Removes first from correct rarity array
       newPieceStorage = await f.removeFirst(newPieceStorage, i);
       break;
@@ -147,7 +152,7 @@ async function refreshShop(stateParam, playerIndex) {
     let temp = iter.next();
     let tempShopList = List([]);
     while (!temp.done) {
-      tempShopList = tempShopList.push(temp.value);
+      tempShopList = tempShopList.push(temp.value.get('name'));
       temp = iter.next();
     }
     const shopList = await tempShopList;
@@ -188,8 +193,8 @@ exports.createBattleBoard = async (inputList) => {
   for (let i = 0; i < inputList.size; i++) {
     const el = inputList.get(i);
     const pokemon = el.get('name');
-    const x = el.get('x');
-    const y = el.get('y');
+    const x = f.x(el);
+    const y = f.y(el);
     const unit = await getBoardUnit(pokemon, x, y);
     board = await board.set(f.pos(x, y), unit);
   }
@@ -207,8 +212,9 @@ exports.createBattleBoard = async (inputList) => {
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
   console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']))
+  console.log(state.getIn(['players', playerIndex, 'shop']));
   let shop = state.getIn(['players', playerIndex, 'shop']);
-  const unit = shop.get(f.pos(unitID));
+  const unit = shop.get(f.pos(unitID)).get('name');
   if (!f.isUndefined(unit)) {
     shop = shop.delete(f.pos(unitID));
     state = state.setIn(['players', playerIndex, 'shop'], shop);
@@ -217,7 +223,7 @@ exports.buyUnit = async (stateParam, playerIndex, unitID) => {
     const unitInfo = await pokemonJS.getStats(unit);
     const handIndex = await getFirstAvailableSpot(state, playerIndex); // TODO: Go: Get first best hand index
     console.log('@buyUnit handIndex', handIndex);
-    const unitHand = await getBoardUnit(unit, handIndex.get('x'));
+    const unitHand = await getBoardUnit(unit, f.x(handIndex));
     // console.log('@buyUnit unitHand', unitHand)
     state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
 
@@ -312,18 +318,14 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     // Check if multiple evolutions exist, random between
     let newPiece;
     if (!f.isUndefined(evolvesTo.size)) { // List
-      newPiece = await getBoardUnit(evolvesTo.get(f.getRandomInt(evolvesTo.size)), position.get('x'), position.get('y'));
+      newPiece = await getBoardUnit(evolvesTo.get(f.getRandomInt(evolvesTo.size)), f.x(position), f.y(position));
     } else { // Value
-      newPiece = await getBoardUnit(evolvesTo, position.get('x'), position.get('y'));
+      newPiece = await getBoardUnit(evolvesTo, f.x(position), f.y(position));
     }
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
   }
   return state;
 }
-/**
- * Given a position, returns if it is on hand or board
- */
-const checkHandUnit = position => f.isUndefined(position.get('y'));
 
 /**
  * Place piece
@@ -333,7 +335,7 @@ const checkHandUnit = position => f.isUndefined(position.get('y'));
 async function placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') {
   let piece;
   let state = stateParam;
-  if (checkHandUnit(fromPosition)) { // from hand
+  if (f.checkHandUnit(fromPosition)) { // from hand
     piece = state.getIn(['players', playerIndex, 'hand', fromPosition]).set('position', toPosition);
     const newHand = state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'hand'], newHand);
@@ -343,7 +345,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     state = state.setIn(['players', playerIndex, 'board'], newBoard);
   }
   let newPiece;
-  if (checkHandUnit(toPosition)) { // to hand
+  if (f.checkHandUnit(toPosition)) { // to hand
     newPiece = state.getIn(['players', playerIndex, 'hand', toPosition]);
     state = state.setIn(['players', playerIndex, 'hand', toPosition], piece);
   } else { // to board
@@ -352,7 +354,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     state = await checkPieceUpgrade(state, playerIndex, piece, toPosition);
   }
   if (shouldSwap && !f.isUndefined(newPiece)) {
-    if (checkHandUnit(fromPosition)) {
+    if (f.checkHandUnit(fromPosition)) {
       state = state.setIn(['players', playerIndex, 'hand', fromPosition], newPiece.set('position', fromPosition));
     } else {
       state = state.setIn(['players', playerIndex, 'board', fromPosition], newPiece.set('position', fromPosition));
@@ -425,7 +427,7 @@ async function discardBaseUnits(state, name, depth = '1') {
 async function sellPiece(state, playerIndex, piecePosition) {
   let pieceTemp;
   // Make this into method, taking pos and get/set, if set take argument to set
-  if (checkHandUnit(piecePosition)) {
+  if (f.checkHandUnit(piecePosition)) {
     pieceTemp = state.getIn(['players', playerIndex, 'hand', piecePosition]);
   } else {
     pieceTemp = state.getIn(['players', playerIndex, 'board', piecePosition]);
@@ -435,7 +437,7 @@ async function sellPiece(state, playerIndex, piecePosition) {
   const cost = unitStats.get('cost');
   const gold = state.getIn(['players', playerIndex, 'gold']);
   let newState = state.setIn(['players', playerIndex, 'gold'], +gold + +cost);
-  if (checkHandUnit(piecePosition)) {
+  if (f.checkHandUnit(piecePosition)) {
     const newHand = newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
     newState = newState.setIn(['players', playerIndex, 'hand'], newHand);
   } else {
@@ -453,8 +455,8 @@ async function sellPiece(state, playerIndex, piecePosition) {
  * (Assasins functionality can use enemyTeam as input)
  */
 function getMovePos(board, closestEnemyPos, range, team) {
-  const x = closestEnemyPos.get('x');
-  const y = closestEnemyPos.get('y');
+  const x = f.x(closestEnemyPos);
+  const y = f.y(closestEnemyPos);
   for (let i = range; i >= 1; i--) {
     if (team === 0) { // S team
       if (f.isUndefined(board.get(f.pos(x, y - i)))) { // S
@@ -506,8 +508,8 @@ function getMovePos(board, closestEnemyPos, range, team) {
  */
 function getClosestEnemy(board, unitPos, range, team) {
   // f.print(board, '@getClosestEnemy board')
-  const x = unitPos.get('x');
-  const y = unitPos.get('y');
+  const x = f.x(unitPos);
+  const y = f.y(unitPos);
   const enemyTeam = 1 - team;
   for (let i = 1; i <= 8; i++) {
     const withinRange = i <= range;
@@ -728,7 +730,7 @@ async function deleteNextMoveResultEntries(unitMoveMapParam, targetToRemove) {
     const tempPrevMove = unitMoveMap.get(tempUnit.value);
     const target = tempPrevMove.get('nextMove').get('target');
     const invalidPrevTarget = targetToRemove;
-    if (target.get('x') === invalidPrevTarget.get('x') && target.get('y') === invalidPrevTarget.get('y')) {
+    if (f.x(target) === f.x(invalidPrevTarget) && f.y(target) === f.y(invalidPrevTarget)) {
       unitMoveMap = await unitMoveMap.delete(tempUnit.value);
       // console.log('Deleting prevMove for: ', tempUnit.value, nextMoveResult.get('nextMove').get('target'))
     }
@@ -976,7 +978,7 @@ async function startBattle(boardParam) {
 /**
  * Reverses position, your units position on enemy boards
  */
-const reverseUnitPos = pos => Map({ x: 7 - pos.get('x'), y: 7 - pos.get('y') });
+const reverseUnitPos = pos => Map({ x: 7 - f.x(pos), y: 7 - f.y(pos) });
 
 /**
  * Board with first_move: pos set for all units

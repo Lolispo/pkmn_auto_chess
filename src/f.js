@@ -1,9 +1,49 @@
 // Author: Petter Andersson
 
-const { Map } = require('immutable');
+const { Map, List } = require('immutable');
 const shuffle = require('immutable-shuffle');
 
+const isUndefined = obj => (typeof obj === 'undefined');
+exports.isUndefined = obj => isUndefined(obj);
+
 exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
+
+/**
+ * Returns:
+ * position: Map{
+ *   x ,
+ *   y (if missing -> is on hand, outside of the board)
+ * }
+ */
+const pos = (x, y) => {
+  // console.log('@pos', List([x]), List([x,y]));
+  if (y === undefined) {
+    return Map({ x });
+    //return List([x])
+  }
+  return Map({ x, y });
+  // return List([x,y])
+};
+
+
+const x = pos => {
+  return pos.get('x');
+  //return pos.get(0);
+}
+
+const y = pos => {
+  //return pos.get(1);
+  return pos.get('y');
+}
+
+exports.pos = (x,y) => pos(x,y);
+exports.x = pos => x(pos);
+exports.y = pos => y(pos);
+
+/**
+ * Given a position, returns if it is on hand or board
+ */
+exports.checkHandUnit = position => isUndefined(y(position));
 
 // exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal version
 exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
@@ -17,47 +57,31 @@ exports.printBoard = async (boardParam, moveParam) => {
   console.log(` -- Move @${move.get('time')}: `);
   while (!tempUnit.done) {
     // console.log('@printBoard', tempUnit.value, board, moveParam)
-    const x = tempUnit.value.get('x');
-    const y = tempUnit.value.get('y');
+    const xPos = x(tempUnit.value);
+    const yPos = y(tempUnit.value);
     const action = move.get('action');
     const target = move.get('target');
     const unitPos = move.get('unitPos');
     const effect = move.get('effect');
     // Unit start string
-    const builtString = `${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${x},${y}}: `
+    const builtString = `${(board.get(tempUnit.value).get('team') === 0 ? 'o' : 'x')}{${xPos},${yPos}}: `
     + `${board.get(tempUnit.value).get('name')}. hp: ${board.get(tempUnit.value).get('hp')} mana: ${board.get(tempUnit.value).get('mana')}`;
     let resultString = builtString;
     // Move string TODO Print dot damage here as well
-    if ((unitPos.get('x') === x && unitPos.get('y') === y)
-    || (action === 'move' && target.get('x') === x && target.get('y') === y)) {
+    if ((x(unitPos) === xPos && y(unitPos) === yPos)
+    || (action === 'move' && x(target) === xPos && y(target) === yPos)) {
       resultString = `${builtString} : ${action}(`
       + `${(move.get('abilityName') ? `${move.get('abilityName')}, `
       + `${(effect && effect.size > 0 ? (effect.get(target) ? `Dot applied: ${effect.get(target).get('dot')}, ` : `Healed: ${effect.get(unitPos).get('heal')}, `) : '')}` : '')}`
-      + `target: {${target.get('x')},${target.get('y')}} ${
-        typeof move.get('value') === 'undefined' ? '' : `dmg: ${move.get('value')}`
-      }${action === 'move' ? `from: {${unitPos.get('x')},${unitPos.get('y')}}` : ''})`;
+      + `target: {${x(target)},${y(target)}} ${
+        isUndefined(move.get('value')) ? '' : `dmg: ${move.get('value')}`
+      }${action === 'move' ? `from: {${x(unitPos)},${y(unitPos)}}` : ''})`;
     }
     console.log(resultString);
     tempUnit = keysIter.next();
   }
   console.log();
 };
-
-/**
- * Returns:
- * position: Map{
- *   x ,
- *   y (if missing -> is on hand, outside of the board)
- * }
- */
-exports.pos = (x, y) => {
-  if (y === undefined) {
-    return Map({ x });
-  }
-  return Map({ x, y });
-};
-
-exports.isUndefined = obj => (typeof obj === 'undefined');
 
 exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());
 

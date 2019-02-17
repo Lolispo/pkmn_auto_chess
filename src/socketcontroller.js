@@ -49,6 +49,8 @@ module.exports = function (socket, io) {
   socket.on('START_GAME', async () => {
     const state = await gameJS._startGame();
     console.log('Starting game!');
+    console.log('@startGame shop', state.getIn(['players', 0, 'shop']))
+    console.log('@startGame shop', state.getIn(['players', 0, 'shop']).toJS())
     socket.emit('UPDATED_STATE', state); // state.getIn(['players', index])
   });
   
