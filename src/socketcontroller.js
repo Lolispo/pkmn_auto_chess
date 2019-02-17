@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 const gameJS = require('./game');
-const { Map } = require('immutable');
+const { Map, fromJS } = require('immutable');
 const sessionJS = require('./session');
 
 let nextPlayerIndex = 0;
@@ -52,49 +52,42 @@ module.exports = function (socket, io) {
     socket.emit('UPDATED_STATE', state); // state.getIn(['players', index])
   });
   
-  socket.on('TOGGLE_LOCK', async (state) => {
+  socket.on('TOGGLE_LOCK', async (stateParam) => {
     const index = connectedPlayers.get(socket.id);
-    const state = await gameJS.toggleLock(state, index);
+    const state = await gameJS.toggleLock(fromJS(stateParam), String(index));
     console.log('Toggling Lock for Shop!');
-    socket.emit('LOCK_TOGGLED', index, state.getIn(['players', index, 'lock']));
+    socket.emit('LOCK_TOGGLED', index, state.getIn(['players', String(index), 'lock']));
   });
 
-  socket.on('BUY_UNIT', async (state, pieceIndex) => {
+  socket.on('BUY_UNIT', async (stateParam, pieceIndex) => {
     const index = connectedPlayers.get(socket.id);
-    const state = await gameJS.buyUnit(state, index, pieceIndex);
+    const state = await gameJS.buyUnit(fromJS(stateParam), String(index), pieceIndex);
     console.log('Bought unit at ', pieceIndex);
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
   });
   
-  socket.on('REFRESH_SHOP', async (state) => {
+  socket.on('REFRESH_SHOP', async (stateParam) => {
     const index = connectedPlayers.get(socket.id);
-    const state = await gameJS._refreshShop(state, index);
+    const state = await gameJS._refreshShop(fromJS(stateParam), String(index));
     console.log('Refreshes Shop');
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
     socket.broadcast.emit('UPDATED_PIECES', state);
   });
 
-  socket.on('PLACE_PIECE', async (state, from, to) => {
+  socket.on('PLACE_PIECE', async (stateParam, from, to) => {
     const index = connectedPlayers.get(socket.id);
-    const state = await gameJS._placePiece(state, index, from, to);
+    const state = await gameJS._placePiece(fromJS(stateParam), String(index), from, to);
     console.log('Place piece at ', from, ' at', to);
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
   });
 
-  socket.on('WITHDRAW_PIECE', async (state, from) => {
+  socket.on('WITHDRAW_PIECE', async (stateParam, from) => {
     const index = connectedPlayers.get(socket.id);
-    const state = await gameJS._withdrawPiece(state, index, from);
+    const state = await gameJS._withdrawPiece(fromJS(stateParam), String(index), from);
     console.log('Withdraw piece at ', from);
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
   });
 
-export const placePiece = (state, from, to) => 
-  socket.emit('PLACE_PIECE', state, from, to);
-
-export const withdrawPiece = (state, from) => 
-  socket.emit('WITHDRAW_PIECE', state, from);
-
-    
   // broadcast to everyone if somebody pitched in
   // Temp function to showcase syntax
   socket.on('UPDATE_EVERYONES_PIECES', (state) => {

@@ -37,8 +37,6 @@ const battleSetup = fileModule.__get__('battleSetup');
 
 
 
-
-
 describe('game state', () => {
   describe('initEmptyState', () => {
     it('initEmptyState is correct?', async () => {

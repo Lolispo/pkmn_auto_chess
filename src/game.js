@@ -194,6 +194,7 @@ exports.createBattleBoard = async (inputList) => {
  */
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
+  console.log('@buyunit', unitID, playerIndex, state)
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(unitID);
   if (!f.isUndefined(unit)) {
@@ -314,7 +315,7 @@ const checkHandUnit = position => f.isUndefined(position.get('y'));
 /**
  * Place piece
  * Swap functionality by default, if something is there already
- * * Assumes that only have of the board is placed on
+ * * Assumes that only half of the board is placed on
  */
 async function placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') {
   let piece;
@@ -567,7 +568,7 @@ async function manaIncrease(board, unitPos, enemyPos) {
  * Take type differences into account
  * Calculate factor against both defending types (if super effective against both, 4x damage)
  * Attack should use one type, main one preferrbly
- * Temp: Assumed typesAttacker is one type
+ * Temp: Assumed typesAttacker is first listed type for normal attacks, set in ability for abilities
  * Power might be wanted
  */
 async function calcDamage(actionType, power, unit, target, attackerType) { // attack, defense, typesAttacker, typesDefender
@@ -1536,20 +1537,6 @@ async function startGame(stateParam) {
   }
   return state;
 }
-
-exports.start = async () => {
-  /*
-  let state = await initEmptyState(2);
-  // f.print(state, '**Initial State: ');
-  state = await startGame(state);
-  // state = await refreshShop(state, 0);
-  // f.print(state, '**State with shop given to player 0: ');
-  state = await buyUnit(state, 0, 1);
-  // f.print(state, '**State where player 0 Bought a Unit at index 1: ');
-  state = await battleTime(state);
-  f.print(state, '**State after battle time with 0 units: ');
-  */
-};
 
 exports._startGame = async () => {
   const state = await initEmptyState(2);

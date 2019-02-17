@@ -3,6 +3,7 @@ import { socket } from './index';
 const reducer = (
   state = {
     index: -1,
+    storedState: {}, // Bad, make functions update relevant things, not entire state
     allReady: false,
     test: 'default',
     pieces: [],
@@ -21,6 +22,7 @@ const reducer = (
     case 'NEW_STATE':
       // Update state with incoming data from server
       state = { ...state, pieces: action.newState.pieces, 
+        storedState: action.newState,
         test: 'im updated', 
         players: action.newState.players,
         player: action.newState.players[state.index],
@@ -44,18 +46,21 @@ const reducer = (
       break;
     case 'UPDATE_PLAYER':
       console.log('updating player', action.index, action.player);
+      console.log(state.storedState.players[state.index])
+      console.log(state.storedState.players[state.index] = action.player)
       state = { ...state,
         test: 'Updated player', 
-        player: action.newState.players[action.index],
-        myHand: action.newState.players[action.index].hand,
-        myBoard: action.newState.players[action.index].board,
-        myShop: action.newState.players[action.index].shop,
-        level: action.newState.players[action.index].level,
-        exp: action.newState.players[action.index].exp,
-        expToReach: action.newState.players[action.index].expToReach,
-        gold: action.newState.players[action.index].gold,
+        player: action.player,
+        myHand: action.player.hand,
+        myBoard: action.player.board,
+        myShop: action.player.shop,
+        level: action.player.level,
+        exp: action.player.exp,
+        expToReach: action.player.expToReach,
+        gold: action.player.gold,
       };
-      }
+      state.storedState.players[state.index] = action.player;
+      console.log(state.storedState)
       break;
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);

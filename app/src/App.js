@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ready, startGame } from './socket';
+import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, placePiece, withdrawPiece} from './socket';
 import { connect } from 'react-redux';
 
 class App extends Component {
@@ -40,19 +40,55 @@ class App extends Component {
       <li>{player}</li>
     );
   }*/
+  /*
+  {this.props.myShop.map(unit =>
+    <li key={unit} onClick={() => this.handleClick(unit)}>
+      {letter}
+    </li>
+  )}*/
+
+  buyUnitEvent = (index) => {
+    // You have enough money to buy this unit
+    // Unit != null
+    // Hand is not full
+    buyUnit(this.props.storedState, index);
+  }
+
+  placePieceEvent = (from, to) => {
+    // to is on valid part of the board
+  }
+
+  withdrawPieceEvent = (from) => {
+    // Hand is not full
+  }
 
   render() {
     return <div>
-      <button onClick={this.readyButton}>The button of ready</button>
-      <button onClick={this.unreadyButton}>The button of unreadying</button>
+      <div> 
+        <button onClick={this.readyButton}>The button of ready</button>
+        <button onClick={this.unreadyButton}>The button of unreadying</button>
+        <button onClick={this.startGame}>StartGame</button>
+      </div>
+      <div>
+        <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
+        <button onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
+        <button onClick={() => refreshShop(this.props.storedState)}>Refresh Shop</button>
+        <button onClick={() => this.buyUnitEvent(0)}>{this.props.myShop[0]}</button>
+        <button onClick={() => this.buyUnitEvent(1)}>{this.props.myShop[1]}</button>
+        <button onClick={() => this.buyUnitEvent(2)}>{this.props.myShop[2]}</button>
+        <button onClick={() => this.buyUnitEvent(3)}>{this.props.myShop[3]}</button>
+        <button onClick={() => this.buyUnitEvent(4)}>{this.props.myShop[4]}</button>
+      </div>
+      <button onClick={this.startGame}>StartGame</button>
+      <button onClick={this.startGame}>StartGame</button>
       <button onClick={this.startGame}>StartGame</button>
       <div>State: {this.props.test}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
       <p>player:{JSON.stringify(this.props.player, null, 2)}</p>
+      <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
       <p>myHand:{JSON.stringify(this.props.myHand, null, 2)}</p>
       <p>myBoard:{JSON.stringify(this.props.myBoard, null, 2)}</p>
-      <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
       <p>level:{JSON.stringify(this.props.level, null, 2)}</p>
       <p>exp:{JSON.stringify(this.props.exp, null, 2)}</p>
       <p>gold:{JSON.stringify(this.props.gold, null, 2)}</p>
@@ -62,6 +98,7 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   index: state.index,
+  storedState: state.storedState,
   allReady: state.allReady,
   pieces: state.pieces,
   test: state.test,

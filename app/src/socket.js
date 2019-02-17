@@ -47,7 +47,7 @@ const configureSocket = dispatch => {
 export const ready = () =>
   socket.emit('READY');
 
-export const ready = () =>
+export const unready = () =>
   socket.emit('UNREADY');
 
 export const giveId = () => 
