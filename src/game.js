@@ -193,8 +193,8 @@ exports.createBattleBoard = async (inputList) => {
   for (let i = 0; i < inputList.size; i++) {
     const el = inputList.get(i);
     const pokemon = el.get('name');
-    const x = f.x(el);
-    const y = f.y(el);
+    const x = el.get('x');
+    const y = el.get('y');
     const unit = await getBoardUnit(pokemon, x, y);
     board = await board.set(f.pos(x, y), unit);
   }
@@ -975,10 +975,6 @@ async function startBattle(boardParam) {
   return Map({ actionStack, board: newBoard, winner: winningTeam });
 }
 
-/**
- * Reverses position, your units position on enemy boards
- */
-const reverseUnitPos = pos => Map({ x: 7 - f.x(pos), y: 7 - f.y(pos) });
 
 /**
  * Board with first_move: pos set for all units
@@ -1188,7 +1184,7 @@ async function combineBoards(board1, board2) {
   tempUnit = keysIter2.next();
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
-    const newUnitPos = reverseUnitPos(unitPos); // Reverse unitPos
+    const newUnitPos = f.reverseUnitPos(unitPos); // Reverse unitPos
     const unit = board2.get(unitPos);
     const battleUnit = await createBattleUnit(unit, newUnitPos, 1);
     newBoard = await newBoard.set(newUnitPos, battleUnit);

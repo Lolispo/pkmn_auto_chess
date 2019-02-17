@@ -263,7 +263,7 @@ describe('game state', () => {
       const hand = state.getIn(['players', 0, 'hand']);
       const gold = state.getIn(['players', 0, 'gold']);
       const unit = hand.get(f.pos(0));
-      state = await sellPiece(state, 0, Map({x: 0}));
+      state = await sellPiece(state, 0, f.pos(0));
       assert.equal(unit.get('name'), state.get('discarded_pieces').get(0));
       assert.equal(state.getIn(['players', 0, 'hand']).get(f.pos(0)), undefined);
       assert.equal(gold, 0);

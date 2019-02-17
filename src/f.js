@@ -18,22 +18,22 @@ exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
 const pos = (x, y) => {
   // console.log('@pos', List([x]), List([x,y]));
   if (y === undefined) {
-    return Map({ x });
-    //return List([x])
+    //return Map({ x });
+    return List([x])
   }
-  return Map({ x, y });
-  // return List([x,y])
+  //return Map({ x, y });
+  return List([x,y])
 };
 
 
 const x = pos => {
-  return pos.get('x');
-  //return pos.get(0);
+  //return pos.get('x');
+  return pos.get(0);
 }
 
 const y = pos => {
-  //return pos.get(1);
-  return pos.get('y');
+  return pos.get(1);
+  //return pos.get('y');
 }
 
 exports.pos = (x,y) => pos(x,y);
@@ -44,6 +44,11 @@ exports.y = pos => y(pos);
  * Given a position, returns if it is on hand or board
  */
 exports.checkHandUnit = position => isUndefined(y(position));
+
+/**
+ * Reverses position, your units position on enemy boards
+ */
+exports.reverseUnitPos = posInput => pos(7 - x(posInput), 7 - y(posInput));
 
 // exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal version
 exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
