@@ -54,14 +54,15 @@ module.exports = function (socket, io) {
   
   socket.on('TOGGLE_LOCK', async (stateParam) => {
     const index = connectedPlayers.get(socket.id);
-    const state = await gameJS.toggleLock(fromJS(stateParam), String(index));
-    console.log('Toggling Lock for Shop!');
-    socket.emit('LOCK_TOGGLED', index, state.getIn(['players', String(index), 'lock']));
+    // const state = await gameJS.toggleLock(fromJS(stateParam), String(index));
+    console.log('Toggling Lock for Shop! prev lock =', (fromJS(stateParam)).getIn(['players', String(index), 'lock']));
+    socket.emit('LOCK_TOGGLED', index, (!(fromJS(stateParam)).getIn(['players', String(index), 'lock']) ? true : false));
   });
 
   socket.on('BUY_UNIT', async (stateParam, pieceIndex) => {
     const index = connectedPlayers.get(socket.id);
     const state = await gameJS.buyUnit(fromJS(stateParam), String(index), pieceIndex);
+    // Gold, shop, hand
     console.log('Bought unit at ', pieceIndex);
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
   });
@@ -70,14 +71,16 @@ module.exports = function (socket, io) {
     const index = connectedPlayers.get(socket.id);
     const state = await gameJS._refreshShop(fromJS(stateParam), String(index));
     console.log('Refreshes Shop');
+    // Requires Shop and Pieces
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
-    socket.broadcast.emit('UPDATED_PIECES', state);
+    socket.emit('UPDATED_PIECES', state);
   });
 
   socket.on('PLACE_PIECE', async (stateParam, from, to) => {
     const index = connectedPlayers.get(socket.id);
     const state = await gameJS._placePiece(fromJS(stateParam), String(index), from, to);
     console.log('Place piece at ', from, ' at', to);
+    // Hand and board
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
   });
 
@@ -85,6 +88,7 @@ module.exports = function (socket, io) {
     const index = connectedPlayers.get(socket.id);
     const state = await gameJS._withdrawPiece(fromJS(stateParam), String(index), from);
     console.log('Withdraw piece at ', from);
+    // Hand and board
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
   });
 

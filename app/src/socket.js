@@ -28,6 +28,10 @@ const configureSocket = dispatch => {
   socket.on('UPDATE_PLAYER', (index, player) => {
     dispatch({ type: 'UPDATE_PLAYER', index: index, player: player});
   });
+  
+  socket.on('LOCK_TOGGLED', (index, lock) => {
+    dispatch({ type: 'LOCK_TOGGLED', index: index, lock: lock});
+  });
 
   socket.on('NEW_PLAYER', index => {
     dispatch({ type: 'NEW_PLAYER', index: index});
@@ -36,6 +40,7 @@ const configureSocket = dispatch => {
   socket.on('ALL_READY', bool => {
     dispatch({ type: 'ALL_READY', value: bool});
   });
+  
   
   return socket;
 };
@@ -59,8 +64,10 @@ export const startGame = () =>
 export const toggleLock = (state) => 
   socket.emit('TOGGLE_LOCK', state);
 
-export const buyUnit = (state, pieceIndex) => 
-  socket.emit('BUY_UNIT', state, pieceIndex);
+export const buyUnit = (state, pieceIndex) => {
+  console.log('@buyUnit', state)
+  socket.emit('BUY_UNIT', state, pieceIndex);  
+}
 
 export const refreshShop = (state) => 
   socket.emit('REFRESH_SHOP', state);

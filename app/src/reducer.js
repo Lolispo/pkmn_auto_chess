@@ -11,6 +11,7 @@ const reducer = (
     myHand: {},
     myBoard: {},
     myShop: {},
+    lock: false,
     level: -1,
     exp: -1,
     expToReach: -1,
@@ -43,11 +44,10 @@ const reducer = (
     case 'NEW_PIECES':
       console.log('New Pieces')
       state = { ...state, pieces: action.newState.pieces}
+      state.storedState.pieces = action.newState.pieces;
       break;
     case 'UPDATE_PLAYER':
       console.log('updating player', action.index, action.player);
-      console.log(state.storedState.players[state.index])
-      console.log(state.storedState.players[state.index] = action.player)
       state = { ...state,
         test: 'Updated player', 
         player: action.player,
@@ -59,8 +59,14 @@ const reducer = (
         expToReach: action.player.expToReach,
         gold: action.player.gold,
       };
+      state.players[state.index] = action.player
       state.storedState.players[state.index] = action.player;
-      console.log(state.storedState)
+      console.log('@Updated player', state.storedState)
+      break;
+    case 'LOCK_TOGGLED':
+      console.log('lock toggled')
+      state = {...state, lock: action.lock}
+      state.storedState.players[state.index]['lock'] = action.lock;
       break;
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);

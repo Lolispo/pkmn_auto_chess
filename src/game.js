@@ -150,7 +150,9 @@ async function refreshShop(stateParam, playerIndex) {
   return state;
 }
 
-exports._refreshShop = async (state, index) => {
+// Cost of 2 gold
+exports._refreshShop = async (stateParam, index) => {
+  const state = stateParam.setIn(['players', index, 'gold'], stateParam.getIn(['players', index, 'gold']) - 2);
   return refreshShop(state, index);
 }
 
@@ -194,7 +196,7 @@ exports.createBattleBoard = async (inputList) => {
  */
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
-  console.log('@buyunit', unitID, playerIndex, state)
+  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']))
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(unitID);
   if (!f.isUndefined(unit)) {
@@ -204,6 +206,7 @@ exports.buyUnit = async (stateParam, playerIndex, unitID) => {
     const hand = state.getIn(['players', playerIndex, 'hand']);
     const unitInfo = await pokemonJS.getStats(unit);
     const handIndex = await getFirstAvailableSpot(state, playerIndex); // TODO: Go: Get first best hand index
+    console.log('@buyUnit handIndex', handIndex);
     const unitHand = await getBoardUnit(unit, handIndex.get('x'));
     // console.log('@buyUnit unitHand', unitHand)
     state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
@@ -358,10 +361,12 @@ exports._placePiece = async (stateParam, playerIndex, fromPosition, toPosition, 
  */
 async function getFirstAvailableSpot(state, playerIndex){
   const hand = state.getIn(['players', playerIndex, 'hand']);
+  // console.log('@getFirst', hand.keys().value)
   for (let i = 0; i < 8; i++) {
     // Get first available spot on bench
     const pos = f.pos(i);
-    if (f.isUndefined(hand.get(pos))) {
+    // console.log('inner', hand.get(pos), hand.get(String(pos)))
+    if (f.isUndefined(hand.get(pos)) && f.isUndefined(hand.get(String(pos)))) {
       return pos;
     }
   }

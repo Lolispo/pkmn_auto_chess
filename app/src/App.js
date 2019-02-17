@@ -54,6 +54,11 @@ class App extends Component {
     buyUnit(this.props.storedState, index);
   }
 
+  refreshShopEvent = (index) => {
+    // You have enough money to refresh
+    refreshShop(this.props.storedState)
+  }
+
   placePieceEvent = (from, to) => {
     // to is on valid part of the board
   }
@@ -72,16 +77,15 @@ class App extends Component {
       <div>
         <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
         <button onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
-        <button onClick={() => refreshShop(this.props.storedState)}>Refresh Shop</button>
+        <button onClick={this.refreshShopEvent}>Refresh Shop</button>
         <button onClick={() => this.buyUnitEvent(0)}>{this.props.myShop[0]}</button>
         <button onClick={() => this.buyUnitEvent(1)}>{this.props.myShop[1]}</button>
         <button onClick={() => this.buyUnitEvent(2)}>{this.props.myShop[2]}</button>
         <button onClick={() => this.buyUnitEvent(3)}>{this.props.myShop[3]}</button>
         <button onClick={() => this.buyUnitEvent(4)}>{this.props.myShop[4]}</button>
       </div>
-      <button onClick={this.startGame}>StartGame</button>
-      <button onClick={this.startGame}>StartGame</button>
-      <button onClick={this.startGame}>StartGame</button>
+      <div>{JSON.stringify(this.props.myBoard, null, 2)}</div>
+      <div>{JSON.stringify(this.props.myHand[{x:0}], null, 2)}</div>
       <div>State: {this.props.test}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
@@ -89,9 +93,11 @@ class App extends Component {
       <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
       <p>myHand:{JSON.stringify(this.props.myHand, null, 2)}</p>
       <p>myBoard:{JSON.stringify(this.props.myBoard, null, 2)}</p>
+      <p>lock:{JSON.stringify(this.props.lock, null, 2)}</p>
       <p>level:{JSON.stringify(this.props.level, null, 2)}</p>
       <p>exp:{JSON.stringify(this.props.exp, null, 2)}</p>
       <p>gold:{JSON.stringify(this.props.gold, null, 2)}</p>
+      <p>State:{JSON.stringify(this.props.storedState, null, 2)}</p>
     </div>;
   }
 }
@@ -107,6 +113,7 @@ const mapStateToProps = state => ({
   myHand: state.myHand,
   myBoard: state.myBoard,
   myShop: state.myShop,
+  lock: state.lock,
   level: state.level,
   exp: state.exp,
   expToReach: state.expToReach,

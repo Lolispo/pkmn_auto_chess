@@ -34,6 +34,7 @@ const markBoardBonuses = fileModule.__get__('markBoardBonuses');
 const createBattleUnit = fileModule.__get__('createBattleUnit');
 const startGame = fileModule.__get__('startGame');
 const battleSetup = fileModule.__get__('battleSetup');
+const getFirstAvailableSpot = fileModule.__get__('getFirstAvailableSpot');
 
 
 
@@ -713,6 +714,19 @@ describe('game state', () => {
      */
     it('prepareBattle', async () => {
       // TODO     
+    });
+  });
+  describe('getFirstAvailableSpot', () => {
+    /**
+     * Get first available spot on hand
+     */
+    it('getFirstAvailableSpot', async () => {
+      let state = await initEmptyState(2);
+      state = await startGame(state);
+      assert.equal((await getFirstAvailableSpot(state, 0)).get('x'), 0);
+      const newHand = Map({}).set(f.pos(0), (await getBoardUnit('rattata', 0)))
+      state = state.setIn(['players', 0, 'hand'], newHand);
+      assert.equal((await getFirstAvailableSpot(state, 0)).get('x'), 1);
     });
   });
   describe('markBoardBonuses', () => {
