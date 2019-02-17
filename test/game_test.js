@@ -13,9 +13,9 @@ const f = require('../src/f');
 
 const initEmptyState = fileModule.__get__('initEmptyState');
 const refreshShop = fileModule.__get__('refreshShop');
-const buyUnit = fileModule.__get__('buyUnit');
+const buyUnit = fileModule.buyUnit;
 const buyExp = fileModule.__get__('buyExp');
-const toggleLock = fileModule.__get__('toggleLock');
+const toggleLock = fileModule.toggleLock;
 const endBattle = fileModule.__get__('endBattle');
 const endTurn = fileModule.__get__('endTurn');
 const buildPieceStorage = fileModule.__get__('buildPieceStorage');

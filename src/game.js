@@ -150,6 +150,10 @@ async function refreshShop(stateParam, playerIndex) {
   return state;
 }
 
+exports._refreshShop = async (state, index) => {
+  return refreshShop(state, index);
+}
+
 /**
  * Create unit for board/hand placement from name and spawn position
  */
@@ -188,7 +192,7 @@ exports.createBattleBoard = async (inputList) => {
  * Remove money from player
  *  Amount of money = getUnit(unitId).cost
  */
-async function buyUnit(stateParam, playerIndex, unitID) {
+exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(unitID);
@@ -213,7 +217,7 @@ async function buyUnit(stateParam, playerIndex, unitID) {
 /**
  * toggleLock for player (setIn)
  */
-async function toggleLock(state, playerIndex) {
+ exports.toggleLock = async (state, playerIndex) => {
   const locked = state.getIn(['players', playerIndex, 'locked']);
   if (!locked) {
     return state.setIn(['players', playerIndex, 'locked'], true);
@@ -344,6 +348,10 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   return state;
 }
 
+exports._placePiece = async (stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') => {
+  return placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap);
+}
+
 /**
  * Get first available spot on hand
  */
@@ -367,6 +375,10 @@ async function getFirstAvailableSpot(state, playerIndex){
 async function withdrawPiece(state, playerIndex, piecePosition) {
   let benchPosition = await getFirstAvailableSpot(state, playerIndex);
   return placePiece(state, playerIndex, piecePosition, benchPosition, false);
+}
+
+exports._withdrawPiece = async (state, playerIndex, piecePosition) => {
+  return withdrawPiece(state, playerIndex, piecePosition);
 }
 
 /**

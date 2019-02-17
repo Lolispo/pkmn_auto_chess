@@ -18,7 +18,7 @@ const reducer = (
   action
 ) => {
   switch (action.type) { // Listens to events dispatched from from socket.js
-    case 'NEW_PIECES':
+    case 'NEW_STATE':
       // Update state with incoming data from server
       state = { ...state, pieces: action.newState.pieces, 
         test: 'im updated', 
@@ -38,10 +38,28 @@ const reducer = (
       // Send state to server
       socket && socket.emit('UPDATE_STATE', state); 
       break;
+    case 'NEW_PIECES':
+      console.log('New Pieces')
+      state = { ...state, pieces: action.newState.pieces}
+      break;
+    case 'UPDATE_PLAYER':
+      console.log('updating player', action.index, action.player);
+      state = { ...state,
+        test: 'Updated player', 
+        player: action.newState.players[action.index],
+        myHand: action.newState.players[action.index].hand,
+        myBoard: action.newState.players[action.index].board,
+        myShop: action.newState.players[action.index].shop,
+        level: action.newState.players[action.index].level,
+        exp: action.newState.players[action.index].exp,
+        expToReach: action.newState.players[action.index].expToReach,
+        gold: action.newState.players[action.index].gold,
+      };
+      }
+      break;
     case 'NEW_PLAYER':
-      console.log('Received player index');
+      console.log('Received player index', action.index);
       state = { ...state, index: action.index}
-      console.log('@newPlayer', action.index); 
       break;
     case 'ALL_READY':
       console.log('AllReady', action.value)

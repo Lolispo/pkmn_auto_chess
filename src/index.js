@@ -13,5 +13,3 @@ const socketController = require('./socketcontroller.js');
 io.on('connection', (socket) => {
   socketController(socket, io);
 });
-
-game.start();

@@ -30,7 +30,8 @@ module.exports = function (socket, io) {
     nextPlayerIndex = sessionJS.findFirstAvailableIndex(connectedPlayers);
   });
    
-  socket.on('READY', async (index) => {
+  socket.on('READY', async () => {
+    const index = connectedPlayers.get(socket.id);
     console.log('Player ' + index + ' is ready');
     readyList = readyList.set(index, true);
     if(readyList.every((val) => val)){
@@ -38,18 +39,61 @@ module.exports = function (socket, io) {
     }
   });
 
-  socket.on('UNREADY', async (index) => {
+  socket.on('UNREADY', async () => {
+    const index = connectedPlayers.get(socket.id);
     console.log('Player ' + index + ' is unready');
     readyList = readyList.set(index, false);
     socket.emit('ALL_READY', false);
   });
 
   socket.on('START_GAME', async () => {
-    state = await gameJS._startGame();
+    const state = await gameJS._startGame();
     console.log('Starting game!');
-    socket.emit('UPDATED_PIECES', state); // state.getIn(['players', index])
+    socket.emit('UPDATED_STATE', state); // state.getIn(['players', index])
   });
-    
+  
+  socket.on('TOGGLE_LOCK', async (state) => {
+    const index = connectedPlayers.get(socket.id);
+    const state = await gameJS.toggleLock(state, index);
+    console.log('Toggling Lock for Shop!');
+    socket.emit('LOCK_TOGGLED', index, state.getIn(['players', index, 'lock']));
+  });
+
+  socket.on('BUY_UNIT', async (state, pieceIndex) => {
+    const index = connectedPlayers.get(socket.id);
+    const state = await gameJS.buyUnit(state, index, pieceIndex);
+    console.log('Bought unit at ', pieceIndex);
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+  });
+  
+  socket.on('REFRESH_SHOP', async (state) => {
+    const index = connectedPlayers.get(socket.id);
+    const state = await gameJS._refreshShop(state, index);
+    console.log('Refreshes Shop');
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    socket.broadcast.emit('UPDATED_PIECES', state);
+  });
+
+  socket.on('PLACE_PIECE', async (state, from, to) => {
+    const index = connectedPlayers.get(socket.id);
+    const state = await gameJS._placePiece(state, index, from, to);
+    console.log('Place piece at ', from, ' at', to);
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+  });
+
+  socket.on('WITHDRAW_PIECE', async (state, from) => {
+    const index = connectedPlayers.get(socket.id);
+    const state = await gameJS._withdrawPiece(state, index, from);
+    console.log('Withdraw piece at ', from);
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+  });
+
+export const placePiece = (state, from, to) => 
+  socket.emit('PLACE_PIECE', state, from, to);
+
+export const withdrawPiece = (state, from) => 
+  socket.emit('WITHDRAW_PIECE', state, from);
+
     
   // broadcast to everyone if somebody pitched in
   // Temp function to showcase syntax

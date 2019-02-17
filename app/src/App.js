@@ -4,15 +4,22 @@ import { connect } from 'react-redux';
 
 class App extends Component {
   // Event listener example, can be attached to example buttons
+  
+  // Event logic
+  // Get required and relevant data from this.props
+  // dispatch can be used to change state values
+  // const { dispatch, name } = this.props;
+  // dispatch({ type: 'MEMES' });
+  // Example: Send data to server
+
   readyButton = () => {
-    // Event logic
     console.log('@readyButton');
-    // Get required and relevant data from this.props
-    const { dispatch, name } = this.props;
-    // dispatch can be used to change state values
-    ready(this.props.index);
-    //dispatch({ type: 'MEMES' });
-    // Example: Send data to server
+    ready();
+  };
+
+  unreadyButton = () => {
+    console.log('@unreadyButton');
+    unready();
   };
 
   startGame = () => {
@@ -37,6 +44,7 @@ class App extends Component {
   render() {
     return <div>
       <button onClick={this.readyButton}>The button of ready</button>
+      <button onClick={this.unreadyButton}>The button of unreadying</button>
       <button onClick={this.startGame}>StartGame</button>
       <div>State: {this.props.test}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
