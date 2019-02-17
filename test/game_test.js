@@ -72,16 +72,21 @@ describe('game state', () => {
     it('does refreshShop remove current shop?', async () => {
       let state = await initEmptyState(2);
       const pieces = state.get('pieces');
+      console.log('pieces', pieces)
       state = await refreshShop(state, 0);
       const newPieces = state.get('pieces');
       const shop = state.getIn(['players', 0, 'shop']);
-      assert.equal(pieces.get(0).get(0), shop.get(0));
+      console.log('shop', shop)
+      assert.equal(pieces.get(0).get(0), shop.get(f.pos(0)));
       assert.equal(pieces.get(0).get(5), newPieces.get(0).get(0));
       state = await refreshShop(state, 0);
       const newestPieces = state.get('pieces');
+      console.log('newestPieces', newestPieces.get(0).get(0))
       assert.equal(pieces.get(0).get(10), newestPieces.get(0).get(0));
+      console.log('@test discarded', state.get('discarded_pieces'));
+      console.log(pieces.get(0).get(0), state.get('discarded_pieces').get(0))
       assert.equal(pieces.get(0).get(0), state.get('discarded_pieces').get(0));
-      assert.equal(pieces.get(0).get(5), state.getIn(['players', 0, 'shop']).get(0));
+      assert.equal(pieces.get(0).get(5), state.getIn(['players', 0, 'shop']).get(f.pos(0)));
       assert.equal(state.getIn(['players', 1, 'shop']).size, 0);
     });
   });
@@ -98,10 +103,11 @@ describe('game state', () => {
       const shop = state.getIn(['players', 0, 'shop']);
       state = await buyUnit(state, 0, 1);
       const hand = state.getIn(['players', 0, 'hand']);
+      console.log(shop.get(f.pos(1)))
       console.log(hand)
       console.log(hand.get(f.pos(0)))
-      assert.equal(hand.get(f.pos(0)).get('name'), shop.get(1));
-      assert.equal(state.getIn(['players', 0, 'shop']).get(1), null);
+      assert.equal(hand.get(f.pos(0)).get('name'), shop.get(f.pos(1)));
+      assert.equal(state.getIn(['players', 0, 'shop']).get(f.pos(1)), null);
     });
   });
   describe('increaseExp', () => {
@@ -192,8 +198,8 @@ describe('game state', () => {
       assert.equal(state.getIn(['players', 1, 'exp']), 0);
       assert.equal(state.getIn(['players', 0, 'level']), 2);
       assert.equal(state.getIn(['players', 1, 'level']), 2);
-      assert.equal(shop.get(0), pieces.get(0).get(0));
-      assert.equal(shop2.get(0), pieces.get(0).get(5));
+      assert.equal(shop.get(f.pos(0)), pieces.get(0).get(0));
+      assert.equal(shop2.get(f.pos(0)), pieces.get(0).get(5));
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(10));
       assert.equal(state.getIn(['players', 0, 'gold']), 3);
     });
@@ -204,7 +210,7 @@ describe('game state', () => {
       const pieces = state.get('pieces');
       state = await endTurn(state);
       assert.equal(state.getIn(['players', 0, 'shop']).size, 0);
-      assert.equal(state.getIn(['players', 1, 'shop']).get(0), pieces.get(0).get(0));
+      assert.equal(state.getIn(['players', 1, 'shop']).get(f.pos(0)), pieces.get(0).get(0));
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(5));
     });
     it('endTurn higher gold?', async () => {
@@ -239,8 +245,8 @@ describe('game state', () => {
       assert.equal(state.getIn(['players', 1, 'exp']), 0);
       assert.equal(state.getIn(['players', 0, 'level']), 2);
       assert.equal(state.getIn(['players', 1, 'level']), 2);
-      assert.equal(shop.get(0), pieces.get(0).get(0));
-      assert.equal(shop2.get(0), pieces.get(0).get(5));
+      assert.equal(shop.get(f.pos(0)), pieces.get(0).get(0));
+      assert.equal(shop2.get(f.pos(0)), pieces.get(0).get(5));
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(10));
       assert.equal(state.getIn(['players', 0, 'gold']), 4); // 1 start, 1 win, 2 basic
       assert.equal(state.getIn(['players', 1, 'gold']), 3); // 1 start 2 basic
@@ -341,7 +347,7 @@ describe('game state', () => {
     it('placePiece on board to board?', async () => {
       let state = await initEmptyState(2);      
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
       state = await placePiece(state, 0, f.pos(1,1), f.pos(4,4));
@@ -354,7 +360,7 @@ describe('game state', () => {
     it('placePiece on board to hand?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
       state = await placePiece(state, 0, f.pos(1,1), f.pos(4));
@@ -365,7 +371,7 @@ describe('game state', () => {
     it('placePiece on hand to board?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
       const board = state.getIn(['players', 0, 'board'])
@@ -374,8 +380,8 @@ describe('game state', () => {
     it('placePiece swap functionality on board->board?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
-      const unit2 = state.getIn(['players', 0, 'shop']).get(2);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
+      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2));
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 0, 2);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
@@ -491,7 +497,7 @@ describe('game state', () => {
     it('withdrawPiece from board, empty bench', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
       state = await buyUnit(state, 0, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
       state = await withdrawPiece(state, 0, f.pos(1,1))
@@ -503,9 +509,9 @@ describe('game state', () => {
     it('withdrawPiece from board, hand 2 units', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
-      const unit2 = state.getIn(['players', 0, 'shop']).get(2);
-      const unit3 = state.getIn(['players', 0, 'shop']).get(3);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
+      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2));
+      const unit3 = state.getIn(['players', 0, 'shop']).get(f.pos(3));
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 0, 2);
       state = await buyUnit(state, 0, 3);
@@ -521,9 +527,9 @@ describe('game state', () => {
     it('withdrawPiece from board, hand has unit at 1 and 3 (should put 2)', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
-      const unit2 = state.getIn(['players', 0, 'shop']).get(2);
-      const unit3 = state.getIn(['players', 0, 'shop']).get(3);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
+      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2));
+      const unit3 = state.getIn(['players', 0, 'shop']).get(f.pos(3));
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 0, 2);
       state = await buyUnit(state, 0, 3);
@@ -539,9 +545,9 @@ describe('game state', () => {
     it('withdrawPiece from board, change hand spot 2 and 3', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(1);
-      const unit2 = state.getIn(['players', 0, 'shop']).get(2);
-      const unit3 = state.getIn(['players', 0, 'shop']).get(3);
+      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1));
+      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2));
+      const unit3 = state.getIn(['players', 0, 'shop']).get(f.pos(3));
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 0, 2);
       state = await buyUnit(state, 0, 3);

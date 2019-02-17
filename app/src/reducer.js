@@ -5,7 +5,7 @@ const reducer = (
     index: -1,
     storedState: {}, // Bad, make functions update relevant things, not entire state
     allReady: false,
-    test: 'default',
+    message: 'default',
     pieces: [],
     players: {},
     myHand: {},
@@ -24,7 +24,7 @@ const reducer = (
       // Update state with incoming data from server
       state = { ...state, pieces: action.newState.pieces, 
         storedState: action.newState,
-        test: 'im updated', 
+        message: 'im updated', 
         players: action.newState.players,
         player: action.newState.players[state.index],
         myHand: action.newState.players[state.index].hand,
@@ -49,7 +49,7 @@ const reducer = (
     case 'UPDATE_PLAYER':
       console.log('updating player', action.index, action.player);
       state = { ...state,
-        test: 'Updated player', 
+        message: 'Updated player', 
         player: action.player,
         myHand: action.player.hand,
         myBoard: action.player.board,
@@ -75,6 +75,9 @@ const reducer = (
     case 'ALL_READY':
       console.log('AllReady', action.value)
       state = { ...state, allReady: action.value}
+      break;
+    case 'UPDATE_MESSAGE':
+      state = {...state, message: action.message}
       break;
     default:
       break;

@@ -6,11 +6,6 @@ class App extends Component {
   // Event listener example, can be attached to example buttons
   
   // Event logic
-  // Get required and relevant data from this.props
-  // dispatch can be used to change state values
-  // const { dispatch, name } = this.props;
-  // dispatch({ type: 'MEMES' });
-  // Example: Send data to server
 
   readyButton = () => {
     console.log('@readyButton');
@@ -47,16 +42,31 @@ class App extends Component {
     </li>
   )}*/
 
+  updateMessage = (msg) => {
+    // Get required and relevant data from this.props
+    // dispatch can be used to change state values
+    const { dispatch } = this.props;
+    dispatch({ type: 'UPDATE_MESSAGE', message: msg});
+  }
+
   buyUnitEvent = (index) => {
     // You have enough money to buy this unit
     // Unit != null
     // Hand is not full
-    buyUnit(this.props.storedState, index);
+    if(this.props.gold >= 2){
+      buyUnit(this.props.storedState, index);
+    } else{
+      this.updateMessage('Not enough gold!');
+    }
   }
 
   refreshShopEvent = (index) => {
     // You have enough money to refresh
-    refreshShop(this.props.storedState)
+    if(this.props.gold >= 2){
+      refreshShop(this.props.storedState)
+    } else{
+      this.updateMessage('Not enough gold!');
+    }
   }
 
   placePieceEvent = (from, to) => {
@@ -86,7 +96,7 @@ class App extends Component {
       </div>
       <div>{JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div>{JSON.stringify(this.props.myHand[{x:0}], null, 2)}</div>
-      <div>State: {this.props.test}</div>
+      <div>State: {this.props.message}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
       <p>player:{JSON.stringify(this.props.player, null, 2)}</p>
@@ -107,7 +117,7 @@ const mapStateToProps = state => ({
   storedState: state.storedState,
   allReady: state.allReady,
   pieces: state.pieces,
-  test: state.test,
+  message: state.message,
   players: state.players,
   player: state.player,
   myHand: state.myHand,

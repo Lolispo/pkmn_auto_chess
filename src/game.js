@@ -87,7 +87,7 @@ async function getPieceFromRarity(prob, index, pieceStorage) {
  * Updates shop with a new piece from getPieceFromRarity
  * Removes the piece from correct place in pieceStorage
  */
-async function addPieceToShop(shop, pieces, level, discPieces) {
+async function addPieceToShop(shop, pos, pieces, level, discPieces) {
   const prob = gameConstantsJS.getPieceProbabilityNum(level);
   let newShop = shop;
   let newPieceStorage = pieces;
@@ -114,7 +114,7 @@ async function addPieceToShop(shop, pieces, level, discPieces) {
     }
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
-      newShop = newShop.push(piece);
+      newShop = newShop.set(pos, piece);
       // Removes first from correct rarity array
       newPieceStorage = await f.removeFirst(newPieceStorage, i);
       break;
@@ -132,18 +132,28 @@ async function addPieceToShop(shop, pieces, level, discPieces) {
 async function refreshShop(stateParam, playerIndex) {
   let state = stateParam;
   const level = state.getIn(['players', playerIndex, 'level']);
-  let newShop = List([]);
+  let newShop = Map({});
   let pieceStorage = state.get('pieces');
   let discPieces = state.get('discarded_pieces');
   for (let i = 0; i < 5; i++) { // Loop over pieces
-    const obj = await addPieceToShop(newShop, pieceStorage, level, discPieces);
+    const obj = await addPieceToShop(newShop, f.pos(i), pieceStorage, level, discPieces);
     newShop = obj.newShop;
     pieceStorage = obj.pieceStorage;
     discPieces = obj.discPieces;
   }
   const shop = state.getIn(['players', playerIndex, 'shop']);
   if (shop.size !== 0) {
-    state = state.set('discarded_pieces', discPieces.concat(shop.filter(piece => !f.isUndefined(piece))));
+    const iter = shop.values();
+    let temp = iter.next();
+    let tempShopList = List([]);
+    while (!temp.done) {
+      tempShopList = tempShopList.push(temp.value);
+      temp = iter.next();
+    }
+    const shopList = await tempShopList;
+    const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
+    console.log('@refreshShop filteredShop', filteredShop);
+    state = state.set('discarded_pieces', discPieces.concat(filteredShop));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
   state = state.set('pieces', pieceStorage);
@@ -198,9 +208,9 @@ exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
   console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']))
   let shop = state.getIn(['players', playerIndex, 'shop']);
-  const unit = shop.get(unitID);
+  const unit = shop.get(f.pos(unitID));
   if (!f.isUndefined(unit)) {
-    shop = shop.splice(unitID, 1, undefined);
+    shop = shop.delete(f.pos(unitID));
     state = state.setIn(['players', playerIndex, 'shop'], shop);
 
     const hand = state.getIn(['players', playerIndex, 'hand']);
