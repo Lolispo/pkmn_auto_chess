@@ -82,9 +82,13 @@ class App extends Component {
 
   pos = (x,y) => {
     if(this.isUndefined(y)){
-      return 'Map { "x": ' + x + ' }'
+      return String(x);
+      //return 'List [ ' + x + ' ]'
+      //return 'Map { "x": ' + x + ' }'
     }
-    return 'Map { "x": ' + x + ', "y": ' + y + ' }';
+    return String(x) + ',' + String(y);
+    //return 'List [ ' + x + ', ' + y + ' ]'
+    //return 'Map { "x": ' + x + ', "y": ' + y + ' }';
   }
 
   render() {

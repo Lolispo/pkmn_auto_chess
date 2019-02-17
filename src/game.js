@@ -211,7 +211,7 @@ exports.createBattleBoard = async (inputList) => {
  */
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
-  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']))
+  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']), f.pos(unitID))
   console.log(state.getIn(['players', playerIndex, 'shop']));
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(f.pos(unitID)).get('name');
@@ -340,6 +340,8 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     const newHand = state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'hand'], newHand);
   } else { // from board
+    console.log('@placePiece', fromPosition)
+    console.log('@placePiece board', state.getIn(['players', playerIndex, 'board']));
     piece = state.getIn(['players', playerIndex, 'board', fromPosition]).set('position', toPosition);
     const newBoard = state.getIn(['players', playerIndex, 'board']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'board'], newBoard);
