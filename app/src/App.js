@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, placePiece, withdrawPiece} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
+import './App.css';
 
 class PokemonImage extends Component{
   render(){
@@ -33,14 +34,14 @@ class Pokemon extends Component{
     const content = (!isUndefined(this.props.shopPokemon) 
       ? <div>
           <PokemonImage name={this.props.shopPokemon.name}/>
-          <div style={{paddingLeft: '5px', whiteSpace: 'pre-line'}}> {/*style={{display: 'table-caption'}}*/}
+          <div className='pokemonShopText'>
             {this.props.shopPokemon.display_name + '$' + this.props.shopPokemon.cost + '\n'}
             {(Array.isArray(this.props.shopPokemon.type) ? this.props.shopPokemon.type[0] + ', ' + this.props.shopPokemon.type[1] : this.props.shopPokemon.type)}
           </div>
         </div>
-      : <div style={{paddingLeft: '35%', paddingTop: '50%'}}>Empty</div>)
+      : <div className='pokemonShopEmpty'>Empty</div>)
     return (
-      <div style={{margin: '5px', paddingBottom: '5px', backgroundColor: 'gray', width: '120px', height: '160px'}} onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div className='pokemonShopEntity' onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
       </div>
     );
@@ -57,9 +58,9 @@ class Board extends Component {
   createEmptyArray(height, width) {
     let data = [];
 
-    for (let i = 0; i < height; i++) {
+    for (let i = 0; i < width; i++) {
       data.push([]);
-      for (let j = 0; j < width; j++) {
+      for (let j = 0; j < height; j++) {
         data[i][j] = {
           x: i,
           y: j,
@@ -72,12 +73,11 @@ class Board extends Component {
   
   renderBoard(data) {
     return data.map((datarow) => {
-      return <div style={{display: 'block'}}>{
+      return <div className='boardRow'>{
         datarow.map((dataitem) => {
           return (
             <div key={dataitem.x * datarow.length + dataitem.y}>
               <Cell value={dataitem}/>
-              {(datarow[datarow.length - 1] === dataitem) ? <div className="clear" style={{clear: 'both', content: ''}}/> : ''}
             </div>);
         })}
       </div>
@@ -86,7 +86,7 @@ class Board extends Component {
 
   render(){
     return (
-      <div style={{display: 'flex'}}>
+      <div className='flex'>
         
         {this.renderBoard(this.state.boardData)}
 
@@ -110,7 +110,7 @@ class Cell extends Component {
     let className = 'cell';
     // (value.isFlagged ? " is-flag" : "");
     return (
-      <div className={className} style={{border: '1px solid #fff', width: '30px', height: '30px', backgroundColor: 'gray'}}>
+      <div className={className}>
         {this.getValue()}
       </div>
     );
@@ -194,16 +194,21 @@ class App extends Component {
   render() {
     return <div>
       <div> 
-        <button onClick={this.readyButton}>The button of ready</button>
-        <button onClick={this.unreadyButton}>The button of unreadying</button>
-        <button onClick={this.startGame}>StartGame</button>
+        <button className='normalButton' onClick={this.readyButton}>The button of ready</button>
+        <button className='normalButton' onClick={this.unreadyButton}>The button of unreadying</button>
+        <button className='normalButton' onClick={this.startGame}>StartGame</button>
       </div>
       <div>
         <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
-        <p>gold:{JSON.stringify(this.props.gold, null, 2)}</p>
-        <button onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
-        <button onClick={this.refreshShopEvent}>Refresh Shop</button>
-        <div style={{display: 'flex'}}>
+        <div className='flex'>
+          <div>
+            <button className='normalButton' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
+            <button className='normalButton' onClick={this.refreshShopEvent}>Refresh Shop</button>
+            {JSON.stringify(this.props.gold, null, 2)}
+          </div>
+          <img className='goldImage' src='https://clipart.info/images/ccovers/1495750449Gold-Coin-PNG-Clipart.png' alt='goldCoin'></img>
+        </div>
+        <div className='flex'>
           <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
           <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
           <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
@@ -215,6 +220,9 @@ class App extends Component {
         <Board height={8} width={8}/>
       </div>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
+      <div>
+        <Board height={1} width={8}/>
+      </div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <div>State: {this.props.message}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
