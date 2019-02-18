@@ -10,7 +10,7 @@ class PokemonImage extends Component{
     const src = 'https://img.pokemondb.net/sprites/x-y/normal/' + this.props.name + '.png';
     return (
       <img
-        className={this.props.name}
+        className={`pokemonImg ${this.props.name}`}
         src={src}
         alt='Pokemon'
       />
@@ -35,8 +35,14 @@ class Pokemon extends Component{
       ? <div>
           <PokemonImage name={this.props.shopPokemon.name}/>
           <div className='pokemonShopText'>
-            {this.props.shopPokemon.display_name + '$' + this.props.shopPokemon.cost + '\n'}
-            {(Array.isArray(this.props.shopPokemon.type) ? this.props.shopPokemon.type[0] + ', ' + this.props.shopPokemon.type[1] : this.props.shopPokemon.type)}
+            {this.props.shopPokemon.display_name + '\n'}
+            {(Array.isArray(this.props.shopPokemon.type) ? 
+              <div>
+                <span className={`type ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
+                <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
+              </div>
+              : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
+            {'$' + this.props.shopPokemon.cost}
           </div>
         </div>
       : <div className='pokemonShopEmpty'>Empty</div>)
@@ -204,7 +210,7 @@ class App extends Component {
           <div>
             <button className='normalButton' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
             <button className='normalButton' onClick={this.refreshShopEvent}>Refresh Shop</button>
-            {JSON.stringify(this.props.gold, null, 2)}
+            <span className='text_shadow'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
           <img className='goldImage' src='https://clipart.info/images/ccovers/1495750449Gold-Coin-PNG-Clipart.png' alt='goldCoin'></img>
         </div>
