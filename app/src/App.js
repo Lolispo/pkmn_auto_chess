@@ -32,7 +32,6 @@ class Pokemon extends Component{
   render(){
     const content = (!isUndefined(this.props.shopPokemon) 
       ? <div>
-          {console.log(this.props.shopPokemon.type.length, this.props.shopPokemon.type.size, this.props.shopPokemon.type)}
           <PokemonImage name={this.props.shopPokemon.name}/>
           <div style={{paddingLeft: '5px', whiteSpace: 'pre-line'}}> {/*style={{display: 'table-caption'}}*/}
             {this.props.shopPokemon.display_name + '$' + this.props.shopPokemon.cost + '\n'}
@@ -48,9 +47,76 @@ class Pokemon extends Component{
   }
 }
 
-class Logic {
+class Board extends Component {
+  state = {
+    ...this.props,
+    boardData: this.createEmptyArray(this.props.height, this.props.width),
+    // gameStatus: "Game in progress",
+  };
 
+  createEmptyArray(height, width) {
+    let data = [];
+
+    for (let i = 0; i < height; i++) {
+      data.push([]);
+      for (let j = 0; j < width; j++) {
+        data[i][j] = {
+          x: i,
+          y: j,
+          pokemon: undefined,
+        };
+      }
+    }
+    return data;
+  }
+  
+  renderBoard(data) {
+    return data.map((datarow) => {
+      return <div style={{display: 'block'}}>{
+        datarow.map((dataitem) => {
+          return (
+            <div key={dataitem.x * datarow.length + dataitem.y}>
+              <Cell value={dataitem}/>
+              {(datarow[datarow.length - 1] === dataitem) ? <div className="clear" style={{clear: 'both', content: ''}}/> : ''}
+            </div>);
+        })}
+      </div>
+    });
+  }
+
+  render(){
+    return (
+      <div style={{display: 'flex'}}>
+        
+        {this.renderBoard(this.state.boardData)}
+
+      </div>
+    );
+  }
 }
+
+class Cell extends Component {
+  getValue() {
+    const { value } = this.props;
+
+    if (value.pokemon) {
+      return this.props.value.pokemon ? <PokemonImage name={this.props.value.pokemon.name}/> : null;
+    }
+
+    return null;
+  }
+
+  render() {
+    let className = 'cell';
+    // (value.isFlagged ? " is-flag" : "");
+    return (
+      <div className={className} style={{border: '1px solid #fff', width: '30px', height: '30px', backgroundColor: 'gray'}}>
+        {this.getValue()}
+      </div>
+    );
+  }
+}
+
 
 class App extends Component {
   // Event listener example, can be attached to example buttons
@@ -144,6 +210,9 @@ class App extends Component {
           <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props}/>
           <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props}/>
         </div>
+      </div>
+      <div>
+        <Board height={8} width={8}/>
       </div>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
