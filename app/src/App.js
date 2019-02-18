@@ -7,7 +7,7 @@ import './App.css';
 class PokemonImage extends Component{
   render(){
     // Import result is the URL of your image
-    const src = 'https://img.pokemondb.net/sprites/x-y/normal/' + this.props.name + '.png';
+    const src = 'https://img.pokemondb.net/sprites/' + this.props.imageMode + '/normal/' + this.props.name + '.png';
     return (
       <img
         className={`pokemonImg ${this.props.name}`}
@@ -33,7 +33,7 @@ class Pokemon extends Component{
   render(){
     const content = (!isUndefined(this.props.shopPokemon) 
       ? <div>
-          <PokemonImage name={this.props.shopPokemon.name}/>
+          <PokemonImage name={this.props.shopPokemon.name} imageMode={this.props.newProps.imageMode}/>
           <div className='pokemonShopText'>
             {this.props.shopPokemon.display_name + '\n'}
             {(Array.isArray(this.props.shopPokemon.type) ? 
@@ -150,6 +150,11 @@ class App extends Component {
     }
   }
 
+  changeImageMode = (mode) => {
+    const { dispatch } = this.props;
+    dispatch({ type: 'CHANGE_IMAGE_MODE', imageMode: mode});
+  }
+
   /*
   playersEvent = () => {
     const players = this.props.players
@@ -230,6 +235,11 @@ class App extends Component {
         <Board height={1} width={8}/>
       </div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
+      <div>
+        <button className='normalButton' onClick={() => this.changeImageMode('x-y')}>x-y mode</button>
+        <button className='normalButton' onClick={() => this.changeImageMode('diamond-pearl')}>iamond-pearl mode</button>
+        <button className='normalButton' onClick={() => this.changeImageMode('black-white')}>black-white mode</button>
+      </div>
       <div>State: {this.props.message}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
@@ -248,10 +258,11 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   index: state.index,
-  storedState: state.storedState,
   allReady: state.allReady,
-  pieces: state.pieces,
+  imageMode: state.imageMode,
   message: state.message,
+  storedState: state.storedState,
+  pieces: state.pieces,
   players: state.players,
   player: state.player,
   myHand: state.myHand,
