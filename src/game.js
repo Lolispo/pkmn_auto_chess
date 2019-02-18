@@ -1515,6 +1515,7 @@ async function endBattle(stateParam, playerIndex, winner, finishedBoard, isPvP, 
  */
 function gameOver(state) {
   const winningPlayer = state.get('players').values().next().value;
+  console.log('GAME OVER, winner =', winningPlayer);
   // TODO Send this information to everyone
   return state;
 }

@@ -7,6 +7,8 @@ const sessionJS = require('./session');
 let nextPlayerIndex = 0;
 let connectedPlayers = Map({});
 let readyList = Map({});
+let counter = 0;
+let prepBattleState;
 
 module.exports = function (socket, io) {
   /*
@@ -51,6 +53,8 @@ module.exports = function (socket, io) {
     console.log('Starting game!');
     console.log('@startGame shop', state.getIn(['players', 0, 'shop']))
     console.log('@startGame shop', state.getIn(['players', 0, 'shop']).toJS())
+    // TODO: Prevent starting new game when game is live
+    // Send to all connected sockets
     socket.emit('UPDATED_STATE', state); // state.getIn(['players', index])
   });
   
@@ -92,6 +96,28 @@ module.exports = function (socket, io) {
     console.log('Withdraw piece at ', from);
     // Hand and board
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
+  });
+
+  // TODO Mark dead players as index -1
+  socket.on('BATTLE_READY', async (stateParam) => {
+    const index = connectedPlayers.get(socket.id);
+    const amount = stateParam.get('amountOfPlayers');
+    if(index != -1 && stateParam.getIn(['players', index])){
+      if(typeof prepBattleState === 'undefined'){ // First ready player
+        prepBattleState = stateParam.set('players', Map({})).setIn(['players', index], stateParam.getIn(['players', index]));
+      } else if(prepBattleState.getIn(['players', index])){ // Update from player already registered
+        prepBattleState = prepBattleState.setIn(['players', index], stateParam.getIn(['players', index]));
+      } else{ // New player
+        counter += 1;
+        prepBattleState = prepBattleState.setIn(['players', index], stateParam.getIn(['players', index]));
+      }
+      if(counter === amount){
+        counter = 0;
+        prepBattleState = undefined;
+        const state = await gameJS.battleSetup(prepBattleState);
+        console.log('@prepBattleState', state);
+      }
+    }
   });
 
   // broadcast to everyone if somebody pitched in

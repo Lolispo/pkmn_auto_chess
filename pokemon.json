@@ -380,8 +380,8 @@
     "ability": "slash",
     "evolves_from": "sandshrew"
   },
-  "nidoran ♀": {
-    "name": "nidoran ♀",
+  "nidoran-f": {
+    "name": "nidoran-f",
     "display_name": "Nidoran ♀☆",
     "cost": 1,
     "hp": 55,
@@ -402,7 +402,7 @@
     "speed": 56,
     "type": "poison",
     "ability": "poisonSting",
-    "evolves_from": "nidoran ♀",
+    "evolves_from": "nidoran-f",
     "evolves_to": "nidoqueen"
   },
   "nidoqueen": {
@@ -420,8 +420,8 @@
     "ability": "earthquake",
     "evolves_from": "nidorina"
   },
-  "nidoran ♂": {
-    "name": "nidoran ♂",
+  "nidoran-m": {
+    "name": "nidoran-m",
     "display_name": "Nidoran ♂☆",
     "cost": 1,
     "hp": 46,
@@ -442,7 +442,7 @@
     "speed": 65,
     "type": "poison",
     "ability": "hornAttack",
-    "evolves_from": "nidoran ♂",
+    "evolves_from": "nidoran-m",
     "evolves_to": "nidoking"
   },
   "nidoking": {
@@ -1254,7 +1254,7 @@
   "drowzee": {
     "name": "drowzee",
     "display_name": "Drowzee☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 60,
     "attack": 48,
     "defense": 45,
@@ -1266,7 +1266,7 @@
   "hypno": {
     "name": "hypno",
     "display_name": "Hypno☆☆",
-    "cost": 6,
+    "cost": 5,
     "hp": 85,
     "attack": 73,
     "defense": 70,
