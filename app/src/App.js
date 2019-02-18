@@ -32,12 +32,16 @@ class Pokemon extends Component{
   render(){
     const content = (!isUndefined(this.props.shopPokemon) 
       ? <div>
+          {console.log(this.props.shopPokemon.type.length, this.props.shopPokemon.type.size, this.props.shopPokemon.type)}
           <PokemonImage name={this.props.shopPokemon.name}/>
-          <p>{this.props.shopPokemon.display_name + '$' + this.props.shopPokemon.cost}</p>
+          <div style={{paddingLeft: '5px', whiteSpace: 'pre-line'}}> {/*style={{display: 'table-caption'}}*/}
+            {this.props.shopPokemon.display_name + '$' + this.props.shopPokemon.cost + '\n'}
+            {(Array.isArray(this.props.shopPokemon.type) ? this.props.shopPokemon.type[0] + ', ' + this.props.shopPokemon.type[1] : this.props.shopPokemon.type)}
+          </div>
         </div>
-      : <div>Empty</div>)
+      : <div style={{paddingLeft: '35%', paddingTop: '50%'}}>Empty</div>)
     return (
-      <div style={{padding: '5px', backgroundColor: 'gray', width: '120px', height: '160px'}} onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div style={{margin: '5px', paddingBottom: '5px', backgroundColor: 'gray', width: '120px', height: '160px'}} onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
       </div>
     );

@@ -119,6 +119,7 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
         name: piece, 
         display_name: unitStats.get('display_name'),
         cost: unitStats.get('cost'),
+        type: unitStats.get('type'),
       }));
       // Removes first from correct rarity array
       newPieceStorage = await f.removeFirst(newPieceStorage, i);
