@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, placePiece, withdrawPiece} from './socket';
 import { connect } from 'react-redux';
-import { isUndefined } from './f';
-
+import { isUndefined, updateMessage } from './f';
 
 class PokemonImage extends Component{
   render(){
@@ -19,6 +18,17 @@ class PokemonImage extends Component{
 }
 
 class Pokemon extends Component{
+  buyUnitEvent = (index) => {
+    // You have enough money to buy this unit
+    // Unit != null
+    // Hand is not full
+    console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
+    if(this.props.newProps.gold >= this.props.shopPokemon.cost){
+      buyUnit(this.props.newProps.storedState, index);
+    } else{
+      updateMessage(this.props.newProps, 'Not enough gold!');
+    }
+  }
   render(){
     const content = (!isUndefined(this.props.shopPokemon) 
       ? <div>
@@ -27,11 +37,15 @@ class Pokemon extends Component{
         </div>
       : <div>Empty</div>)
     return (
-      <div style={{backgroundColor: 'gray'}} onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div style={{padding: '5px', backgroundColor: 'gray', width: '120px', height: '160px'}} onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
       </div>
     );
   }
+}
+
+class Logic {
+
 }
 
 class App extends Component {
@@ -74,31 +88,12 @@ class App extends Component {
     </li>
   )}*/
 
-  updateMessage = (msg) => {
-    // Get required and relevant data from this.props
-    // dispatch can be used to change state values
-    const { dispatch } = this.props;
-    dispatch({ type: 'UPDATE_MESSAGE', message: msg});
-  }
-
-  buyUnitEvent = (index) => {
-    // You have enough money to buy this unit
-    // Unit != null
-    // Hand is not full
-    console.log('@buyUnitEvent', this.props.myShop[this.pos(index)].cost)
-    if(this.props.gold >= this.props.myShop[this.pos(index)].cost){
-      buyUnit(this.props.storedState, index);
-    } else{
-      this.updateMessage('Not enough gold!');
-    }
-  }
-
   refreshShopEvent = (index) => {
     // You have enough money to refresh
     if(this.props.gold >= 2){
       refreshShop(this.props.storedState)
     } else{
-      this.updateMessage('Not enough gold!');
+      updateMessage(this.props, 'Not enough gold!');
     }
   }
 
@@ -138,12 +133,12 @@ class App extends Component {
         <p>gold:{JSON.stringify(this.props.gold, null, 2)}</p>
         <button onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
         <button onClick={this.refreshShopEvent}>Refresh Shop</button>
-        <div>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4}/>
+        <div style={{display: 'flex'}}>
+          <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
+          <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
+          <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
+          <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props}/>
+          <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props}/>
         </div>
       </div>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>

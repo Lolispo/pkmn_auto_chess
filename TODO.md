@@ -127,6 +127,9 @@ More tests
 
 Potential to use more functional code, map/filter
 
+## Frontend
+
+Frame shop units
 
 ## Communication
 
