@@ -134,9 +134,10 @@ class Cell extends Component {
     if(this.props.map){
       const pokemon = this.props.map[this.getPos(value.x,value.y)];
       if(!isUndefined(pokemon)){
+        const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0: true) : false);
         const content = 
         <div title={pokemon.type}>
-          <PokemonImage name={pokemon.name} paddingTop='5px'/>
+          <PokemonImage name={pokemon.name} paddingTop='5px' back={back}/>
         </div>
         return content;
       }
