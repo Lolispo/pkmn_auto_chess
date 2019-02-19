@@ -133,6 +133,10 @@ Potential to use more functional code, map/filter
 
 ## Frontend
 
+Combine ready buttons
+
+Hide buttons ready and start when game is live
+
 Frame shop units
 
 Press unit to toggle information

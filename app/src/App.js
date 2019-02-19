@@ -206,7 +206,7 @@ class App extends Component {
   }
 
   buyExp = (index) => {
-    // You have enough money to refresh
+    // You have enough money to buy exp
     if(this.props.gold >= 5){
       buyExp(this.props.storedState)
     } else{
