@@ -220,8 +220,8 @@ class App extends Component {
     const splitted = to.split(',');
     const fromSplitted = from.split(',');
     const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
-    const unitExists = (fromSplitted.length === 2 ? this.props.myBoard[from] : this.props.myShop[from])
-    // console.log('@placePieceEvent', fromSplitted, validPos, unitExists)
+    const unitExists = (fromSplitted.length === 2 ? this.props.myBoard[fromParam] : this.props.myHand[from])
+    console.log('@placePieceEvent', fromSplitted, validPos, unitExists, this.props.myHand);
     if(validPos && unitExists && !this.props.onGoingBattle){
       placePiece(this.props.storedState, from, to);
     } else {
