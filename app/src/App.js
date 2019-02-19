@@ -32,9 +32,8 @@ class Pokemon extends Component{
     // console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
     if(this.props.shopPokemon){
       if(this.props.newProps.gold >= this.props.shopPokemon.cost){
-        console.log(this.props.newProps.myHand.length)
-        // TODO: Check hand is not full, length is undefined
-        if(isUndefined(this.props.newProps.myHand.length) || this.props.newProps.myHand.length < 8){
+        const size = Object.keys(this.props.newProps.myHand).length
+        if(size < 8){
           buyUnit(this.props.newProps.storedState, index);
         } else{
           updateMessage(this.props.newProps, 'Hand is full!');
