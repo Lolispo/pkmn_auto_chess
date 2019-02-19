@@ -1,17 +1,41 @@
 import React, { Component } from 'react';
-import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, placePiece, withdrawPiece} from './socket';
+import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import './App.css';
 
 class PokemonImage extends Component{
+  
+  /*
+    x-y: 126.5 120
+    d-p: 86.5 80
+    b-w: 102.5 96
+  */
+  getPaddingLeft = (imageMode) => {
+    switch(imageMode){
+      case 'diamond-pearl':
+        return (130 - 80) / 2;
+      case 'black-white':
+        return (130 - 96) / 2;
+      case 'x-y':
+      default:
+        return (130 - 126.5) / 2;
+    }
+  }
+  
   render(){
     // Import result is the URL of your image
-    const src = 'https://img.pokemondb.net/sprites/' + this.props.imageMode + '/normal/' + this.props.name + '.png';
+    //const src = 'https://img.pokemondb.net/sprites/' + this.props.imageMode + '/normal/' + this.props.name + '.png';
+    const src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
+    const paddingLeft = this.getPaddingLeft(this.props.imageMode);
     return (
       <img
         className={`pokemonImg ${this.props.name}`}
+        //{/*style={}{paddingLeft: '45px', paddingTop: '30px'}*/}
         src={src}
+        onLoad = {function() {
+          console.log(this) //logs 600
+        }}
         alt='Pokemon'
       />
     );
@@ -30,22 +54,28 @@ class Pokemon extends Component{
       updateMessage(this.props.newProps, 'Not enough gold!');
     }
   }
+  
   render(){
-    const content = (!isUndefined(this.props.shopPokemon) 
-      ? <div>
-          <PokemonImage name={this.props.shopPokemon.name} imageMode={this.props.newProps.imageMode}/>
-          <div className='pokemonShopText'>
-            {this.props.shopPokemon.display_name + '\n'}
-            {(Array.isArray(this.props.shopPokemon.type) ? 
-              <div>
-                <span className={`type ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
-                <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
-              </div>
-              : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
-            {'$' + this.props.shopPokemon.cost}
+    let content;
+    if(!isUndefined(this.props.shopPokemon)){
+      content = <div>
+            <div className='pokemonImageDiv'>
+              <PokemonImage name={this.props.shopPokemon.name} imageMode={this.props.newProps.imageMode}/>
+            </div>
+            <div className='pokemonShopText'>
+              {this.props.shopPokemon.display_name + '\n'}
+              {(Array.isArray(this.props.shopPokemon.type) ? 
+                <div>
+                  <span className={`type ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
+                  <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
+                </div>
+                : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
+              {'$' + this.props.shopPokemon.cost}
+            </div>
           </div>
-        </div>
-      : <div className='pokemonShopEmpty'>Empty</div>)
+    } else {
+      content = <div className='pokemonShopEmpty'>Empty</div>;
+    }
     return (
       <div className='pokemonShopEntity' onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
@@ -61,16 +91,25 @@ class Board extends Component {
     // gameStatus: "Game in progress",
   };
 
+  getPos(x,y){
+    if(this.props.isBoard){
+      return x + ',' + y;
+    } else{
+      return x;
+    }
+  }
+
   createEmptyArray(height, width) {
     let data = [];
-
     for (let i = 0; i < width; i++) {
       data.push([]);
       for (let j = 0; j < height; j++) {
+        console.log('@createEmptyArray', this.props.map, this.props.map[this.getPos(i,j)])
+        const newPokemon = (this.props.map ? this.props.map[this.getPos(i,j)] : undefined);
         data[i][j] = {
           x: i,
           y: j,
-          pokemon: undefined,
+          pokemon: newPokemon,
         };
       }
     }
@@ -178,6 +217,15 @@ class App extends Component {
     }
   }
 
+  buyExp = (index) => {
+    // You have enough money to refresh
+    if(this.props.gold >= 5){
+      buyExp(this.props.storedState)
+    } else{
+      updateMessage(this.props, 'Not enough gold!');
+    }
+  }
+
   placePieceEvent = (from, to) => {
     // to is on valid part of the board
   }
@@ -210,6 +258,7 @@ class App extends Component {
         <button className='normalButton' onClick={this.startGame}>StartGame</button>
       </div>
       <div>
+      <div>Message: {this.props.message}</div>
         <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
         <div className='flex'>
           <div>
@@ -219,6 +268,11 @@ class App extends Component {
           </div>
           <img className='goldImage' src='https://clipart.info/images/ccovers/1495750449Gold-Coin-PNG-Clipart.png' alt='goldCoin'></img>
         </div>
+        <div>
+          <div>
+            <button className='normalButton' onClick={this.buyExp}>Buy Exp</button>
+          </div>
+        </div>
         <div className='flex'>
           <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
           <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
@@ -226,21 +280,20 @@ class App extends Component {
           <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props}/>
           <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props}/>
         </div>
+        <div>
+          <button className='normalButton' onClick={() => this.changeImageMode('x-y')}>x-y mode</button>
+          <button className='normalButton' onClick={() => this.changeImageMode('diamond-pearl')}>diamond-pearl mode</button>
+          <button className='normalButton' onClick={() => this.changeImageMode('black-white')}>black-white mode</button>
+        </div>
       </div>
       <div>
-        <Board height={8} width={8}/>
+        <Board height={8} width={8} map={this.props.myBoard} isBoard={true}/>
       </div>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div>
-        <Board height={1} width={8}/>
+        <Board height={1} width={8} map={this.props.myHand} isBoard={false}/>
       </div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
-      <div>
-        <button className='normalButton' onClick={() => this.changeImageMode('x-y')}>x-y mode</button>
-        <button className='normalButton' onClick={() => this.changeImageMode('diamond-pearl')}>iamond-pearl mode</button>
-        <button className='normalButton' onClick={() => this.changeImageMode('black-white')}>black-white mode</button>
-      </div>
-      <div>State: {this.props.message}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
       <p>player:{JSON.stringify(this.props.player, null, 2)}</p>

@@ -131,6 +131,10 @@ Potential to use more functional code, map/filter
 
 Frame shop units
 
+Frontend buy exp
+
+Different version pokemans get different padding
+
 ## Communication
 
 Client                  Server

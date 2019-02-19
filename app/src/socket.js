@@ -65,8 +65,11 @@ export const toggleLock = (state) =>
   socket.emit('TOGGLE_LOCK', state);
 
 export const buyUnit = (state, pieceIndex) => {
-  console.log('@buyUnit', state)
   socket.emit('BUY_UNIT', state, pieceIndex);  
+}
+
+export const buyExp = (state) => {
+  socket.emit('BUY_EXP', state);  
 }
 
 export const refreshShop = (state) => 

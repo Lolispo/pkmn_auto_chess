@@ -277,8 +277,10 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
 /**
  * Buy exp for player (setIn)
  */
-function buyExp(state, playerIndex) {
-  return increaseExp(state, playerIndex, 5);
+exports.buyExp = (state, playerIndex) => {
+  const gold = state.getIn(['players', playerIndex, 'gold']);
+  const newState = state.setIn(['players', playerIndex, 'gold'], gold - 5);
+  return increaseExp(newState, playerIndex, 5);
 }
 
 
