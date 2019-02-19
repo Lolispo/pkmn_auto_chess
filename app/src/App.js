@@ -6,36 +6,13 @@ import './App.css';
 
 class PokemonImage extends Component{
   
-  /*
-    x-y: 126.5 120
-    d-p: 86.5 80
-    b-w: 102.5 96
-  */
-  getPaddingLeft = (imageMode) => {
-    switch(imageMode){
-      case 'diamond-pearl':
-        return (130 - 80) / 2;
-      case 'black-white':
-        return (130 - 96) / 2;
-      case 'x-y':
-      default:
-        return (130 - 126.5) / 2;
-    }
-  }
-  
   render(){
     // Import result is the URL of your image
-    //const src = 'https://img.pokemondb.net/sprites/' + this.props.imageMode + '/normal/' + this.props.name + '.png';
     const src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
-    const paddingLeft = this.getPaddingLeft(this.props.imageMode);
     return (
       <img
         className={`pokemonImg ${this.props.name}`}
-        //{/*style={}{paddingLeft: '45px', paddingTop: '30px'}*/}
         src={src}
-        onLoad = {function() {
-          console.log(this) //logs 600
-        }}
         alt='Pokemon'
       />
     );
@@ -66,7 +43,7 @@ class Pokemon extends Component{
               {this.props.shopPokemon.display_name + '\n'}
               {(Array.isArray(this.props.shopPokemon.type) ? 
                 <div>
-                  <span className={`type ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
+                  <span className={`type typeLeft ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
                   <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
                 </div>
                 : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
@@ -279,11 +256,6 @@ class App extends Component {
           <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
           <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props}/>
           <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props}/>
-        </div>
-        <div>
-          <button className='normalButton' onClick={() => this.changeImageMode('x-y')}>x-y mode</button>
-          <button className='normalButton' onClick={() => this.changeImageMode('diamond-pearl')}>diamond-pearl mode</button>
-          <button className='normalButton' onClick={() => this.changeImageMode('black-white')}>black-white mode</button>
         </div>
       </div>
       <div>

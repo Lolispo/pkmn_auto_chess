@@ -96,7 +96,10 @@ body {
 
 .type {
   padding: 1px;
-  /*margin-top: 10px;*/
+}
+
+.typeLeft {
+  margin-right: 2px;
 }
 
 .poison {

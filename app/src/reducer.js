@@ -5,7 +5,6 @@ const reducer = (
     index: -1,
     allReady: false,
     message: 'default',
-    imageMode: 'x-y',
     storedState: {},
     pieces: [],
     players: {},
@@ -79,19 +78,6 @@ const reducer = (
       break;
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message}
-      break;
-    case 'CHANGE_IMAGE_MODE':
-      switch(action.imageMode){
-        case 'diamond-pearl':
-          state = {...state, imageMode: 'diamond-pearl'}
-          break;
-        case 'black-white':
-          state = {...state, imageMode: 'black-white'}
-          break;
-        case 'x-v':
-        default:
-          state = {...state, imageMode: 'x-y'}
-      }
       break;
     default:
       break;
