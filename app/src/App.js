@@ -217,7 +217,7 @@ class App extends Component {
   placePieceEvent = (from, to) => {
     // to is on valid part of the board
     const splitted = to.split(',');
-    if((splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0){
+    if((splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0 && !this.props.onGoingBattle){
       placePiece(this.props.storedState, String(from), to);
     } else {
       updateMessage(this.props, 'Invalid target placing!');
@@ -228,7 +228,7 @@ class App extends Component {
     // Hand is not full
     const size = Object.keys(this.props.myHand).length
     if(size < 8){
-      if(this.props.myBoard[from]){ // From contains unit
+      if(this.props.myBoard[from] && !this.props.onGoingBattle){ // From contains unit
         withdrawPiece(this.props.storedState, String(from));
       }
     } else{
