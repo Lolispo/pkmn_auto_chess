@@ -14,7 +14,7 @@ const f = require('../src/f');
 const initEmptyState = fileModule.__get__('initEmptyState');
 const refreshShop = fileModule.__get__('refreshShop');
 const buyUnit = fileModule.buyUnit;
-const buyExp = fileModule.__get__('buyExp');
+const buyExp = fileModule.buyExp;
 const toggleLock = fileModule.toggleLock;
 const endBattle = fileModule.__get__('endBattle');
 const endTurn = fileModule.__get__('endTurn');
@@ -882,7 +882,11 @@ describe('gameconstants', () => {
   });
   describe('getPieceProbabilityNum', () => {
     it('getPieceProbabilityNum correct?', () => {
-      // TODO
+      let prob = fileModule2.getPieceProbabilityNum(1);
+      assert.equal(prob[0], 1.00);
+      prob = fileModule2.getPieceProbabilityNum(5);
+      assert.equal(prob[0], 0.4);
+      assert.equal(prob[1], 0.75);
     });
   });
   describe('getRoundType', () => {

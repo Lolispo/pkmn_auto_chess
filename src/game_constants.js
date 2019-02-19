@@ -55,6 +55,8 @@ const expRequiredPerLevel = Map({
   9: 40,
 });
 
+exports.getExpRequired = index => expRequiredPerLevel.get(String(index));
+
 const damageFactorType = Map({
   attack: 0.125,
   spell: 0.5,
@@ -176,5 +178,3 @@ exports.getPieceProbabilityNum = (index) => {
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4'),
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4') + probs.get('5')];
 };
-
-exports.getExpRequired = index => expRequiredPerLevel.get(String(index));

@@ -30,12 +30,19 @@
 .pokemonImg {
   display: block;
   margin: auto;
-  padding-top: 30px;
 }
 
 .pokemonShopEmpty {
   padding-left: 35%;
   padding-top: 50%;
+}
+
+.paddingLeft5{
+  padding-left: 5px;
+}
+
+.paddingRight5{
+  padding-right: 5px;
 }
 
 .boardRow {
@@ -84,7 +91,8 @@ body {
   margin: 20px;
   padding: 0;
   font-family: sans-serif;
-  background: #f4f4f4;
+  background: white;
+  /*background-image: url(https://i.imgur.com/VOPXdoh.jpg) no-repeat;*/
 }
 
 .goldImage {

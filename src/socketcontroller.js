@@ -51,11 +51,11 @@ module.exports = function (socket, io) {
   socket.on('START_GAME', async () => {
     const state = await gameJS._startGame();
     console.log('Starting game!');
-    console.log('@startGame shop', state.getIn(['players', 0, 'shop']))
-    console.log('@startGame shop', state.getIn(['players', 0, 'shop']).toJS())
+    // console.log('@startGame shop', state.getIn(['players', 0, 'shop']))
+    // console.log('@startGame shop', state.getIn(['players', 0, 'shop']).toJS())
     // TODO: Prevent starting new game when game is live
     // Send to all connected sockets
-    socket.emit('UPDATED_STATE', state.setIn(['players', 0, 'gold'], 100)); // state.getIn(['players', index])
+    socket.emit('UPDATED_STATE', state.setIn(['players', 0, 'gold'], 1000)); // state.getIn(['players', index])
   });
   
   socket.on('TOGGLE_LOCK', async (stateParam) => {
@@ -84,7 +84,7 @@ module.exports = function (socket, io) {
   socket.on('REFRESH_SHOP', async (stateParam) => {
     const index = connectedPlayers.get(socket.id);
     const state = await gameJS._refreshShop(fromJS(stateParam), String(index));
-    console.log('Refreshes Shop');
+    console.log('Refreshes Shop, level', state.getIn(['players', String(index), 'level']));
     // Requires Shop and Pieces
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', String(index)]));
     socket.emit('UPDATED_PIECES', state);

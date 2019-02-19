@@ -253,7 +253,10 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
   let exp = player.get('exp');
   let expToReach = player.get('expToReach');
   let amount = amountParam;
+  if(level === 10)
+    return state;
   while (amount >= 0) {
+    console.log('increaseExp', level, exp, expToReach)
     // console.log(exp, level, expToReach, amount, expToReach > exp + amount);
     if (expToReach > exp + amount) { // not enough exp to level up
       exp += amount;
@@ -261,16 +264,24 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
       player = player.set('level', level);
       player = player.set('exp', exp);
       player = player.set('expToReach', expToReach);
-      state = state.setIn(['players', playerIndex], player); // await
+      state = state.setIn(['players', playerIndex], player);
       break;
     } else { // Leveling up
       level += 1;
+      if(level === 10){
+        player = player.set('level', level);
+        player = player.set('exp', 0);
+        player = player.set('expToReach', 'max');
+        state = state.setIn(['players', playerIndex], player);
+        break;
+      }
       amount -= expToReach - exp;
       expToReach = gameConstantsJS.getExpRequired(level);
       // 2exp -> 4 when +5 => lvlup +3 exp: 5 = 5 - (4 - 2) = 5 - 2 = 3
       exp = 0;
     }
   }
+  console.log('increaseExp leaving', level, exp, expToReach)
   return state;
 }
 

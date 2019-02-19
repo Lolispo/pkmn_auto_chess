@@ -5,13 +5,18 @@ import { isUndefined, updateMessage } from './f';
 import './App.css';
 
 class PokemonImage extends Component{
-  
+
   render(){
     // Import result is the URL of your image
-    const src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
+    let src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
+    if(this.props.back){
+      src = 'https://img.pokemondb.net/sprites/black-white/anim/back-normal/' + this.props.name + '.gif';
+    }
+    const pt = this.props.paddingTop;
     return (
       <img
         className={`pokemonImg ${this.props.name}`}
+        style={{paddingTop: pt}}
         src={src}
         alt='Pokemon'
       />
@@ -24,11 +29,19 @@ class Pokemon extends Component{
     // You have enough money to buy this unit
     // Unit != null
     // Hand is not full
-    console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
-    if(this.props.newProps.gold >= this.props.shopPokemon.cost){
-      buyUnit(this.props.newProps.storedState, index);
-    } else{
-      updateMessage(this.props.newProps, 'Not enough gold!');
+    // console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
+    if(this.props.shopPokemon){
+      if(this.props.newProps.gold >= this.props.shopPokemon.cost){
+        console.log(this.props.newProps.myHand.length)
+        // TODO: Check hand is not full, length is undefined
+        if(isUndefined(this.props.newProps.myHand.length) || this.props.newProps.myHand.length < 8){
+          buyUnit(this.props.newProps.storedState, index);
+        } else{
+          updateMessage(this.props.newProps, 'Hand is full!');
+        }
+      } else{
+        updateMessage(this.props.newProps, 'Not enough gold!');
+      }
     }
   }
   
@@ -37,7 +50,7 @@ class Pokemon extends Component{
     if(!isUndefined(this.props.shopPokemon)){
       content = <div>
             <div className='pokemonImageDiv'>
-              <PokemonImage name={this.props.shopPokemon.name} imageMode={this.props.newProps.imageMode}/>
+              <PokemonImage name={this.props.shopPokemon.name} paddingTop='30px'/>
             </div>
             <div className='pokemonShopText'>
               {this.props.shopPokemon.display_name + '\n'}
@@ -68,25 +81,14 @@ class Board extends Component {
     // gameStatus: "Game in progress",
   };
 
-  getPos(x,y){
-    if(this.props.isBoard){
-      return x + ',' + y;
-    } else{
-      return x;
-    }
-  }
-
   createEmptyArray(height, width) {
     let data = [];
     for (let i = 0; i < width; i++) {
       data.push([]);
       for (let j = 0; j < height; j++) {
-        console.log('@createEmptyArray', this.props.map, this.props.map[this.getPos(i,j)])
-        const newPokemon = (this.props.map ? this.props.map[this.getPos(i,j)] : undefined);
         data[i][j] = {
           x: i,
           y: j,
-          pokemon: newPokemon,
         };
       }
     }
@@ -99,7 +101,7 @@ class Board extends Component {
         datarow.map((dataitem) => {
           return (
             <div key={dataitem.x * datarow.length + dataitem.y}>
-              <Cell value={dataitem}/>
+              <Cell value={dataitem} isBoard={this.props.isBoard} map={this.props.map}/>
             </div>);
         })}
       </div>
@@ -118,13 +120,28 @@ class Board extends Component {
 }
 
 class Cell extends Component {
+  getPos(x,y){
+    if(this.props.isBoard){
+      return x + ',' + y;
+    } else{
+      return x;
+    }
+  }
+  
   getValue() {
     const { value } = this.props;
-
-    if (value.pokemon) {
-      return this.props.value.pokemon ? <PokemonImage name={this.props.value.pokemon.name}/> : null;
+    // console.log('@Cell.getValue value =', value)
+    // console.log('@Cell.getValue', this.props.map, this.props.map[this.getPos(value.x,value.y)])
+    if(this.props.map){
+      const pokemon = this.props.map[this.getPos(value.x,value.y)];
+      if(!isUndefined(pokemon)){
+        const content = 
+        <div title={pokemon.type}>
+          <PokemonImage name={pokemon.name} paddingTop='5px'/>
+        </div>
+        return content;
+      }
     }
-
     return null;
   }
 
@@ -164,11 +181,6 @@ class App extends Component {
     } else {
       console.log('Not starting')
     }
-  }
-
-  changeImageMode = (mode) => {
-    const { dispatch } = this.props;
-    dispatch({ type: 'CHANGE_IMAGE_MODE', imageMode: mode});
   }
 
   /*
@@ -211,8 +223,6 @@ class App extends Component {
     // Hand is not full
   }
 
- 
-
   pos = (x,y) => {
     if(isUndefined(y)){
       return String(x);
@@ -236,12 +246,12 @@ class App extends Component {
       </div>
       <div>
       <div>Message: {this.props.message}</div>
-        <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
         <div className='flex'>
           <div>
+            <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
             <button className='normalButton' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
             <button className='normalButton' onClick={this.refreshShopEvent}>Refresh Shop</button>
-            <span className='text_shadow'>{JSON.stringify(this.props.gold, null, 2)}</span>
+            <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
           <img className='goldImage' src='https://clipart.info/images/ccovers/1495750449Gold-Coin-PNG-Clipart.png' alt='goldCoin'></img>
         </div>
@@ -262,8 +272,9 @@ class App extends Component {
         <Board height={8} width={8} map={this.props.myBoard} isBoard={true}/>
       </div>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
-      <div>
+      <div className='flex'>
         <Board height={1} width={8} map={this.props.myHand} isBoard={false}/>
+        <img src='https://banner2.kisspng.com/20171217/dd9/trash-can-png-5a364e156b25f5.1849924415135083734389.jpg' alt='trash' style={{width: '90px',height: '52px'}}/>
       </div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
@@ -284,7 +295,6 @@ class App extends Component {
 const mapStateToProps = state => ({
   index: state.index,
   allReady: state.allReady,
-  imageMode: state.imageMode,
   message: state.message,
   storedState: state.storedState,
   pieces: state.pieces,

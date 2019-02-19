@@ -127,13 +127,21 @@ More tests
 
 Potential to use more functional code, map/filter
 
+## Backend
+
+
+
 ## Frontend
 
 Frame shop units
 
-Frontend buy exp
+Press unit to toggle information
 
-Different version pokemans get different padding
+Placement: Drag and drop
+
+Withdraw: Double click
+
+Sell: Drag to trashcan (hold mouse click for 3 sec)
 
 ## Communication
 
