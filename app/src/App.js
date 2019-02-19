@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece} from './socket';
+import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import './App.css';
@@ -216,11 +216,24 @@ class App extends Component {
 
   placePieceEvent = (from, to) => {
     // to is on valid part of the board
-    placePiece(this.props.storedState, String(from), to);
+    const splitted = to.split(',');
+    if((splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0){
+      placePiece(this.props.storedState, String(from), to);
+    } else {
+      updateMessage(this.props, 'Invalid target placing!');
+    }
   }
 
   withdrawPieceEvent = (from) => {
     // Hand is not full
+    const size = Object.keys(this.props.myHand).length
+    if(size < 8){
+      if(this.props.myBoard[from]){ // From contains unit
+        withdrawPiece(this.props.storedState, String(from));
+      }
+    } else{
+      updateMessage(this.props, 'Hand is full!');
+    }
   }
 
   pos = (x,y) => {
@@ -276,7 +289,10 @@ class App extends Component {
         <Board height={1} width={8} map={this.props.myHand} isBoard={false}/>
         <img src='https://banner2.kisspng.com/20171217/dd9/trash-can-png-5a364e156b25f5.1849924415135083734389.jpg' alt='trash' style={{width: '90px',height: '52px'}}/>
       </div>
-      <button className='normalButton' onClick={() => this.placePieceEvent(0, '1,1')}>Place Piece</button>
+      <button className='normalButton' onClick={() => this.placePieceEvent(0, '1,1')}>Place Piece at 0 to 1,1</button>
+      <button className='normalButton' onClick={() => this.placePieceEvent(0, '7,3')}>Place Piece at 0 to 7,3</button>
+      <button className='normalButton' onClick={() => this.withdrawPieceEvent('1,1')}>Withdraw piece from 1,1</button>
+      <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
@@ -309,6 +325,9 @@ const mapStateToProps = state => ({
   exp: state.exp,
   expToReach: state.expToReach,
   gold: state.gold,
+  onGoingBattle: state.onGoingBattle,
+  actionStack: state.actionStack,
+  battleStartBoard: state.battleStartBoard,
 });
 
 export default connect(mapStateToProps)(App);

@@ -1243,6 +1243,8 @@ async function prepareBattle(board1, board2) {
  */
 async function battleTime(stateParam) {
   let state = stateParam;
+  let actionStacks = Map({});
+  let startingBoards = Map({});
   const playerIter = state.get('players').keys();
   let tempPlayer = playerIter.next();
   let iter;
@@ -1269,6 +1271,8 @@ async function battleTime(stateParam) {
     // TODO: Send actionStack to frontend and startBoard
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
+    actionStacks = actionStacks.set(index, actionStack);
+    startingBoards = startingBoards.set(index, startBoard);
 
     const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board');
@@ -1291,13 +1295,15 @@ async function battleTime(stateParam) {
   }
   // Post battle state
   const newState = await state;
-  return newState;
+  return Map({}).set('state', newState).set('startingBoards', startingBoards).set('actionStacks', actionStacks);
 }
 
 async function npcRound(stateParam, npcBoard) {
   let state = stateParam;
+  let actionStacks = Map({});
+  let startingBoards = Map({});
   const playerIter = state.get('players').keys();
-  const tempPlayer = playerIter.next();
+  let tempPlayer = playerIter.next();
   // TODO: Future: All battles calculate concurrently
   while (!tempPlayer.done) {
     const currentPlayer = tempPlayer.value;
@@ -1309,6 +1315,8 @@ async function npcRound(stateParam, npcBoard) {
     // TODO: Send actionStack to frontend and startBoard
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
+    actionStacks = actionStacks.set(currentPlayer, actionStack);
+    startingBoards = startingBoards.set(currentPlayer, startBoard);
 
     const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board');
@@ -1325,7 +1333,7 @@ async function npcRound(stateParam, npcBoard) {
   }
   // Post battle state
   const newState = await state;
-  return newState;
+  return Map({}).set('state', newState).set('startingBoards', startingBoards).set('actionStacks', actionStacks);
 }
 
 /**
@@ -1383,7 +1391,7 @@ async function fixTooManyUnits(state, playerIndex){
  * Check not too many units on board
  * Calculate battle for given board, either pvp or npc/gym round
  */
-async function battleSetup(stateParam) {
+exports.battleSetup = async (stateParam) => {
   let state = stateParam;
   const iter = state.get('players').keys();
   let temp = iter.next();
@@ -1400,13 +1408,13 @@ async function battleSetup(stateParam) {
   const round = state.get('round');
   switch (gameConstantsJS.getRoundType(round)) {
     case 'pvp':
-      return battleTime(state);
+      return (await battleTime(state)).set('preBattleState', state);
     case 'npc':
       const boardNpc = await gameConstantsJS.getSetRound(round);
-      return npcRound(state, boardNpc);
+      return (await npcRound(state, boardNpc)).set('preBattleState', state);
     case 'gym':
       const boardGym = await gameConstantsJS.getSetRound(round);
-      return npcRound(state, boardGym);
+      return (await npcRound(state, boardGym)).set('preBattleState', state);
   }
 }
 

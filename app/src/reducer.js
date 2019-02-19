@@ -16,6 +16,9 @@ const reducer = (
     exp: -1,
     expToReach: -1,
     gold: -1,
+    onGoingBattle: false,
+    actionStack: {},
+    battleStartBoard: {},
   },
   action
 ) => {
@@ -78,6 +81,18 @@ const reducer = (
       break;
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message}
+      break;
+    case 'BATTLE_TIME':
+      const actionStack = action.actionStacks[state.index];
+      const battleStartBoard = action.battleStartBoards[state.index];
+      state = {
+        ...state,
+        onGoingBattle: true,
+        actionStack,
+        battleStartBoard,
+      }
+      console.log('@battleTime actionStack', state.actionStack);
+      console.log('@battleTime battleStartBoard', state.battleStartBoard)
       break;
     default:
       break;

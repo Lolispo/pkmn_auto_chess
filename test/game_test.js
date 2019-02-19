@@ -32,7 +32,7 @@ const withdrawPiece = fileModule.__get__('withdrawPiece');
 const markBoardBonuses = fileModule.__get__('markBoardBonuses');
 const createBattleUnit = fileModule.__get__('createBattleUnit');
 const startGame = fileModule.__get__('startGame');
-const battleSetup = fileModule.__get__('battleSetup');
+const battleSetup = fileModule.battleSetup;
 const getFirstAvailableSpot = fileModule.__get__('getFirstAvailableSpot');
 
 

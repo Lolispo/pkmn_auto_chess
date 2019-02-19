@@ -41,6 +41,9 @@ const configureSocket = dispatch => {
     dispatch({ type: 'ALL_READY', value: bool});
   });
   
+  socket.on('BATTLE_TIME', (actionStacks, battleStartBoards) => {
+    dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards});
+  });
   
   return socket;
 };
@@ -80,5 +83,9 @@ export const placePiece = (state, from, to) =>
 
 export const withdrawPiece = (state, from) => 
   socket.emit('WITHDRAW_PIECE', state, from);
+
+export const battleReady = (state) => {
+  socket.emit('BATTLE_READY', state);
+}
 
 export default configureSocket;
