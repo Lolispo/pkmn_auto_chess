@@ -45,9 +45,10 @@ const reducer = (
       socket && socket.emit('UPDATE_STATE', state); 
       break;
     case 'NEW_PIECES':
-      console.log('New Pieces')
+      console.log('@New Pieces', action.newState.discarded_pieces)
       state = { ...state, pieces: action.newState.pieces}
       state.storedState.pieces = action.newState.pieces;
+      state.storedState.discarded_pieces = action.newState.discarded_pieces;
       break;
     case 'UPDATE_PLAYER':
       console.log('updating player', action.index, action.player);

@@ -214,11 +214,16 @@ class App extends Component {
     }
   }
 
-  placePieceEvent = (from, to) => {
+  placePieceEvent = (fromParam, to) => {
     // to is on valid part of the board
+    const from = String(fromParam);
     const splitted = to.split(',');
-    if((splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0 && !this.props.onGoingBattle){
-      placePiece(this.props.storedState, String(from), to);
+    const fromSplitted = from.split(',');
+    const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
+    const unitExists = (fromSplitted.length === 2 ? this.props.myBoard[from] : this.props.myShop[from])
+    // console.log('@placePieceEvent', fromSplitted, validPos, unitExists)
+    if(validPos && unitExists && !this.props.onGoingBattle){
+      placePiece(this.props.storedState, from, to);
     } else {
       updateMessage(this.props, 'Invalid target placing!');
     }

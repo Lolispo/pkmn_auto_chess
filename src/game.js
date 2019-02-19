@@ -59,7 +59,7 @@ async function refillPieces(pieces, discardedPieces) {
   if (discardedPieces.size === 0) {
     return pieces;
   }
-  console.log('@refillPieces', discardedPieces); // pieceStorage
+  console.log('@refillPieces Refilling', discardedPieces.size, 'units'); // pieceStorage
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     const cost = (await pokemonJS.getStats(discardedPieces.get(i))).get('cost');
@@ -94,6 +94,7 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
   // console.log('addPieceToShop LEVEL ', level, prob)
   for (let i = 0; i < 5; i++) { // Loop over levels
     // If any piece storage goes empty -> put all discarded pieces in pieces
+    // console.log('@addPieceToShop', discPieces)
     if (newPieceStorage.get(i).size === 0) {
       newPieceStorage = await refillPieces(newPieceStorage, discPieces);
       newDiscPieces = List([]);
@@ -158,7 +159,7 @@ async function refreshShop(stateParam, playerIndex) {
     }
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
-    console.log('@refreshShop filteredShop', filteredShop);
+    console.log('@refreshShop filteredShop', filteredShop, '(', pieceStorage.size, '/', discPieces.size, ')');
     state = state.set('discarded_pieces', discPieces.concat(filteredShop));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
@@ -212,8 +213,8 @@ exports.createBattleBoard = async (inputList) => {
  */
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
-  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']), f.pos(unitID))
-  console.log(state.getIn(['players', playerIndex, 'shop']));
+  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']).get('name'), f.pos(unitID))
+  // console.log(state.getIn(['players', playerIndex, 'shop']));
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(f.pos(unitID)).get('name');
   if (!f.isUndefined(unit)) {

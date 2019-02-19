@@ -67,10 +67,12 @@ module.exports = function (socket, io) {
 
   socket.on('BUY_UNIT', async (stateParam, pieceIndex) => {
     const index = connectedPlayers.get(socket.id);
+    // console.log('Discarded pieces inc', fromJS(stateParam).get('discarded_pieces'));
     const state = await gameJS.buyUnit(fromJS(stateParam), index, pieceIndex);
     // Gold, shop, hand
-    console.log('Bought unit at ', pieceIndex);
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    console.log('Bought unit at', pieceIndex, 'discarded =', state.get('discarded_pieces'));
+    socket.emit('UPDATED_STATE', state); // Was updateplayer
+    // socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
   
   socket.on('BUY_EXP', async (stateParam, pieceIndex) => {
