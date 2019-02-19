@@ -74,8 +74,7 @@ async function refillPieces(pieces, discardedPieces) {
  * i is used to know which rarity it is checking (from 1 to 5)
  * Made sure after method that rarity contain pieces
  */
-async function getPieceFromRarity(prob, index, pieceStorage) {
-  const random = Math.random();
+async function getPieceFromRarity(random, prob, index, pieceStorage) {
   let piece;
   if (prob > random) {
     piece = pieceStorage.get(index).get(0);
@@ -101,16 +100,17 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
     }
     // TODO: In theory, pieces might still be empty here, if not enough pieces were in the deck.
     // Temp: If still empty for that level, try a level below
+    const random = Math.random();
     let piece;
     if (newPieceStorage.get(i).size === 0) {
       if (i != 0) {
-        piece = await getPieceFromRarity(prob[i - 1], i - 1, newPieceStorage);
+        piece = await getPieceFromRarity(random, prob[i - 1], i - 1, newPieceStorage);
       } else {
         console.log('Not enough pieces of lower rarity, and current rarity not found');
         process.exit();
       }
     } else {
-      piece = await getPieceFromRarity(prob[i], i, newPieceStorage);
+      piece = await getPieceFromRarity(random, prob[i], i, newPieceStorage);
     }
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
@@ -350,6 +350,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   let piece;
   let state = stateParam;
   if (f.checkHandUnit(fromPosition)) { // from hand
+    console.log('@placePiece placeOnBoard', fromPosition, state.getIn(['players', playerIndex, 'hand']))
     piece = state.getIn(['players', playerIndex, 'hand', fromPosition]).set('position', toPosition);
     const newHand = state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'hand'], newHand);

@@ -133,6 +133,8 @@ Potential to use more functional code, map/filter
 
 ## Frontend
 
+Moltres (example) is too big
+
 Combine ready buttons
 
 Hide buttons ready and start when game is live

@@ -87,7 +87,7 @@ class Board extends Component {
       for (let j = 0; j < height; j++) {
         data[i][j] = {
           x: i,
-          y: j,
+          y: height-j-1,
         };
       }
     }
@@ -216,6 +216,7 @@ class App extends Component {
 
   placePieceEvent = (from, to) => {
     // to is on valid part of the board
+    placePiece(this.props.storedState, String(from), to);
   }
 
   withdrawPieceEvent = (from) => {
@@ -275,6 +276,7 @@ class App extends Component {
         <Board height={1} width={8} map={this.props.myHand} isBoard={false}/>
         <img src='https://banner2.kisspng.com/20171217/dd9/trash-can-png-5a364e156b25f5.1849924415135083734389.jpg' alt='trash' style={{width: '90px',height: '52px'}}/>
       </div>
+      <button className='normalButton' onClick={() => this.placePieceEvent(0, '1,1')}>Place Piece</button>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
