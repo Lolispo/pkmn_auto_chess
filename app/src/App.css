@@ -61,6 +61,11 @@
   background-color: gray;
 }
 
+.markedUnit {
+  border: 1px solid yellow;
+  background-color: rgb(59, 56, 56);
+}
+
 .text_shadow {
   color: white;
   text-shadow:

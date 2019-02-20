@@ -84,6 +84,9 @@ export const placePiece = (state, from, to) =>
 export const withdrawPiece = (state, from) => 
   socket.emit('WITHDRAW_PIECE', state, from);
 
+export const sellPiece = (state, from) => 
+  socket.emit('SELL_PIECE', state, from);
+
 export const battleReady = (state) => {
   socket.emit('BATTLE_READY', state);
 }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady} from './socket';
+import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import './App.css';
+import { ifError } from 'assert';
 
 class PokemonImage extends Component{
 
@@ -100,7 +101,7 @@ class Board extends Component {
         datarow.map((dataitem) => {
           return (
             <div key={dataitem.x * datarow.length + dataitem.y}>
-              <Cell value={dataitem} isBoard={this.props.isBoard} map={this.props.map}/>
+              <Cell value={dataitem} isBoard={this.props.isBoard} map={this.props.map} newProps={this.props.newProps}/>
             </div>);
         })}
       </div>
@@ -109,16 +110,20 @@ class Board extends Component {
 
   render(){
     return (
-      <div className='flex'>
-        
+      <div className='flex'> 
         {this.renderBoard(this.state.boardData)}
-
       </div>
     );
   }
 }
 
 class Cell extends Component {
+  state = {
+    ...this.state,
+    pos: this.getPos(this.props.value.x, this.props.value.y),
+    selPos: this.props.newProps.selectedUnit,
+  }
+
   getPos(x,y){
     if(this.props.isBoard){
       return x + ',' + y;
@@ -126,30 +131,118 @@ class Cell extends Component {
       return x;
     }
   }
+
+  placePieceEvent = (fromParam, to) => {
+    // to is on valid part of the board
+    const prop = this.props.newProps;
+    const from = String(fromParam);
+    if(from && to){
+      console.log('@placePieceEvent',from, to);
+      const splitted = to.split(',');
+      const fromSplitted = from.split(',');
+      const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
+      const unitExists = (fromSplitted.length === 2 ? prop.myBoard[fromParam] : prop.myHand[from])
+      console.log('@placePieceEvent', fromSplitted, validPos, unitExists, prop.myHand);
+      if(validPos && unitExists && !prop.onGoingBattle){
+        console.log('Sending place piece!')
+        placePiece(prop.storedState, from, to);
+      } else {
+        updateMessage(prop, 'Invalid target placing!');
+      }
+    }
+  }
+
   
+  withdrawPieceEvent = (from) => {
+    // Hand is not full
+    const prop = this.props.newProps;
+    const size = Object.keys(prop.myHand).length
+    if(size < 8){
+      if(prop.myBoard[from] && !prop.onGoingBattle){ // From contains unit
+        withdrawPiece(prop.storedState, String(from));
+      }
+    } else{
+      updateMessage(prop, 'Hand is full!');
+    }
+  }
+
+  sellPieceEvent = (from) => {
+    const prop = this.props.newProps;
+    const validUnit = (this.props.isBoard ? prop.myBoard[from] : prop.myHand[from])
+    if(validUnit && !prop.onGoingBattle){ // From contains unit
+      sellPiece(prop.storedState, String(from));
+    } else{
+      updateMessage(prop, 'Invalid target to sell!', from);
+    }
+  }
+  
+  handleCellClick(el){
+    console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
+    el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos}});
+  }
+
+  handleKeyPress(event, self){
+    // console.log(event)
+    // console.log(event.key, event.currentTarget)
+    let from;
+    switch(event.key){
+      case 'q':
+        from = self.props.newProps.selectedUnit.pos;
+        const to = self.props.newProps.mouseOverId;
+        this.placePieceEvent(from, to);
+        break;
+      case 'w':
+        from = self.props.newProps.selectedUnit.pos;
+        if(!isUndefined(from)){
+          this.withdrawPieceEvent(from);
+        } else {
+          from = self.props.newProps.mouseOverId;
+          this.withdrawPieceEvent(from);
+        }
+        break;
+      case 'e':
+        from = self.props.newProps.selectedUnit.pos;
+        if(!isUndefined(from)){
+          this.sellPieceEvent(from);
+        } else {
+          console.log('Use Select to sell units!')
+        }
+        break;
+    }
+  }
+
+  handleMouseOver(event, self){
+    //console.log('@handleMouseEvent', event, self)
+    const x = event.clientX;
+    const y = event.clientY;
+    const id = document.elementFromPoint(x, y).id;
+    // console.log('@handleMouseOver', x, y, id);
+    self.props.newProps.dispatch({type: 'SET_MOUSEOVER_ID', mouseOverId: id})
+  }
+
   getValue() {
     const { value } = this.props;
     // console.log('@Cell.getValue value =', value)
     // console.log('@Cell.getValue', this.props.map, this.props.map[this.getPos(value.x,value.y)])
     if(this.props.map){
-      const pokemon = this.props.map[this.getPos(value.x,value.y)];
+      const pokemon = this.props.map[this.state.pos];
       if(!isUndefined(pokemon)){
-        const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0: true) : false);
-        const content = 
-        <div title={pokemon.type}>
-          <PokemonImage name={pokemon.name} paddingTop='5px' back={back}/>
-        </div>
-        return content;
+        const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
+        return <PokemonImage name={pokemon.name} paddingTop='5px' back={back}/>
       }
     }
     return null;
   }
 
   render() {
-    let className = 'cell';
-    // (value.isFlagged ? " is-flag" : "");
+    // console.log('@renderCell', this.props.selectedUnit)
+    const selPos = this.state.selPos;
+    let className = 'cell' +
+    (!isUndefined(selPos) && this.props.isBoard === selPos.isBoard && 
+    selPos.x === this.props.value.x && selPos.y === this.props.value.y ? ' markedUnit' : '');
     return (
-      <div className={className}>
+      <div id={this.state.pos} className={className} onClick={() => this.handleCellClick(this)} onKeyDown={(event) => this.handleKeyPress(event, this)} 
+        onMouseOver={(event) => this.handleMouseOver(event, this)} tabIndex='0'>
         {this.getValue()}
       </div>
     );
@@ -183,20 +276,6 @@ class App extends Component {
     }
   }
 
-  /*
-  playersEvent = () => {
-    const players = this.props.players
-    const comp = players.map((player) =>
-      <li>{player}</li>
-    );
-  }*/
-  /*
-  {this.props.myShop.map(unit =>
-    <li key={unit} onClick={() => this.handleClick(unit)}>
-      {letter}
-    </li>
-  )}*/
-
   refreshShopEvent = (index) => {
     // You have enough money to refresh
     if(this.props.gold >= 2){
@@ -212,33 +291,6 @@ class App extends Component {
       buyExp(this.props.storedState)
     } else{
       updateMessage(this.props, 'Not enough gold!');
-    }
-  }
-
-  placePieceEvent = (fromParam, to) => {
-    // to is on valid part of the board
-    const from = String(fromParam);
-    const splitted = to.split(',');
-    const fromSplitted = from.split(',');
-    const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
-    const unitExists = (fromSplitted.length === 2 ? this.props.myBoard[fromParam] : this.props.myHand[from])
-    console.log('@placePieceEvent', fromSplitted, validPos, unitExists, this.props.myHand);
-    if(validPos && unitExists && !this.props.onGoingBattle){
-      placePiece(this.props.storedState, from, to);
-    } else {
-      updateMessage(this.props, 'Invalid target placing!');
-    }
-  }
-
-  withdrawPieceEvent = (from) => {
-    // Hand is not full
-    const size = Object.keys(this.props.myHand).length
-    if(size < 8){
-      if(this.props.myBoard[from] && !this.props.onGoingBattle){ // From contains unit
-        withdrawPiece(this.props.storedState, String(from));
-      }
-    } else{
-      updateMessage(this.props, 'Hand is full!');
     }
   }
 
@@ -288,18 +340,21 @@ class App extends Component {
         </div>
       </div>
       <div>
-        <Board height={8} width={8} map={this.props.myBoard} isBoard={true}/>
+        <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
       </div>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div className='flex'>
-        <Board height={1} width={8} map={this.props.myHand} isBoard={false}/>
+        <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
         <img src='https://banner2.kisspng.com/20171217/dd9/trash-can-png-5a364e156b25f5.1849924415135083734389.jpg' alt='trash' style={{width: '90px',height: '52px'}}/>
       </div>
       <button className='normalButton' onClick={() => this.placePieceEvent(0, '1,1')}>Place Piece at 0 to 1,1</button>
       <button className='normalButton' onClick={() => this.placePieceEvent(0, '7,3')}>Place Piece at 0 to 7,3</button>
       <button className='normalButton' onClick={() => this.withdrawPieceEvent('1,1')}>Withdraw piece from 1,1</button>
+      <button className='normalButton' onClick={() => this.withdrawPieceEvent(this.props.selectedUnit.pos)}>Withdraw piece: {this.props.selectedUnit.pos}</button>
+      <button className='normalButton' onClick={() => this.sellPieceEvent(this.props.selectedUnit.pos)}>Sell piece: {this.props.selectedUnit.pos}</button>
       <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
+      <div>selectedUnit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
       <p>player:{JSON.stringify(this.props.player, null, 2)}</p>
@@ -334,6 +389,8 @@ const mapStateToProps = state => ({
   onGoingBattle: state.onGoingBattle,
   actionStack: state.actionStack,
   battleStartBoard: state.battleStartBoard,
+  selectedUnit: state.selectedUnit,
+  mouseOverId: state.mouseOverId,
 });
 
 export default connect(mapStateToProps)(App);

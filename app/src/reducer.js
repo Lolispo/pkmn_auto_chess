@@ -19,6 +19,8 @@ const reducer = (
     onGoingBattle: false,
     actionStack: {},
     battleStartBoard: {},
+    selectedUnit: -1,
+    mouseOverId: -1,
   },
   action
 ) => {
@@ -94,6 +96,14 @@ const reducer = (
       }
       console.log('@battleTime actionStack', state.actionStack);
       console.log('@battleTime battleStartBoard', state.battleStartBoard)
+      break;
+    case 'SELECT_UNIT':
+      // TODO: Mark unit as selected Css
+      state = {...state, selectedUnit: action.selectedUnit}
+      break;
+    case 'SET_MOUSEOVER_ID':
+      // console.log('@reducer.setMouseOverId', action.mouseOverId);
+      state = {...state, mouseOverId: action.mouseOverId}
       break;
     default:
       break;

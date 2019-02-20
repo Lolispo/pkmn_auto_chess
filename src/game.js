@@ -338,6 +338,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
       newPiece = await getBoardUnit(evolvesTo, f.x(position), f.y(position));
     }
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
+    return checkPieceUpgrade(state, playerIndex, newPiece, position);
   }
   return state;
 }
@@ -464,6 +465,10 @@ async function sellPiece(state, playerIndex, piecePosition) {
   }
   // Add units to discarded Cards, add base level of card
   return discardBaseUnits(newState, piece.get('name'));
+}
+
+exports._sellPiece = (state, playerIndex, piecePosition) => {
+  return sellPiece(state, playerIndex, piecePosition);
 }
 
 /**

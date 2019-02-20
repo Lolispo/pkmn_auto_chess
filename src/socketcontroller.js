@@ -108,6 +108,14 @@ module.exports = function (socket, io) {
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
 
+  socket.on('SELL_PIECE', async (stateParam, from) => {
+    const index = connectedPlayers.get(socket.id);
+    const state = await gameJS._sellPiece(fromJS(stateParam), index, from);
+    console.log('Sell piece at ', from);
+    // Hand and board
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+  });
+
   // TODO Mark dead players as index -1
   socket.on('BATTLE_READY', async (stateParam) => {
     const index = connectedPlayers.get(socket.id);
