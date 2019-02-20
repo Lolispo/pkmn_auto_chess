@@ -117,32 +117,26 @@ body {
 }
 
 .messageUpdate {
-  animation: 1.5s ease-in-out 0s 1 alternate both running opacity;
+  animation: 0.5s ease-in-out 0s infinite alternate both running invis;
 }
 
-.testAnimation {
-  /*
-    animation: moveDown 0.5s infinite alternate, shrink 0.53s infinite alternate;
-    animation: mymove 5s infinite;
-  */
+.messageUpdate-enter {
+  opacity: 0.01;
+}
+
+.messageUpdate-enter.messageUpdate-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
 }
 
 @keyframes shrinkDown {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(0);
-  }
+  from  {transform: scale(1);}
+  to    {transform: scale(0);}
 }
 
 @keyframes invis {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from  {opacity: 0.5;}
+  to    {opacity: 1;}
 }
 
 .example-enter {
@@ -154,6 +148,7 @@ body {
   transition: all 500ms ease-in;
 }
 
+/*
 .example-leave {
   transform: opacity(0);
 }
@@ -162,6 +157,7 @@ body {
   transform: scale(0.01);
   transition: all 500ms ease-in;
 }
+*/
 
 
 .lockImage {

@@ -331,11 +331,11 @@ class App extends Component {
         <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>StartGame</button>
       </div>
       <div>
-      <div className={'text_shadow'} >
+      <div className={'text_shadow messageUpdate'} >
         <CSSTransitionGroup
-          transitionName="example"
+          transitionName="messageUpdate"
           transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}>
+          transitionLeave={false}>
           <div>
             {'Message: ' + this.props.message}
           </div>
