@@ -26,11 +26,15 @@ Aoe damage logic
 
 Matchup system
     
+Finish abilities implementation (teleport)
+
 ## Frontend
 
 Show type bonuses
 
 KeyPress 1-8, binds place unit from that pos index (0-7) to mouseOverId
+
+Bind space toggleShop
 
 Timer
 
