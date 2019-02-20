@@ -12,6 +12,7 @@ Temp: 1 hp per level
 ## Backend
 
 Type buffs, add all and test
+    Add typebuffs from sheets directly
 
 Stop spawning units of certain type for player if has level 3
     prevent getting more units of same type if you have max, level 3, of that type
@@ -100,6 +101,11 @@ Find a way of choosing pokemon in play
     shouldn't play all 151 at once
     1: Ban base types in beginning
     2: Choose (20-40) units to start with
+
+Automatic JSON download from google sheet
+
+Fix working npm script to start both react and node server
+    Currently requires two terminals, concurrent script not working
 
 #### Rival: Rival battle when playing against a certain opponent
     > 3 battles
