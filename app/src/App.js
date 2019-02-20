@@ -63,7 +63,7 @@ class Pokemon extends Component{
             this.props.shopPokemon.type[0] : this.props.shopPokemon.type);
       content = <div>
             <div className={`pokemonImageDiv ${backgroundColor}`}>
-              <PokemonImage name={this.props.shopPokemon.name} paddingTop='30px'/>
+              <PokemonImage name={this.props.shopPokemon.name} paddingTop='20px'/>
             </div>
             <div className='pokemonShopText'>
               {this.props.shopPokemon.display_name + '\n'}

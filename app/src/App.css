@@ -186,23 +186,23 @@ body {
   rgb(58, 49, 49)
 */
 .costColor1 {
-  background-color: lightgray;
+  background-color: rgb(123,123,123);
 }
 
 .costColor2 {
-  background-color: lightgreen;
+  background-color: rgb(57, 120, 35);
 }
 
 .costColor3 {
-  background-color: rgb(82, 108, 192);
+  background-color: rgb(18, 90, 159);
 }
 
 .costColor4 {
-  background-color: rgb(176, 118, 202);
+  background-color: rgb(131, 47, 184);
 }
 
 .costColor5 {
-  background-color: gold;
+  background-color: rgb(255, 118, 28);
 }
 
 .poison {
