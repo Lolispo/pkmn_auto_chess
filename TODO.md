@@ -23,6 +23,8 @@ Matchup system
     
 ## Frontend
 
+KeyPress 1-8, binds place unit from that pos index (0-7) to mouseOverId
+
 Timer
 
 Battle

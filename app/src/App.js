@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
+import CSSTransitionGroup from 'react-addons-css-transition-group';
 import './App.css';
+
 import lockedLock from './assets/lockedLock.png';
 import openLock from './assets/openLock.png';
 import goldCoin from './assets/goldCoin.png';
@@ -18,12 +20,18 @@ class PokemonImage extends Component{
     }
     const pt = this.props.paddingTop;
     return (
-      <img
-        className={`pokemonImg ${this.props.name}`}
-        style={{paddingTop: pt}}
-        src={src}
-        alt='Pokemon'
-      />
+      <CSSTransitionGroup
+          transitionName="example"
+          transitionEnterTimeout={500}
+          transitionLeave={false}>
+          <img
+            className={`pokemonImg ${this.props.name}`}
+            key={src}
+            style={{paddingTop: pt}}
+            src={src}
+            alt='Pokemon'
+          />
+        </CSSTransitionGroup>
     );
   }
 }
@@ -89,7 +97,7 @@ class Board extends Component {
     const prop = this.props.newProps;
     const from = String(fromParam);
     if(from && to){
-      // console.log('@placePieceEvent',from, to);
+      console.log('@placePieceEvent',from, to);
       const splitted = to.split(',');
       const fromSplitted = from.split(',');
       const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
@@ -136,6 +144,7 @@ class Board extends Component {
       case 'q':
         from = prop.selectedUnit.pos;
         const to = prop.mouseOverId;
+        console.log('@placePiece q pressed', from, to)
         this.placePieceEvent(from, to);
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
@@ -223,11 +232,10 @@ class Cell extends Component {
     const x = event.clientX;
     const y = event.clientY;
     const el = document.elementFromPoint(x, y);
-    let id = el.id;
-    if(el.id === ''){
-      id = el.parentElement.id;
-
-    }
+    let id = (el.id === '' ? 
+      (el.parentElement.id === '' ? 
+        (el.parentElement.parentElement.id === '' ? '' : el.parentElement.parentElement.id ) 
+      : el.parentElement.id) : el.id);
     if(self.props.newProps.mouseOverId !== id){
       // console.log('Mousing Over:', id);
       self.props.newProps.dispatch({type: 'SET_MOUSEOVER_ID', mouseOverId: id})        
@@ -323,7 +331,16 @@ class App extends Component {
         <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>StartGame</button>
       </div>
       <div>
-      <div className='text_shadow'>Message: {this.props.message}</div>
+      <div className={'text_shadow'} >
+        <CSSTransitionGroup
+          transitionName="example"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
+          <div>
+            {'Message: ' + this.props.message}
+          </div>
+        </CSSTransitionGroup>
+      </div>
         <div>
           <div>
             <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
@@ -363,6 +380,7 @@ class App extends Component {
       </div>
       <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
       <div>selectedUnit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>
+      <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>

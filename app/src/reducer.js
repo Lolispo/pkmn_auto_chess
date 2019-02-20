@@ -32,7 +32,6 @@ const reducer = (
         storedState: action.newState,
         message: 'im updated', 
         players: action.newState.players,
-        player: action.newState.players[state.index],
         myHand: action.newState.players[state.index].hand,
         myBoard: action.newState.players[state.index].board,
         myShop: action.newState.players[state.index].shop,
@@ -55,7 +54,6 @@ const reducer = (
       console.log('updating player', action.index, action.player);
       state = { ...state,
         message: 'Updated player', 
-        player: action.player,
         myHand: action.player.hand,
         myBoard: action.player.board,
         myShop: action.player.shop,

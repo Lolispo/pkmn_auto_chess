@@ -28,6 +28,7 @@
 }
 
 .pokemonImg {
+  animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
   display: block;
   margin: auto;
 }
@@ -98,6 +99,8 @@
   /*font-size: 16pt;*/
 }
 
+
+
 body {
   margin: 20px;
   padding: 0;
@@ -112,6 +115,54 @@ body {
   padding-top: 1px;
   padding-left: 5px;
 }
+
+.messageUpdate {
+  animation: 1.5s ease-in-out 0s 1 alternate both running opacity;
+}
+
+.testAnimation {
+  /*
+    animation: moveDown 0.5s infinite alternate, shrink 0.53s infinite alternate;
+    animation: mymove 5s infinite;
+  */
+}
+
+@keyframes shrinkDown {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0);
+  }
+}
+
+@keyframes invis {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.example-enter {
+  transform: scale(0.01);
+}
+
+.example-enter.example-enter-active {
+  transform: scale(1);
+  transition: all 500ms ease-in;
+}
+
+.example-leave {
+  transform: opacity(0);
+}
+
+.example-leave.example-leave-active {
+  transform: scale(0.01);
+  transition: all 500ms ease-in;
+}
+
 
 .lockImage {
   height: 30px;
