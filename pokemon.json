@@ -1626,9 +1626,9 @@
     "type": "normal",
     "ability": "quickAttack",
     "evolves_to": [
-      "List([vaporeon",
+      "vaporeon",
       "jolteon",
-      "flareon])"
+      "flareon"
     ]
   },
   "vaporeon": {

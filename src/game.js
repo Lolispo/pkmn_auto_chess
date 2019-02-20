@@ -178,7 +178,7 @@ exports._refreshShop = async (stateParam, index) => {
  */
 async function getBoardUnit(name, x, y) {
   const unitInfo = await pokemonJS.getStats(name);
-  // console.log('@getBoardUnit', name, unitInfo)
+  console.log('@getBoardUnit', name, unitInfo)
   return Map({
     name,
     display_name: unitInfo.get('display_name'),
@@ -310,6 +310,10 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   let state = stateParam;
   const boardUnits = state.getIn(['players', playerIndex, 'board']);
   const name = piece.get('name');
+  const stats = await pokemonJS.getStats(name);
+  console.log('evolvesTo: ', stats.get('evolvesTo'))
+  if(f.isUndefined(stats.get('evolves_to')))
+    return state;
   let pieceCounter = 0;
   let positions = List([]);
   const keysIter = boardUnits.keys();
@@ -328,7 +332,6 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
       board = board.delete(positions.get(i));
     }
     state = state.setIn(['players', playerIndex, 'board'], board);
-    const stats = await pokemonJS.getStats(name);
     const evolvesTo = stats.get('evolves_to');
     // Check if multiple evolutions exist, random between
     let newPiece;

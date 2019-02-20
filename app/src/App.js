@@ -22,7 +22,7 @@ class PokemonImage extends Component{
     return (
       <CSSTransitionGroup
           transitionName="example"
-          transitionEnterTimeout={500}
+          transitionEnterTimeout={300}
           transitionLeave={false}>
           <img
             className={`pokemonImg ${this.props.name}`}
@@ -59,8 +59,10 @@ class Pokemon extends Component{
   render(){
     let content;
     if(!isUndefined(this.props.shopPokemon)){
+      const backgroundColor = (Array.isArray(this.props.shopPokemon.type) ? 
+            this.props.shopPokemon.type[0] : this.props.shopPokemon.type);
       content = <div>
-            <div className='pokemonImageDiv'>
+            <div className={`pokemonImageDiv ${backgroundColor}`}>
               <PokemonImage name={this.props.shopPokemon.name} paddingTop='30px'/>
             </div>
             <div className='pokemonShopText'>
@@ -75,10 +77,11 @@ class Pokemon extends Component{
             </div>
           </div>
     } else {
-      content = <div className='pokemonShopEmpty'>Empty</div>;
+      content = <div className={`pokemonShopEmpty text_shadow`}>Empty</div>;
     }
+    const costColorClass = (!isUndefined(this.props.shopPokemon) ? 'costColor' + this.props.shopPokemon.cost : '')
     return (
-      <div className='pokemonShopEntity' onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div className={`pokemonShopEntity ${costColorClass}`} onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
       </div>
     );
@@ -316,12 +319,8 @@ class App extends Component {
   pos = (x,y) => {
     if(isUndefined(y)){
       return String(x);
-      //return 'List [ ' + x + ' ]'
-      //return 'Map { "x": ' + x + ' }'
     }
     return String(x) + ',' + String(y);
-    //return 'List [ ' + x + ', ' + y + ' ]'
-    //return 'Map { "x": ' + x + ', "y": ' + y + ' }';
   }
 
   render() {

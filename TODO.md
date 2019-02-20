@@ -9,10 +9,15 @@ How much hp to lose? 1 point per level of unit
 Definitely not, 6 level 6 units would be 36 hp, more like 14 damage from them (6-0)
 Temp: 1 hp per level
 
+Check rarity 'color' connected to piece cost
+    $5 pieces are easily spotted in shop
+
 ## Backend
 
 Type buffs, add all and test
     Add typebuffs from sheets directly
+
+Type bonuses on current board recalculate and store on piece interactions
 
 Stop spawning units of certain type for player if has level 3
     prevent getting more units of same type if you have max, level 3, of that type
@@ -23,6 +28,8 @@ Matchup system
     
 ## Frontend
 
+Show type bonuses
+
 KeyPress 1-8, binds place unit from that pos index (0-7) to mouseOverId
 
 Timer
@@ -32,7 +39,9 @@ Battle
 Sound
 
 Max size of units
-    Units with big animations: Moltres Pidgeotto
+    Units with big animations: Moltres Pidgeotto Fearow
+    Bit bigger: onix, mewtwo
+    Units like zapdos, rapidash and arcanine gets fixed by small increase in Cell size
 
 Ready: Show number of connected players on start game button
 
