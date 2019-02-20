@@ -129,25 +129,32 @@ Potential to use more functional code, map/filter
 
 ## Backend
 
+Stop spawning units of certain type for player if has level 3
 
+Prevent requests if game isn't active
+
+Hold sessions connected to socketids
 
 ## Frontend
 
-Moltres (example) is too big
+Units with big animations: Moltres Pidgeotto
 
 Combine ready buttons
 
 Hide buttons ready and start when game is live
 
-Frame shop units
+Shop:
+    Modal
+    Better outline / card holder
 
-Press unit to toggle information
+Hover: 
+    Show information about type bonuses on hover and evolution
 
-Placement: Drag and drop
+Placement: Currently Click and Q
 
-Withdraw: Double click
+Withdraw: W
 
-Sell: Drag to trashcan (hold mouse click for 3 sec)
+Sell: Click and E
 
 ## Communication
 

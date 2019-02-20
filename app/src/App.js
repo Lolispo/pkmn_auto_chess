@@ -3,7 +3,10 @@ import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, pl
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import './App.css';
-import { ifError } from 'assert';
+import lockedLock from './assets/lockedLock.png';
+import openLock from './assets/openLock.png';
+import goldCoin from './assets/goldCoin.png';
+// import { ifError } from 'assert';
 
 class PokemonImage extends Component{
 
@@ -177,7 +180,7 @@ class Cell extends Component {
   }
   
   handleCellClick(el){
-    console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
+    // console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
     el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos}});
   }
 
@@ -192,11 +195,12 @@ class Cell extends Component {
         this.placePieceEvent(from, to);
         break;
       case 'w':
-        from = self.props.newProps.selectedUnit.pos;
-        if(!isUndefined(from)){
+        from = self.props.newProps.mouseOverId;
+        console.log(self.props.newProps.myBoard, from, self.props.newProps.mouseOverId)
+        if(!isUndefined(from) && self.props.newProps.myBoard[from]){
           this.withdrawPieceEvent(from);
         } else {
-          from = self.props.newProps.mouseOverId;
+          from = self.props.newProps.selectedUnit.pos;
           this.withdrawPieceEvent(from);
         }
         break;
@@ -215,9 +219,16 @@ class Cell extends Component {
     //console.log('@handleMouseEvent', event, self)
     const x = event.clientX;
     const y = event.clientY;
-    const id = document.elementFromPoint(x, y).id;
-    // console.log('@handleMouseOver', x, y, id);
-    self.props.newProps.dispatch({type: 'SET_MOUSEOVER_ID', mouseOverId: id})
+    const el = document.elementFromPoint(x, y);
+    let id = el.id;
+    if(el.id === ''){
+      id = el.parentElement.id;
+
+    }
+    if(self.props.newProps.mouseOverId !== id){
+      console.log('Mousing Over:', id);
+      self.props.newProps.dispatch({type: 'SET_MOUSEOVER_ID', mouseOverId: id})        
+    }
   }
 
   getValue() {
@@ -316,15 +327,23 @@ class App extends Component {
         <button className='normalButton' onClick={this.startGame}>StartGame</button>
       </div>
       <div>
-      <div>Message: {this.props.message}</div>
-        <div className='flex'>
+      <div className='text_shadow'>Message: {this.props.message}</div>
+        <div>
           <div>
             <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
-            <button className='normalButton' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
-            <button className='normalButton' onClick={this.refreshShopEvent}>Refresh Shop</button>
-            <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
+            <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + this.props.exp + '/' + this.props.expToReach + ')'}</span>
           </div>
-          <img className='goldImage' src='https://clipart.info/images/ccovers/1495750449Gold-Coin-PNG-Clipart.png' alt='goldCoin'></img>
+          <div className='flex'>
+            <div>
+              <img className='lockImage' src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
+            </div>
+            <div>
+              <button className='normalButton' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
+              <button className='normalButton' onClick={this.refreshShopEvent}>Refresh Shop</button>
+              <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
+            </div>
+            <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
+          </div>
         </div>
         <div>
           <div>
@@ -342,19 +361,13 @@ class App extends Component {
       <div>
         <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
       </div>
-      <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div className='flex'>
         <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
-        <img src='https://banner2.kisspng.com/20171217/dd9/trash-can-png-5a364e156b25f5.1849924415135083734389.jpg' alt='trash' style={{width: '90px',height: '52px'}}/>
       </div>
-      <button className='normalButton' onClick={() => this.placePieceEvent(0, '1,1')}>Place Piece at 0 to 1,1</button>
-      <button className='normalButton' onClick={() => this.placePieceEvent(0, '7,3')}>Place Piece at 0 to 7,3</button>
-      <button className='normalButton' onClick={() => this.withdrawPieceEvent('1,1')}>Withdraw piece from 1,1</button>
-      <button className='normalButton' onClick={() => this.withdrawPieceEvent(this.props.selectedUnit.pos)}>Withdraw piece: {this.props.selectedUnit.pos}</button>
-      <button className='normalButton' onClick={() => this.sellPieceEvent(this.props.selectedUnit.pos)}>Sell piece: {this.props.selectedUnit.pos}</button>
       <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
-      <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <div>selectedUnit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>
+      <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
+      <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
       <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
       <p>player:{JSON.stringify(this.props.player, null, 2)}</p>
