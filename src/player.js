@@ -16,10 +16,10 @@ function Player(i) {
     exp: 0,
     expToReach: 1,
     gold: 1,
-    shop: Map({}),    // Buys from 5
-    hand: Map({}),    // Sideline, 8 at once
-    board: Map({}),   // Placed on board (8x8 area, placeable is 4x8)
-    rivals: Map({}),  // Holds index and numbers of players played in battle
+    shop: Map({}), // Buys from 5
+    hand: Map({}), // Sideline, 8 at once
+    board: Map({}), // Placed on board (8x8 area, placeable is 4x8)
+    rivals: Map({}), // Holds index and numbers of players played in battle
     /**
      * Board example
      *      Map({ (Check OrderedMap in immutable)

@@ -14,10 +14,10 @@ exports.findFirstAvailableIndex = (connectedPlayers) => {
     takenIndices = takenIndices.add(index);
     temp = iter.next();
   }
-  for(let i = 0; i < 8; i++){
-    if(!takenIndices.includes(i)){
+  for (let i = 0; i < 8; i++) {
+    if (!takenIndices.includes(i)) {
       return i;
     }
   }
   return undefined;
-}
+};

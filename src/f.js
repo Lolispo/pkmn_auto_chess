@@ -18,35 +18,35 @@ exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
 const pos = (x, y) => {
   // console.log('@pos', List([x]), List([x,y]));
   // Convert 'List [ 0 ]' to 0
-  // Convert 'List [ 0 , 1 ] to 1 TODO check comma placement    
+  // Convert 'List [ 0 , 1 ] to 1 TODO check comma placement
   if (y === undefined) {
-    //return Map({ x });
-    //return List([x])
+    // return Map({ x });
+    // return List([x])
     return String(x);
   }
-  //return Map({ x, y });
-  //return List([x,y])
-  return x + ',' + y;
+  // return Map({ x, y });
+  // return List([x,y])
+  return `${x},${y}`;
 };
 
 
-const x = pos => {
-  //return pos.get('x');
-  //return pos.get(0);
+const x = (pos) => {
+  // return pos.get('x');
+  // return pos.get(0);
   const splitted = pos.split(',');
   const curr = splitted[0];
   return (isUndefined(curr) ? curr : parseInt(curr));
-}
+};
 
-const y = pos => {
-  //return pos.get(1);
-  //return pos.get('y');
+const y = (pos) => {
+  // return pos.get(1);
+  // return pos.get('y');
   const splitted = pos.split(',');
   const curr = splitted[1];
   return (isUndefined(curr) ? curr : parseInt(curr));
-}
+};
 
-exports.pos = (x,y) => pos(x,y);
+exports.pos = (x, y) => pos(x, y);
 exports.x = pos => x(pos);
 exports.y = pos => y(pos);
 

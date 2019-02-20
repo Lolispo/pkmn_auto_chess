@@ -117,7 +117,7 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
     if (!f.isUndefined(piece)) {
       const unitStats = await pokemonJS.getStats(piece);
       newShop = newShop.set(pos, Map({
-        name: piece, 
+        name: piece,
         display_name: unitStats.get('display_name'),
         cost: unitStats.get('cost'),
         type: unitStats.get('type'),
@@ -171,7 +171,7 @@ async function refreshShop(stateParam, playerIndex) {
 exports._refreshShop = async (stateParam, index) => {
   const state = stateParam.setIn(['players', index, 'gold'], stateParam.getIn(['players', index, 'gold']) - 2);
   return refreshShop(state, index);
-}
+};
 
 /**
  * Create unit for board/hand placement from name and spawn position
@@ -213,7 +213,7 @@ exports.createBattleBoard = async (inputList) => {
  */
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
-  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']).get('name'), f.pos(unitID))
+  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']).get('name'), f.pos(unitID));
   // console.log(state.getIn(['players', playerIndex, 'shop']));
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(f.pos(unitID)).get('name');
@@ -233,19 +233,19 @@ exports.buyUnit = async (stateParam, playerIndex, unitID) => {
     state = state.setIn(['players', playerIndex, 'gold'], currentGold - unitInfo.get('cost'));
   }
   return state;
-}
+};
 
 
 /**
  * toggleLock for player (setIn)
  */
- exports.toggleLock = async (state, playerIndex) => {
+exports.toggleLock = async (state, playerIndex) => {
   const locked = state.getIn(['players', playerIndex, 'locked']);
   if (!locked) {
     return state.setIn(['players', playerIndex, 'locked'], true);
   }
   return state.setIn(['players', playerIndex, 'locked'], false);
-}
+};
 
 async function increaseExp(stateParam, playerIndex, amountParam) {
   let state = stateParam;
@@ -254,8 +254,7 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
   let exp = player.get('exp');
   let expToReach = player.get('expToReach');
   let amount = amountParam;
-  if(level === 10)
-    return state;
+  if (level === 10) return state;
   while (amount >= 0) {
     // console.log('increaseExp', level, exp, expToReach)
     // console.log(exp, level, expToReach, amount, expToReach > exp + amount);
@@ -269,7 +268,7 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
       break;
     } else { // Leveling up
       level += 1;
-      if(level === 10){
+      if (level === 10) {
         player = player.set('level', level);
         player = player.set('exp', 0);
         player = player.set('expToReach', 'max');
@@ -293,7 +292,7 @@ exports.buyExp = (state, playerIndex) => {
   const gold = state.getIn(['players', playerIndex, 'gold']);
   const newState = state.setIn(['players', playerIndex, 'gold'], gold - 5);
   return increaseExp(newState, playerIndex, 5);
-}
+};
 
 
 /**
@@ -311,8 +310,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   const boardUnits = state.getIn(['players', playerIndex, 'board']);
   const name = piece.get('name');
   const stats = await pokemonJS.getStats(name);
-  if(f.isUndefined(stats.get('evolves_to')))
-    return state;
+  if (f.isUndefined(stats.get('evolves_to'))) return state;
   let pieceCounter = 0;
   let positions = List([]);
   const keysIter = boardUnits.keys();
@@ -354,12 +352,12 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   let piece;
   let state = stateParam;
   if (f.checkHandUnit(fromPosition)) { // from hand
-    console.log('@placePiece placeOnBoard', fromPosition, state.getIn(['players', playerIndex, 'hand']))
+    console.log('@placePiece placeOnBoard', fromPosition, state.getIn(['players', playerIndex, 'hand']));
     piece = state.getIn(['players', playerIndex, 'hand', fromPosition]).set('position', toPosition);
     const newHand = state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'hand'], newHand);
   } else { // from board
-    console.log('@placePiece', fromPosition)
+    console.log('@placePiece', fromPosition);
     console.log('@placePiece board', state.getIn(['players', playerIndex, 'board']));
     piece = state.getIn(['players', playerIndex, 'board', fromPosition]).set('position', toPosition);
     const newBoard = state.getIn(['players', playerIndex, 'board']).delete(fromPosition);
@@ -385,14 +383,12 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   return state;
 }
 
-exports._placePiece = async (stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') => {
-  return placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap);
-}
+exports._placePiece = async (stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') => placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap);
 
 /**
  * Get first available spot on hand
  */
-async function getFirstAvailableSpot(state, playerIndex){
+async function getFirstAvailableSpot(state, playerIndex) {
   const hand = state.getIn(['players', playerIndex, 'hand']);
   // console.log('@getFirst', hand.keys().value)
   for (let i = 0; i < 8; i++) {
@@ -412,13 +408,11 @@ async function getFirstAvailableSpot(state, playerIndex){
  * * Assumes not bench is full
  */
 async function withdrawPiece(state, playerIndex, piecePosition) {
-  let benchPosition = await getFirstAvailableSpot(state, playerIndex);
+  const benchPosition = await getFirstAvailableSpot(state, playerIndex);
   return placePiece(state, playerIndex, piecePosition, benchPosition, false);
 }
 
-exports._withdrawPiece = async (state, playerIndex, piecePosition) => {
-  return withdrawPiece(state, playerIndex, piecePosition);
-}
+exports._withdrawPiece = async (state, playerIndex, piecePosition) => withdrawPiece(state, playerIndex, piecePosition);
 
 /**
  * When units are sold, when level 1, a level 1 unit should be added to discarded_pieces
@@ -469,9 +463,7 @@ async function sellPiece(state, playerIndex, piecePosition) {
   return discardBaseUnits(newState, piece.get('name'));
 }
 
-exports._sellPiece = (state, playerIndex, piecePosition) => {
-  return sellPiece(state, playerIndex, piecePosition);
-}
+exports._sellPiece = (state, playerIndex, piecePosition) => sellPiece(state, playerIndex, piecePosition);
 
 /**
  * Get first available spot at max range away from closest enemy
@@ -655,7 +647,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
       case 'buff':
         if (!f.isUndefined(args)) { // Args: Use buff on self on board [buffType, amount]
           const buffValue = newBoard.getIn([unitPos, args.get(0)]) + args.get(1);
-          console.log('@useAbility - buff', buffValue)
+          console.log('@useAbility - buff', buffValue);
           newBoard = newBoard.setIn([unitPos, args.get(0)], buffValue);
           effectMap = effectMap.setIn([unitPos, `buff${args.get(0)}`], buffValue);
         }
@@ -787,8 +779,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     // TODO Check aoe / notarget here instead
     // console.log('@spell ability', ability)
     // TODO: Some ability still crashes - oddish fixed
-    if(f.isUndefined(ability)){
-      console.log(unit.get('name') + ' buggy ability')
+    if (f.isUndefined(ability)) {
+      console.log(`${unit.get('name')} buggy ability`);
     }
     const range = (!f.isUndefined(ability.get('acc_range')) && !f.isUndefined(ability.get('acc_range').size)
       ? ability.get('acc_range').get(1) : abilitiesJS.getAbilityDefault('range'));
@@ -1288,7 +1280,7 @@ async function battleTime(stateParam) {
     // console.log('@battleTime newBoard, finished board result', newBoard); // Good print, finished board
     const round = state.get('round');
     const newStateAfterBattle = await endBattle(state, index, winner, newBoard, true, enemy);
-    if(newStateAfterBattle.get('round') === round + 1){
+    if (newStateAfterBattle.get('round') === round + 1) {
       state = newStateAfterBattle;
     } else {
       state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
@@ -1333,7 +1325,7 @@ async function npcRound(stateParam, npcBoard) {
     // TODO Npc: Give bonuses for beating npcs, special money or something
     const round = state.get('round');
     const newStateAfterBattle = await endBattle(state, currentPlayer, winner, newBoard, false);
-    if(newStateAfterBattle.get('round') === round + 1){
+    if (newStateAfterBattle.get('round') === round + 1) {
       state = newStateAfterBattle;
     } else {
       state = state.setIn(['players', currentPlayer], newStateAfterBattle.getIn(['players', currentPlayer]));
@@ -1351,7 +1343,7 @@ async function npcRound(stateParam, npcBoard) {
  * if hand is full, sell cheapest unit
  * Do this until board.size == level
  */
-async function fixTooManyUnits(state, playerIndex){
+async function fixTooManyUnits(state, playerIndex) {
   const board = state.getIn(['players', playerIndex, 'board']);
   // Find cheapest unit
   const iter = board.keys();
@@ -1361,36 +1353,36 @@ async function fixTooManyUnits(state, playerIndex){
   while (!temp.done) {
     const unitPos = temp.value;
     const cost = (await pokemonJS.getStats(board.get(unitPos).get('name'))).get('cost');
-    if(cost < cheapestCost){
+    if (cost < cheapestCost) {
       cheapestCost = cost;
       cheapestCostIndex = List([unitPos]);
-    } else if(cost == cheapestCost) {
-      cheapestCostIndex = cheapestCostIndex.push(unitPos)
+    } else if (cost == cheapestCost) {
+      cheapestCostIndex = cheapestCostIndex.push(unitPos);
     }
     temp = iter.next();
   }
   let chosenUnit;
-  if(cheapestCostIndex.size === 1){
+  if (cheapestCostIndex.size === 1) {
     chosenUnit = cheapestCostIndex.get(0);
   } else {
     // TODO Check the one that provides fewest combos
     // Temp: Random from cheapest
     const chosenIndex = Math.random() * cheapestCostIndex.size;
-    chosenUnit = cheapestCostIndex.get(chosenIndex); 
+    chosenUnit = cheapestCostIndex.get(chosenIndex);
   }
   // Withdraw if possible unit, otherwise sell
   let newState;
   // TODO: Inform Client about update
-  if(state.getIn(['players', playerIndex, 'hand']).size < 8){
-    console.log('WITHDRAWING PIECE', board.get(chosenUnit).get('name'))
+  if (state.getIn(['players', playerIndex, 'hand']).size < 8) {
+    console.log('WITHDRAWING PIECE', board.get(chosenUnit).get('name'));
     newState = await withdrawPiece(state, playerIndex, chosenUnit);
   } else {
-    console.log('SELLING PIECE', board.get(chosenUnit).get('name'))
+    console.log('SELLING PIECE', board.get(chosenUnit).get('name'));
     newState = await sellPiece(state, playerIndex, chosenUnit);
   }
   const newBoard = newState.getIn(['players', playerIndex, 'board']);
   const level = newState.getIn(['players', playerIndex, 'level']);
-  if(newBoard.size > level) {
+  if (newBoard.size > level) {
     return fixTooManyUnits(newState, playerIndex);
   }
   return newState.getIn(['players', playerIndex]);
@@ -1408,7 +1400,7 @@ exports.battleSetup = async (stateParam) => {
     const playerIndex = temp.value;
     const board = state.getIn(['players', playerIndex, 'board']);
     const level = state.getIn(['players', playerIndex, 'level']);
-    if(board.size > level) {
+    if (board.size > level) {
       const newPlayer = await fixTooManyUnits(state, playerIndex);
       state = state.setIn(['players', playerIndex], newPlayer);
     }
@@ -1427,7 +1419,7 @@ exports.battleSetup = async (stateParam) => {
     default:
       return (await battleTime(state)).set('preBattleState', state);
   }
-}
+};
 
 /**
  * *This is not a player made action, time based event for all players
@@ -1521,7 +1513,7 @@ async function calcDamageTaken(boardUnits) {
 async function endBattle(stateParam, playerIndex, winner, finishedBoard, isPvP, enemyPlayerIndex) {
   let state = stateParam;
   // console.log('@endBattle', state, playerIndex, winner, enemyPlayerIndex);
-  if(isPvP){
+  if (isPvP) {
     const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
     if (winner) {
       state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
