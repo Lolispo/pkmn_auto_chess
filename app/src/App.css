@@ -63,8 +63,10 @@
 
 .markedUnit {
   border: 1px solid yellow;
-  background-color: rgb(59, 56, 56);
+  background-color: rgb(94, 89, 89);
 }
+
+:focus { outline: none; }
 
 .text_shadow {
   color: white;

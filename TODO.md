@@ -137,11 +137,13 @@ Hold sessions connected to socketids
 
 ## Frontend
 
-Ready: Show number of connected players on start game button
+Timer
 
-Double check if keyPress events should be on Cell
-    A lot of events being activated at same time (64)!
-    Maybe for placePiece, but not the others?
+Battle
+
+Sound
+
+Ready: Show number of connected players on start game button
 
 Units with big animations: Moltres Pidgeotto
 
