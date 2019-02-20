@@ -1,9 +1,14 @@
 # Pokemon Auto Chess
 
+#### Author: Petter Andersson
+
 Based on the game Dota Auto Chess
 
-Frontend planned in React/Redux environment
+Frontend in React/Redux environment
 
-## Why?
+Backend in NodeJS
 
-Because
+## Unit sheet
+
+Sheet of unit stats and information can be found [here](https://docs.google.com/spreadsheets/d/1ZIxd55wfgdav-15bVCv33NrRvHGXY9IXot63FsUZrgg/)
+

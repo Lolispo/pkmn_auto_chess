@@ -1,29 +1,55 @@
 # TODO
 
-## Check
+## Check in Auto Chess
 
 Cost of dota auto chess upgraded units
     Level 2, type 4 -> sells for 6 (his level) +2 for now
 
 How much hp to lose? 1 point per level of unit
 Definitely not, 6 level 6 units would be 36 hp, more like 14 damage from them (6-0)
+Temp: 1 hp per level
 
-Check exp required for every level
+## Backend
 
-Check how many pieces in auto chess (different pieces)
+Type buffs, add all and test
 
-Decide if wanted:
-Shuffle deck of pieces when 20 (40?) pieces are discarded? Chance for not all pieces should be in every game
+Stop spawning units of certain type for player if has level 3
+    prevent getting more units of same type if you have max, level 3, of that type
 
-## Refactor
+Aoe damage logic
 
-game.js either contain functions for front-end interaction OR state manipulation, not both!
+Matchup system
+    
+## Frontend
 
-Get all close interactions with state separated from functions used further up
+Timer
+
+Battle
+
+Sound
+
+Max size of units
+    Units with big animations: Moltres Pidgeotto
+
+Ready: Show number of connected players on start game button
+
+Shop:
+    Modal
+    Better outline / card holder
+    Open and close shop with space
+
+Hover: 
+    Show information about type bonuses on hover and evolution
+
+## Communication
+
+Prevent requests if game isn't active
+
+Hold sessions connected to socketids
 
 ## Tests
 
-Test weaknesses applying correctly
+More tests in general, easier to test in theory when frontend done
 
 Test combos/buffs from types
 
@@ -31,24 +57,7 @@ Abilities:
 Test dot damage functionality
 Test lifesteal functionality
 
-## General
-
-Only have same amount of units on board for battle as level
-
-Aoe damage logic
-
-Rival: Rival battle when playing against a certain opponent
-    > 3 battles
-    Alt1: Either when playing against the person you played the most
-        Temp implementation makes this irrelevant
-    Alt2: The person you lost to the most 
-        Problem: People won't be rivals against each other
-    Revamp over enemy matchups should be done to make this interesting
-
-
-Mapper: Json object to transfer to fron-end with relevant information
-
-Socket.io connection, simple listeners that connect to the functions
+## Javascript Check me
 
 check Promise.all alternative for loops
 
@@ -60,52 +69,49 @@ cleanup async usage, using Promise.all in places where multíple calculations ar
     // Promise.all() allows us to send all requests at the same time. 
     let results = await Promise.all([ getValueA, getValueB, getValueC ]); 
 
+## Cleanup / Refactor
+
+Separate logic into more files if possible
+
+Remove unused variables in imports
+
+Cleanup comments, better structure
+
+Potential to use more functional code, map/filter
+
+## Optional Features
+
+Shuffle deck of pieces when 20 (40?) pieces are discarded? Chance for not all pieces should be in every game
+
+eevee:
+    Placement of eevees decides evolution!
+    Evolution based on amount of unit types on board
+    Temp: Random
+
+## New features to add (Not as core)
+
+Mapper: Json object to transfer to front-end with relevant information
+    socketcontroller handles communication
+    pieces shouldn't be reachable on the client
+    session based saving of pieces instead? #Communication
+
 Find a way of choosing pokemon in play
+    (Filtered list makes this less important)
     shouldn't play all 151 at once
     1: Ban base types in beginning
     2: Choose (20-40) units to start with
 
-Alt: 
-    Focus on many units with many evolutions
-    Pro: Doesn't require manual labour of setting stats
-    Easier to say if evolution exist or not
-    Interesting gameplay aspect?
-    Might want 2 levels for some (Level 5 units)
-Auto chess: Jynx1 jynx2 jynx3
-    drawbacks: jynx2 jynx3
-    Jynx2 = jynx level 50, Jynx3 = jynx level 100
-    Find math for getting a better version of one pokemon that is balanced and comparable to others evolving
+#### Rival: Rival battle when playing against a certain opponent
+    > 3 battles
+    Alt1: Either when playing against the person you played the most
+        Temp implementation makes this irrelevant
+    Alt2: The person you lost to the most 
+        Problem: People won't be rivals against each other
+    Alt1 Best: Revamp over enemy matchups should be done to make this interesting
 
-eevee:
-    Evolution based on amount of unit types on board
-    Placement of eevees decides evolution!
+#### Items
 
-prevent getting more units of same type if you have max of that type
-
-## Npc rounds / Item rounds
-
-Gym leader rounds:
-    gives special item money,
-    max 3 hp round loss
-    can give item (low chance)
-    10: Rock: Geodude, Onix
-    15: Water: Staryu, Starmie
-    20: Electric: voltorb, pikachu, raichu
-    25: Grass: victreebel, tangela, vileplume
-    30: Poison: koffing, muk, koffing, weezing
-    35: Psychic: kadabra, mr. mime, venomoth, alakazam
-    40: Fire: Growlithe, ponyta, rapidash, arcanine
-    45: Ground: rhyhorn, dugtrio, nidoqueen, nidoking, rhydon
-    50: Ice: dewgong, cloyster, slowbro, jynx, lapras
-    55: Fighting + Onix: Onix, hitmonlee, hitmonchan, onix, machamp
-    60: Ghost + goldbat/arbok: Gengar, golbat, haunter, arbok, gengar
-    65: Flying + Dragon: Gyarados, Dragonair, aerodactyl, dragonite
-    70: Final Boss: Pidgeot, alakazam, rhydon, arcanine, exeggutor, blastoise
-
-Shop rounds: 
-    Buy items for item money in item shop
-
-## Items
+More inspiration can be found [here](https://www.reddit.com/r/AutoChess/comments/ar4cjh/pokemon_autochess_concept/)
 
 1 item per pokemon
 
@@ -116,51 +122,17 @@ Rare Candy - 2 less pokemon required for
 leftovers/lifesteal functionality
     item / type buff
 
+#### Npc rounds / Item rounds
 
-## Everywhere
+Gym leader rounds:
+    gives special item money,
+    max 3 hp round loss
+    can give item (low chance)
 
-Remove unused variables in imports
+Shop rounds: 
+    Buy items for item money in item shop
 
-Cleanup comments, better structure
-
-More tests
-
-Potential to use more functional code, map/filter
-
-## Backend
-
-Stop spawning units of certain type for player if has level 3
-
-Prevent requests if game isn't active
-
-Hold sessions connected to socketids
-
-## Frontend
-
-Timer
-
-Battle
-
-Sound
-
-Ready: Show number of connected players on start game button
-
-Units with big animations: Moltres Pidgeotto
-
-Shop:
-    Modal
-    Better outline / card holder
-
-Hover: 
-    Show information about type bonuses on hover and evolution
-
-Placement: Currently Click and Q
-
-Withdraw: W
-
-Sell: Click and E
-
-## Communication
+## Communication Schema: 
 
 Client                  Server
 player ready ->

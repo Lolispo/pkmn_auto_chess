@@ -1413,14 +1413,16 @@ exports.battleSetup = async (stateParam) => {
   }
   const round = state.get('round');
   switch (gameConstantsJS.getRoundType(round)) {
-    case 'pvp':
-      return (await battleTime(state)).set('preBattleState', state);
     case 'npc':
       const boardNpc = await gameConstantsJS.getSetRound(round);
       return (await npcRound(state, boardNpc)).set('preBattleState', state);
     case 'gym':
       const boardGym = await gameConstantsJS.getSetRound(round);
       return (await npcRound(state, boardGym)).set('preBattleState', state);
+    case 'shop':
+    case 'pvp':
+    default:
+      return (await battleTime(state)).set('preBattleState', state);
   }
 }
 
