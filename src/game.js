@@ -257,7 +257,7 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
   if(level === 10)
     return state;
   while (amount >= 0) {
-    console.log('increaseExp', level, exp, expToReach)
+    // console.log('increaseExp', level, exp, expToReach)
     // console.log(exp, level, expToReach, amount, expToReach > exp + amount);
     if (expToReach > exp + amount) { // not enough exp to level up
       exp += amount;
@@ -282,7 +282,7 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
       exp = 0;
     }
   }
-  console.log('increaseExp leaving', level, exp, expToReach)
+  // console.log('increaseExp leaving', level, exp, expToReach)
   return state;
 }
 

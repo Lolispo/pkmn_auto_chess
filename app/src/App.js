@@ -344,7 +344,7 @@ class App extends Component {
         <div>
           <div>
             <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
-            <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + this.props.exp + '/' + this.props.expToReach + ')'}</span>
+            <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>
           </div>
           <div className='flex'>
             <div>
