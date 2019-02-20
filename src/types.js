@@ -8,6 +8,9 @@ const increaseSpeed = (unit, bonus) => unit.set('speed', unit.get('speed') - bon
 const increaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') + +bonus);
 const increaseAttack = (unit, bonus) => unit.set('attack', +unit.get('attack') + +bonus);
 const increaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense') + +bonus);
+const decreaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense') - +bonus);
+
+// TODO: Add hp reg mechanic?
 
 /**
  * req: Required amount of units to receive bonus
@@ -25,17 +28,11 @@ const typeMap = new Map({
       'Rock',
       'Steel',
     ]),
-    desc: 'Increases Hp',
-    req: List([3, 6, 9]),
-    bonusAmount: List([20, 40, 60]),
-    bonusType: 'bonus',
-    bonus: (unit, bonus) => increaseHp(unit, bonus),
-    /*
-    All stages of game, 15 max ish (Could remove some, farfetchd, ditto, porygon)
-    [4, 7, 10] hp for all
-    pidgey rattata spearow clefairy jigglypuff meowth farfetchd doduo
-    lickitung chansey kangaskhan tauros ditto eevee porygon snorlax
-    */
+    desc: 'Increases Hp for all units',
+    req: List([4, 7, 10]),
+    bonusAmount: List([15, 30, 45]),
+    bonusType: 'allBonus',
+    allBonus: (unit, bonus) => increaseHp(unit, bonus),
   }),
   fire: Map({
     name: 'fire',
@@ -51,13 +48,12 @@ const typeMap = new Map({
       'Rock',
       'Dragon',
     ]),
-    desc: 'Increases attack damage',
+    desc: 'Increases attack damage for fire types',
     req: List([2, 4, 6]),
     bonusAmount: List([10, 20, 30]),
     bonusType: 'bonus',
     bonus: (unit, bonus) => increaseAttack(unit, bonus),
     /*
-    charmander, vulpix, growlithe, moltres, magmar, flareon ponyta
     Increase burn chance for abilities? (currently 10%)
     [3, 6] might be better
     */
@@ -74,17 +70,15 @@ const typeMap = new Map({
       'Grass',
       'Dragon',
     ]),
-    desc: 'Increases attack damage for all',
-    req: List([3, 6, 9]),
+    desc: 'Increases speed for all water type units',
+    req: List([4, 7, 10]),
     bonusAmount: List([15, 30, 45]),
     bonusType: 'allBonus',
-    allBonus: (unit, bonus) => increaseAttack(unit, bonus),
+    allBonus: (unit, bonus) => increaseSpeed(unit, bonus),
     /*
-    All bonus (something) defense/attack
-    18 units: Remove, goldeen, krabby, tentacool
+    All bonus defense
+    Could be better
     [4, 7, 10]
-    psyduck poliwag tentacool slowpoke krabby omanyte kabuto
-    squirtle, seel, shellder, horsea, goldeen, staryu, magikarp, vaporeon, lapras
     */
   }),
   electric: Map({
@@ -99,14 +93,10 @@ const typeMap = new Map({
       'Dragon',
     ]),
     desc: 'Increases speed for all',
-    req: List([3, 6, 9]),
+    req: List([2,4,6]),
     bonusAmount: List([20, 40, 60]),
     bonusType: 'allBonus',
     allBonus: (unit, bonus) => increaseSpeed(unit, bonus),
-    /*
-    pikachu magnemite voltorb jolteon electabuzz zapdos
-    [2,4,6]
-    */
   }),
   grass: Map({
     name: 'grass',
@@ -124,15 +114,11 @@ const typeMap = new Map({
       'Dragon',
       'Steel',
     ]),
-    desc: 'Increases speed',
+    desc: 'Increases defense for all grass type units',
     req: List([2, 4, 6]),
     bonusAmount: List([20, 40, 60]),
     bonusType: 'bonus',
-    bonus: (unit, bonus) => increaseSpeed(unit, bonus),
-    /*
-    oddish, bellsprout, exeggcute, tangela paras
-    [2,4,6]
-    */
+    bonus: (unit, bonus) => increaseDefense(unit, bonus),
   }),
   ice: Map({
     name: 'ice',
@@ -148,11 +134,11 @@ const typeMap = new Map({
       'Ice',
       'Steel',
     ]),
-    /*
-    dewgong, articuno, cloyster, jynx, lapras
-    Should be strong, [2,4,6]
-    Buff for all
-    */
+    desc: 'Increases Hp for all units',
+    req: List([2, 4, 6]),
+    bonusAmount: List([30, 60, 90]),
+    bonusType: 'allBonus',
+    allBonus: (unit, bonus) => increaseHp(unit, bonus),
   }),
   fighting: Map({
     name: 'fighting',
@@ -170,11 +156,11 @@ const typeMap = new Map({
       'Bug',
       'Fairy',
     ]),
-    /*
-    mankey, poliwrath, machop, hitmonlee chan
-    Damage a lot for Fighters?
-    [2,4,6]
-    */
+    desc: 'Increases Damage for all fighting type units',
+    req: List([2, 4, 6]),
+    bonusAmount: List([20, 40, 60]),
+    bonusType: 'bonus',
+    bonus: (unit, bonus) => increaseAttack(unit, bonus),
   }),
   poison: Map({
     name: 'poison',
@@ -188,11 +174,13 @@ const typeMap = new Map({
       'Rock',
       'Ghost',
     ]),
+    desc: 'Increases defense for all poison typed units',
+    req: List([3,6,9]),
+    bonusAmount: List([20, 40, 60]),
+    bonusType: 'bonus',
+    bonus: (unit, bonus) => increaseDefense(unit, bonus),
     /*
-    weedle bulba ekans, nidoranx2, zubat oddish venonat bellsprout tentacool grimer gastly koffing
     early game
-    Buff for all of same type
-    [3,6,9]
     */
   }),
   ground: Map({
@@ -208,12 +196,11 @@ const typeMap = new Map({
       'Grass',
       'Bug',
     ]),
-    /*
-    sandshrew (nidoking/queen) diglett geodude onix cubone rhyhorn
-    [3, 6, 9]
-    [2, 4, 6] might be too strong
-
-    */
+    desc: 'Increases defense for all ground typed units',
+    req: List([2, 4, 6]),
+    bonusAmount: List([30, 60, 90]),
+    bonusType: 'bonus',
+    bonus: (unit, bonus) => increaseDefense(unit, bonus),
   }),
   flying: Map({
     name: 'flying',
@@ -227,13 +214,11 @@ const typeMap = new Map({
       'Rock',
       'Steel',
     ]),
-    /*
-    Increases speed for all flyers
-    [3, 6, 9]
-    [4, 7, 10]
-    charizard, butterfree, pidgey, spearow, zubat, farfetchd, doduo,
-    scyther gyarados aerodactyl 3xbirds dragonite
-    */
+    desc: 'Increases defense for all ground typed units',
+    req: List([3, 6, 9]),
+    bonusAmount: List([30, 60, 90]),
+    bonusType: 'bonus',
+    bonus: (unit, bonus) => increaseSpeed(unit, bonus),
   }),
   psychic: Map({
     name: 'psychic',
@@ -245,11 +230,11 @@ const typeMap = new Map({
       'Psychic',
       'Steel',
     ]),
-    /*
-    abra gastly drowzee slowbro exeggcute starmie mrmime jynx mew mewtwo
-    [2, 4, 6] Too strong?
-    Undead buff? Decreases enemy defense
-    */
+    desc: 'Decreases defense for all enemy units',
+    req: List([3, 6, 9]),
+    bonusAmount: List([20, 40, 60]),
+    bonusType: 'enemyDebuff',
+    enemyDebuff: (unit, bonus) => decreaseDefense(unit, bonus),
   }),
   bug: Map({
     name: 'bug',
@@ -267,9 +252,13 @@ const typeMap = new Map({
       'Steel',
       'Fairy',
     ]),
+    desc: 'Increases Hp for all bug typed units',
+    req: List([2, 4]),
+    bonusAmount: List([20, 40, 60]),
+    bonusType: 'bonus',
+    bonus: (unit, bonus) => increaseHp(unit, bonus),
     /*
-    [2, 4] Druid buff
-    caterpie weedle paras venonat scyther pinsir
+    [2, 4] Druid buff TODO
     */
   }),
   rock: Map({
@@ -285,10 +274,11 @@ const typeMap = new Map({
       'Ground',
       'Steel',
     ]),
-    /*
-    geodude rhyhorn onix omanyte kabuto aerodactly
-    [2, 4, 6] Increase Defense
-    */
+    desc: 'Increases attack damage for all rock typed units',
+    req: List([2, 4, 6]),
+    bonusAmount: List([15, 30, 45]),
+    bonusType: 'bonus',
+    bonus: (unit, bonus) => increaseDefense(unit, bonus),
   }),
   ghost: Map({
     name: 'ghost',
@@ -298,9 +288,8 @@ const typeMap = new Map({
     ]),
     ineffectiveAgainst: 'Dark',
     /*
-    gastly
-    Demon ? Only strong if only ghost on board, +50% dmg
-    Evasion ? (Since ghost hard to hit)
+    TODO: Demon ? Only strong if only ghost on board, +50% dmg
+          Evasion ? (Since ghost hard to hit)
     */
   }),
   dragon: Map({
@@ -342,7 +331,6 @@ const typeMap = new Map({
       'Steel',
     ]),
     /*
-    Magnemite
     Defense for steel units
     No combo, simple bonus
     */
