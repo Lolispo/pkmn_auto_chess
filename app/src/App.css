@@ -54,7 +54,7 @@
 }
 
 .cell {
-  border: 1px solid #fff;
+  border: 1px solid lightblue;
   border-radius: 5px;
   width: 70px; 
   height: 70px;
@@ -73,6 +73,10 @@
   1px -1px 0 #000,
   -1px 1px 0 #000,
   1px 1px 0 #000;  
+}
+
+.hidden {
+  display: none;
 }
 
 .normalButton {
@@ -96,7 +100,7 @@ body {
   margin: 20px;
   padding: 0;
   font-family: sans-serif;
-  background: white;
+  background: lightblue;
   /*background-image: url(https://i.imgur.com/VOPXdoh.jpg) no-repeat;*/
 }
 

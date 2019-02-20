@@ -137,11 +137,13 @@ Hold sessions connected to socketids
 
 ## Frontend
 
+Ready: Show number of connected players on start game button
+
+Double check if keyPress events should be on Cell
+    A lot of events being activated at same time (64)!
+    Maybe for placePiece, but not the others?
+
 Units with big animations: Moltres Pidgeotto
-
-Combine ready buttons
-
-Hide buttons ready and start when game is live
 
 Shop:
     Modal

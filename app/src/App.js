@@ -266,14 +266,11 @@ class App extends Component {
   
   // Event logic
 
-  readyButton = () => {
-    console.log('@readyButton');
-    ready();
-  };
-
-  unreadyButton = () => {
-    console.log('@unreadyButton');
-    unready();
+  toggleReady = () => {
+    console.log('@toggleReady', this.props.ready);
+    const { dispatch } = this.props;
+    dispatch({type: 'TOGGLE_READY'});
+    this.props.ready ? unready() : ready();
   };
 
   startGame = () => {
@@ -316,15 +313,11 @@ class App extends Component {
     //return 'Map { "x": ' + x + ', "y": ' + y + ' }';
   }
 
-  /**
-   * Shop add as modal
-   */
   render() {
     return <div>
       <div> 
-        <button className='normalButton' onClick={this.readyButton}>The button of ready</button>
-        <button className='normalButton' onClick={this.unreadyButton}>The button of unreadying</button>
-        <button className='normalButton' onClick={this.startGame}>StartGame</button>
+        <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
+        <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>StartGame</button>
       </div>
       <div>
       <div className='text_shadow'>Message: {this.props.message}</div>
@@ -385,6 +378,7 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   index: state.index,
+  ready: state.ready,
   allReady: state.allReady,
   message: state.message,
   storedState: state.storedState,

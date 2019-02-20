@@ -3,6 +3,7 @@ import { socket } from './index';
 const reducer = (
   state = {
     index: -1,
+    ready: false,
     allReady: false,
     message: 'default',
     storedState: {},
@@ -42,9 +43,7 @@ const reducer = (
       };
       console.log(action.newState)
       console.log(state);
-      
-      // Send state to server
-      socket && socket.emit('UPDATE_STATE', state); 
+
       break;
     case 'NEW_PIECES':
       console.log('@New Pieces', action.newState.discarded_pieces)
@@ -77,6 +76,9 @@ const reducer = (
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);
       state = { ...state, index: action.index}
+      break;
+    case 'TOGGLE_READY':
+      state = { ...state, ready: !state.ready}
       break;
     case 'ALL_READY':
       console.log('AllReady', action.value)
