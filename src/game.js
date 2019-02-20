@@ -178,7 +178,7 @@ exports._refreshShop = async (stateParam, index) => {
  */
 async function getBoardUnit(name, x, y) {
   const unitInfo = await pokemonJS.getStats(name);
-  console.log('@getBoardUnit', name, unitInfo)
+  // console.log('@getBoardUnit', name, unitInfo)
   return Map({
     name,
     display_name: unitInfo.get('display_name'),
@@ -311,7 +311,6 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   const boardUnits = state.getIn(['players', playerIndex, 'board']);
   const name = piece.get('name');
   const stats = await pokemonJS.getStats(name);
-  console.log('evolvesTo: ', stats.get('evolvesTo'))
   if(f.isUndefined(stats.get('evolves_to')))
     return state;
   let pieceCounter = 0;
@@ -656,6 +655,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
       case 'buff':
         if (!f.isUndefined(args)) { // Args: Use buff on self on board [buffType, amount]
           const buffValue = newBoard.getIn([unitPos, args.get(0)]) + args.get(1);
+          console.log('@useAbility - buff', buffValue)
           newBoard = newBoard.setIn([unitPos, args.get(0)], buffValue);
           effectMap = effectMap.setIn([unitPos, `buff${args.get(0)}`], buffValue);
         }

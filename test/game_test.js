@@ -743,18 +743,22 @@ describe('game state', () => {
       const unit = await createBattleUnit((await getBoardUnit('rattata', 1, 1)), f.pos(1,1), 0);
       const unit2 = await createBattleUnit((await getBoardUnit('pidgey', 1, 2)), f.pos(1,2), 0);
       const unit3 = await createBattleUnit((await getBoardUnit('spearow', 1, 3)), f.pos(1,3), 0);
+      const unit4 = await createBattleUnit((await getBoardUnit('snorlax', 1, 4)), f.pos(1,4), 0);
       const newBoard = Map({})
       .set(f.pos(1,1), unit)
       .set(f.pos(1,2), unit2)
-      .set(f.pos(1,3), unit3);
+      .set(f.pos(1,3), unit3)
+      .set(f.pos(1,4), unit4);
       const markedBoard = await markBoardBonuses(newBoard);
-      assert.equal(markedBoard.get(f.pos(1,1)).get('buff').get(0), 'normal');
-      assert.equal(markedBoard.get(f.pos(1,2)).get('buff').get(0), 'normal');
-      assert.equal(markedBoard.get(f.pos(1,3)).get('buff').get(0), 'normal');
+      assert.equal(markedBoard.get(f.pos(1,1)).get('buff').get(0), 'normal +15');
+      assert.equal(markedBoard.get(f.pos(1,2)).get('buff').get(0), 'normal +15');
+      assert.equal(markedBoard.get(f.pos(1,3)).get('buff').get(0), 'normal +15');
+      assert.equal(markedBoard.get(f.pos(1,4)).get('buff').get(0), 'normal +15');
       // TODO: Check that the normal buff is applied
-      assert.equal(markedBoard.get(f.pos(1,1)).get('hp'), (await pokemonJS.getStats('rattata')).get('hp') + 20);
-      assert.equal(markedBoard.get(f.pos(1,2)).get('hp'), (await pokemonJS.getStats('pidgey')).get('hp') + 20);
-      assert.equal(markedBoard.get(f.pos(1,3)).get('hp'), (await pokemonJS.getStats('spearow')).get('hp') + 20);
+      assert.equal(markedBoard.get(f.pos(1,1)).get('hp'), (await pokemonJS.getStats('rattata')).get('hp') + 15);
+      assert.equal(markedBoard.get(f.pos(1,2)).get('hp'), (await pokemonJS.getStats('pidgey')).get('hp') + 15);
+      assert.equal(markedBoard.get(f.pos(1,3)).get('hp'), (await pokemonJS.getStats('spearow')).get('hp') + 15);
+      assert.equal(markedBoard.get(f.pos(1,4)).get('hp'), (await pokemonJS.getStats('snorlax')).get('hp') + 15);
     });
     it('markBoardBonuses team impact', async () => {
       // TODO
@@ -781,8 +785,8 @@ describe('game state', () => {
       state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
       state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
-      state = await battleTime(state);
-      f.print(state)
+      state = (await battleTime(state)).get('state');
+      // f.print(state)
     });
     it('battleTime Weedle battle', async () => {
       let state = await initEmptyState(2, List(['charmander', 'oddish', 'paras', 'ponyta', 'vulpix', 'caterpie', 'weedle']));
@@ -796,8 +800,8 @@ describe('game state', () => {
       state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
       state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
-      state = await battleTime(state);
-      f.print(state)
+      state = (await battleTime(state)).get('state');
+      // f.print(state)
     });
     it('battleTime Big', async () => {
       let state = await initEmptyState(2);
@@ -811,20 +815,20 @@ describe('game state', () => {
       state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
       state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
-      state = await battleTime(state);
-      f.print(state)
+      state = (await battleTime(state)).get('state');
+      // f.print(state)
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(1,2))
-      state = await battleTime(state);
-      f.print(state)
+      state = (await battleTime(state)).get('state');
+      // f.print(state)
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(2,1))
       state = await placePiece(state, 1, f.pos(0), f.pos(2,1))
-      state = await battleTime(state);
-      f.print(state)
+      state = (await battleTime(state)).get('state');
+      // f.print(state)
     });
   });
   describe('battleSetup', () => {
@@ -844,24 +848,24 @@ describe('game state', () => {
       state = await buyUnit(state, 1, 2);
       state = await placePiece(state, 0, f.pos(0), f.pos(2,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(2,2))
-      state = await battleSetup(state);
+      state = (await battleSetup(state)).get('state');
       // f.print(state)
       state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
       state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
-      state = await battleSetup(state);
+      state = (await battleSetup(state)).get('state');
       // f.print(state)
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(1,2))
       state = await placePiece(state, 1, f.pos(0), f.pos(1,2))
-      state = await battleSetup(state);
-      f.print(state)
+      state = (await battleSetup(state)).get('state');
+      // f.print(state)
       state = await buyUnit(state, 0, 1);
       state = await buyUnit(state, 1, 1);
       state = await placePiece(state, 0, f.pos(0), f.pos(2,1))
       state = await placePiece(state, 1, f.pos(0), f.pos(2,1))
-      state = await battleSetup(state);
-      f.print(state)
+      state = (await battleSetup(state)).get('state');
+      // f.print(state)
     });
   });
 });
