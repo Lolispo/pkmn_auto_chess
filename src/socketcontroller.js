@@ -7,7 +7,7 @@ const pokemonJS = require('./pokemon');
 const abilitiesJS = require('./abilities');
 
 let nextPlayerIndex = 0;
-let connectedPlayers = Map({});
+let connectedPlayers = Map({}); // TODO: Make map bind to session ids
 let readyList = Map({});
 let counter = 1; // 0, 1 is for testing alone
 let prepBattleState;
