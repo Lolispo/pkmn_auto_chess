@@ -68,8 +68,11 @@ export const giveId = () =>
 export const startGame = () => 
   socket.emit('START_GAME');
 
-export const toggleLock = (state) => 
-  socket.emit('TOGGLE_LOCK', state);
+export const toggleLock = (state) => {
+  if(state.players) {
+    socket.emit('TOGGLE_LOCK', state);
+  }
+}
 
 export const buyUnit = (state, pieceIndex) => {
   socket.emit('BUY_UNIT', state, pieceIndex);  

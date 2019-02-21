@@ -8,6 +8,7 @@ import './App.css';
 import lockedLock from './assets/lockedLock.png';
 import openLock from './assets/openLock.png';
 import goldCoin from './assets/goldCoin.png';
+import refreshShopImage from './assets/refreshShop.png';
 // import { ifError } from 'assert';
 
 class PokemonImage extends Component{
@@ -387,31 +388,36 @@ class App extends Component {
       let evolves_to = '';
       if(s.evolves_from) {
         evolves_from = <span className='flex'>
-          <span className='paddingRight5'>Evolves from: </span>
-          <PokemonImage name={s.evolves_from} sideLength={30}/>
+          <span className='paddingRight5 marginTop15'>Evolves from: </span>
+          <PokemonImage name={s.evolves_from} sideLength={40}/>
         </span>;
       }
       if(s.evolves_to) {
         evolves_to = <span className='flex'>
-          <span className='paddingRight5'>Evolves to: </span>
-          <PokemonImage name={s.evolves_to} sideLength={30}/>
+          <span className='paddingRight5 marginTop15'>Evolves to: </span>
+          <PokemonImage name={s.evolves_to} sideLength={40}/>
         </span>
       }
       const content = <div className='center'>
-        <div className='textAlignCenter'>{(Array.isArray(s.type) ? 
+        <div className='textAlignCenter'>
+        {(Array.isArray(s.type) ? 
             <div>
               <span className={`type typeLeft ${s.type[0]}`}>{s.type[0]}</span>
               <span className={`type ${s.type[1]}`}>{s.type[1] + '\n'}</span>
             </div>
           : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
         </div>
-        <span className='center'>{`Hp: ${s.hp}\n`}</span>
-        <span>{`Attack: ${s.attack}\n`}</span>
-        <span>{`Defense: ${s.defense}\n`}</span>
-        <span>{`Speed: ${s.speed}\n`}</span>
-        <span className={`type ${s.abilityType}`}>{`Ability: ${s.ability}\n`}</span>
-        {evolves_from}
-        {evolves_to}
+        <div style={{paddingTop: '15px'}}>
+          <span className='center'>{`Hp: ${s.hp}\n`}</span>
+          <span>{`Attack: ${s.attack}\n`}</span>
+          <span>{`Defense: ${s.defense}\n`}</span>
+          <span>{`Speed: ${s.speed}\n`}</span>
+          <span className={`type ${s.abilityType}`}>{`Ability: ${s.ability}\n`}</span>
+        </div>
+        <div>
+          {evolves_from}
+          {evolves_to}
+        </div>
       </div>
       return content;
     }
@@ -419,14 +425,14 @@ class App extends Component {
 
   selectedUnitInformation = () => {
     const className = 'center text_shadow infoPanel';
-    const noSelected = <div className={`centerWith50 ${className}`} style={{paddingTop: '20px'}}>Empty</div>
+    const noSelected = <div className={`${className}`} style={{paddingTop: '40px', paddingLeft: '18px'}}>No unit selected</div>
     if(!isUndefined(this.props.selectedUnit)){
       let pokemon = (this.props.selectedUnit.isBoard ? this.props.myBoard[this.props.selectedUnit.pos] : this.props.myHand[this.props.selectedUnit.pos]);
       if(pokemon){
         const pokeEl= <PokemonImage name={pokemon.name} sideLength={50}/>;
         // console.log('@selectedUnitInformation', pokemon.display_name, pokemon)
         return <div className={className}>
-          <div className='textAlignCenter'>
+          <div className='textAlignCenter' style={{paddingTop: '30px'}}>
             <div>{pokemon.display_name}</div>
             {pokeEl}
           </div>
@@ -439,6 +445,20 @@ class App extends Component {
 
   render() {
     return <div>
+      <div className='centerWith50 flex'>
+        <div className='marginTop5 flex biggerText'>
+          <div>
+            <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
+            <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>
+          </div>
+        </div>
+        <div className='flex' style={{paddingLeft: '65px'}}>
+          <div className='marginTop5 biggerText'>
+            <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
+          </div>
+          <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
+        </div>
+      </div>
       <div className='flex' style={{paddingTop: '10px'}}>
         <div style={{width: '165px'}}>
           <div className='flex'> 
@@ -454,12 +474,6 @@ class App extends Component {
                 {'Message: ' + this.props.message}
               </div>
             </CSSTransitionGroup>
-          </div>
-          <div>
-            <div>
-              <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
-              <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>
-            </div>
           </div>
           <div className = 'centerWith50'>
             <button className='normalButton marginTop5' onClick={this.buyExp}>Buy Exp</button>
@@ -487,29 +501,28 @@ class App extends Component {
                 <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
               </div>
               <div className='flex'>
+                <div className='' style={{paddingTop: '60px', paddingLeft: '24px'}}>
+                  <div>
+                    <img className='lockImage' onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
+                  </div>
+                  <div style={{paddingTop: '10px'}}>
+                    <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>   
+                  </div>
+                </div>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
-                <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='pokemonShopHalf'/>                
+                <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
               </div>
             </div>
-            <div className='flex'>
-              <div>
-                <img className='lockImage' src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
-              </div>
-              <div>
-                <button className='normalButton marginTop5' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
-              </div>
+            {/*<div>
+              <button className='normalButton marginTop5' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
             </div>
             <div>
-              <button className='normalButton marginTop5' onClick={this.refreshShopEvent}>Refresh Shop</button>
-            </div>
-            <div className='flex'>
-              <div className='marginTop5'>
-                <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
-              </div>
-              <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
-            </div>
+            <button className='normalButton marginTop5' onClick={this.refreshShopEvent}>Refresh Shop</button>
+            </div>*/}
           </div>
-          <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
+          <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
+            <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
+          </div>
         </div>
       </div>
       {/*
