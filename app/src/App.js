@@ -356,7 +356,7 @@ class App extends Component {
     }
   }
 
-  refreshShopEvent = (index) => {
+  refreshShopEvent = () => {
     // You have enough money to refresh
     if(this.props.gold >= 2){
       refreshShop(this.props.storedState)
@@ -365,7 +365,7 @@ class App extends Component {
     }
   }
 
-  buyExp = (index) => {
+  buyExp = () => {
     // You have enough money to buy exp
     if(this.props.gold >= 5){
       buyExp(this.props.storedState)
@@ -443,6 +443,17 @@ class App extends Component {
     return noSelected;
   }
 
+  handleKeyPress(event){
+    switch(event.key){
+      case 'd':
+        this.refreshShopEvent();
+        break;
+      case 'f':
+        this.buyExp();
+        break;
+    }
+  }
+
   render() {
     return <div>
       <div className='centerWith50 flex'>
@@ -495,7 +506,7 @@ class App extends Component {
         <div className='paddingLeft5'>
           <div>
             <div>
-              <div className='flex'>
+              <div className='flex' onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='1'>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>

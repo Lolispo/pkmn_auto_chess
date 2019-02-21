@@ -44,6 +44,7 @@ Show permenent buffs at left of board
 
 KeyPress 1-8, binds place unit from that pos index (0-7) to mouseOverId
     Problem: If unit is bought, board is deselected
+    Store all keyDownEvent so they are always active
 
 Bind space toggleShop
 
@@ -85,6 +86,8 @@ Test dot damage functionality
 Test lifesteal functionality
 
 ## Javascript Check me
+
+.bind(this) for functions using self, handleKeyPress
 
 check Promise.all alternative for loops
 
