@@ -18,7 +18,6 @@ Type bonuses on current board
     typeBuffs
     Recalculate and store on piece interactions
 
-
 Stop spawning units of certain type for player if has level 3
     Max 9 units for each player
 
@@ -30,44 +29,22 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
-RefreshShop position
-Second line in shop, better alignment
+Battle
 
 Use Message more
 
-Level text and Gold on top
-
-Bind D refresh
-bind f buy exp
-
 Show permenent buffs at left of board  
 
-KeyPress 1-8, binds place unit from that pos index (0-7) to mouseOverId
-    Problem: If unit is bought, board is deselected
-    Store all keyDownEvent so they are always active
-
-Bind space toggleShop
+Problem: Board or shop needs to be used to use those hot keys
+    Theory would be nice to atleast only require one place where both hotkey groups work
 
 Timer
-
-Battle
 
 Sound
 
 Ready: Show number of connected players on start game button
 
-Shop:
-    Modal
-    Better outline / card holder
-    Open and close shop with space
-
-Detailed information
-    Show information about type bonuses on hover and evolution
-    Hover: 
-    Press, Show information bar to the left
-
 Right side of screen: contain information from other players
-
 
 ## Communication
 
@@ -86,8 +63,6 @@ Test dot damage functionality
 Test lifesteal functionality
 
 ## Javascript Check me
-
-.bind(this) for functions using self, handleKeyPress
 
 check Promise.all alternative for loops
 
@@ -114,6 +89,8 @@ Potential to use more functional code, map/filter
 Type buffs - Add typebuffs from sheets directly
 
 Shuffle deck of pieces when 20 (40?) pieces are discarded? Chance for not all pieces should be in every game
+
+Shop: Modal?
 
 eevee:
     Placement of eevees decides evolution!
