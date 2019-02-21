@@ -61,14 +61,18 @@
 .cell {
   border: 1px solid lightblue;
   border-radius: 5px;
-  width: 70px; 
-  height: 70px;
+  width: 85px; 
+  height: 85px;
   background-color: gray;
+  background: url(https://i.gyazo.com/f5c31403dc3840b9b276c3e8d3e178d3.png) no-repeat;
+  background-size: 85px 85px;
 }
 
 .markedUnit {
   border: 1px solid yellow;
-  background-color: rgb(94, 89, 89);
+  outline-style: groove;
+  outline-color: yellow;
+  outline-width: medium;
 }
 
 :focus { outline: none; }

@@ -12,13 +12,55 @@ import goldCoin from './assets/goldCoin.png';
 
 class PokemonImage extends Component{
 
+  constructor(props) {
+    super(props);
+    this.state = {dimensions: {}, paddingTop: '0px', sideLength: this.props.sideLength};
+    this.onImgLoad = this.onImgLoad.bind(this);
+    this.reduceImageSize = this.reduceImageSize.bind(this);
+    this.calculatePadding = this.calculatePadding.bind(this);
+  }
+
+  onImgLoad({target:img}) {
+    console.log('@onImgLoad - ', img.offsetHeight, 'vs', img.naturalHeight, ', ', img.offsetWidth, 'vs', img.naturalWidth);
+    this.setState({dimensions:{height:img.naturalHeight,
+                               width:img.naturalWidth}});
+    this.calculatePadding(img.naturalHeight);
+  }
+
+  reduceImageSize(width, height, initial='true') {
+    const sideLength = this.state.sideLength;
+    let newHeight = height;
+    let newWidth = width;
+    if(width > sideLength || height > sideLength){
+      this.reduceImageSize(width * 0.9, height * 0.9, false);
+    } else {
+      if(!initial){
+        this.setState({dimensions:{ height: newHeight,
+                                    width:  newWidth}});
+        this.calculatePadding(newHeight);
+      }
+    }
+  }
+
+  calculatePadding(height) {
+    const sideLength = this.state.sideLength;
+    const paddingTop = (sideLength - height) / 2;
+    console.log('@calculatePadding', paddingTop)
+    this.setState({paddingTop: paddingTop});
+  }
+
+  // No padding for the biggest bois
+  bigNames = ['moltres', 'pidgeotto', 'gyarados', 'onix', 'steelix', 'fearow'];
+
   render(){
     // Import result is the URL of your image
+    const {width, height} = this.state.dimensions;
+    this.reduceImageSize(width, height);
+    const paddingTop = this.state.paddingTop;
     let src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
     if(this.props.back){
       src = 'https://img.pokemondb.net/sprites/black-white/anim/back-normal/' + this.props.name + '.gif';
     }
-    const pt = this.props.paddingTop;
     return (
       <CSSTransitionGroup
           transitionName="example"
@@ -27,9 +69,10 @@ class PokemonImage extends Component{
           <img
             className={`pokemonImg ${this.props.name}`}
             key={src}
-            style={{paddingTop: pt}}
+            style={{paddingTop: paddingTop, width: width, height: height}}
             src={src}
             alt='Pokemon'
+            onLoad={this.onImgLoad}
           />
         </CSSTransitionGroup>
     );
@@ -59,11 +102,14 @@ class Pokemon extends Component{
   render(){
     let content;
     if(!isUndefined(this.props.shopPokemon)){
+      const costColorClass = (!isUndefined(this.props.shopPokemon) ? 'costColor' + this.props.shopPokemon.cost : '')
+      /*
       const backgroundColor = (Array.isArray(this.props.shopPokemon.type) ? 
             this.props.shopPokemon.type[0] : this.props.shopPokemon.type);
+      */
       content = <div>
-            <div className={`pokemonImageDiv ${backgroundColor}`}>
-              <PokemonImage name={this.props.shopPokemon.name} paddingTop='20px'/>
+            <div className={`pokemonImageDiv ${costColorClass}`}>
+              <PokemonImage name={this.props.shopPokemon.name} paddingTop='20px' sideLength={85}/>
             </div>
             <div className='pokemonShopText'>
               {this.props.shopPokemon.display_name + '\n'}
@@ -79,9 +125,8 @@ class Pokemon extends Component{
     } else {
       content = <div className={`pokemonShopEmpty text_shadow`}>Empty</div>;
     }
-    const costColorClass = (!isUndefined(this.props.shopPokemon) ? 'costColor' + this.props.shopPokemon.cost : '')
     return (
-      <div className={`pokemonShopEntity ${costColorClass}`} onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div className={`pokemonShopEntity`} onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
       </div>
     );
@@ -144,8 +189,17 @@ class Board extends Component {
     const prop = self.props.newProps;
     let from;
     switch(event.key){
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+        from = String(parseInt(event.key) - 1);
       case 'q':
-        from = prop.selectedUnit.pos;
+        from = (isUndefined(from) ? prop.selectedUnit.pos : from);
         const to = prop.mouseOverId;
         console.log('@placePiece q pressed', from, to)
         this.placePieceEvent(from, to);
@@ -252,7 +306,7 @@ class Cell extends Component {
       const pokemon = this.props.map[this.state.pos];
       if(!isUndefined(pokemon)){
         const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
-        return <PokemonImage name={pokemon.name} paddingTop='5px' back={back}/>
+        return <PokemonImage name={pokemon.name} paddingTop='10px' back={back} sideLength={85}/>
       }
     }
     return null;
