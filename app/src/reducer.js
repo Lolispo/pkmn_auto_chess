@@ -22,6 +22,7 @@ const reducer = (
     battleStartBoard: {},
     selectedUnit: -1,
     mouseOverId: -1,
+    stats: {},
   },
   action
 ) => {
@@ -84,6 +85,10 @@ const reducer = (
       break;
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message}
+      break;
+    case 'UPDATE_SELECTED_STATS':
+      console.log('Updating stats', action.stats)
+      state = {...state, stats: action.stats}
       break;
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];

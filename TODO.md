@@ -11,7 +11,13 @@ Temp: 1 hp per level
 
 ## Backend
 
-Type bonuses on current board recalculate and store on piece interactions
+More information on board units
+    Buff, every unit has buff or empty
+
+Type bonuses on current board 
+    typeBuffs
+    Recalculate and store on piece interactions
+
 
 Stop spawning units of certain type for player if has level 3
     Max 9 units for each player
@@ -24,7 +30,17 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
-Show type bonuses
+RefreshShop position
+Second line in shop, better alignment
+
+Use Message more
+
+Level text and Gold on top
+
+Bind D refresh
+bind f buy exp
+
+Show permenent buffs at left of board  
 
 KeyPress 1-8, binds place unit from that pos index (0-7) to mouseOverId
     Problem: If unit is bought, board is deselected

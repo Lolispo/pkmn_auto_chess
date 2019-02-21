@@ -1,14 +1,17 @@
 // Author: Petter Andersson
 
-const gameJS = require('./game');
 const { Map, fromJS } = require('immutable');
+const gameJS = require('./game');
 const sessionJS = require('./session');
+const pokemonJS = require('./pokemon');
+const abilitiesJS = require('./abilities');
 
 let nextPlayerIndex = 0;
 let connectedPlayers = Map({});
 let readyList = Map({});
 let counter = 1; // 0, 1 is for testing alone
 let prepBattleState;
+
 
 module.exports = function (socket, io) {
   /*
@@ -55,6 +58,14 @@ module.exports = function (socket, io) {
     // TODO: Prevent starting new game when game is live
     // Send to all connected sockets
     socket.emit('UPDATED_STATE', state.setIn(['players', 0, 'gold'], 1000)); // state.getIn(['players', index])
+  });
+
+  socket.on('GET_STATS', async (name) => {
+    const stats = pokemonJS.getStats(name);
+    const ability = abilitiesJS.getAbility(name);
+    const newStats = (await stats).set('abilityType', (await ability).get('type'));
+    console.log('Retrieving stats for', name, newStats);
+    socket.emit('UPDATE_SELECTED_STATS', newStats);
   });
 
   socket.on('TOGGLE_LOCK', async (stateParam) => {

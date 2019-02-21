@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece} from './socket';
+import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece, getStats} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
@@ -109,7 +109,7 @@ class Pokemon extends Component{
       */
       content = <div>
             <div className={`pokemonImageDiv ${costColorClass}`}>
-              <PokemonImage name={this.props.shopPokemon.name} paddingTop='20px' sideLength={85}/>
+              <PokemonImage name={this.props.shopPokemon.name} sideLength={85}/>
             </div>
             <div className='pokemonShopText'>
               {this.props.shopPokemon.display_name + '\n'}
@@ -126,7 +126,7 @@ class Pokemon extends Component{
       content = <div className={`pokemonShopEmpty text_shadow`}>Empty</div>;
     }
     return (
-      <div className={`pokemonShopEntity`} onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div className={`pokemonShopEntity ${this.props.className}`} onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
       </div>
     );
@@ -257,7 +257,7 @@ class Board extends Component {
 
   render(){
     return (
-      <div className='flex' onKeyDown={(event) => this.handleKeyPress(event, this)}> 
+      <div className='flex center' onKeyDown={(event) => this.handleKeyPress(event, this)}> 
         {this.renderBoard(this.state.boardData)}
       </div>
     );
@@ -281,7 +281,10 @@ class Cell extends Component {
   
   handleCellClick(el){
     // console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
-    el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos}});
+    const unit = (el.props.isBoard ? el.props.newProps.myBoard[this.state.pos] : el.props.newProps.myHand[this.state.pos]);
+    el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit}});
+    if(unit)
+      getStats(unit.name);
   }
 
   handleMouseOver(event, self){
@@ -306,7 +309,7 @@ class Cell extends Component {
       const pokemon = this.props.map[this.state.pos];
       if(!isUndefined(pokemon)){
         const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
-        return <PokemonImage name={pokemon.name} paddingTop='10px' back={back} sideLength={85}/>
+        return <PokemonImage name={pokemon.name} back={back} sideLength={85}/>
       }
     }
     return null;
@@ -377,63 +380,139 @@ class App extends Component {
     return String(x) + ',' + String(y);
   }
 
+  buildStats = () => {
+    if(this.props.stats){
+      const s = this.props.stats;
+      let evolves_from = '';
+      let evolves_to = '';
+      if(s.evolves_from) {
+        evolves_from = <span className='flex'>
+          <span className='paddingRight5'>Evolves from: </span>
+          <PokemonImage name={s.evolves_from} sideLength={30}/>
+        </span>;
+      }
+      if(s.evolves_to) {
+        evolves_to = <span className='flex'>
+          <span className='paddingRight5'>Evolves to: </span>
+          <PokemonImage name={s.evolves_to} sideLength={30}/>
+        </span>
+      }
+      const content = <div className='center'>
+        <div className='textAlignCenter'>{(Array.isArray(s.type) ? 
+            <div>
+              <span className={`type typeLeft ${s.type[0]}`}>{s.type[0]}</span>
+              <span className={`type ${s.type[1]}`}>{s.type[1] + '\n'}</span>
+            </div>
+          : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
+        </div>
+        <span className='center'>{`Hp: ${s.hp}\n`}</span>
+        <span>{`Attack: ${s.attack}\n`}</span>
+        <span>{`Defense: ${s.defense}\n`}</span>
+        <span>{`Speed: ${s.speed}\n`}</span>
+        <span className={`type ${s.abilityType}`}>{`Ability: ${s.ability}\n`}</span>
+        {evolves_from}
+        {evolves_to}
+      </div>
+      return content;
+    }
+  }
+
+  selectedUnitInformation = () => {
+    const className = 'center text_shadow infoPanel';
+    const noSelected = <div className={`centerWith50 ${className}`} style={{paddingTop: '20px'}}>Empty</div>
+    if(!isUndefined(this.props.selectedUnit)){
+      let pokemon = (this.props.selectedUnit.isBoard ? this.props.myBoard[this.props.selectedUnit.pos] : this.props.myHand[this.props.selectedUnit.pos]);
+      if(pokemon){
+        const pokeEl= <PokemonImage name={pokemon.name} sideLength={50}/>;
+        // console.log('@selectedUnitInformation', pokemon.display_name, pokemon)
+        return <div className={className}>
+          <div className='textAlignCenter'>
+            <div>{pokemon.display_name}</div>
+            {pokeEl}
+          </div>
+          {this.buildStats()}
+        </div>
+      }
+    }
+    return noSelected;
+  }
+
   render() {
     return <div>
-      <div> 
-        <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-        <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>StartGame</button>
-      </div>
-      <div>
-      <div className={'text_shadow messageUpdate'} >
-        <CSSTransitionGroup
-          transitionName="messageUpdate"
-          transitionEnterTimeout={500}
-          transitionLeave={false}>
-          <div>
-            {'Message: ' + this.props.message}
+      <div className='flex' style={{paddingTop: '10px'}}>
+        <div style={{width: '165px'}}>
+          <div className='flex'> 
+            <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
+            <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>StartGame</button>
           </div>
-        </CSSTransitionGroup>
-      </div>
+          <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
+            <CSSTransitionGroup
+              transitionName="messageUpdate"
+              transitionEnterTimeout={500}
+              transitionLeave={false}>
+              <div>
+                {'Message: ' + this.props.message}
+              </div>
+            </CSSTransitionGroup>
+          </div>
+          <div>
+            <div>
+              <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
+              <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>
+            </div>
+          </div>
+          <div className = 'centerWith50'>
+            <button className='normalButton marginTop5' onClick={this.buyExp}>Buy Exp</button>
+          </div>
+          <div>
+            {this.selectedUnitInformation()}
+          </div>
+          <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
+        </div>
         <div>
           <div>
-            <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
-            <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>
+            <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
           </div>
-          <div className='flex'>
-            <div>
-              <img className='lockImage' src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
-            </div>
-            <div>
-              <button className='normalButton' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
-              <button className='normalButton' onClick={this.refreshShopEvent}>Refresh Shop</button>
-              <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
-            </div>
-            <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
+          <div className='paddingLeft5 center'>_____________________________________________________________________________</div>
+          <div className='flex center'>
+            <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
           </div>
         </div>
-        <div>
+        <div className='paddingLeft5'>
           <div>
-            <button className='normalButton' onClick={this.buyExp}>Buy Exp</button>
+            <div>
+              <div className='flex'>
+                <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
+                <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
+                <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
+              </div>
+              <div className='flex'>
+                <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
+                <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='pokemonShopHalf'/>                
+              </div>
+            </div>
+            <div className='flex'>
+              <div>
+                <img className='lockImage' src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
+              </div>
+              <div>
+                <button className='normalButton marginTop5' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
+              </div>
+            </div>
+            <div>
+              <button className='normalButton marginTop5' onClick={this.refreshShopEvent}>Refresh Shop</button>
+            </div>
+            <div className='flex'>
+              <div className='marginTop5'>
+                <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
+              </div>
+              <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
+            </div>
           </div>
-        </div>
-        <div className='flex'>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props}/>
-          <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props}/>
+          <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
         </div>
       </div>
-      <div>
-        <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
-      </div>
-      <div className='paddingLeft5'>________________________________________________________________</div>
-      <div className='flex'>
-        <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
-      </div>
-      <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
-      <div>selectedUnit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>
-      <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
+      {/*
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
@@ -447,6 +526,7 @@ class App extends Component {
       <p>exp:{JSON.stringify(this.props.exp, null, 2)}</p>
       <p>gold:{JSON.stringify(this.props.gold, null, 2)}</p>
       <p>State:{JSON.stringify(this.props.storedState, null, 2)}</p>
+      */}
     </div>;
   }
 }
@@ -473,6 +553,7 @@ const mapStateToProps = state => ({
   battleStartBoard: state.battleStartBoard,
   selectedUnit: state.selectedUnit,
   mouseOverId: state.mouseOverId,
+  stats: state.stats,
 });
 
 export default connect(mapStateToProps)(App);

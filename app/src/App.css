@@ -1,3 +1,4 @@
+
 .pokemonShopText {
   padding-left: 5px;
   white-space: pre-line;
@@ -25,6 +26,10 @@
   background-size: 120px 180px;*/
 }
 
+.pokemonShopHalf {
+  margin-left: 70px;
+}
+
 .pokemonImageDiv{
   height: 90px;
   border-radius: 50px;
@@ -50,12 +55,35 @@
   padding-right: 5px;
 }
 
+.infoPanel {
+  padding-top: 5px;
+  padding-bottom: 50px;
+  white-space: pre-line;
+}
+
+.textAlignCenter {
+  text-align: center;
+}
+
 .boardRow {
   display: block;
 }
 
 .flex {
   display: flex;
+}
+
+.center {
+  margin: auto;
+}
+
+.centerWith50{
+  margin: auto;
+  width: 50%;
+}
+
+.marginTop5 {
+  margin-top: 5px;
 }
 
 .cell {

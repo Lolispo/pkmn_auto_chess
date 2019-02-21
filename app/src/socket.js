@@ -44,6 +44,10 @@ const configureSocket = dispatch => {
   socket.on('BATTLE_TIME', (actionStacks, battleStartBoards) => {
     dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards});
   });
+
+  socket.on('UPDATE_SELECTED_STATS', (stats) => {
+    dispatch({ type: 'UPDATE_SELECTED_STATS', stats});
+  });
   
   return socket;
 };
@@ -89,6 +93,10 @@ export const sellPiece = (state, from) =>
 
 export const battleReady = (state) => {
   socket.emit('BATTLE_READY', state);
+}
+
+export const getStats = (name) => {
+  socket.emit('GET_STATS', name);
 }
 
 export default configureSocket;
