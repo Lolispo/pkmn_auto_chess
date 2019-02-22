@@ -83,8 +83,8 @@ module.exports = function (socket, io) {
     console.log('Starting game!');
     
     // Send to all connected sockets
-    console.log('@startGame', sessionConnectedPlayers, socket.id, waitingPlayers, connectedPlayers)
-    const stateToSend = getStateToSend(state).setIn(['players', 0, 'gold'], 1000); // Test
+    const stateToSend = getStateToSend(state).setIn(['players', '0', 'gold'], 1000);
+    console.log('@startGame', socket.id, sessionConnectedPlayers, stateToSend)
     socket.emit('NEW_PLAYER', sessionConnectedPlayers.get(socket.id));
     socket.emit('UPDATED_STATE', stateToSend);
   });

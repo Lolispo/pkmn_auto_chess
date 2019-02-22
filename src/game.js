@@ -1441,23 +1441,24 @@ async function endTurn(stateParam) {
   }
 
   for (let i = 0; i < state.get('amountOfPlayers'); i++) {
-    const locked = state.getIn(['players', i, 'locked']);
+    const index = String(i);
+    const locked = state.getIn(['players', index, 'locked']);
     if (!locked) {
-      state = await refreshShop(state, String(i));
+      state = await refreshShop(state, index);
       // console.log('Not locked for player[' + i + '] \n', state.get('pieces').get(0));
     }
-    state = await increaseExp(state, String(i), 1);
-    const gold = state.getIn(['players', i, 'gold']);
+    state = await increaseExp(state, index, 1);
+    const gold = state.getIn(['players', index, 'gold']);
     // Min 0 gold interest -> max 5
     const bonusGold = Math.min(Math.floor(gold / 10), 5);
-    const streak = state.getIn(['players', i, 'streak']) || 0;
+    const streak = state.getIn(['players', index, 'streak']) || 0;
     const streakGold = Math.min(Math.floor(
       (streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1),
     ), 3);
     // console.log(`@playerEndTurn Gold: p[${i + 1}]: `,
     // `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
     const newGold = gold + income_basic + bonusGold + streakGold;
-    state = state.setIn(['players', i, 'gold'], newGold);
+    state = state.setIn(['players', index, 'gold'], newGold);
     // console.log(i, '\n', state.get('pieces').get(0));
     // state = state.set(i, state.getIn(['players', i]));
   }

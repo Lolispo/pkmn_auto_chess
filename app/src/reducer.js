@@ -37,7 +37,7 @@ const reducer = (
       // Update state with incoming data from server
       state = { ...state, pieces: action.newState.pieces, 
         storedState: action.newState,
-        message: 'im updated', 
+        message: 'Received State', 
         players: action.newState.players,
         myHand: action.newState.players[state.index].hand,
         myBoard: action.newState.players[state.index].board,

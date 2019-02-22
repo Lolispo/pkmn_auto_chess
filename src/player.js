@@ -34,9 +34,9 @@ function Player(i) {
 exports.initPlayers = (state, peoplePlaying) => {
   let players = Map({});
   for (let i = 0; i < peoplePlaying; i++) {
-    const player = new Player(i);
+    const player = new Player(String(i));
     // TODO: Customize player more, name, avatar etc
-    players = players.set(i, player);
+    players = players.set(String(i), player);
   }
   const state2 = state.set('players', players);
   return state2.set('amountOfPlayers', players.size);

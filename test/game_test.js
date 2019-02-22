@@ -44,10 +44,10 @@ describe('game state', () => {
       assert.equal(state.get('round'), 1);
       assert.equal(state.get('income_basic'), 1);
       assert.equal(state.get('discardedPieces').size, 0);
-      assert.equal(state.getIn(['players', 0, 'level']), 1);
-      assert.equal(state.getIn(['players', 1, 'level']), 1);
-      assert.equal(state.getIn(['players', 0, 'expToReach']), 1);
-      assert.equal(state.getIn(['players', 0, 'exp']), 0);
+      assert.equal(state.getIn(['players', '0', 'level']), 1);
+      assert.equal(state.getIn(['players', '1', 'level']), 1);
+      assert.equal(state.getIn(['players', '0', 'expToReach']), 1);
+      assert.equal(state.getIn(['players', '0', 'exp']), 0);
     });
   });
   describe('buildPieceStorage', () => {
@@ -72,21 +72,21 @@ describe('game state', () => {
       let state = await initEmptyState(2);
       const pieces = state.get('pieces');
       console.log('pieces', pieces)
-      state = await refreshShop(state, 0);
+      state = await refreshShop(state, '0');
       const newPieces = state.get('pieces');
-      const shop = state.getIn(['players', 0, 'shop']);
+      const shop = state.getIn(['players', '0', 'shop']);
       console.log('shop', shop)
       assert.equal(pieces.get(0).get(0), shop.get(f.pos(0)).get('name'));
       assert.equal(pieces.get(0).get(5), newPieces.get(0).get(0));
-      state = await refreshShop(state, 0);
+      state = await refreshShop(state, '0');
       const newestPieces = state.get('pieces');
       console.log('newestPieces', newestPieces.get(0).get(0))
       assert.equal(pieces.get(0).get(10), newestPieces.get(0).get(0));
       console.log('@test discarded', state.get('discardedPieces'));
       console.log(pieces.get(0).get(0), state.get('discardedPieces').get(0))
       assert.equal(pieces.get(0).get(0), state.get('discardedPieces').get(0));
-      assert.equal(pieces.get(0).get(5), state.getIn(['players', 0, 'shop']).get(f.pos(0)).get('name'));
-      assert.equal(state.getIn(['players', 1, 'shop']).size, 0);
+      assert.equal(pieces.get(0).get(5), state.getIn(['players', '0', 'shop']).get(f.pos(0)).get('name'));
+      assert.equal(state.getIn(['players', '1', 'shop']).size, 0);
     });
   });
   describe('buyUnit', () => {
@@ -99,51 +99,51 @@ describe('game state', () => {
     it('buyunit default?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const shop = state.getIn(['players', 0, 'shop']);
-      state = await buyUnit(state, 0, 1);
-      const hand = state.getIn(['players', 0, 'hand']);
+      const shop = state.getIn(['players', '0', 'shop']);
+      state = await buyUnit(state, '0', 1);
+      const hand = state.getIn(['players', '0', 'hand']);
       console.log(shop.get(f.pos(1)))
       console.log(hand)
       console.log(hand.get(f.pos(0)))
       assert.equal(hand.get(f.pos(0)).get('name'), shop.get(f.pos(1)).get('name'));
-      assert.equal(state.getIn(['players', 0, 'shop']).get(f.pos(1)), null);
+      assert.equal(state.getIn(['players', '0', 'shop']).get(f.pos(1)), null);
     });
   });
   describe('increaseExp', () => {
     it('increaseExp default?', async() => {
       let state = await initEmptyState(2);
-      assert.equal(state.getIn(['players', 0, 'level']), 1);
-      assert.equal(state.getIn(['players', 0, 'exp']), 0);
-      state = await increaseExp(state, 0, 1);
+      assert.equal(state.getIn(['players', '0', 'level']), 1);
+      assert.equal(state.getIn(['players', '0', 'exp']), 0);
+      state = await increaseExp(state, '0', 1);
       //console.log(state)
-      assert.equal(state.getIn(['players', 0, 'level']), 2);
-      assert.equal(state.getIn(['players', 0, 'exp']), 0);
-      assert.equal(state.getIn(['players', 0, 'expToReach']), fileModule2.getExpRequired(2));
+      assert.equal(state.getIn(['players', '0', 'level']), 2);
+      assert.equal(state.getIn(['players', '0', 'exp']), 0);
+      assert.equal(state.getIn(['players', '0', 'expToReach']), fileModule2.getExpRequired(2));
     });
   });
   describe('buyExp', () => {
     it('does buyexp increase level correctly?', async() => {
       let state = await initEmptyState(2);
-      state = await buyExp(state, 0);
+      state = await buyExp(state, '0');
       // Buy 5 exp from level 1, 0exp:
       // 1(^1) + 1(^2) + 2(^3) + 1(4) = Level 4, 1 exp
-      assert.equal(state.getIn(['players', 0, 'level']), 4);
-      assert.equal(state.getIn(['players', 0, 'exp']), 1);
-      assert.equal(state.getIn(['players', 0, 'expToReach']), fileModule2.getExpRequired(4));
+      assert.equal(state.getIn(['players', '0', 'level']), 4);
+      assert.equal(state.getIn(['players', '0', 'exp']), 1);
+      assert.equal(state.getIn(['players', '0', 'expToReach']), fileModule2.getExpRequired(4));
     });
   });
   describe('toggleLock', () => {
     it('toggleLock false -> true', async () => {
       let state = await initEmptyState(2);
-      state = await toggleLock(state, 0);
-      assert.equal(state.getIn(['players', 0, 'locked']), true);
+      state = await toggleLock(state, '0');
+      assert.equal(state.getIn(['players', '0', 'locked']), true);
     });
     it('toggleLock false -> true -> false', async () => {
       let state = await initEmptyState(2);
-      state = await toggleLock(state, 0);
-      assert.equal(state.getIn(['players', 0, 'locked']), true);
-      state = await toggleLock(state, 0);
-      assert.equal(state.getIn(['players', 0, 'locked']), false);
+      state = await toggleLock(state, '0');
+      assert.equal(state.getIn(['players', '0', 'locked']), true);
+      state = await toggleLock(state, '0');
+      assert.equal(state.getIn(['players', '0', 'locked']), false);
       // Assertion
     });
   });
@@ -157,19 +157,19 @@ describe('game state', () => {
     */
     it('endBattle win?', async () => {
       let state = await initEmptyState(2);
-      const gold = state.getIn(['players', 0, 'gold']);
+      const gold = state.getIn(['players', '0', 'gold']);
       const unit = await createBattleUnit((await getBoardUnit('rattata', 2, 2)), f.pos(2,2), 0);
-      state = await endBattle(state, 0, true, Map({}).set(f.pos(2,2), unit), true, 1); 
-      assert.equal(state.getIn(['players', 0, 'gold']), gold + 1);
-      assert.equal(state.getIn(['players', 1, 'gold']), gold); // Not affected
+      state = await endBattle(state, '0', true, Map({}).set(f.pos(2,2), unit), true, 1); 
+      assert.equal(state.getIn(['players', '0', 'gold']), gold + 1);
+      assert.equal(state.getIn(['players', '1', 'gold']), gold); // Not affected
     });
     it('endBattle lose?', async () => {
       let state = await initEmptyState(2);
-      const hp = state.getIn(['players', 0, 'hp']);
+      const hp = state.getIn(['players', '0', 'hp']);
       const unit = await createBattleUnit((await getBoardUnit('rattata', 2, 2)), f.pos(2,2), 1);
-      state = await endBattle(state, 0, false, Map({}).set(f.pos(2,2), unit), true, 1);
+      state = await endBattle(state, '0', false, Map({}).set(f.pos(2,2), unit), true, 1);
       // TODO Test with damage taken (Will be 0 when no enemy units)
-      assert.equal(state.getIn(['players', 0, 'hp']), hp - (await pokemonJS.getStats(unit.get('name'))).get('cost'));
+      assert.equal(state.getIn(['players', '0', 'hp']), hp - (await pokemonJS.getStats(unit.get('name'))).get('cost'));
     });
   });
   describe('endTurn', () => {
@@ -184,73 +184,74 @@ describe('game state', () => {
     it('endTurn default?', async () => {
       let state = await initEmptyState(2);
       const pieces = await state.get('pieces');
-      assert.equal(state.getIn(['players', 0, 'gold']), 1);
+      assert.equal(state.getIn(['players', '0', 'gold']), 1);
+      console.log('@endturndefault state', state)
       state = await endTurn(state);
       assert.equal(state.get('income_basic'), 2);
       assert.equal(state.get('round'), 2);
-      const shop = await state.getIn(['players', 0, 'shop']);
-      const shop2 = await state.getIn(['players', 1, 'shop']);
+      const shop = await state.getIn(['players', '0', 'shop']);
+      const shop2 = await state.getIn(['players', '1', 'shop']);
       //console.log('\@endTurn Pieces', pieces.get(0))
       //console.log('@endTurn Shop', shop)
       //console.log('@endTurn Shop2', shop2)
-      assert.equal(state.getIn(['players', 0, 'exp']), 0);
-      assert.equal(state.getIn(['players', 1, 'exp']), 0);
-      assert.equal(state.getIn(['players', 0, 'level']), 2);
-      assert.equal(state.getIn(['players', 1, 'level']), 2);
+      assert.equal(state.getIn(['players', '0', 'exp']), 0);
+      assert.equal(state.getIn(['players', '1', 'exp']), 0);
+      assert.equal(state.getIn(['players', '0', 'level']), 2);
+      assert.equal(state.getIn(['players', '1', 'level']), 2);
       assert.equal(shop.get(f.pos(0)).get('name'), pieces.get(0).get(0));
       assert.equal(shop2.get(f.pos(0)).get('name'), pieces.get(0).get(5));
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(10));
-      assert.equal(state.getIn(['players', 0, 'gold']), 3);
+      assert.equal(state.getIn(['players', '0', 'gold']), 3);
     });
     
     it('endTurn with locked player?', async () => {
       let state = await initEmptyState(2);
-      state = await toggleLock(state, 0);
+      state = await toggleLock(state, '0');
       const pieces = state.get('pieces');
       state = await endTurn(state);
-      assert.equal(state.getIn(['players', 0, 'shop']).size, 0);
-      assert.equal(state.getIn(['players', 1, 'shop']).get(f.pos(0)).get('name'), pieces.get(0).get(0));
+      assert.equal(state.getIn(['players', '0', 'shop']).size, 0);
+      assert.equal(state.getIn(['players', '1', 'shop']).get(f.pos(0)).get('name'), pieces.get(0).get(0));
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(5));
     });
     it('endTurn higher gold?', async () => {
       let state = await initEmptyState(2);
-      state = state.setIn(['players', 0, 'gold'], 20);
-      state = state.setIn(['players', 0, 'streak'], 3);
+      state = state.setIn(['players', '0', 'gold'], 20);
+      state = state.setIn(['players', '0', 'streak'], 3);
       state = state.set('income_basic', 2);
       state = await endTurn(state);
       // 20 start, 2 + 1(endTurn) basic, 1 streak, 2 tens
-      assert.equal(state.getIn(['players', 0, 'gold']), 20+3+Math.floor(3/2)+2);
+      assert.equal(state.getIn(['players', '0', 'gold']), 20+3+Math.floor(3/2)+2);
     });
     
   });
   describe('endBattle, prepEndTurn, endTurn', () => {
     it('many tests?', async () => {
       let state = await initEmptyState(2);
-      const hp = state.getIn(['players', 0, 'hp']); // Both have same start hp
+      const hp = state.getIn(['players', '0', 'hp']); // Both have same start hp
       const pieces = state.get('pieces');
       const unit = await createBattleUnit((await getBoardUnit('squirtle', 2, 2)), f.pos(2,2), 0);
-      state = await endBattle(state, 0, true, Map({}).set(f.pos(2,2), unit), true, 1);
-      state = await endBattle(state, 1, false, Map({}).set(f.pos(2,2), unit), true, 0);
+      state = await endBattle(state, '0', true, Map({}).set(f.pos(2,2), unit), true, 1);
+      state = await endBattle(state, '1', false, Map({}).set(f.pos(2,2), unit), true, 0);
       // Assertion - endTurn should have been run
       // Player 0 won round, player 1 lost round
       assert.equal(state.get('income_basic'), 2); // inc by 1
       assert.equal(state.get('round'), 2);  // 
-      const shop = await state.getIn(['players', 0, 'shop']);
-      const shop2 = await state.getIn(['players', 1, 'shop']);
+      const shop = await state.getIn(['players', '0', 'shop']);
+      const shop2 = await state.getIn(['players', '1', 'shop']);
       //console.log('\@endTurn Pieces', pieces.get(0))
       //console.log('@endTurn Shop', shop)
       //console.log('@endTurn Shop2', shop2)
-      assert.equal(state.getIn(['players', 0, 'exp']), 0);
-      assert.equal(state.getIn(['players', 1, 'exp']), 0);
-      assert.equal(state.getIn(['players', 0, 'level']), 2);
-      assert.equal(state.getIn(['players', 1, 'level']), 2);
+      assert.equal(state.getIn(['players', '0', 'exp']), 0);
+      assert.equal(state.getIn(['players', '1', 'exp']), 0);
+      assert.equal(state.getIn(['players', '0', 'level']), 2);
+      assert.equal(state.getIn(['players', '1', 'level']), 2);
       assert.equal(shop.get(f.pos(0)).get('name'), pieces.get(0).get(0));
       assert.equal(shop2.get(f.pos(0)).get('name'), pieces.get(0).get(5));
       assert.equal(state.getIn(['pieces']).get(0).get(0), pieces.get(0).get(10));
-      assert.equal(state.getIn(['players', 0, 'gold']), 4); // 1 start, 1 win, 2 basic
-      assert.equal(state.getIn(['players', 1, 'gold']), 3); // 1 start 2 basic
-      assert.equal(state.getIn(['players', 0, 'hp']), hp);
-      assert.equal(state.getIn(['players', 1, 'hp']), hp - (await pokemonJS.getStats(unit.get('name'))).get('cost'));
+      assert.equal(state.getIn(['players', '0', 'gold']), 4); // 1 start, 1 win, 2 basic
+      assert.equal(state.getIn(['players', '1', 'gold']), 3); // 1 start 2 basic
+      assert.equal(state.getIn(['players', '0', 'hp']), hp);
+      assert.equal(state.getIn(['players', '1', 'hp']), hp - (await pokemonJS.getStats(unit.get('name'))).get('cost'));
     });
   });
   describe('sellPiece', () => {
@@ -259,16 +260,16 @@ describe('game state', () => {
     it('sellPiece from hand?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      state = await buyUnit(state, 0, 1);
-      const hand = state.getIn(['players', 0, 'hand']);
-      const gold = state.getIn(['players', 0, 'gold']);
+      state = await buyUnit(state, '0', 1);
+      const hand = state.getIn(['players', '0', 'hand']);
+      const gold = state.getIn(['players', '0', 'gold']);
       const unit = hand.get(f.pos(0));
-      state = await sellPiece(state, 0, f.pos(0));
+      state = await sellPiece(state, '0', f.pos(0));
       assert.equal(unit.get('name'), state.get('discardedPieces').get(0));
-      assert.equal(state.getIn(['players', 0, 'hand']).get(f.pos(0)), undefined);
+      assert.equal(state.getIn(['players', '0', 'hand']).get(f.pos(0)), undefined);
       assert.equal(gold, 0);
       const stats = await pokemonJS.getStats(unit.get('name'));
-      assert.equal(state.getIn(['players', 0, 'gold']), stats.get('cost'));
+      assert.equal(state.getIn(['players', '0', 'gold']), stats.get('cost'));
     });
     it('sellPiece from hand, level 3?', async () => {
       // TODO
@@ -318,22 +319,22 @@ describe('game state', () => {
   describe('removeHp', () => {
     it('removeHp default?', async () => {
       let state = await initEmptyState(2);
-      state = await removeHp(state, 0, 5);
-      assert.equal(state.getIn(['players', 0, 'hp']), 95);
+      state = await removeHp(state, '0', 5);
+      assert.equal(state.getIn(['players', '0', 'hp']), 95);
     });
     it('removeHp player defeated (not game over)?', async () => {
       let state = await initEmptyState(3);
-      state = state.setIn(['players', 0, 'hp'], 5);
-      state = await removeHp(state, 0, 5);
-      assert.equal(state.getIn(['players', 0]), undefined);
+      state = state.setIn(['players', '0', 'hp'], 5);
+      state = await removeHp(state, '0', 5);
+      assert.equal(state.getIn(['players', '0']), undefined);
       assert.equal(state.get('amountOfPlayers'), 2);
     });
     it('removeHp player defeated gameOver?', async () => {
       // TODO
       let state = await initEmptyState(2);
-      state = state.setIn(['players', 0, 'hp'], 5);
-      state = await removeHp(state, 0, 5);
-      assert.equal(state.getIn(['players', 0]), undefined);
+      state = state.setIn(['players', '0', 'hp'], 5);
+      state = await removeHp(state, '0', 5);
+      assert.equal(state.getIn(['players', '0']), undefined);
       assert.equal(state.get('amountOfPlayers'), 1);
     });
   });
@@ -346,11 +347,11 @@ describe('game state', () => {
     it('placePiece on board to board?', async () => {
       let state = await initEmptyState(2);      
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
-      state = await placePiece(state, 0, f.pos(1,1), f.pos(4,4));
-      const board = state.getIn(['players', 0, 'board'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1));
+      state = await placePiece(state, '0', f.pos(1,1), f.pos(4,4));
+      const board = state.getIn(['players', '0', 'board'])
       assert.equal(board.get(f.pos(4,4)).get('name'), unit);
       assert.equal(f.x(board.get(f.pos(4,4)).get('position')), 4);
       assert.equal(f.y(board.get(f.pos(4,4)).get('position')), 4);
@@ -359,34 +360,34 @@ describe('game state', () => {
     it('placePiece on board to hand?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
-      state = await placePiece(state, 0, f.pos(1,1), f.pos(4));
-      const hand = state.getIn(['players', 0, 'hand'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1));
+      state = await placePiece(state, '0', f.pos(1,1), f.pos(4));
+      const hand = state.getIn(['players', '0', 'hand'])
       assert.equal(hand.get(f.pos(4)).get('name'), unit);
       assert.equal(hand.get(f.pos(1,1)), undefined);   
     });
     it('placePiece on hand to board?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
-      const board = state.getIn(['players', 0, 'board'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1));
+      const board = state.getIn(['players', '0', 'board'])
       assert.equal(board.get(f.pos(1,1)).get('name'), unit);
    });
     it('placePiece swap functionality on board->board?', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 0, 2);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
-      state = await placePiece(state, 0, f.pos(1), f.pos(5,3));
-      state = await placePiece(state, 0, f.pos(1,1), f.pos(5,3));
-      const board = state.getIn(['players', 0, 'board'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      const unit2 = state.getIn(['players', '0', 'shop']).get(f.pos(2)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '0', 2);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1));
+      state = await placePiece(state, '0', f.pos(1), f.pos(5,3));
+      state = await placePiece(state, '0', f.pos(1,1), f.pos(5,3));
+      const board = state.getIn(['players', '0', 'board'])
       assert.equal(board.get(f.pos(1,1)).get('name'), unit2);
       assert.equal(board.get(f.pos(5,3)).get('name'), unit);   
     });
@@ -405,9 +406,9 @@ describe('game state', () => {
       .set(f.pos(1,1), await getBoardUnit('charmander', 1, 1))
       .set(f.pos(1,2), await getBoardUnit('charmander', 1, 2))
       .set(f.pos(2,2), unit);
-      state = state.setIn(['players', 0, 'board'], newBoard);
-      state = await checkPieceUpgrade(state, 0, unit, f.pos(2,2));
-      const board = state.getIn(['players', 0, 'board'])
+      state = state.setIn(['players', '0', 'board'], newBoard);
+      state = await checkPieceUpgrade(state, '0', unit, f.pos(2,2));
+      const board = state.getIn(['players', '0', 'board'])
       assert.equal(board.get(f.pos(2,2)).get('name'), 'charmeleon');
       assert.equal(board.get(f.pos(1,2)), undefined);
       assert.equal(board.get(f.pos(1,1)), undefined);
@@ -421,9 +422,9 @@ describe('game state', () => {
       .set(f.pos(1,3), await getBoardUnit('pikachu', 1, 3))
       .set(f.pos(1,4), await getBoardUnit('pikachu', 1, 4))
       .set(f.pos(2,2), unit);
-      state = state.setIn(['players', 0, 'board'], newBoard);
-      state = await checkPieceUpgrade(state, 0, unit, f.pos(2,2));
-      const board = state.getIn(['players', 0, 'board'])
+      state = state.setIn(['players', '0', 'board'], newBoard);
+      state = await checkPieceUpgrade(state, '0', unit, f.pos(2,2));
+      const board = state.getIn(['players', '0', 'board'])
       assert.equal(board.get(f.pos(2,2)).get('name'), 'charizard');
       assert.equal(board.get(f.pos(1,2)), undefined);
       assert.equal(board.get(f.pos(1,1)), undefined); 
@@ -496,28 +497,28 @@ describe('game state', () => {
     it('withdrawPiece from board, empty bench', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
-      state = await withdrawPiece(state, 0, f.pos(1,1))
-      const board = state.getIn(['players', 0, 'board'])
-      const hand = state.getIn(['players', 0, 'hand'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1));
+      state = await withdrawPiece(state, '0', f.pos(1,1))
+      const board = state.getIn(['players', '0', 'board'])
+      const hand = state.getIn(['players', '0', 'hand'])
       assert.equal(board.get(f.pos(1,1)), undefined);
       assert.equal(hand.get(f.pos(0)).get('name'), unit);   
     });
     it('withdrawPiece from board, hand 2 units', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2)).get('name');
-      const unit3 = state.getIn(['players', 0, 'shop']).get(f.pos(3)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 0, 2);
-      state = await buyUnit(state, 0, 3);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1));
-      state = await withdrawPiece(state, 0, f.pos(1,1))
-      const board = state.getIn(['players', 0, 'board'])
-      const hand = state.getIn(['players', 0, 'hand'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      const unit2 = state.getIn(['players', '0', 'shop']).get(f.pos(2)).get('name');
+      const unit3 = state.getIn(['players', '0', 'shop']).get(f.pos(3)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '0', 2);
+      state = await buyUnit(state, '0', 3);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1));
+      state = await withdrawPiece(state, '0', f.pos(1,1))
+      const board = state.getIn(['players', '0', 'board'])
+      const hand = state.getIn(['players', '0', 'hand'])
       assert.equal(board.get(f.pos(1,1)), undefined);
       assert.equal(hand.get(f.pos(0)).get('name'), unit); 
       assert.equal(hand.get(f.pos(1)).get('name'), unit2); 
@@ -526,16 +527,16 @@ describe('game state', () => {
     it('withdrawPiece from board, hand has unit at 1 and 3 (should put 2)', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2)).get('name');
-      const unit3 = state.getIn(['players', 0, 'shop']).get(f.pos(3)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 0, 2);
-      state = await buyUnit(state, 0, 3);
-      state = await placePiece(state, 0, f.pos(1), f.pos(1,1));
-      state = await withdrawPiece(state, 0, f.pos(1,1))
-      const board = state.getIn(['players', 0, 'board'])
-      const hand = state.getIn(['players', 0, 'hand'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      const unit2 = state.getIn(['players', '0', 'shop']).get(f.pos(2)).get('name');
+      const unit3 = state.getIn(['players', '0', 'shop']).get(f.pos(3)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '0', 2);
+      state = await buyUnit(state, '0', 3);
+      state = await placePiece(state, '0', f.pos(1), f.pos(1,1));
+      state = await withdrawPiece(state, '0', f.pos(1,1))
+      const board = state.getIn(['players', '0', 'board'])
+      const hand = state.getIn(['players', '0', 'hand'])
       assert.equal(board.get(f.pos(1,1)), undefined);
       assert.equal(hand.get(f.pos(0)).get('name'), unit); 
       assert.equal(hand.get(f.pos(1)).get('name'), unit2); 
@@ -544,18 +545,18 @@ describe('game state', () => {
     it('withdrawPiece from board, change hand spot 2 and 3', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      const unit = state.getIn(['players', 0, 'shop']).get(f.pos(1)).get('name');
-      const unit2 = state.getIn(['players', 0, 'shop']).get(f.pos(2)).get('name');
-      const unit3 = state.getIn(['players', 0, 'shop']).get(f.pos(3)).get('name');
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 0, 2);
-      state = await buyUnit(state, 0, 3);
-      state = await placePiece(state, 0, f.pos(1), f.pos(1,1));
-      state = await placePiece(state, 0, f.pos(2), f.pos(2,2));
-      state = await withdrawPiece(state, 0, f.pos(2,2))
-      state = await withdrawPiece(state, 0, f.pos(1,1))
-      const board = state.getIn(['players', 0, 'board'])
-      const hand = state.getIn(['players', 0, 'hand'])
+      const unit = state.getIn(['players', '0', 'shop']).get(f.pos(1)).get('name');
+      const unit2 = state.getIn(['players', '0', 'shop']).get(f.pos(2)).get('name');
+      const unit3 = state.getIn(['players', '0', 'shop']).get(f.pos(3)).get('name');
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '0', 2);
+      state = await buyUnit(state, '0', 3);
+      state = await placePiece(state, '0', f.pos(1), f.pos(1,1));
+      state = await placePiece(state, '0', f.pos(2), f.pos(2,2));
+      state = await withdrawPiece(state, '0', f.pos(2,2))
+      state = await withdrawPiece(state, '0', f.pos(1,1))
+      const board = state.getIn(['players', '0', 'board'])
+      const hand = state.getIn(['players', '0', 'hand'])
       assert.equal(board.get(f.pos(1,1)), undefined);
       assert.equal(hand.get(f.pos(0)).get('name'), unit); 
       assert.equal(hand.get(f.pos(1)).get('name'), unit3); 
@@ -728,10 +729,10 @@ describe('game state', () => {
     it('getFirstAvailableSpot', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      assert.equal(f.x((await getFirstAvailableSpot(state, 0))), 0);
+      assert.equal(f.x((await getFirstAvailableSpot(state, '0'))), 0);
       const newHand = Map({}).set(f.pos(0), (await getBoardUnit('rattata', 0)))
-      state = state.setIn(['players', 0, 'hand'], newHand);
-      assert.equal(f.x((await getFirstAvailableSpot(state, 0))), 1);
+      state = state.setIn(['players', '0', 'hand'], newHand);
+      assert.equal(f.x((await getFirstAvailableSpot(state, '0'))), 1);
     });
   });
   describe('markBoardBonuses', () => {
@@ -776,57 +777,57 @@ describe('game state', () => {
     it('battleTime Poison battle', async () => {
       let state = await initEmptyState(2, List(['weedle', 'nidoran ♀', 'ekans']));
       state = await startGame(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
       state = await endTurn(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
-      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1))
+      state = await placePiece(state, '0', f.pos(1), f.pos(2,2))
+      state = await placePiece(state, '1', f.pos(0), f.pos(1,1))
+      state = await placePiece(state, '1', f.pos(1), f.pos(2,2))
       state = (await battleTime(state)).get('state');
       // f.print(state)
     });
     it('battleTime Weedle battle', async () => {
       let state = await initEmptyState(2, List(['charmander', 'oddish', 'paras', 'ponyta', 'vulpix', 'caterpie', 'weedle']));
       state = await startGame(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
       state = await endTurn(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
-      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1))
+      state = await placePiece(state, '0', f.pos(1), f.pos(2,2))
+      state = await placePiece(state, '1', f.pos(0), f.pos(1,1))
+      state = await placePiece(state, '1', f.pos(1), f.pos(2,2))
       state = (await battleTime(state)).get('state');
       // f.print(state)
     });
     it('battleTime Big', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
       state = await endTurn(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 0, f.pos(1), f.pos(2,2))
-      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 1, f.pos(1), f.pos(2,2))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1))
+      state = await placePiece(state, '0', f.pos(1), f.pos(2,2))
+      state = await placePiece(state, '1', f.pos(0), f.pos(1,1))
+      state = await placePiece(state, '1', f.pos(1), f.pos(2,2))
       state = (await battleTime(state)).get('state');
       // f.print(state)
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,2))
-      state = await placePiece(state, 1, f.pos(0), f.pos(1,2))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,2))
+      state = await placePiece(state, '1', f.pos(0), f.pos(1,2))
       state = (await battleTime(state)).get('state');
       // f.print(state)
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(2,1))
-      state = await placePiece(state, 1, f.pos(0), f.pos(2,1))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(2,1))
+      state = await placePiece(state, '1', f.pos(0), f.pos(2,1))
       state = (await battleTime(state)).get('state');
       // f.print(state)
     });
@@ -840,30 +841,30 @@ describe('game state', () => {
     it('battleSetup Big', async () => {
       let state = await initEmptyState(2);
       state = await startGame(state);
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,1))
-      state = await placePiece(state, 1, f.pos(0), f.pos(1,1))
-      state = await buyUnit(state, 0, 2);
-      state = await buyUnit(state, 1, 2);
-      state = await placePiece(state, 0, f.pos(0), f.pos(2,2))
-      state = await placePiece(state, 1, f.pos(0), f.pos(2,2))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,1))
+      state = await placePiece(state, '1', f.pos(0), f.pos(1,1))
+      state = await buyUnit(state, '0', 2);
+      state = await buyUnit(state, '1', 2);
+      state = await placePiece(state, '0', f.pos(0), f.pos(2,2))
+      state = await placePiece(state, '1', f.pos(0), f.pos(2,2))
       state = (await battleSetup(state)).get('state');
       // f.print(state)
-      state = await placePiece(state, 0, f.pos(0), f.pos(3,3))
-      state = await placePiece(state, 1, f.pos(0), f.pos(3,3))
+      state = await placePiece(state, '0', f.pos(0), f.pos(3,3))
+      state = await placePiece(state, '1', f.pos(0), f.pos(3,3))
       state = (await battleSetup(state)).get('state');
       // f.print(state)
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(1,2))
-      state = await placePiece(state, 1, f.pos(0), f.pos(1,2))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(1,2))
+      state = await placePiece(state, '1', f.pos(0), f.pos(1,2))
       state = (await battleSetup(state)).get('state');
       // f.print(state)
-      state = await buyUnit(state, 0, 1);
-      state = await buyUnit(state, 1, 1);
-      state = await placePiece(state, 0, f.pos(0), f.pos(2,1))
-      state = await placePiece(state, 1, f.pos(0), f.pos(2,1))
+      state = await buyUnit(state, '0', 1);
+      state = await buyUnit(state, '1', 1);
+      state = await placePiece(state, '0', f.pos(0), f.pos(2,1))
+      state = await placePiece(state, '1', f.pos(0), f.pos(2,1))
       state = (await battleSetup(state)).get('state');
       // f.print(state)
     });
