@@ -102,11 +102,16 @@ exports.updateSessionPieces = (socketId, connectedPlayers, sessions, state) => {
 
 exports.getLongestBattleTime = (actionStacks) => {
   let longestTime = -1;
-  for(let i = 0; i < actionStacks.size; i++){
-    const time = actionStacks.get(actionStacks.size - 1).get('time');
+  const iter = actionStacks.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const id = temp.value;
+    const actionStack = actionStacks.get(id);
+    const time = actionStack.get(actionStack.size - 1).get('time');
     if(time > longestTime){
       longestTime = time;
     }
+    temp = iter.next();
   }
   return longestTime;
 }
