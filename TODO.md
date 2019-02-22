@@ -34,31 +34,23 @@ Finish abilities implementation (teleport)
 
 Make elements % based instead of pixel based
 
-Give information that playarea isn't selected when it isn't
-    Some error showing when hotkeys are availalbe or not
-
 Add leaveGame button
     Are you sure you want to leave? Prompt
 
 outline ugly, not on right side
 
-store stats for units for infopanel in map
-    fetch from that if available
-    cache
+Cache Information
+    Prio: store stats for units for infopanel in map
+    Cache images/gifs (Store image, paddingTop, width and height, might not work)
 
-Cache images
-
-Start button bigger size
-    Doesn't fit 10/10 players ready
+Allow to start game without all connected sockets ready
+    Countdown and start with all ready players when countdown finishes
 
 Battle
 
 Use Message more
 
 Show permenent buffs at left of board  
-
-Problem: Board or shop needs to be used to use those hot keys
-    Theory would be nice to atleast only require one place where both hotkey groups work
 
 Timer
 
@@ -69,10 +61,6 @@ Ready: Show number of connected players on start game button
 Right side of screen: contain information from other players
 
 ## Communication
-
-Prevent requests if game isn't active
-
-Hold sessions connected to socketids
 
 ## Tests
 
@@ -85,6 +73,9 @@ Test dot damage functionality
 Test lifesteal functionality
 
 ## Javascript Check me
+
+Give information that playarea isn't selected when it isn't
+    Some error showing when hotkeys are availalbe or not
 
 check Promise.all alternative for loops
 
@@ -107,6 +98,9 @@ Cleanup comments, better structure
 Potential to use more functional code, map/filter
 
 ## Optional Features
+
+Chat system on left hand or bottom right of screen
+    Use it for information about other people's upgrades
 
 Type buffs - Add typebuffs from sheets directly
 

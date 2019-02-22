@@ -125,7 +125,7 @@
 .normalButton {
 	border: black;
   border-style: solid;
-	height: 35px;
+	height: 45px;
   /*width: 50px;*/
   margin-right: 5px;	
   color: white;
@@ -203,6 +203,15 @@ body {
 }
 */
 
+.hpBar {
+  background-color: green;
+  text-align: center;
+  border: 1px solid black;
+  /*
+  position: absolute;
+  max-width: 84px;*/
+  /*margin-left: 1px;*/
+}
 
 .lockImage {
   height: 45px;

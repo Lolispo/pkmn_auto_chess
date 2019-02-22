@@ -98,21 +98,23 @@ module.exports = function (socket, io) {
   // disconnect logic
   socket.on('disconnect', () => {
     // Find which connection disconnected, remove data from that person
-    console.log('Player disconnected: ', connectedPlayers.get(socket.id).get('socketId'));
-    const user = connectedPlayers.get(socket.id);
-    const sessionId = user.get('sessionId')
-    const session = sessions.get(sessionId);
-    if(sessionId && session){ // User was in a session (not false, true | sessionId)
-      const updatedSession = sessionJS.sessionPlayerDisconnect(socket.id, session);
-      if(f.isUndefined(updatedSession)){
-        console.log('Removing Session:', sessionId, '(All players left)');
-        sessions = sessions.delete(sessionId);
-      } else {
-        console.log('Still Players left in session:', sessionId);
-        sessions = updatedSession;
+    if(connectedPlayers){
+      console.log('Player disconnected: ', connectedPlayers.get(socket.id).get('socketId'));
+      const user = connectedPlayers.get(socket.id);
+      const sessionId = user.get('sessionId')
+      const session = sessions.get(sessionId);
+      if(sessionId && session){ // User was in a session (not false, true | sessionId)
+        const updatedSession = sessionJS.sessionPlayerDisconnect(socket.id, session);
+        if(f.isUndefined(updatedSession)){
+          console.log('Removing Session:', sessionId, '(All players left)');
+          sessions = sessions.delete(sessionId);
+        } else {
+          console.log('Still Players left in session:', sessionId);
+          sessions = updatedSession;
+        }
       }
+      connectedPlayers = connectedPlayers.delete(socket.id);
     }
-    connectedPlayers = connectedPlayers.delete(socket.id);
   });
 
   socket.on('TOGGLE_LOCK', async (stateParam) => {
@@ -225,7 +227,6 @@ module.exports = function (socket, io) {
           const index = getPlayerIndex(socket.id);
           console.log('Player update', index, preBattleState.getIn(['players', index]));
           io.to(`${socketId}`).emit('UPDATE_PLAYER', index, preBattleState.getIn(['players', index]));
-          // TODO: Currently sends actionStacks and startingBoards for all players (For future to show all battles)
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);
           temp = iter.next();
         }

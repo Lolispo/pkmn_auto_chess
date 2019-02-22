@@ -1,9 +1,5 @@
 import { socket } from './index';
 
-const visualizeBattle = () => {
-  console.log('hello')
-}
-
 const reducer = (
   state = {
     index: -1,
@@ -24,6 +20,7 @@ const reducer = (
     expToReach: -1,
     gold: -1,
     onGoingBattle: false,
+    startBattle: false,
     actionStack: {},
     battleStartBoard: {},
     selectedUnit: -1,
@@ -107,11 +104,21 @@ const reducer = (
         onGoingBattle: true,
         actionStack,
         battleStartBoard,
+        startBattle: true
       }
       console.log('@battleTime actionStack', state.actionStack);
       console.log('@battleTime battleStartBoard', state.battleStartBoard)
-      visualizeBattle();
+      // TODO: BattleStartBoard contain unneccessary amount of information
       break;
+    case 'CHANGE_STARTBATTLE':
+      console.log('FIND ME: Changing StartBattle', action.value);
+      state = {...state, startBattle: action.value}
+      break;
+    case 'UPDATE_BATTLEBOARD':
+        console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
+        state = {...state, battleStartBoard: action.board, message: action.moveNumber}
+        // console.log('state', state);
+        break;
     case 'SELECT_UNIT':
       // TODO: Mark unit as selected Css
       state = {...state, selectedUnit: action.selectedUnit}

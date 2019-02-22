@@ -1612,7 +1612,7 @@
       "water",
       "flying"
     ],
-    "ability": "hydroPump",
+    "ability": "hyperBeam",
     "evolves_from": "magikarp"
   },
   "eevee": {

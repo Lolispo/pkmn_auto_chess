@@ -215,8 +215,11 @@ class Cell extends Component {
     // console.log('@Cell.getValue', this.props.map, this.props.map[this.getPos(value.x,value.y)])
     if(this.props.map){
       let pokemon;
+      // console.log('@getValue', this.props.isBoard && this.props.newProps.onGoingBattle)
       if(this.props.isBoard && this.props.newProps.onGoingBattle){ // Battle
+        // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
         pokemon = this.props.newProps.battleStartBoard[this.state.pos]
+        // TODO: Add healthbar
       } else {
         pokemon = this.props.map[this.state.pos];
       }
@@ -237,8 +240,10 @@ class Cell extends Component {
     selPos.x === this.props.value.x && selPos.y === this.props.value.y ? ' markedUnit' : '');
     return (
       <div id={this.state.pos} className={className} onClick={() => this.handleCellClick(this)} 
-        onMouseOver={(event) => this.handleMouseOver(event, this)} tabIndex='0'>
+        onMouseOver={(event) => this.handleMouseOver(event, this)}>
         {this.getValue()}
+        {(this.props.newProps.battleStartBoard[this.state.pos] ? 
+          <div className='hpBar' style={{width: (this.props.newProps.battleStartBoard[this.state.pos].hp)+'%'}}>{this.props.newProps.battleStartBoard[this.state.pos].hp}</div> : '')}
       </div>
     );
   }
@@ -449,6 +454,78 @@ class App extends Component {
     }
   }
 
+  wait = async (ms) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  renderMove = async (nextMove, board, timeToWait) => {
+    let newBoard = board;
+    await this.wait(timeToWait);
+    console.log('@Time: ', timeToWait, board);
+    const action = nextMove.action;
+    const target = nextMove.target;
+    const value = nextMove.value;
+    const unitPos = nextMove.unitPos;
+    const unit = newBoard[unitPos];  // Save unit from prev pos
+    switch(action) {
+      case 'move':
+        console.log('Move from', unitPos, 'to', target);
+        delete newBoard[unitPos];        // Remove unit from previous pos
+        newBoard[target] = unit;         // Add unit to new pos on board
+        return newBoard;
+      case 'attack':
+        // TODO: Animate attack on unitPos
+        const newHp = newBoard[target].hp - value;
+        console.log('Attack from', unitPos, 'with', value, 'damage, newHp', newHp);
+        if(newHp <= 0){
+          delete newBoard[target]; 
+        } else {
+          newBoard[target].hp = newHp;
+        }
+        return newBoard;
+      case 'spell':
+        const effect = nextMove.effect;
+        const abilityName = nextMove.abilityName;
+        const newHpSpell = newBoard[target].hp - value;
+        console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
+        if(newHpSpell <= 0){
+          delete newBoard[target]; 
+        } else {
+          newBoard[target].hp = newHpSpell;
+        }
+        return newBoard;
+      default:
+        console.log('error');
+    }
+  }
+
+  startBattleEvent = async (self) => {
+    console.log('ONLY ONCE PLS')
+    const { dispatch, actionStack, battleStartBoard } = self.props;
+    dispatch({type: 'CHANGE_STARTBATTLE', value: false});
+    let board = battleStartBoard
+    let currentTime = 0;
+    const timeFactor = 15;
+    console.log('hello', actionStack.length);
+    // Add some kind of timer here for battle countdowns (setTimeout here made dispatch not update correct state)
+    let counter = 0;
+    while(actionStack.length > 0) {
+      const nextMove = actionStack.shift(); // actionStack is mutable
+      const time = nextMove.time;
+      const nextRenderTime =  (time - currentTime) * timeFactor;
+      board = await this.renderMove(nextMove, board, nextRenderTime);
+      console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
+      currentTime = time;
+      dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
+      counter += 1;
+    }  
+  }
+
+  // TODO: Add listener here to call this.startBattleEvent (Some kind of state change)
+  //     {(this.props.startBattle ? this.startBattleEvent() : '')}
+
   render() {
     return <div>
       <div className='centerWith50 flex'>
@@ -521,19 +598,15 @@ class App extends Component {
                 <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
               </div>
             </div>
-            {/*<div>
-              <button className='normalButton marginTop5' onClick={() => toggleLock(this.props.storedState)}>Toggle Lock</button>
-            </div>
-            <div>
-            <button className='normalButton marginTop5' onClick={this.refreshShopEvent}>Refresh Shop</button>
-            </div>*/}
           </div>
           <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
             <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
           </div>
         </div>
       </div>
+      <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent(this) : () => {})}/>
       {/*
+      <p>battleStartBoard:{JSON.stringify(this.props.battleStartBoard, null, 2)}</p>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
       <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
       <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
@@ -572,6 +645,7 @@ const mapStateToProps = state => ({
   expToReach: state.expToReach,
   gold: state.gold,
   onGoingBattle: state.onGoingBattle,
+  startBattle: state.startBattle,
   actionStack: state.actionStack,
   battleStartBoard: state.battleStartBoard,
   selectedUnit: state.selectedUnit,
