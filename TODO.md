@@ -32,6 +32,8 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Make elements % based instead of pixel based
+
 Give information that playarea isn't selected when it isn't
     Some error showing when hotkeys are availalbe or not
 
