@@ -95,10 +95,10 @@ module.exports = function (socket, io) {
     console.log('Player disconnected: ', connectedPlayers.get(socket.id).get('socketId'));
     const user = connectedPlayers.get(socket.id);
     const sessionId = user.get('sessionId')
-    if(sessionId){ // User was in a session (not false, true | sessionId)
-      const session = sessions.get(sessionId);
+    const session = sessions.get(sessionId);
+    if(sessionId && session){ // User was in a session (not false, true | sessionId)
       const updatedSession = sessionJS.sessionPlayerDisconnect(socket.id, session);
-      if(isUndefined(updatedSession)){
+      if(f.isUndefined(updatedSession)){
         console.log('Removing Session:', sessionId, '(All players left)');
         sessions = sessions.delete(sessionId);
       } else {
@@ -177,12 +177,11 @@ module.exports = function (socket, io) {
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
 
-  // TODO Mark dead players as index -1
   socket.on('BATTLE_READY', async (stateParam) => {
     const index = getPlayerIndex(socket.id);
     const state = fromJS(stateParam); // Shouldn't require pieces in battle
     const amount = state.get('amountOfPlayers');
-    const sessionId = connectedPlayers.get(socketId).get('sessionId');
+    const sessionId = connectedPlayers.get(socket.id).get('sessionId');
     const session = sessions.get(sessionId);
     let counter = session.get('counter');
     let prepBattleState = session.get('prepBattleState');
@@ -205,7 +204,9 @@ module.exports = function (socket, io) {
         console.log('@sc.battleReady Ready for battle!');
         console.log('@sc.battleReady state', prepBattleState.getIn(['players']));
         // Battle
-        const obj = await gameJS.battleSetup(prepBattleState);
+        const prepBSWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, prepBattleState);
+        console.log('@sc.battleReady State sent in', prepBSWithPieces)
+        const obj = await gameJS.battleSetup(prepBSWithPieces);
         const state = obj.get('state');
         console.log('@sc.battleReady Players in state after Battle', state.getIn(['players']));
         const preBattleState = obj.get('preBattleState');
@@ -215,8 +216,8 @@ module.exports = function (socket, io) {
         let temp = iter.next();
         while (!temp.done) {
           const socketId = temp.value;
-          const index = connectedPlayers.get(socketId);
-          console.log('Player update', preBattleState.getIn(['players', index]));
+          const index = getPlayerIndex(socket.id);
+          console.log('Player update', index, preBattleState.getIn(['players', index]));
           io.to(`${socketId}`).emit('UPDATE_PLAYER', index, preBattleState.getIn(['players', index]));
           // TODO: Currently sends actionStacks and startingBoards for all players (For future to show all battles)
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);

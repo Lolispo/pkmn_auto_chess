@@ -1443,10 +1443,10 @@ async function endTurn(stateParam) {
   for (let i = 0; i < state.get('amountOfPlayers'); i++) {
     const locked = state.getIn(['players', i, 'locked']);
     if (!locked) {
-      state = await refreshShop(state, i);
+      state = await refreshShop(state, String(i));
       // console.log('Not locked for player[' + i + '] \n', state.get('pieces').get(0));
     }
-    state = await increaseExp(state, i, 1);
+    state = await increaseExp(state, String(i), 1);
     const gold = state.getIn(['players', i, 'gold']);
     // Min 0 gold interest -> max 5
     const bonusGold = Math.min(Math.floor(gold / 10), 5);

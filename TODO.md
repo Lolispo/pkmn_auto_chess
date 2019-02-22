@@ -11,6 +11,9 @@ Temp: 1 hp per level
 
 ## Backend
 
+end game when peoplePlaying > 2 from start and only one left
+    otherwise let play until dead (good for testing and singleplayer)
+
 More information on board units
     Buff, every unit has buff or empty
 
@@ -29,8 +32,22 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Give information that playarea isn't selected when it isn't
+    Some error showing when hotkeys are availalbe or not
+
 Add leaveGame button
     Are you sure you want to leave? Prompt
+
+outline ugly, not on right side
+
+store stats for units for infopanel in map
+    fetch from that if available
+    cache
+
+Cache images
+
+Start button bigger size
+    Doesn't fit 10/10 players ready
 
 Battle
 

@@ -3,7 +3,7 @@
 const { Map, List, Set } = require('immutable');
 const gameJS = require('./game');
 
-const START_COUNTER_VALUE = 1; // 0, 1 is for testing alone
+const START_COUNTER_VALUE = 0; // 0, 1 is for testing alone
 const MAX_AMOUNT_CONCURRENT_GAMES = 8;
 
 const getPlayerIndex = (session, socketId) => session.get('connectedPlayers').get(socketId);
