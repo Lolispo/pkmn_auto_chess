@@ -50,6 +50,10 @@ const configureSocket = dispatch => {
     dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards});
   });
 
+  socket.on('END_BATTLE', () => {
+    dispatch({ type: 'END_BATTLE'});
+  });
+
   socket.on('SET_STATS', (name, stats) => {
     console.log('@socket.setStats')
     dispatch({ type: 'SET_STATS', name, stats});

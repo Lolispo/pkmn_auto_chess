@@ -130,6 +130,9 @@ const reducer = (
       // console.log('@reducer.setMouseOverId', action.mouseOverId);
       state = {...state, mouseOverId: action.mouseOverId}
       break;
+    case 'END_BATTLE':
+      state = {...state, onGoingBattle: false}
+      break;
     default:
       break;
   }

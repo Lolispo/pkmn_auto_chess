@@ -529,7 +529,7 @@ class App extends Component {
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
     let board = battleStartBoard
     let currentTime = 0;
-    const timeFactor = 15;
+    const timeFactor = 15; // Load in a better way TODO
     console.log('hello', actionStack.length);
     // Add some kind of timer here for battle countdowns (setTimeout here made dispatch not update correct state)
     let counter = 0;

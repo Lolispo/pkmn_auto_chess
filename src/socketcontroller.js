@@ -10,6 +10,8 @@ const f = require('./f');
 let connectedPlayers = Map({}); // Stores connected players, socketids -> ConnectedUser
 let sessions = Map({});         // Maps sessionIds to sessions
 
+const TIME_FACTOR = 15;
+
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
 
 const countReadyPlayers = (isReadyAction, socket, io) => {
@@ -222,6 +224,8 @@ module.exports = function (socket, io) {
         const startingBoards = obj.get('startingBoards');
         const iter = connectedPlayers.keys();
         let temp = iter.next();
+        const stateToSend = getStateToSend(state);
+        const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
         while (!temp.done) {
           const socketId = temp.value;
           const index = getPlayerIndex(socket.id);
@@ -230,6 +234,10 @@ module.exports = function (socket, io) {
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);
           temp = iter.next();
         }
+        setTimeout(() => {
+          io.emit('END_BATTLE');
+          io.emit('UPDATED_STATE', stateToSend);
+        }, longestTime);
       } else {
         const newSession = session.set('counter', counter).set('prepBattleState', prepBattleState);
         sessions = sessions.set(sessionId, newSession);

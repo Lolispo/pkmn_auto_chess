@@ -32,6 +32,8 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Load / Set time factor better
+
 Fix z-index (or something) to place selected on top
 
 Make elements % based instead of pixel based
