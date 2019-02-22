@@ -215,17 +215,27 @@ class Cell extends Component {
     // console.log('@Cell.getValue', this.props.map, this.props.map[this.getPos(value.x,value.y)])
     if(this.props.map){
       let pokemon;
+      const sideLength = 85;
       // console.log('@getValue', this.props.isBoard && this.props.newProps.onGoingBattle)
       if(this.props.isBoard && this.props.newProps.onGoingBattle){ // Battle
         // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
         pokemon = this.props.newProps.battleStartBoard[this.state.pos]
-        // TODO: Add healthbar
+        const hpBar = (pokemon ? <div className='hpBarDiv' style={{width: sideLength}}>
+          <div className='hpBar text_shadow' style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
+          </div> : '')
+        if(!isUndefined(pokemon)){
+          const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
+          return <div style={{position: 'relative'}}>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
+            {hpBar}
+          </div>
+        }
       } else {
         pokemon = this.props.map[this.state.pos];
-      }
-      if(!isUndefined(pokemon)){
-        const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
-        return <PokemonImage name={pokemon.name} back={back} sideLength={85}/>
+        if(!isUndefined(pokemon)){
+          const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
+          return <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
+        }
       }
     }
     return null;
@@ -242,8 +252,6 @@ class Cell extends Component {
       <div id={this.state.pos} className={className} onClick={() => this.handleCellClick(this)} 
         onMouseOver={(event) => this.handleMouseOver(event, this)}>
         {this.getValue()}
-        {(this.props.newProps.battleStartBoard[this.state.pos] ? 
-          <div className='hpBar' style={{width: (this.props.newProps.battleStartBoard[this.state.pos].hp)+'%'}}>{this.props.newProps.battleStartBoard[this.state.pos].hp}</div> : '')}
       </div>
     );
   }

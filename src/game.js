@@ -1170,7 +1170,9 @@ async function markBoardBonuses(board) {
  */
 async function createBattleUnit(unit, unitPos, team) {
   const unitStats = await pokemonJS.getStats(unit.get('name'));
-  return unit.set('team', team).set('attack', unitStats.get('attack')).set('hp', unitStats.get('hp'))
+  return unit.set('team', team).set('attack', unitStats.get('attack'))
+    .set('hp', unitStats.get('hp'))
+    .set('maxHp', unitStats.get('hp'))
     .set('type', unitStats.get('type'))
     .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
     .set('ability', unitStats.get('ability'))

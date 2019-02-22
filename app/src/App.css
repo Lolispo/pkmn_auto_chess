@@ -203,10 +203,16 @@ body {
 }
 */
 
+.hpBarDiv {
+
+}
+
 .hpBar {
   background-color: green;
   text-align: center;
   border: 1px solid black;
+  position: absolute; 
+  margin-top: 5px;
   /*
   position: absolute;
   max-width: 84px;*/
