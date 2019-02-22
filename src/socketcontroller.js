@@ -242,6 +242,6 @@ module.exports = function (socket, io) {
     const ability = abilitiesJS.getAbility(name);
     const newStats = (await stats).set('abilityType', (await ability).get('type'));
     console.log('Retrieving stats for', name, newStats);
-    socket.emit('UPDATE_SELECTED_STATS', newStats);
+    socket.emit('SET_STATS', name, newStats);
   });
 };

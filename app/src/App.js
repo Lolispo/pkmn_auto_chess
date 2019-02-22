@@ -186,13 +186,22 @@ class Cell extends Component {
       return x;
     }
   }
+
+  getStatsEvent(props, name) {
+    if(props.statsMap[name]){
+      console.log('Cached info')
+      props.dispatch({type: 'SET_STATS', name: name, stats: props.statsMap[name]});
+    } else {
+      getStats(name);
+    }
+  }
   
   handleCellClick(el){
     // console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
     const unit = (el.props.isBoard ? el.props.newProps.myBoard[this.state.pos] : el.props.newProps.myHand[this.state.pos]);
     el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit}});
     if(unit)
-      getStats(unit.name);
+      this.getStatsEvent(el.props.newProps, unit.name);
   }
 
   handleMouseOver(event, self){
@@ -305,6 +314,8 @@ class App extends Component {
     }
     return String(x) + ',' + String(y);
   }
+
+  statsMap = {};
 
   buildStats = () => {
     if(this.props.stats){
@@ -494,6 +505,8 @@ class App extends Component {
         }
         return newBoard;
       case 'spell':
+        // TODO: Animations
+        // TODO: Check spell effects
         const effect = nextMove.effect;
         const abilityName = nextMove.abilityName;
         const newHpSpell = newBoard[target].hp - value;
@@ -659,6 +672,7 @@ const mapStateToProps = state => ({
   selectedUnit: state.selectedUnit,
   mouseOverId: state.mouseOverId,
   stats: state.stats,
+  statsMap: state.statsMap,
 });
 
 export default connect(mapStateToProps)(App);

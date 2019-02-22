@@ -26,6 +26,7 @@ const reducer = (
     selectedUnit: -1,
     mouseOverId: -1,
     stats: {},
+    statsMap: {},
   },
   action
 ) => {
@@ -92,9 +93,11 @@ const reducer = (
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message}
       break;
-    case 'UPDATE_SELECTED_STATS':
-      console.log('Updating stats', action.stats)
-      state = {...state, stats: action.stats}
+    case 'SET_STATS':
+      console.log('Updating stats', action.name, action.stats)
+      const statsMap = state.statsMap;
+      statsMap[action.name] = action.stats;
+      state = {...state, name: action.name, stats: action.stats, statsMap}
       break;
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];

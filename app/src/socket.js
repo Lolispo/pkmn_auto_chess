@@ -50,8 +50,9 @@ const configureSocket = dispatch => {
     dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards});
   });
 
-  socket.on('UPDATE_SELECTED_STATS', (stats) => {
-    dispatch({ type: 'UPDATE_SELECTED_STATS', stats});
+  socket.on('SET_STATS', (name, stats) => {
+    console.log('@socket.setStats')
+    dispatch({ type: 'SET_STATS', name, stats});
   });
   
   return socket;
