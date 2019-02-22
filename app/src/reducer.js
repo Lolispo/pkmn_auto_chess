@@ -1,9 +1,15 @@
 import { socket } from './index';
 
+const visualizeBattle = () => {
+  console.log('hello')
+}
+
 const reducer = (
   state = {
     index: -1,
     ready: false,
+    playersReady: -1,
+    connectedPlayers: -1,
     allReady: false,
     message: 'default',
     storedState: {},
@@ -46,10 +52,10 @@ const reducer = (
 
       break;
     case 'NEW_PIECES':
-      console.log('@New Pieces', action.newState.discarded_pieces)
+      console.log('@New Pieces', action.newState.discardedPieces)
       state = { ...state, pieces: action.newState.pieces}
       state.storedState.pieces = action.newState.pieces;
-      state.storedState.discarded_pieces = action.newState.discarded_pieces;
+      state.storedState.discardedPieces = action.newState.discardedPieces;
       break;
     case 'UPDATE_PLAYER':
       console.log('updating player', action.index, action.player);
@@ -79,9 +85,12 @@ const reducer = (
     case 'TOGGLE_READY':
       state = { ...state, ready: !state.ready}
       break;
+    case 'READY':
+      state = { ...state, playersReady: action.playersReady, connectedPlayers: action.connectedPlayers}
+      break;
     case 'ALL_READY':
-      console.log('AllReady', action.value)
-      state = { ...state, allReady: action.value}
+      console.log('AllReady', action.playersReady, action.connectedPlayers, action.value)
+      state = { ...state, playersReady: action.playersReady, connectedPlayers: action.connectedPlayers, allReady: action.value}
       break;
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message}
@@ -101,6 +110,7 @@ const reducer = (
       }
       console.log('@battleTime actionStack', state.actionStack);
       console.log('@battleTime battleStartBoard', state.battleStartBoard)
+      visualizeBattle();
       break;
     case 'SELECT_UNIT':
       // TODO: Mark unit as selected Css

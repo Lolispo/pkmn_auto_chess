@@ -44,7 +44,7 @@ async function initEmptyState(amountPlaying, optList) {
   const pieceStorage = await buildPieceStorage(optList);
   const state = Map({
     pieces: pieceStorage,
-    discarded_pieces: List([]),
+    discardedPieces: List([]),
     round: 1,
     income_basic: 1,
   });
@@ -141,7 +141,7 @@ async function refreshShop(stateParam, playerIndex) {
   const level = state.getIn(['players', playerIndex, 'level']);
   let newShop = Map({});
   let pieceStorage = state.get('pieces');
-  let discPieces = state.get('discarded_pieces');
+  let discPieces = state.get('discardedPieces');
   for (let i = 0; i < 5; i++) { // Loop over pieces
     const obj = await addPieceToShop(newShop, f.pos(i), pieceStorage, level, discPieces);
     newShop = obj.newShop;
@@ -160,7 +160,7 @@ async function refreshShop(stateParam, playerIndex) {
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
     console.log('@refreshShop filteredShop', filteredShop, '(', pieceStorage.size, '/', discPieces.size, ')');
-    state = state.set('discarded_pieces', discPieces.concat(filteredShop));
+    state = state.set('discardedPieces', discPieces.concat(filteredShop));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
   state = state.set('pieces', pieceStorage);
@@ -213,7 +213,7 @@ exports.createBattleBoard = async (inputList) => {
  */
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
-  console.log('@buyunit', unitID, playerIndex, state.getIn(['players', playerIndex, 'hand']).get('name'), f.pos(unitID));
+  console.log('@buyunit', unitID, playerIndex, f.pos(unitID));
   // console.log(state.getIn(['players', playerIndex, 'shop']));
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(f.pos(unitID)).get('name');
@@ -303,7 +303,7 @@ exports.buyExp = (state, playerIndex) => {
 /**
   * Checks all units on board for player of that piece type
   * if 3 units are found, remove those 3 units and replace @ position with evolution
-  * No units are added to discarded_pieces
+  * No units are added to discardedPieces
   */
 async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   let state = stateParam;
@@ -415,19 +415,19 @@ async function withdrawPiece(state, playerIndex, piecePosition) {
 exports._withdrawPiece = async (state, playerIndex, piecePosition) => withdrawPiece(state, playerIndex, piecePosition);
 
 /**
- * When units are sold, when level 1, a level 1 unit should be added to discarded_pieces
+ * When units are sold, when level 1, a level 1 unit should be added to discardedPieces
  * Level 2 => 3 level 1 units, Level 3 => 9 level 1 units
  */
 async function discardBaseUnits(state, name, depth = '1') {
   const unitStats = await pokemonJS.getStats(name);
   const evolutionFrom = unitStats.get('evolution_from');
   if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
-    let discPieces = state.get('discarded_pieces');
+    let discPieces = state.get('discardedPieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
     for (let i = 0; i < amountOfPieces; i++) {
       discPieces = await discPieces.push(name);
     }
-    return state.set('discarded_pieces', discPieces);
+    return state.set('discardedPieces', discPieces);
   }
   const newName = evolutionFrom.get('name');
   return discardBaseUnits(state, newName, depth + 1);
@@ -1580,7 +1580,7 @@ async function startGame(stateParam) {
   return state;
 }
 
-exports._startGame = async () => {
-  const state = await initEmptyState(2);
+exports._startGame = async amountPlaying => {
+  const state = await initEmptyState(amountPlaying);
   return await startGame(state);
 };

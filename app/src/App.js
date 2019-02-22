@@ -138,7 +138,6 @@ class Board extends Component {
   state = {
     ...this.props,
     boardData: this.createEmptyArray(this.props.height, this.props.width),
-    // gameStatus: "Game in progress",
   };
 
   placePieceEvent = (fromParam, to) => {
@@ -307,7 +306,12 @@ class Cell extends Component {
     // console.log('@Cell.getValue value =', value)
     // console.log('@Cell.getValue', this.props.map, this.props.map[this.getPos(value.x,value.y)])
     if(this.props.map){
-      const pokemon = this.props.map[this.state.pos];
+      let pokemon;
+      if(this.props.isBoard && this.props.newProps.onGoingBattle){ // Battle
+        pokemon = this.props.newProps.battleStartBoard[this.state.pos]
+      } else {
+        pokemon = this.props.map[this.state.pos];
+      }
       if(!isUndefined(pokemon)){
         const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
         return <PokemonImage name={pokemon.name} back={back} sideLength={85}/>
@@ -350,7 +354,7 @@ class App extends Component {
     if(this.props.allReady){
       // TODO: Actually start game
       console.log('Starting')
-      startGame();
+      startGame(this.props.playersReady);
     } else {
       console.log('Not starting')
     }
@@ -474,7 +478,9 @@ class App extends Component {
         <div style={{width: '165px'}}>
           <div className='flex'> 
             <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-            <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>StartGame</button>
+            <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>
+              StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
+            </button>
           </div>
           <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
             <CSSTransitionGroup
@@ -505,8 +511,8 @@ class App extends Component {
         </div>
         <div className='paddingLeft5'>
           <div>
-            <div>
-              <div className='flex' onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='1'>
+            <div onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='1'>
+              <div className='flex'>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
@@ -558,6 +564,8 @@ class App extends Component {
 const mapStateToProps = state => ({
   index: state.index,
   ready: state.ready,
+  playersReady: state.playersReady,
+  connectedPlayers: state.connectedPlayers,
   allReady: state.allReady,
   message: state.message,
   storedState: state.storedState,

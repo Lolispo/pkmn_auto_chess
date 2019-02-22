@@ -43,7 +43,7 @@ describe('game state', () => {
       let state = await initEmptyState(2);
       assert.equal(state.get('round'), 1);
       assert.equal(state.get('income_basic'), 1);
-      assert.equal(state.get('discarded_pieces').size, 0);
+      assert.equal(state.get('discardedPieces').size, 0);
       assert.equal(state.getIn(['players', 0, 'level']), 1);
       assert.equal(state.getIn(['players', 1, 'level']), 1);
       assert.equal(state.getIn(['players', 0, 'expToReach']), 1);
@@ -82,9 +82,9 @@ describe('game state', () => {
       const newestPieces = state.get('pieces');
       console.log('newestPieces', newestPieces.get(0).get(0))
       assert.equal(pieces.get(0).get(10), newestPieces.get(0).get(0));
-      console.log('@test discarded', state.get('discarded_pieces'));
-      console.log(pieces.get(0).get(0), state.get('discarded_pieces').get(0))
-      assert.equal(pieces.get(0).get(0), state.get('discarded_pieces').get(0));
+      console.log('@test discarded', state.get('discardedPieces'));
+      console.log(pieces.get(0).get(0), state.get('discardedPieces').get(0))
+      assert.equal(pieces.get(0).get(0), state.get('discardedPieces').get(0));
       assert.equal(pieces.get(0).get(5), state.getIn(['players', 0, 'shop']).get(f.pos(0)).get('name'));
       assert.equal(state.getIn(['players', 1, 'shop']).size, 0);
     });
@@ -264,7 +264,7 @@ describe('game state', () => {
       const gold = state.getIn(['players', 0, 'gold']);
       const unit = hand.get(f.pos(0));
       state = await sellPiece(state, 0, f.pos(0));
-      assert.equal(unit.get('name'), state.get('discarded_pieces').get(0));
+      assert.equal(unit.get('name'), state.get('discardedPieces').get(0));
       assert.equal(state.getIn(['players', 0, 'hand']).get(f.pos(0)), undefined);
       assert.equal(gold, 0);
       const stats = await pokemonJS.getStats(unit.get('name'));
@@ -394,7 +394,7 @@ describe('game state', () => {
   /**
     * Checks all units on board for player of that piece type
     * if 3 units are found, remove those 3 units and replace @ position with evolution
-    * No units are added to discarded_pieces
+    * No units are added to discardedPieces
     * stateParam, playerIndex, piece, position
     */
   describe('checkPieceUpgrade', () => {
@@ -444,7 +444,7 @@ describe('game state', () => {
   });
   describe('discardBaseUnits', () => {
     /**
-     * When units are sold, when level 1, a level 1 unit should be added to discarded_pieces
+     * When units are sold, when level 1, a level 1 unit should be added to discardedPieces
      * Level 2 => 3 level 1 units, Level 3 => 9 level 1 units
      */
     it('discardBaseUnits level 1 unit test?', async () => {

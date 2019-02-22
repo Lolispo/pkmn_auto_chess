@@ -29,6 +29,9 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Add leaveGame button
+    Are you sure you want to leave? Prompt
+
 Battle
 
 Use Message more

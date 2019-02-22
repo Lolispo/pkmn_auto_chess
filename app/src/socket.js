@@ -37,8 +37,13 @@ const configureSocket = dispatch => {
     dispatch({ type: 'NEW_PLAYER', index: index});
   });
 
-  socket.on('ALL_READY', bool => {
-    dispatch({ type: 'ALL_READY', value: bool});
+  // TODO Update in reducer for Allready and ready
+  socket.on('ALL_READY', (playersReady, connectedPlayers, allReady) => {
+    dispatch({ type: 'ALL_READY', playersReady: playersReady, connectedPlayers: connectedPlayers, value: allReady});
+  });
+
+  socket.on('READY', (playersReady, connectedPlayers) => {
+    dispatch({ type: 'READY', playersReady: playersReady, connectedPlayers: connectedPlayers});
   });
   
   socket.on('BATTLE_TIME', (actionStacks, battleStartBoards) => {
@@ -65,8 +70,8 @@ export const unready = () =>
 export const giveId = () => 
   socket.emit('GIVE_ID');
 
-export const startGame = () => 
-  socket.emit('START_GAME');
+export const startGame = amountToPlay => 
+  socket.emit('START_GAME', amountToPlay);
 
 export const toggleLock = (state) => {
   if(state.players) {
