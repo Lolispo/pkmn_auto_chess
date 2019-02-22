@@ -40,13 +40,13 @@ Add leaveGame button
 outline ugly, not on right side
 
 Cache Information
-    Prio: store stats for units for infopanel in map
     Cache images/gifs (Store image, paddingTop, width and height, might not work)
 
 Allow to start game without all connected sockets ready
     Countdown and start with all ready players when countdown finishes
 
 Battle
+    Send finished state from backend after timeFactor * longestMatchTime
 
 Use Message more
 
