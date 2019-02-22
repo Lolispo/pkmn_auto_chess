@@ -414,7 +414,8 @@ class App extends Component {
 
   sellPieceEvent = (from) => {
     const prop = this.props;
-    const validUnit = (this.props.isBoard ? prop.myBoard[from] : prop.myHand[from])
+    const validUnit = (prop.selectedUnit.isBoard ? prop.myBoard[from] : prop.myHand[from])
+    console.log('@sellPiece', validUnit, from, prop.selectedUnit.isBoard)
     if(validUnit && !prop.onGoingBattle){ // From contains unit
       sellPiece(prop.storedState, String(from));
     } else{

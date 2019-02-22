@@ -92,7 +92,7 @@
 
 .cell {
   border: 1px solid lightblue;
-  border-radius: 5px;
+  border-radius: 8px;
   width: 85px; 
   height: 85px;
   background-color: gray;
@@ -102,9 +102,11 @@
 
 .markedUnit {
   border: 1px solid yellow;
+  /*
   outline-style: groove;
-  outline-color: yellow;
-  outline-width: medium;
+  outline-color: gold;
+  outline-width: thin;*/
+  box-shadow: 0 0 7pt 3pt yellow;
 }
 
 :focus { outline: none; }

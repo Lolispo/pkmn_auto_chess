@@ -32,6 +32,8 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Fix z-index (or something) to place selected on top
+
 Make elements % based instead of pixel based
 
 Add leaveGame button
@@ -55,8 +57,6 @@ Show permenent buffs at left of board
 Timer
 
 Sound
-
-Ready: Show number of connected players on start game button
 
 Right side of screen: contain information from other players
 
@@ -114,11 +114,6 @@ eevee:
     Temp: Random
 
 ## New features to add (Not as core)
-
-Mapper: Json object to transfer to front-end with relevant information
-    socketcontroller handles communication
-    pieces shouldn't be reachable on the client
-    session based saving of pieces instead? #Communication
 
 Find a way of choosing pokemon in play
     (Filtered list makes this less important)
