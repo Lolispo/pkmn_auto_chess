@@ -497,6 +497,9 @@ class App extends Component {
         return newBoard;
       case 'attack':
         // TODO: Animate attack on unitPos
+        if(isUndefined(newBoard[target])){
+          console.log('Time to crash: ', newBoard, target, value);
+        }
         const newHp = newBoard[target].hp - value;
         console.log('Attack from', unitPos, 'with', value, 'damage, newHp', newHp);
         if(newHp <= 0){

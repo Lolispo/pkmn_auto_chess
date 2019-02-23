@@ -216,6 +216,7 @@ module.exports = function (socket, io) {
         // Battle
         const prepBSWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, prepBattleState);
         console.log('@sc.battleReady State sent in', prepBSWithPieces)
+
         const obj = await gameJS.battleSetup(prepBSWithPieces);
         const state = obj.get('state');
         console.log('@sc.battleReady Players in state after Battle', state.getIn(['players']));
@@ -228,7 +229,7 @@ module.exports = function (socket, io) {
         const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
         while (!temp.done) {
           const socketId = temp.value;
-          const index = getPlayerIndex(socket.id);
+          const index = getPlayerIndex(socketId);
           console.log('Player update', index, preBattleState.getIn(['players', index]));
           io.to(`${socketId}`).emit('UPDATE_PLAYER', index, preBattleState.getIn(['players', index]));
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);

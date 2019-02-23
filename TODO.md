@@ -12,6 +12,7 @@ Temp: 1 hp per level
 ## Backend
 
 end game when peoplePlaying > 2 from start and only one left
+    Game over logic
     otherwise let play until dead (good for testing and singleplayer)
 
 More information on board units
@@ -30,9 +31,21 @@ Matchup system
     
 Finish abilities implementation (teleport)
 
+Handle empty boards for battle
+
+ToggleLock make it work
+    Make toggleWork toggle in session for player (during battles required)
+
+Check Pieces, more than 9 ekans currently for example
+
 ## Frontend
 
+Show damage dealt from unit to target, apply css animation of movement in that direction
+
 Load / Set time factor better
+
+Show player Names / hp on right side of screen
+    Add option to choose playerNames
 
 Fix z-index (or something) to place selected on top
 
@@ -114,6 +127,10 @@ eevee:
     Placement of eevees decides evolution!
     Evolution based on amount of unit types on board
     Temp: Random
+
+## Balance
+
+Second wave 2 rattatas seem strong
 
 ## New features to add (Not as core)
 
