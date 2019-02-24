@@ -9,7 +9,12 @@ How much hp to lose? 1 point per level of unit
 Definitely not, 6 level 6 units would be 36 hp, more like 14 damage from them (6-0)
 Temp: 1 hp per level
 
+Buyexp 4 or 5
+
 ## Backend
+
+Prebattlestate calculations seem to put units in weird positions
+    Position seem correct still but their key is wrong (2,0 -> 5,5)
 
 endTurn first calculated after battle is visually simualted
     Supports locking of shop and selling pieces for other income bonuses
@@ -55,6 +60,10 @@ ToggleLock
 Level 5 shouldnt be gym wave
     Somehow onix geodude wave (Gym at lvl 10) came at 5
 
+Callback too many units
+
+Lose hp from npcRound
+
 ## Frontend
 
 Startscreen: 
@@ -71,19 +80,34 @@ Battle
         Max 200, 50/200 => 25% mana bar full
         Change color of manabar when above ability.cost
     Select units working during battle (Investigate)
+    Show damage dealt from unit to target, apply css animation of movement in that direction
 
-Show bars in infopanel screen for stats (Easier comparisons)
+Infopanel
+    Show bars in infopanel screen for stats (Easier comparisons)
+    Show all evolutions, highlight selected unit
+    Click on evolution, expand that unit
+        Name on evolution
+    Level of unit displayed (Cost, worth to sell)
 
-Show damage dealt from unit to target, apply css animation of movement in that direction
+Shop
+    Buy unit third of shop div
+    Rest is infopanel selectable
 
 Scoreboard: 
-    Stick to right side, bigger on hover
+    Fix player+hp order being displayed correctly
+        Show player name on screen somewhere too make more clear
+    Stick to right side
     Add option to choose playerNames
-    Make players clickable/hoverable
+    Make players clickable
         Show their board when that is done
 
-Fix z-index (or something) to place selected on top
-    outline ugly, not on right side
+Board css:
+    pseduoElements :select 
+    Fix z-index (or something) to place selected on top
+        outline ugly, not on right side
+    Display Which unit will be called back/selected when too many units on board
+        Gray background or something
+        Requires replacement of code
 
 Cache Information
     Cache images/gifs (Store image, paddingTop, width and height, might not work)
@@ -97,7 +121,29 @@ Timer
 
 Sound
 
+Support for mouse only gameplay
+    If markedUnit exist (selectedUnit) and empty board is clicked
+        (no unit) then placePiece from select to no unit pos
+
+
+
+RefreshPiece cost 2 gold, more clear
+
+Display winner of battle more clear
+
+Levelup:
+    Level up effect
+    Display between board and hand exp
+        Display classic pokemon exp bar instead of exp/expToReach
+        Number in middle
+        exp / exptoreach to the left
+        [5/8] --- ----     5 ---------]
+Shop
+    Buy button (Big one)
+
 ## Communication
+
+session is undefined, causes server crash
 
 ## Tests
 
@@ -157,6 +203,8 @@ eevee:
 ## Balance
 
 Second wave 2 rattatas seem strong
+
+Diglett too weak for 2? -> 1?
 
 ## New features to add (Not as core)
 

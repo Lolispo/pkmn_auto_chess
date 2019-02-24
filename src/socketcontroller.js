@@ -85,7 +85,7 @@ module.exports = function (socket, io) {
     console.log('Starting game!');
     
     // Send to all connected sockets
-    const stateToSend = getStateToSend(state).setIn(['players', '0', 'gold'], 1000);
+    const stateToSend = getStateToSend(state); //.setIn(['players', '0', 'gold'], 1000);
     console.log('@startGame', socket.id, sessionConnectedPlayers, stateToSend)
     const iter = sessionConnectedPlayers.keys();
     let temp = iter.next();

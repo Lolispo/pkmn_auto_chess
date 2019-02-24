@@ -1373,6 +1373,7 @@ async function fixTooManyUnits(state, playerIndex) {
     chosenUnit = cheapestCostIndex.get(chosenIndex);
   }
   // Withdraw if possible unit, otherwise sell
+  console.log('@FixTooManyUnits Check keys', state);
   let newState;
   // TODO: Inform Client about update
   if (state.getIn(['players', playerIndex, 'hand']).size < 8) {
