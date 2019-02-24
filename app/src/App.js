@@ -536,6 +536,9 @@ class App extends Component {
     // Add some kind of timer here for battle countdowns (setTimeout here made dispatch not update correct state)
     let counter = 0;
     while(actionStack.length > 0) {
+      if(isUndefined(board)){
+        console.log('CHECK ME: Board is undefined', board, nextMove, nextRenderTime);
+      }
       const nextMove = actionStack.shift(); // actionStack is mutable
       const time = nextMove.time;
       const nextRenderTime =  (time - currentTime) * timeFactor;

@@ -11,85 +11,91 @@ Temp: 1 hp per level
 
 ## Backend
 
-first move
+endTurn first calculated after battle is visually simualted
+    Supports locking of shop and selling pieces for other income bonuses
+        Potential for abuse if before battle have over certain amount, income from that, and then buy a lot
+    Move it out of the battle functions, battlefunctions return relevant data (winner)
 
 end game when peoplePlaying > 2 from start and only one left
     Game over logic
     otherwise let play until dead (good for testing and singleplayer)
 
-More information on board units
-    Buff, every unit has buff or empty
+Information moving to get to frontend:
+    Gold information calculation
+        Move outside of function, calculate at gold changes and update frontend
+    Type bonuses calculations, what combos are active
+        Recalculate and update unitbuffs and boardBuffs on piece interactions
+        Set on board units (not battle, already had)
+            Every unit has buff or empty
+        Set on left side of board, buffs
+            boardBuffs    
 
-Type bonuses on current board 
-    typeBuffs
-    Recalculate and store on piece interactions
+Handle empty boards for battle
 
-Stop spawning units of certain type for player if has level 3
+Pieces:
     Max 9 units for each player
+        Fixes: Stop spawning units of certain type for player if has level 3
+    Check Pieces, more than 9 ekans currently for example
+
+Ability displayName
 
 Aoe damage logic
 
 Matchup system
-    
+
+first move
+
 Finish abilities implementation (teleport)
 
-Handle empty boards for battle
-
-ToggleLock make it work
-    Make toggleWork toggle in session for player (during battles required)
-
-Check Pieces, more than 9 ekans currently for example
-
-Ability displayName
+ToggleLock
+    toggeLock, dispatch directly, dont interact with server (Easy spam)
+    If in battle: 
+        Interact with server and set it to be saved into the player just created
 
 Level 5 shouldnt be gym wave
     Somehow onix geodude wave (Gym at lvl 10) came at 5
 
-toggeLock, dispatch directly, dont interact with server (Easy spam)
-
 ## Frontend
 
-Update connected on disconnect
+Startscreen: 
+    Update connected on disconnect
+    Make different actions invalid if game isn't live
+    If connection with host is gone, exit game
+    Allow to start game without all connected sockets ready
+        Countdown and start with all ready players when countdown finishes
+    Add leaveGame button
+        Are you sure you want to leave? Prompt
 
-Show mana bar
-    Max 200 or something?
+Battle
+    Show mana bar
+        Max 200, 50/200 => 25% mana bar full
+        Change color of manabar when above ability.cost
+    Select units working during battle (Investigate)
 
 Show bars in infopanel screen for stats (Easier comparisons)
 
 Show damage dealt from unit to target, apply css animation of movement in that direction
 
-Load / Set time factor better
-
-Show player Names / hp on right side of screen
+Scoreboard: 
+    Stick to right side, bigger on hover
     Add option to choose playerNames
+    Make players clickable/hoverable
+        Show their board when that is done
 
 Fix z-index (or something) to place selected on top
     outline ugly, not on right side
 
-Make elements % based instead of pixel based
-
-Add leaveGame button
-    Are you sure you want to leave? Prompt
-
-
 Cache Information
     Cache images/gifs (Store image, paddingTop, width and height, might not work)
 
-Allow to start game without all connected sockets ready
-    Countdown and start with all ready players when countdown finishes
-
-Battle
-    Send finished state from backend after timeFactor * longestMatchTime
-
-Use Message more
+Use Message more, especially for errors
+    Read text if error
 
 Show permenent buffs at left of board  
 
 Timer
 
 Sound
-
-Right side of screen: contain information from other players
 
 ## Communication
 
@@ -103,9 +109,13 @@ Abilities:
 Test dot damage functionality
 Test lifesteal functionality
 
-## Javascript Check me
+## Code / Javascript Check me
 
-Give information that playarea isn't selected when it isn't
+Load / Set time factor better
+
+Make elements % based instead of pixel based
+
+Give information that playarea isn't in focus when it isn't
     Some error showing when hotkeys are availalbe or not
 
 check Promise.all alternative for loops
