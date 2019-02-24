@@ -551,6 +551,20 @@ class App extends Component {
   // TODO: Add listener here to call this.startBattleEvent (Some kind of state change)
   //     {(this.props.startBattle ? this.startBattleEvent() : '')}
 
+  playerStatsDiv = () => {
+    const players = this.props.players;
+    const sortedPlayersByHp = Object.keys(players).sort(function(a,b){return players[a].hp - players[b].hp});
+    let list = [];
+    for(let i = 0; i < sortedPlayersByHp.length; i++){
+      console.log('inner: ', i, sortedPlayersByHp[i], players[sortedPlayersByHp[i]], players[sortedPlayersByHp[i]].hp)
+      list.push(<div>{i + ': ' + players[sortedPlayersByHp[i]].hp}</div>)
+    }
+    console.log('@PlayerStatsDiv', sortedPlayersByHp);
+    return <div>
+       {list}
+    </div>
+  }
+
   render() {
     return <div>
       <div className='centerWith50 flex'>
@@ -627,6 +641,9 @@ class App extends Component {
           <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
             <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
           </div>
+        </div>
+        <div>
+          {this.playerStatsDiv()}
         </div>
       </div>
       <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent(this) : () => {})}/>

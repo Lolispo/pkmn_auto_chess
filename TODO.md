@@ -11,6 +11,8 @@ Temp: 1 hp per level
 
 ## Backend
 
+first move
+
 end game when peoplePlaying > 2 from start and only one left
     Game over logic
     otherwise let play until dead (good for testing and singleplayer)
@@ -38,7 +40,11 @@ ToggleLock make it work
 
 Check Pieces, more than 9 ekans currently for example
 
+Ability displayName
+
 ## Frontend
+
+Show mana bar
 
 Show damage dealt from unit to target, apply css animation of movement in that direction
 
@@ -48,13 +54,13 @@ Show player Names / hp on right side of screen
     Add option to choose playerNames
 
 Fix z-index (or something) to place selected on top
+    outline ugly, not on right side
 
 Make elements % based instead of pixel based
 
 Add leaveGame button
     Are you sure you want to leave? Prompt
 
-outline ugly, not on right side
 
 Cache Information
     Cache images/gifs (Store image, paddingTop, width and height, might not work)
