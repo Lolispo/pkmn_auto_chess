@@ -221,6 +221,7 @@ module.exports = function (socket, io) {
         const state = obj.get('state');
         console.log('@sc.battleReady Players in state after Battle', state.getIn(['players']));
         const preBattleState = obj.get('preBattleState');
+        console.log('@sc.battleReady Pre battle state', preBattleState.getIn(['players']));
         const actionStacks = obj.get('actionStacks');
         const startingBoards = obj.get('startingBoards');
         const iter = connectedPlayers.keys();

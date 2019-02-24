@@ -291,7 +291,7 @@ async function increaseExp(stateParam, playerIndex, amountParam) {
 exports.buyExp = (state, playerIndex) => {
   const gold = state.getIn(['players', playerIndex, 'gold']);
   const newState = state.setIn(['players', playerIndex, 'gold'], gold - 5);
-  return increaseExp(newState, playerIndex, 5);
+  return increaseExp(newState, playerIndex, 4);
 };
 
 
@@ -1373,7 +1373,7 @@ async function fixTooManyUnits(state, playerIndex) {
     chosenUnit = cheapestCostIndex.get(chosenIndex);
   }
   // Withdraw if possible unit, otherwise sell
-  console.log('@FixTooManyUnits Check keys', state);
+  console.log('@FixTooManyUnits Check keys', state.get('players'));
   let newState;
   // TODO: Inform Client about update
   if (state.getIn(['players', playerIndex, 'hand']).size < 8) {

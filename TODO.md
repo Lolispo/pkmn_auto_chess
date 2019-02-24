@@ -9,8 +9,6 @@ How much hp to lose? 1 point per level of unit
 Definitely not, 6 level 6 units would be 36 hp, more like 14 damage from them (6-0)
 Temp: 1 hp per level
 
-Buyexp 4 or 5
-
 ## Backend
 
 Prebattlestate calculations seem to put units in weird positions
@@ -57,9 +55,6 @@ ToggleLock
     If in battle: 
         Interact with server and set it to be saved into the player just created
 
-Level 5 shouldnt be gym wave
-    Somehow onix geodude wave (Gym at lvl 10) came at 5
-
 Callback too many units
 
 Lose hp from npcRound
@@ -74,6 +69,21 @@ Startscreen:
         Countdown and start with all ready players when countdown finishes
     Add leaveGame button
         Are you sure you want to leave? Prompt
+
+TopBar:
+    Add option to choose playerNames
+    Show which round
+    (PieceImage) Amount of pieces on board / Level (max amount allowed)
+        Turn Red on left number if above
+    Move away level
+    
+Levelup:
+    Level up effect
+    Display between board and hand exp
+        Display classic pokemon exp bar instead of exp/expToReach
+        Number in middle
+        exp / exptoreach to the left
+        [5/8] --- ----     5 ---------]
 
 Battle
     Show mana bar
@@ -97,7 +107,6 @@ Scoreboard:
     Fix player+hp order being displayed correctly
         Show player name on screen somewhere too make more clear
     Stick to right side
-    Add option to choose playerNames
     Make players clickable
         Show their board when that is done
 
@@ -113,7 +122,7 @@ Cache Information
     Cache images/gifs (Store image, paddingTop, width and height, might not work)
 
 Use Message more, especially for errors
-    Read text if error
+    Red text if error
 
 Show permenent buffs at left of board  
 
@@ -130,16 +139,6 @@ Support for mouse only gameplay
 RefreshPiece cost 2 gold, more clear
 
 Display winner of battle more clear
-
-Levelup:
-    Level up effect
-    Display between board and hand exp
-        Display classic pokemon exp bar instead of exp/expToReach
-        Number in middle
-        exp / exptoreach to the left
-        [5/8] --- ----     5 ---------]
-Shop
-    Buy button (Big one)
 
 ## Communication
 

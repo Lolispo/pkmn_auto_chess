@@ -1,5 +1,3 @@
-import { socket } from './index';
-
 const reducer = (
   state = {
     index: -1,

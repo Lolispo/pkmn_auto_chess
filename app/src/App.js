@@ -1,3 +1,5 @@
+// Author: Petter Andersson
+
 import React, { Component } from 'react';
 import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece, getStats} from './socket';
 import { connect } from 'react-redux';
@@ -9,7 +11,6 @@ import lockedLock from './assets/lockedLock.png';
 import openLock from './assets/openLock.png';
 import goldCoin from './assets/goldCoin.png';
 import refreshShopImage from './assets/refreshShop.png';
-// import { ifError } from 'assert';
 
 class PokemonImage extends Component{
 
@@ -471,6 +472,7 @@ class App extends Component {
       case 'f':
         this.buyExp();
         break;
+      default:
     }
   }
 
@@ -483,7 +485,7 @@ class App extends Component {
   renderMove = async (nextMove, board, timeToWait) => {
     let newBoard = board;
     await this.wait(timeToWait);
-    console.log('@Time: ', timeToWait, board);
+    // console.log('@Time: ', timeToWait, board);
     const action = nextMove.action;
     const target = nextMove.target;
     const value = nextMove.value;
@@ -536,12 +538,12 @@ class App extends Component {
     // Add some kind of timer here for battle countdowns (setTimeout here made dispatch not update correct state)
     let counter = 0;
     while(actionStack.length > 0) {
-      if(isUndefined(board)){
-        console.log('CHECK ME: Board is undefined', board, nextMove, nextRenderTime);
-      }
       const nextMove = actionStack.shift(); // actionStack is mutable
       const time = nextMove.time;
       const nextRenderTime =  (time - currentTime) * timeFactor;
+      if(isUndefined(board)){
+        console.log('CHECK ME: Board is undefined', board, nextMove, nextRenderTime);
+      }
       board = await this.renderMove(nextMove, board, nextRenderTime);
       // console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
       currentTime = time;

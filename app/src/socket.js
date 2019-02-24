@@ -1,3 +1,5 @@
+// Author: Petter Andersson
+
 // src/socket.js
 import io from 'socket.io-client';
 
