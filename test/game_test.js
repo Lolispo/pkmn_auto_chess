@@ -901,6 +901,7 @@ describe('gameconstants', () => {
       assert.equal(fileModule2.getRoundType(3), 'npc');
       assert.equal(fileModule2.getRoundType(4), 'pvp');
       assert.equal(fileModule2.getRoundType(5), 'pvp');
+      assert.equal(fileModule2.getRoundType(6), 'pvp');
       assert.equal(fileModule2.getRoundType(8), 'pvp');
       assert.equal(fileModule2.getRoundType(10), 'gym');
       assert.equal(fileModule2.getRoundType(20), 'gym');

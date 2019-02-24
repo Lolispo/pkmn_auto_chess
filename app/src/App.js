@@ -22,7 +22,7 @@ class PokemonImage extends Component{
   }
 
   onImgLoad({target:img}) {
-    console.log('@onImgLoad - ', img.offsetHeight, 'vs', img.naturalHeight, ', ', img.offsetWidth, 'vs', img.naturalWidth);
+    // console.log('@onImgLoad - ', img.offsetHeight, 'vs', img.naturalHeight, ', ', img.offsetWidth, 'vs', img.naturalWidth);
     this.setState({dimensions:{height:img.naturalHeight,
                                width:img.naturalWidth}});
     this.calculatePadding(img.naturalHeight);
@@ -44,7 +44,7 @@ class PokemonImage extends Component{
   calculatePadding(height) {
     const sideLength = this.state.sideLength;
     const paddingTop = (sideLength - height) / 2;
-    console.log('@calculatePadding', paddingTop)
+    // console.log('@calculatePadding', paddingTop)
     this.setState({paddingTop: paddingTop});
   }
 
@@ -226,7 +226,7 @@ class Cell extends Component {
       let pokemon;
       const sideLength = 85;
       // console.log('@getValue', this.props.isBoard && this.props.newProps.onGoingBattle)
-      if(this.props.isBoard && this.props.newProps.onGoingBattle){ // Battle
+      if(this.props.isBoard && this.props.newProps.onGoingBattle && this.props.newProps.battleStartBoard){ // Battle
         // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
         pokemon = this.props.newProps.battleStartBoard[this.state.pos]
         const hpBar = (pokemon ? <div className='hpBarDiv' style={{width: sideLength}}>
@@ -527,13 +527,12 @@ class App extends Component {
   }
 
   startBattleEvent = async (self) => {
-    console.log('ONLY ONCE PLS')
     const { dispatch, actionStack, battleStartBoard } = self.props;
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
     let board = battleStartBoard
     let currentTime = 0;
     const timeFactor = 15; // Load in a better way TODO
-    console.log('hello', actionStack.length);
+    console.log('Starting Battle with', actionStack.length, 'moves');
     // Add some kind of timer here for battle countdowns (setTimeout here made dispatch not update correct state)
     let counter = 0;
     while(actionStack.length > 0) {
@@ -541,7 +540,7 @@ class App extends Component {
       const time = nextMove.time;
       const nextRenderTime =  (time - currentTime) * timeFactor;
       board = await this.renderMove(nextMove, board, nextRenderTime);
-      console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
+      // console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
       currentTime = time;
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
       counter += 1;
@@ -556,12 +555,13 @@ class App extends Component {
     const sortedPlayersByHp = Object.keys(players).sort(function(a,b){return players[a].hp - players[b].hp});
     let list = [];
     for(let i = 0; i < sortedPlayersByHp.length; i++){
-      console.log('inner: ', i, sortedPlayersByHp[i], players[sortedPlayersByHp[i]], players[sortedPlayersByHp[i]].hp)
-      list.push(<div>{i + ': ' + players[sortedPlayersByHp[i]].hp}</div>)
+      // console.log('inner: ', i, sortedPlayersByHp[i], players[sortedPlayersByHp[i]], players[sortedPlayersByHp[i]].hp)
+      list.push(<div key={i}>{'Player ' + i + ': ' + players[sortedPlayersByHp[i]].hp + ' hp'}</div>)
     }
-    console.log('@PlayerStatsDiv', sortedPlayersByHp);
-    return <div>
-       {list}
+    // console.log('@PlayerStatsDiv', sortedPlayersByHp);
+    return <div className='text_shadow' style={{paddingTop: '45px'}}>
+      Scoreboard:  
+      {list}
     </div>
   }
 

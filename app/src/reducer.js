@@ -74,7 +74,7 @@ const reducer = (
     case 'LOCK_TOGGLED':
       console.log('lock toggled')
       state = {...state, lock: action.lock}
-      state.storedState.players[state.index]['lock'] = action.lock;
+      state.storedState.players[state.index]['locked'] = action.lock;
       break;
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);

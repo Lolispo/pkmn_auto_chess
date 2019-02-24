@@ -122,7 +122,7 @@ module.exports = function (socket, io) {
   socket.on('TOGGLE_LOCK', async (stateParam) => {
     const index = getPlayerIndex(socket.id);
     // const state = await gameJS.toggleLock(fromJS(stateParam), index);
-    const prevLock = (fromJS(stateParam)).getIn(['players', index, 'lock']);
+    const prevLock = (fromJS(stateParam)).getIn(['players', index, 'locked']);
     console.log('Toggling Lock for Shop! prev lock =', prevLock);
     socket.emit('LOCK_TOGGLED', index, !prevLock);
   });
@@ -195,9 +195,9 @@ module.exports = function (socket, io) {
     const session = sessions.get(sessionId);
     let counter = session.get('counter');
     let prepBattleState = session.get('prepBattleState');
-    console.log('@battleReady', index, state.getIn(['players', index]));
+    // console.log('@battleReady', index, state.getIn(['players', index]));
     if (index != -1 && state.getIn(['players', index])) {
-      console.log('@battleReady', counter, amount);
+      // console.log('@battleReady', counter, amount);
       if (f.isUndefined(prepBattleState)) { // First ready player
         counter += 1;
         prepBattleState = state.set('players', Map({})).setIn(['players', index], state.getIn(['players', index]));
@@ -212,10 +212,10 @@ module.exports = function (socket, io) {
         const newSession = (session.get('prepBattleState') ? session.set('counter', 0).delete('prepBattleState') : session.set('counter', 0));
         sessions = sessions.set(sessionId, newSession);
         console.log('@sc.battleReady Ready for battle!');
-        console.log('@sc.battleReady state', prepBattleState.getIn(['players']));
+        // console.log('@sc.battleReady state', prepBattleState.getIn(['players']));
         // Battle
         const prepBSWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, prepBattleState);
-        console.log('@sc.battleReady State sent in', prepBSWithPieces)
+        // console.log('@sc.battleReady State sent in', prepBSWithPieces)
 
         const obj = await gameJS.battleSetup(prepBSWithPieces);
         const state = obj.get('state');
@@ -230,7 +230,7 @@ module.exports = function (socket, io) {
         while (!temp.done) {
           const socketId = temp.value;
           const index = getPlayerIndex(socketId);
-          console.log('Player update', index, preBattleState.getIn(['players', index]));
+          // console.log('Player update', index, preBattleState.getIn(['players', index]));
           io.to(`${socketId}`).emit('UPDATE_PLAYER', index, preBattleState.getIn(['players', index]));
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);
           temp = iter.next();

@@ -42,9 +42,19 @@ Check Pieces, more than 9 ekans currently for example
 
 Ability displayName
 
+Level 5 shouldnt be gym wave
+    Somehow onix geodude wave (Gym at lvl 10) came at 5
+
+toggeLock, dispatch directly, dont interact with server (Easy spam)
+
 ## Frontend
 
+Update connected on disconnect
+
 Show mana bar
+    Max 200 or something?
+
+Show bars in infopanel screen for stats (Easier comparisons)
 
 Show damage dealt from unit to target, apply css animation of movement in that direction
 
