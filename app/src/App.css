@@ -206,7 +206,7 @@ body {
 }
 */
 
-.hpBarDiv {
+.barDiv {
 
 }
 
@@ -220,6 +220,15 @@ body {
   position: absolute;
   max-width: 84px;*/
   /*margin-left: 1px;*/
+}
+
+.manaBar {
+  background-color: blue;
+  text-align: center;
+  border: 1px solid black;
+  padding-top: 15px;
+  position: absolute; 
+  margin-top: 5px;
 }
 
 .lockImage {

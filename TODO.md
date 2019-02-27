@@ -87,6 +87,7 @@ Levelup:
 
 Battle
     Show mana bar
+        Requires mana changes to be sent in move
         Max 200, 50/200 => 25% mana bar full
         Change color of manabar when above ability.cost
     Select units working during battle (Investigate)
@@ -98,6 +99,7 @@ Infopanel
     Click on evolution, expand that unit
         Name on evolution
     Level of unit displayed (Cost, worth to sell)
+    Pokedex look?
 
 Shop
     Buy unit third of shop div

@@ -100,7 +100,7 @@ module.exports = function (socket, io) {
   // disconnect logic
   socket.on('disconnect', () => {
     // Find which connection disconnected, remove data from that person
-    if(connectedPlayers){
+    if(connectedPlayers && connectedPlayers.get(socket.id)){
       console.log('Player disconnected: ', connectedPlayers.get(socket.id).get('socketId'));
       const user = connectedPlayers.get(socket.id);
       const sessionId = user.get('sessionId')
@@ -249,8 +249,11 @@ module.exports = function (socket, io) {
 
   socket.on('GET_STATS', async (name) => {
     const stats = pokemonJS.getStats(name);
-    const ability = abilitiesJS.getAbility(name);
-    const newStats = (await stats).set('abilityType', (await ability).get('type'));
+    const ability = await abilitiesJS.getAbility(name);
+    let newStats = (await stats).set('abilityType', ability.get('type'));
+    if(ability.get('displayName')){
+      newStats = newStats.set('abilityDisplayName', ability.get('displayName'));
+    }
     console.log('Retrieving stats for', name, newStats);
     socket.emit('SET_STATS', name, newStats);
   });

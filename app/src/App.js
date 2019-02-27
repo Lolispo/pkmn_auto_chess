@@ -230,14 +230,18 @@ class Cell extends Component {
       if(this.props.isBoard && this.props.newProps.onGoingBattle && this.props.newProps.battleStartBoard){ // Battle
         // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
         pokemon = this.props.newProps.battleStartBoard[this.state.pos]
-        const hpBar = (pokemon ? <div className='hpBarDiv' style={{width: sideLength}}>
+        const hpBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className='hpBar text_shadow' style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
           </div> : '')
+        /*const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
+          <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+          </div> : '')*/
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           return <div style={{position: 'relative'}}>
             <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
             {hpBar}
+            {/*manaBar*/}
           </div>
         }
       } else {
@@ -517,6 +521,35 @@ class App extends Component {
         const abilityName = nextMove.abilityName;
         const newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
+        if(Object.keys(effect).length){
+          console.log('SPELL EFFECT Not Empty: ', effect);
+          Object.keys(effect).forEach(e => {
+            const unitPosEffect = newBoard[e];
+            const effectToApplyOnUnit = effect[e];
+            Object.keys(effectToApplyOnUnit).forEach(buff => {
+              const typeEffect = buff;
+              const valueEffect = effectToApplyOnUnit[buff];
+              console.log('Found', typeEffect, 'effect with value', valueEffect, 'for unit', unitPosEffect);
+              switch(typeEffect){
+                case 'multistrike':
+                  // TODO Visualize multistrike ability
+                case 'teleport':
+                case 'noTarget':
+                case 'dot':
+                  // TODO Visualize 'dot' is appled to unit
+                  break;
+                case 'heal':
+                  if(unitPosEffect === target){
+                    newHpSpell += valueEffect;
+                  } else {
+                    newBoard[unitPosEffect].hp = newBoard[unitPosEffect].hp + valueEffect;
+                  }
+                // case buffs, not required in theory for attack or defence, since not visible
+                default:
+              }
+            });
+          });
+        }
         if(newHpSpell <= 0){
           delete newBoard[target]; 
         } else {

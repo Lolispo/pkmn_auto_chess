@@ -771,7 +771,7 @@ async function deleteNextMoveResultEntries(unitMoveMapParam, targetToRemove) {
  */
 async function nextMove(board, unitPos, optPreviousTarget) {
   const unit = board.get(unitPos);
-  if (unit.get('mana') >= 100) { // Use spell, && withinRange for spell
+  if (unit.get('mana') >= unit.get('manaCost')) { // Use spell, && withinRange for spell
     // TODO AOE spell logic
     // Idea: Around every adjacent enemy in range of 1 from closest enemy
     const team = unit.get('team');
@@ -1170,18 +1170,20 @@ async function markBoardBonuses(board) {
  */
 async function createBattleUnit(unit, unitPos, team) {
   const unitStats = await pokemonJS.getStats(unit.get('name'));
+  const ability = abilitiesJS.getAbility(unit.get('name'));
   return unit.set('team', team).set('attack', unitStats.get('attack'))
     .set('hp', unitStats.get('hp'))
     .set('maxHp', unitStats.get('hp'))
     .set('type', unitStats.get('type'))
     .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
-    .set('ability', unitStats.get('ability'))
     .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))
+    .set('ability', unitStats.get('ability'))
     .set('defense', unitStats.get('defense') || pokemonJS.getStatsDefault('defense'))
     .set('speed', pokemonJS.getStatsDefault('upperLimitSpeed') - (unitStats.get('speed') || pokemonJS.getStatsDefault('speed')))
     .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
     .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'))
-    .set('position', unitPos);
+    .set('position', unitPos)
+    .set('manaCost', (await ability).get('mana'));    
 }
 
 /**
