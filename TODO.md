@@ -11,8 +11,15 @@ Temp: 1 hp per level
 
 ## Backend
 
+For mana updates on frontend:
+    Move manaIncrease function logic to 2 functions
+    One calculate mana changes and return the value
+        Can also be used in move
+    The other calculates newBoard from manaChanges calculated
+
 Prebattlestate calculations seem to put units in weird positions
     Position seem correct still but their key is wrong (2,0 -> 5,5)
+    Seems correct
 
 endTurn first calculated after battle is visually simualted
     Supports locking of shop and selling pieces for other income bonuses
@@ -50,12 +57,13 @@ first move
 
 Finish abilities implementation (teleport)
 
-ToggleLock
+ToggleLock Refactor
     toggeLock, dispatch directly, dont interact with server (Easy spam)
     If in battle: 
         Interact with server and set it to be saved into the player just created
 
 Callback too many units
+    = ?
 
 Lose hp from npcRound
 
