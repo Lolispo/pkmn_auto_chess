@@ -11,15 +11,17 @@ Temp: 1 hp per level
 
 ## Backend
 
-For mana updates on frontend:
-    Move manaIncrease function logic to 2 functions
-    One calculate mana changes and return the value
-        Can also be used in move
-    The other calculates newBoard from manaChanges calculated
+Move updates:
+    Mana updates
+        Move manaIncrease function logic to 2 functions
+        One calculate mana changes and return the value
+            Can also be used in move
+        The other calculates newBoard from manaChanges calculated
+    Attack / Spell effectivness stored in move
 
-Prebattlestate calculations seem to put units in weird positions
-    Position seem correct still but their key is wrong (2,0 -> 5,5)
-    Seems correct
+Apply buffs for all of same type
+    CHECK ME (All paras get bug buff)
+        Currently works for paras when alone, not when 2 are there
 
 endTurn first calculated after battle is visually simualted
     Supports locking of shop and selling pieces for other income bonuses
@@ -33,19 +35,21 @@ end game when peoplePlaying > 2 from start and only one left
 Information moving to get to frontend:
     Gold information calculation
         Move outside of function, calculate at gold changes and update frontend
+    PlacePieceEvent:
+        Types
+        Which units to be sent back
     Type bonuses calculations, what combos are active
         Recalculate and update unitbuffs and boardBuffs on piece interactions
         Set on board units (not battle, already had)
             Every unit has buff or empty
         Set on left side of board, buffs
-            boardBuffs    
+            boardBuffs
 
 Handle empty boards for battle
 
 Pieces:
     Max 9 units for each player
         Fixes: Stop spawning units of certain type for player if has level 3
-    Check Pieces, more than 9 ekans currently for example
 
 Ability displayName
 

@@ -625,7 +625,16 @@ class App extends Component {
       currentTime = time;
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
       counter += 1;
-    }  
+    }
+    if(actionStack.length === 0){
+      const winningTeam = Object.values(battleStartBoard)[0].team;
+      // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
+      if(winningTeam === 0) {
+        dispatch({type: 'UPDATE_MESSAGE', message: 'You won!'}); 
+      } else {
+        dispatch({type: 'UPDATE_MESSAGE', message: 'You lost!'}); 
+      }
+    }
   }
 
   // TODO: Add listener here to call this.startBattleEvent (Some kind of state change)

@@ -1282,6 +1282,12 @@ async function battleTime(stateParam) {
     const winner = (resultBattle.get('winner') === 0);
     const newBoard = resultBattle.get('board');
     // console.log('@battleTime newBoard, finished board result', newBoard); // Good print, finished board
+    // Store rivals logic
+    const prevRivals = state.getIn(['players', index, 'rivals']);
+    state = state.setIn(['players', index, 'rivals'], prevRivals.set(enemy, (prevRivals.get(enemy) || 0) + 1));
+    // TODO: Move endBattle logic outside of this function
+    // winner & newBoard & isPvpRound & enemy index required
+    // Requires refactor / remake of getting opponent order, too consistently get same order / calculate before hand
     const round = state.get('round');
     const newStateAfterBattle = await endBattle(state, index, winner, newBoard, true, enemy);
     if (newStateAfterBattle.get('round') === round + 1) {
@@ -1289,9 +1295,7 @@ async function battleTime(stateParam) {
     } else {
       state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
     }
-    // Store rivals logic
-    const prevRivals = state.getIn(['players', index, 'rivals']);
-    state = state.setIn(['players', index, 'rivals'], prevRivals.set(enemy, (prevRivals.get(enemy) || 0) + 1));
+
     if (iter.done) {
       break;
     } else {

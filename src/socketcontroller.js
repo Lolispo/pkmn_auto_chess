@@ -227,6 +227,7 @@ module.exports = function (socket, io) {
         const startingBoards = obj.get('startingBoards');
         const iter = connectedSessionPlayers.keys();
         let temp = iter.next();
+        sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
         const stateToSend = getStateToSend(state);
         const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
         while (!temp.done) {

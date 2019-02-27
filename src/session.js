@@ -97,6 +97,7 @@ exports.updateSessionPieces = (socketId, connectedPlayers, sessions, state) => {
   const sessionId = connectedPlayers.get(socketId).get('sessionId');
   const session = sessions.get(sessionId);
   const newSession = session.set('pieces', state.get('pieces')).set('discardedPieces', state.get('discardedPieces'))
+  // console.log('@updateSessionPieces', newSession.getIn(['pieces', 0, 0]), session.getIn(['pieces', 0, 0]))
   return sessions.set(sessionId, newSession);
 }
 
