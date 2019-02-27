@@ -1,3 +1,5 @@
+// Author: Petter Andersson
+
 const reducer = (
   state = {
     index: -1,
@@ -25,6 +27,7 @@ const reducer = (
     mouseOverId: -1,
     stats: {},
     statsMap: {},
+    round: 1,
   },
   action
 ) => {
@@ -129,7 +132,7 @@ const reducer = (
       state = {...state, mouseOverId: action.mouseOverId}
       break;
     case 'END_BATTLE':
-      state = {...state, onGoingBattle: false}
+      state = {...state, onGoingBattle: false, round: state.round + 1}
       break;
     default:
       break;

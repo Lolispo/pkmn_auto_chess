@@ -603,9 +603,26 @@ class App extends Component {
     </div>
   }
 
+  getAmountOfUnitsOnBoard = () => {
+    const unitsOnBoard = Object.keys(this.props.myBoard).length;
+    const level = this.props.level;
+    let color;
+    if(unitsOnBoard > level) {
+      color = 'red'
+    }
+    const content = <span style={{color: color}}>{unitsOnBoard}</span>
+    return <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+      Pieces: {content}/{level}
+    </div>
+  }
+
   render() {
     return <div>
       <div className='centerWith50 flex'>
+        <div className='marginTop5 biggerText text_shadow'>
+          {'Round: ' + this.props.round}
+        </div>
+        {this.getAmountOfUnitsOnBoard()}
         <div className='flex' style={{paddingLeft: '65px'}}>
           <div className='marginTop5 biggerText'>
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
@@ -736,6 +753,7 @@ const mapStateToProps = state => ({
   mouseOverId: state.mouseOverId,
   stats: state.stats,
   statsMap: state.statsMap,
+  round: state.round,
 });
 
 export default connect(mapStateToProps)(App);
