@@ -125,10 +125,10 @@ describe('game state', () => {
     it('does buyexp increase level correctly?', async() => {
       let state = await initEmptyState(2);
       state = await buyExp(state, '0');
-      // Buy 5 exp from level 1, 0exp:
-      // 1(^1) + 1(^2) + 2(^3) + 1(4) = Level 4, 1 exp
+      // Buy 4 exp from level 1, 0exp:
+      // 1(^1) + 1(^2) + 2(^3) + 0(4) = Level 4, 0 exp
       assert.equal(state.getIn(['players', '0', 'level']), 4);
-      assert.equal(state.getIn(['players', '0', 'exp']), 1);
+      assert.equal(state.getIn(['players', '0', 'exp']), 0);
       assert.equal(state.getIn(['players', '0', 'expToReach']), fileModule2.getExpRequired(4));
     });
   });
