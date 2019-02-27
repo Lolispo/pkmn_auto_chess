@@ -606,12 +606,6 @@ class App extends Component {
   render() {
     return <div>
       <div className='centerWith50 flex'>
-        <div className='marginTop5 flex biggerText'>
-          <div>
-            <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
-            <span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>
-          </div>
-        </div>
         <div className='flex' style={{paddingLeft: '65px'}}>
           <div className='marginTop5 biggerText'>
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
@@ -649,7 +643,17 @@ class App extends Component {
           <div>
             <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
           </div>
-          <div className='paddingLeft5 center'>_____________________________________________________________________________</div>
+          <div className='levelDiv'>
+            <div className='levelBar overlap' style={{width: (this.props.expToReach != 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
+            <div className='biggerText centerWith50 overlap levelText'>
+              <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
+              {/*<span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>*/}
+            </div>
+            <div className='overlap text_shadow marginTop5 paddingLeft5'>
+              {'Exp: ' + this.props.exp + '/' + this.props.expToReach}
+            </div>
+            {/*<div className='paddingLeft5 center'>_____________________________________________________________________________</div>*/}
+          </div>
           <div className='flex center'>
             <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
           </div>

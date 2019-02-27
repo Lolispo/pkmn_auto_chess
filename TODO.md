@@ -86,12 +86,7 @@ TopBar:
     Move away level
     
 Levelup:
-    Level up effect
-    Display between board and hand exp
-        Display classic pokemon exp bar instead of exp/expToReach
-        Number in middle
-        exp / exptoreach to the left
-        [5/8] --- ----     5 ---------]
+    Level up animation -> too full bar and down to zero (or xp over 0)
 
 Battle
     Show mana bar

@@ -231,6 +231,31 @@ body {
   margin-top: 5px;
 }
 
+.levelDiv {
+  position: relative;
+  height: 26px;
+}
+
+.levelBar {
+  background-color: green;
+  height: 26px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border: 1px solid lightblue;
+  border-radius: 10px;
+}
+
+.levelText {
+  padding-left: 310px;
+}
+
+.overlap {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 .lockImage {
   height: 45px;
   width: 27px;
