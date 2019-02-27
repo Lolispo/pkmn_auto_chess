@@ -349,6 +349,15 @@ class App extends Component {
           : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
         </div>
         <div style={{paddingTop: '15px'}}>
+          <div>
+            <span>Hp: </span>
+            <span style={{position: 'relative'}}>
+              <div className='levelBar overlap' style={{width: String(s.hp/150 * 100) + '%'}}></div>
+              <div className='overlap'>
+                {` ${s.hp}`}
+              </div>
+            </span>
+          </div>
           <span className='center'>{`Hp: ${s.hp}\n`}</span>
           <span>{`Attack: ${s.attack}\n`}</span>
           <span>{`Defense: ${s.defense}\n`}</span>

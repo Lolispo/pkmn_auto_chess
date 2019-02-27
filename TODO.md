@@ -80,17 +80,14 @@ Startscreen:
 
 TopBar:
     Add option to choose playerNames
-    Show which round
-    (PieceImage) Amount of pieces on board / Level (max amount allowed)
-        Turn Red on left number if above
-    Move away level
+    Piece Image
     
 Levelup:
     Level up animation -> too full bar and down to zero (or xp over 0)
 
 Battle
     Show mana bar
-        Requires mana changes to be sent in move
+        Requires mana changes to be sent in move, added in backend todo
         Max 200, 50/200 => 25% mana bar full
         Change color of manabar when above ability.cost
     Select units working during battle (Investigate)
