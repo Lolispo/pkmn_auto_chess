@@ -69,6 +69,8 @@ Lose hp from npcRound
 
 ## Frontend
 
+Code: Event code only in one place
+
 Startscreen: 
     Update connected on disconnect
     Make different actions invalid if game isn't live
@@ -133,10 +135,7 @@ Timer
 Sound
 
 Support for mouse only gameplay
-    If markedUnit exist (selectedUnit) and empty board is clicked
-        (no unit) then placePiece from select to no unit pos
-
-
+    Add options to withdraw and sell piece with mouse
 
 RefreshPiece cost 2 gold, more clear
 

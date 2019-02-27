@@ -184,7 +184,7 @@ class Cell extends Component {
     if(this.props.isBoard){
       return x + ',' + y;
     } else{
-      return x;
+      return String(x);
     }
   }
 
@@ -197,12 +197,43 @@ class Cell extends Component {
     }
   }
   
+  placePieceEvent = (fromParam, to) => {
+    // to is on valid part of the board
+    const prop = this.props.newProps;
+    const from = String(fromParam);
+    if(from && to){
+      console.log('@placePieceEvent',from, to);
+      const splitted = to.split(',');
+      const fromSplitted = from.split(',');
+      const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
+      const unitExists = (fromSplitted.length === 2 ? prop.myBoard[fromParam] : prop.myHand[from])
+      // console.log('@placePieceEvent', fromSplitted, validPos, unitExists, prop.myHand);
+      if(validPos && unitExists && !prop.onGoingBattle){
+        // console.log('Sending place piece!')
+        placePiece(prop.storedState, from, to);
+        prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
+      } else {
+        updateMessage(prop, 'Invalid target placing!');
+      }
+    }
+  }
+
   handleCellClick(el){
-    // console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
     const unit = (el.props.isBoard ? el.props.newProps.myBoard[this.state.pos] : el.props.newProps.myHand[this.state.pos]);
-    el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit}});
-    if(unit)
+    const prevSelectedUnit = el.props.newProps.selectedUnit;
+    console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
+    console.log(' -', el.props.isBoard, this.state.pos, unit, prevSelectedUnit)
+    // If unit selected -> presses empty -> place piece 
+    if(this.state.pos !== prevSelectedUnit.pos){ // Shouldn't do anything if same tile as SELECT_UNIT Tile
+      el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit}});
+    } else { // Deselect by doubleclick same unit
+      el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {isBoard: el.props.isBoard, pos: ''}});
+    }
+    if(unit){ // Pressed unit
       this.getStatsEvent(el.props.newProps, unit.name);
+    } else if(prevSelectedUnit.pos && this.state.pos !== prevSelectedUnit.pos && prevSelectedUnit.unit){ // Pressed empty cell
+      this.placePieceEvent(prevSelectedUnit.pos, this.state.pos);
+    }
   }
 
   handleMouseOver(event, self){
@@ -407,6 +438,7 @@ class App extends Component {
       if(validPos && unitExists && !prop.onGoingBattle){
         // console.log('Sending place piece!')
         placePiece(prop.storedState, from, to);
+        prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       } else {
         updateMessage(prop, 'Invalid target placing!');
       }
@@ -420,6 +452,7 @@ class App extends Component {
     if(size < 8){
       if(prop.myBoard[from] && !prop.onGoingBattle){ // From contains unit
         withdrawPiece(prop.storedState, String(from));
+        prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       }
     } else{
       updateMessage(prop, 'Hand is full!');
@@ -432,6 +465,7 @@ class App extends Component {
     console.log('@sellPiece', validUnit, from, prop.selectedUnit.isBoard)
     if(validUnit && !prop.onGoingBattle){ // From contains unit
       sellPiece(prop.storedState, String(from));
+      prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
     } else{
       updateMessage(prop, 'Invalid target to sell!', from);
     }
@@ -621,7 +655,7 @@ class App extends Component {
     }
     const content = <span style={{color: color}}>{unitsOnBoard}</span>
     return <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
-      Pieces: {content}/{level}
+      Pieces: {content} / {level}
     </div>
   }
 
@@ -664,6 +698,7 @@ class App extends Component {
             {this.selectedUnitInformation()}
           </div>
           <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
+          {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
         </div>
         <div>
           <div>
