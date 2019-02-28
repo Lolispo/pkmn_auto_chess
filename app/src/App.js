@@ -393,7 +393,7 @@ class App extends Component {
           <span>{`Attack: ${s.attack}\n`}</span>
           <span>{`Defense: ${s.defense}\n`}</span>
           <span>{`Speed: ${s.speed}\n`}</span>
-          <span className={`type ${s.abilityType}`}>{`Ability: ${s.ability}\n`}</span>
+          <span className={`type ${s.abilityType}`}>{`Ability: ${s.abilityDisplayName}\n`}</span>
         </div>
         <div>
           {evolves_from}

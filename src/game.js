@@ -135,6 +135,7 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
  * Generate newShop from pieces and update pieces to newPieces
  * Update discarded cards from previous shop
  * Add new shop
+ * TODO: Add logic for piece cap, max 9 units
  */
 async function refreshShop(stateParam, playerIndex) {
   let state = stateParam;

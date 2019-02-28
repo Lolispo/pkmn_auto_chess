@@ -35,6 +35,7 @@ end game when peoplePlaying > 2 from start and only one left
 Information moving to get to frontend:
     Gold information calculation
         Move outside of function, calculate at gold changes and update frontend
+        Maybe streak is received on frontend and everything can then be calculated there already?
     PlacePieceEvent:
         Types
         Which units to be sent back
@@ -52,6 +53,7 @@ Pieces:
         Fixes: Stop spawning units of certain type for player if has level 3
 
 Ability displayName
+    Fix better displayNames, current only capitalized
 
 Aoe damage logic
 
