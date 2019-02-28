@@ -70,6 +70,10 @@ Callback too many units
 
 Lose hp from npcRound
 
+No effect types should be added as ineffective types ATLEAST or Uber ineffective (like 30% damage)
+
+Check money: Feels like you get a lot of money
+
 ## Frontend
 
 Code: Event code only in one place
@@ -207,7 +211,12 @@ eevee:
 
 Second wave 2 rattatas seem strong
 
-Diglett too weak for 2? -> 1?
+Too Weak:
+    Diglett 2->1
+    Vulpix 2->1
+
+Too Strong:
+    Sandshrew 1->3(2)
 
 ## New features to add (Not as core)
 

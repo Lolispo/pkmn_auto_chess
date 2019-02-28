@@ -353,7 +353,7 @@
     "defense": 55,
     "speed": 100,
     "type": "electric",
-    "ability": "thunderBolt",
+    "ability": "thunderbolt",
     "evolves_from": "pikachu"
   },
   "sandshrew": {
@@ -1103,7 +1103,7 @@
       "electric",
       "steel"
     ],
-    "ability": "thunderBolt",
+    "ability": "thunderbolt",
     "evolves_from": "magnemite"
   },
   "magnezone": {
@@ -1296,7 +1296,7 @@
     "defense": 70,
     "speed": 140,
     "type": "electric",
-    "ability": "thunderBolt",
+    "ability": "thunderbolt",
     "evolves_from": "voltorb"
   },
   "exeggcute": {
@@ -1537,7 +1537,7 @@
     "defense": 57,
     "speed": 105,
     "type": "electric",
-    "ability": "thunderBolt",
+    "ability": "thunderbolt",
     "evolves_from": "elekid"
   },
   "electivire": {
@@ -1652,7 +1652,7 @@
     "defense": 60,
     "speed": 130,
     "type": "electric",
-    "ability": "thunderBolt",
+    "ability": "thunderbolt",
     "evolves_from": "eevee"
   },
   "flareon": {
@@ -1777,7 +1777,7 @@
       "electric",
       "flying"
     ],
-    "ability": "thunderBolt"
+    "ability": "thunderbolt"
   },
   "moltres": {
     "name": "moltres",

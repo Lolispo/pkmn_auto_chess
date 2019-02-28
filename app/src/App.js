@@ -642,11 +642,11 @@ class App extends Component {
 
   playerStatsDiv = () => {
     const players = this.props.players;
-    const sortedPlayersByHp = Object.keys(players).sort(function(a,b){return players[a].hp - players[b].hp});
+    const sortedPlayersByHp = Object.keys(players).sort(function(a,b){return players[b].hp - players[a].hp});
     let list = [];
     for(let i = 0; i < sortedPlayersByHp.length; i++){
       // console.log('inner: ', i, sortedPlayersByHp[i], players[sortedPlayersByHp[i]], players[sortedPlayersByHp[i]].hp)
-      list.push(<div key={i}>{'Player ' + i + ': ' + players[sortedPlayersByHp[i]].hp + ' hp'}</div>)
+      list.push(<div key={i}>{'Player ' + players[sortedPlayersByHp[i]].index + ': ' + players[sortedPlayersByHp[i]].hp + ' hp'}</div>)
     }
     // console.log('@PlayerStatsDiv', sortedPlayersByHp);
     return <div className='text_shadow' style={{paddingTop: '45px'}}>
