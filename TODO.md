@@ -52,9 +52,6 @@ Pieces:
     Max 9 units for each player
         Fixes: Stop spawning units of certain type for player if has level 3
 
-Ability displayName
-    Fix better displayNames, current only capitalized
-
 Aoe damage logic
 
 Matchup system

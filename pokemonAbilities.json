@@ -20,7 +20,7 @@
   },
   "rockThrow": {
     "name": "rockThrow",
-    "displayName": "Rockthrow",
+    "displayName": "Rock Throw",
     "type": "rock",
     "power": 50,
     "acc_range": 0.9
@@ -51,13 +51,13 @@
   },
   "waterGun": {
     "name": "waterGun",
-    "displayName": "Watergun",
+    "displayName": "Water Gun",
     "type": "water",
     "power": 40
   },
   "bubbleBeam": {
     "name": "bubbleBeam",
-    "displayName": "Bubblebeam",
+    "displayName": "Bubble Beam",
     "type": "water",
     "power": 65
   },
@@ -75,7 +75,7 @@
   },
   "poisonSting": {
     "name": "poisonSting",
-    "displayName": "Poisonsting",
+    "displayName": "Poison Sting",
     "type": "poison",
     "power": 15,
     "effect": [
@@ -85,14 +85,14 @@
   },
   "megaDrain": {
     "name": "megaDrain",
-    "displayName": "Megadrain",
+    "displayName": "Mega Drain",
     "type": "grass",
     "power": 75,
     "effect": "lifesteal"
   },
   "hydroPump": {
     "name": "hydroPump",
-    "displayName": "Hydropump",
+    "displayName": "Hydro Pump",
     "type": "water",
     "power": 110,
     "acc_range": 0.8,
@@ -100,7 +100,7 @@
   },
   "furyAttack": {
     "name": "furyAttack",
-    "displayName": "Furyattack",
+    "displayName": "Fury Attack",
     "type": "normal",
     "power": 15,
     "acc_range": 0.85,
@@ -108,7 +108,7 @@
   },
   "quickAttack": {
     "name": "quickAttack",
-    "displayName": "Quickattack",
+    "displayName": "Quick Attack",
     "type": "normal",
     "power": 40
   },
@@ -126,12 +126,12 @@
   },
   "thunderShock": {
     "name": "thunderShock",
-    "displayName": "Thundershock",
+    "displayName": "Thunder Shock",
     "type": "electric",
     "power": 40
   },
-  "thunderBolt": {
-    "name": "thunderBolt",
+  "thunderbolt": {
+    "name": "thunderbolt",
     "displayName": "Thunderbolt",
     "type": "electric",
     "power": 90
@@ -151,7 +151,7 @@
   },
   "hyperBeam": {
     "name": "hyperBeam",
-    "displayName": "Hyperbeam",
+    "displayName": "Hyper Beam",
     "type": "normal",
     "power": 150,
     "acc_range": 0.9,
@@ -174,7 +174,7 @@
   },
   "doubleSlap": {
     "name": "doubleSlap",
-    "displayName": "Doubleslap",
+    "displayName": "Double Slap",
     "type": "normal",
     "power": 15,
     "acc_range": 0.85,
@@ -182,7 +182,7 @@
   },
   "karateChop": {
     "name": "karateChop",
-    "displayName": "Karatechop",
+    "displayName": "Karate Chop",
     "type": "fighting",
     "power": 50
   },
@@ -211,13 +211,13 @@
   },
   "wingAttack": {
     "name": "wingAttack",
-    "displayName": "Wingattack",
+    "displayName": "Wing Attack",
     "type": "flying",
     "power": 60
   },
   "leechLife": {
     "name": "leechLife",
-    "displayName": "Leechlife",
+    "displayName": "Leech Life",
     "type": "bug",
     "power": 80,
     "effect": "lifesteal"
@@ -230,21 +230,21 @@
   },
   "dynamicPunch": {
     "name": "dynamicPunch",
-    "displayName": "Dynamicpunch",
+    "displayName": "Dynamic Punch",
     "type": "fighting",
     "power": 100,
     "acc_range": 0.5
   },
   "razorLeaf": {
     "name": "razorLeaf",
-    "displayName": "Razorleaf",
+    "displayName": "Razor Leaf",
     "type": "grass",
     "power": 55,
     "acc_range": 0.95
   },
   "solarBeam": {
     "name": "solarBeam",
-    "displayName": "Solarbeam",
+    "displayName": "Solar Beam",
     "type": "grass",
     "power": 200,
     "effect": "aoe",
@@ -252,13 +252,13 @@
   },
   "seismicToss": {
     "name": "seismicToss",
-    "displayName": "Seismictoss",
+    "displayName": "Seismic Toss",
     "type": "fighting",
     "power": 50
   },
   "hornAttack": {
     "name": "hornAttack",
-    "displayName": "Hornattack",
+    "displayName": "Horn Attack",
     "type": "normal",
     "power": 65
   },
@@ -270,7 +270,7 @@
   },
   "sludgeBomb": {
     "name": "sludgeBomb",
-    "displayName": "Sludgebomb",
+    "displayName": "Sludge Bomb",
     "type": "poison",
     "power": 90,
     "effect": [
@@ -280,21 +280,21 @@
   },
   "megaPunch": {
     "name": "megaPunch",
-    "displayName": "Megapunch",
+    "displayName": "Mega Punch",
     "type": "normal",
     "power": 80,
     "acc_range": 0.85
   },
   "megaKick": {
     "name": "megaKick",
-    "displayName": "Megakick",
+    "displayName": "Mega Kick",
     "type": "normal",
     "power": 120,
     "acc_range": 0.75
   },
   "boneClub": {
     "name": "boneClub",
-    "displayName": "Boneclub",
+    "displayName": "Bone Club",
     "type": "ground",
     "power": 65,
     "acc_range": 0.85
@@ -308,7 +308,7 @@
   },
   "shadowBall": {
     "name": "shadowBall",
-    "displayName": "Shadowball",
+    "displayName": "Shadow Ball",
     "type": "ghost",
     "power": 80
   },
@@ -332,20 +332,20 @@
   },
   "ironHead": {
     "name": "ironHead",
-    "displayName": "Ironhead",
+    "displayName": "Iron Head",
     "type": "steel",
     "power": 80
   },
   "dragonPulse": {
     "name": "dragonPulse",
-    "displayName": "Dragonpulse",
+    "displayName": "Dragon Pulse",
     "type": "dragon",
     "power": 85,
     "effect": "aoe"
   },
   "bodySlam": {
     "name": "bodySlam",
-    "displayName": "Bodyslam",
+    "displayName": "Body Slam",
     "type": "normal",
     "power": 85
   },
@@ -357,7 +357,7 @@
   },
   "zapCannon": {
     "name": "zapCannon",
-    "displayName": "Zapcannon",
+    "displayName": "Zap Cannon",
     "type": "electric",
     "power": 120,
     "acc_range": 0.5,
@@ -365,7 +365,7 @@
   },
   "fireBlast": {
     "name": "fireBlast",
-    "displayName": "Fireblast",
+    "displayName": "Fire Blast",
     "type": "fire",
     "power": 110,
     "acc_range": 0.85,
