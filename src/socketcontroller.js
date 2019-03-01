@@ -8,7 +8,7 @@ const abilitiesJS = require('./abilities');
 const f = require('./f');
 
 let connectedPlayers = Map({}); // Stores connected players, socketids -> ConnectedUser
-let sessions = Map({});         // Maps sessionIds to sessions
+let sessions = Map({}); // Maps sessionIds to sessions
 
 const TIME_FACTOR = 15;
 
@@ -25,24 +25,22 @@ const countReadyPlayers = (isReadyAction, socket, io) => {
     // Compares to true since sessionId = true => ready (if value -> not ready)
     const sessionId = connectedPlayers.get(id).get('sessionId');
     // console.log('@inside - sessionId for', temp.value, ':', sessionId, connectedPlayers.get(id), connectedPlayers.get(id).get('sessionId'));
-    counterReady = (sessionId === true ? counterReady + 1 : counterReady); 
+    counterReady = (sessionId === true ? counterReady + 1 : counterReady);
     counterPlayersWaiting = (sessionId === false || sessionId === true ? counterPlayersWaiting + 1 : counterPlayersWaiting);
     temp = iter.next();
   }
   if (counterReady === counterPlayersWaiting) {
     io.emit('ALL_READY', counterReady, counterPlayersWaiting, true);
-  } else if(!isReadyAction){ // Someone went unready
+  } else if (!isReadyAction) { // Someone went unready
     io.emit('ALL_READY', counterReady, counterPlayersWaiting, false);
   } else {
-    io.emit('READY', counterReady, counterPlayersWaiting)
+    io.emit('READY', counterReady, counterPlayersWaiting);
   }
-}
+};
 
-const getStateToSend = (state) => {
-  return state.delete('pieces').delete('discardedPieces');
-}
+const getStateToSend = state => state.delete('pieces').delete('discardedPieces');
 
-module.exports = function (socket, io) {
+module.exports = (socket, io) => {
   /*
     Example io code
     io.on('connection', function(socket){
@@ -63,18 +61,18 @@ module.exports = function (socket, io) {
 
   socket.on('READY', async () => {
     connectedPlayers = connectedPlayers.setIn([socket.id, 'sessionId'], true); // Ready
-    console.log(`Player is ready`);
+    console.log('Player is ready');
     countReadyPlayers(true, socket, io);
   });
 
   socket.on('UNREADY', async () => {
     connectedPlayers = connectedPlayers.setIn([socket.id, 'sessionId'], false); // Unready
-    console.log(`Player went unready`);
+    console.log('Player went unready');
     countReadyPlayers(false, socket, io);
   });
 
-  socket.on('START_GAME', async amountToPlay => {
-    const waitingPlayers = connectedPlayers.filter((player) => player.get('sessionId') === true || player.get('sessionId') === false);
+  socket.on('START_GAME', async (amountToPlay) => {
+    const waitingPlayers = connectedPlayers.filter(player => player.get('sessionId') === true || player.get('sessionId') === false);
     const sessionConnectedPlayers = sessionJS.initializeConnectedPlayers(waitingPlayers);
     const sessionId = sessionJS.findFirstAvailableIndex(sessions);
     connectedPlayers = await sessionJS.updateSessionIds(connectedPlayers, Array.from(sessionConnectedPlayers.keys()), sessionId);
@@ -83,14 +81,14 @@ module.exports = function (socket, io) {
     const newSession = sessionJS.makeSession(sessionConnectedPlayers, state.get('pieces'));
     sessions = sessions.set(sessionId, newSession);
     console.log('Starting game!');
-    
+
     // Send to all connected sockets
-    const stateToSend = getStateToSend(state); //.setIn(['players', '0', 'gold'], 1000);
-    console.log('@startGame', socket.id, sessionConnectedPlayers, stateToSend)
+    const stateToSend = getStateToSend(state); // .setIn(['players', '0', 'gold'], 1000);
+    console.log('@startGame', socket.id, sessionConnectedPlayers, stateToSend);
     const iter = sessionConnectedPlayers.keys();
     let temp = iter.next();
     while (!temp.done) {
-      const id = temp.value
+      const id = temp.value;
       io.to(`${id}`).emit('NEW_PLAYER', sessionConnectedPlayers.get(id));
       temp = iter.next();
     }
@@ -100,14 +98,14 @@ module.exports = function (socket, io) {
   // disconnect logic
   socket.on('disconnect', () => {
     // Find which connection disconnected, remove data from that person
-    if(connectedPlayers && connectedPlayers.get(socket.id)){
+    if (connectedPlayers && connectedPlayers.get(socket.id)) {
       console.log('Player disconnected: ', connectedPlayers.get(socket.id).get('socketId'));
       const user = connectedPlayers.get(socket.id);
-      const sessionId = user.get('sessionId')
+      const sessionId = user.get('sessionId');
       const session = sessions.get(sessionId);
-      if(sessionId && session){ // User was in a session (not false, true | sessionId)
+      if (sessionId && session) { // User was in a session (not false, true | sessionId)
         const updatedSession = sessionJS.sessionPlayerDisconnect(socket.id, session);
-        if(f.isUndefined(updatedSession)){
+        if (f.isUndefined(updatedSession)) {
           console.log('Removing Session:', sessionId, '(All players left)');
           sessions = sessions.delete(sessionId);
         } else {
@@ -197,7 +195,7 @@ module.exports = function (socket, io) {
     let counter = session.get('counter');
     let prepBattleState = session.get('prepBattleState');
     // console.log('@battleReady', index, state.getIn(['players', index]));
-    if (index != -1 && state.getIn(['players', index])) {
+    if (index !== -1 && state.getIn(['players', index])) {
       // console.log('@battleReady', counter, amount);
       if (f.isUndefined(prepBattleState)) { // First ready player
         counter += 1;
@@ -219,23 +217,23 @@ module.exports = function (socket, io) {
         // console.log('@sc.battleReady State sent in', prepBSWithPieces)
 
         const obj = await gameJS.battleSetup(prepBSWithPieces);
-        const state = obj.get('state');
-        console.log('@sc.battleReady Players in state after Battle', state.getIn(['players']));
+        const newState = obj.get('state');
+        console.log('@sc.battleReady Players in state after Battle', newState.getIn(['players']));
         const preBattleState = obj.get('preBattleState');
         console.log('@sc.battleReady Pre battle state', preBattleState.getIn(['players']));
         const actionStacks = obj.get('actionStacks');
         const startingBoards = obj.get('startingBoards');
         const iter = connectedSessionPlayers.keys();
         let temp = iter.next();
-        sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
-        const stateToSend = getStateToSend(state);
+        sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
+        const stateToSend = getStateToSend(newState);
         const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
         while (!temp.done) {
           const socketId = temp.value;
-          const index = connectedSessionPlayers.get(socketId);
+          const tempIndex = connectedSessionPlayers.get(socketId);
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
-          io.to(`${socketId}`).emit('UPDATE_PLAYER', index, preBattleState.getIn(['players', index]));
+          io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);
           temp = iter.next();
         }
@@ -254,7 +252,7 @@ module.exports = function (socket, io) {
     const stats = pokemonJS.getStats(name);
     const ability = await abilitiesJS.getAbility(name);
     let newStats = (await stats).set('abilityType', ability.get('type'));
-    if(ability.get('displayName')){
+    if (ability.get('displayName')) {
       newStats = newStats.set('abilityDisplayName', ability.get('displayName'));
     }
     console.log('Retrieving stats for', name, newStats);

@@ -1184,7 +1184,7 @@ async function createBattleUnit(unit, unitPos, team) {
     .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
     .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'))
     .set('position', unitPos)
-    .set('manaCost', (await ability).get('mana'));    
+    .set('manaCost', (await ability).get('mana'));
 }
 
 /**
@@ -1591,7 +1591,7 @@ async function startGame(stateParam) {
   return state;
 }
 
-exports._startGame = async amountPlaying => {
+exports._startGame = async (amountPlaying) => {
   const state = await initEmptyState(amountPlaying);
-  return await startGame(state);
+  return startGame(state);
 };

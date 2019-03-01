@@ -562,7 +562,7 @@ class App extends Component {
         // TODO: Check spell effects
         const effect = nextMove.effect;
         const abilityName = nextMove.abilityName;
-        const newHpSpell = newBoard[target].hp - value;
+        let newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         if(Object.keys(effect).length){
           console.log('SPELL EFFECT Not Empty: ', effect);
@@ -587,6 +587,7 @@ class App extends Component {
                   } else {
                     newBoard[unitPosEffect].hp = newBoard[unitPosEffect].hp + valueEffect;
                   }
+                  break;
                 // case buffs, not required in theory for attack or defence, since not visible
                 default:
               }
@@ -717,7 +718,7 @@ class App extends Component {
             <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
           </div>
           <div className='levelDiv'>
-            <div className='levelBar overlap' style={{width: (this.props.expToReach != 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
+            <div className='levelBar overlap' style={{width: (this.props.expToReach !== 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
             <div className='biggerText centerWith50 overlap levelText'>
               <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
               {/*<span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>*/}
