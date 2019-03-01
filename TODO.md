@@ -181,6 +181,11 @@ Display winner of battle more clear
 
 session is undefined, causes server crash
 
+if refresh on battle start, start new game -> first battle finishes => replaces new game
+    setTimeout check if session still exist
+    Insession: Loop over connectedPlayers in session and use io.to
+    Unready/Ready: io.to users where connectedUser.session == true || false
+
 ## Tests
 
 More tests in general, easier to test in theory when frontend done
