@@ -670,8 +670,11 @@ class App extends Component {
 
   render() {
     return <div>
-      <div className='centerWith50 flex'>
-        <div className='marginTop5 biggerText text_shadow'>
+      <div className='centerWith50 flex' style={{width: '80%'}}>
+        <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+          {'Player ' + this.props.index}
+        </div>
+        <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
           {'Round: ' + this.props.round}
         </div>
         {this.getAmountOfUnitsOnBoard()}

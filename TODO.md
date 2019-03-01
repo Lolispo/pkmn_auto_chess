@@ -11,6 +11,14 @@ Temp: 1 hp per level
 
 ## Backend
 
+In Battle Change (IMPORTANT):
+    Quickfix, disable buying during battle
+    Save player changes made during battle to be received after the battle
+    ToggleLock: Interact with server and set it to be saved into the player just created
+    Buy Unit: 
+    Refresh Unit: 
+    Buy Exp
+
 Move updates:
     Mana updates
         Move manaIncrease function logic to 2 functions
