@@ -4,7 +4,8 @@
     "ineffectiveAgainst": [
       "Rock",
       "Steel"
-    ]
+    ],
+    "noDamageAgainst": "Ghost"
   },
   "fire": {
     "name": "fire",
@@ -44,7 +45,8 @@
       "Electric",
       "Grass",
       "Dragon"
-    ]
+    ],
+    "noDamageAgainst": "Ground"
   },
   "grass": {
     "name": "grass",
@@ -93,7 +95,8 @@
       "Psychic",
       "Bug",
       "Fairy"
-    ]
+    ],
+    "noDamageAgainst": "Ghost"
   },
   "poison": {
     "name": "poison",
@@ -106,7 +109,8 @@
       "Ground",
       "Rock",
       "Ghost"
-    ]
+    ],
+    "noDamageAgainst": "Steel"
   },
   "ground": {
     "name": "ground",
@@ -120,7 +124,8 @@
     "ineffectiveAgainst": [
       "Grass",
       "Bug"
-    ]
+    ],
+    "noDamageAgainst": "Flying"
   },
   "flying": {
     "name": "flying",
@@ -144,7 +149,8 @@
     "ineffectiveAgainst": [
       "Psychic",
       "Steel"
-    ]
+    ],
+    "noDamageAgainst": "Dark"
   },
   "bug": {
     "name": "bug",
@@ -183,12 +189,14 @@
       "Psychic",
       "Ghost"
     ],
-    "ineffectiveAgainst": "Dark"
+    "ineffectiveAgainst": "Dark",
+    "noDamageAgainst": "Normal"
   },
   "dragon": {
     "name": "dragon",
     "strongAgainst": "Dragon",
-    "ineffectiveAgainst": "Steel"
+    "ineffectiveAgainst": "Steel",
+    "noDamageAgainst": "Fairy"
   },
   "dark": {
     "name": "dark",
@@ -228,5 +236,10 @@
       "Poison",
       "Steel"
     ]
+  },
+  "": {
+    "name": "declaration",
+    "strongAgainst": "2x damage against this type",
+    "ineffectiveAgainst": "0.5 damage against this type"
   }
 }

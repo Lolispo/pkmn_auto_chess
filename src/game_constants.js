@@ -172,9 +172,25 @@ exports.getRarityAmount = index => rarityAmount.get(index - 1);
 
 exports.getLevelPieceProbability = index => levelPieceProbability.get(String(index));
 
-exports.getPieceProbabilityNum = (index) => {
+exports.getPieceProbabilityNum = index => {
   const probs = levelPieceProbability.get(String(index));
   return [probs.get('1'), probs.get('1') + probs.get('2'), probs.get('1') + probs.get('2') + probs.get('3'),
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4'),
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4') + probs.get('5')];
 };
+
+exports.getTypeEffectString = typeFactor => {
+  if(typeFactor <= 0.0) {
+    return 'No effect';
+  } else if(typeFactor <= 0.25){
+    return 'Not effective'
+  } else if(typeFactor <= 0.5){
+    return 'Not very effective'
+  } else if(typeFactor > 0.5 && typeFactor < 2){
+    return '';
+  } else if(typeFactor <= 2){
+    return 'Super effective!'
+  } else if(typeFactor <= 4){
+    return 'Extremely effective!'
+  }
+}

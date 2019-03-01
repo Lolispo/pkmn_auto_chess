@@ -233,11 +233,20 @@ module.exports = (socket, io) => {
           const tempIndex = connectedSessionPlayers.get(socketId);
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
+          // TODO: Send enemy name
           io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);
           temp = iter.next();
         }
         setTimeout(() => {
+          /*
+            TODO: Build state to send
+            Rearrange code:
+            battleSetup shouldn't contain endBattle
+            send battle states to frontends
+            THEN here in setTimeout, do endBattle
+            updateSessionPieces from endTurn (here after endbattles)
+          */
           io.emit('END_BATTLE');
           io.emit('UPDATED_STATE', stateToSend);
         }, longestTime);

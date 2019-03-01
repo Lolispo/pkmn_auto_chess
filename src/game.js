@@ -606,10 +606,9 @@ async function manaIncrease(board, unitPos, enemyPos) {
  * Temp: Assumed typesAttacker is first listed type for normal attacks, set in ability for abilities
  * Power might be wanted
  */
-async function calcDamage(actionType, power, unit, target, attackerType) { // attack, defense, typesAttacker, typesDefender
+async function calcDamage(actionType, power, unit, target, typeFactor) { // attack, defense, typesAttacker, typesDefender
   // console.log('@calcDamage', unit, target)
   const factor = gameConstantsJS.getDamageFactorType(actionType) * power * (unit.get('attack') / target.get('defense'));
-  const typeFactor = await typesJS.getTypeFactor(attackerType, target.get('type'));
   console.log('@calcDamage returning: ', typeFactor, '*', Math.round(factor), '+ 1 =', Math.round(factor * typeFactor + 1));
   return Math.round(factor * typeFactor + 1);
 }
@@ -789,7 +788,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const action = 'spell';
     const target = await enemyPos.get('closestEnemy');
     // console.log('@nextmove - ability target: ', target, enemyPos)
-    const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), ability.get('type'));
+    const typeFactor = await typesJS.getTypeFactor(ability.get('type'), board.get(target).get('type'));
+    const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), typeFactor);
     const abilityName = ability.get('name');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
     // console.log('@abilityResult', abilityResult)
@@ -803,7 +803,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       battleOver = await isBattleOver(newBoard, team);
     }
     const move = Map({
-      unitPos, action, value: abilityDamage, abilityName, target, effect,
+      unitPos, action, value: abilityDamage, abilityName, target, effect, typeEffective: gameConstantsJS.getTypeEffectString(typeFactor),
     });
     return Map({
       nextMove: move,
@@ -825,7 +825,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const target = enemyPos.get('closestEnemy');
     const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type'));
     // console.log('@nextmove - normal attack target: ', target, enemyPos)
-    const value = await calcDamage(action, unit.get('attack'), unit, board.get(target), attackerType);
+    const typeFactor = await typesJS.getTypeFactor(attackerType, board.get(target).get('type'));
+    const value = await calcDamage(action, unit.get('attack'), unit, board.get(target), typeFactor);
     // Calculate newBoard from action
     const removedHPBoard = await removeHpBattle(board, target, value); // {board, unitDied}
     const newBoard = removedHPBoard.get('board');
@@ -840,7 +841,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       newBoardMana = await manaIncrease(newBoard, unitPos, target);
     }
     const move = Map({
-      unitPos, action, value, target,
+      unitPos, action, value, target, typeEffective: gameConstantsJS.getTypeEffectString(typeFactor),
     });
     return Map({
       nextMove: move,
@@ -1224,15 +1225,15 @@ async function combineBoards(board1, board2) {
 async function prepareBattle(board1, board2) {
   // Check to see if a battle is required
   // Lose when empty, even if enemy no units aswell (tie with no damage taken)
+  const board = await combineBoards(board1, board2);
   if (board1.size === 0) {
-    return Map({ actionStack: List([]), winner: 1 });
+    return Map({ actionStack: List([]), winner: 1, board});
   } if (board2.size === 0) {
-    return Map({ actionStack: List([]), winner: 0 });
+    return Map({ actionStack: List([]), winner: 0, board});
   }
 
-  // Both players have units, battle required
-  const board = await combineBoards(board1, board2);
   // f.print(board, '@prepareBattle')
+  // Both players have units, battle required
   const boardWithBonuses = await markBoardBonuses(board);
   // f.print(boardWithBonuses);
   const boardWithMovement = await setRandomFirstMove(boardWithBonuses);

@@ -267,12 +267,17 @@ class Cell extends Component {
         /*const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
           </div> : '')*/
+        const actionMessage = (pokemon && pokemon.actionMessage !== '' ? 
+          <div className='text_shadow' style={{position: 'absolute'}}>
+            {pokemon.actionMessage}
+          </div> : '');
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           return <div style={{position: 'relative'}}>
             <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
             {hpBar}
             {/*manaBar*/}
+            {actionMessage}
           </div>
         }
       } else {
@@ -537,6 +542,7 @@ class App extends Component {
     const target = nextMove.target;
     const value = nextMove.value;
     const unitPos = nextMove.unitPos;
+    const typeEffective = nextMove.typeEffective;
     const unit = newBoard[unitPos];  // Save unit from prev pos
     switch(action) {
       case 'move':
@@ -548,6 +554,12 @@ class App extends Component {
         // TODO: Animate attack on unitPos
         if(isUndefined(newBoard[target])){
           console.log('Time to crash: ', newBoard, target, value);
+        }
+        if(!isUndefined(typeEffective)) {
+          // Either '' or Message
+          newBoard[unitPos].actionMessage = typeEffective;
+        } else {
+          newBoard[unitPos].actionMessage = '';
         }
         const newHp = newBoard[target].hp - value;
         console.log('Attack from', unitPos, 'with', value, 'damage, newHp', newHp);
@@ -562,6 +574,12 @@ class App extends Component {
         // TODO: Check spell effects
         const effect = nextMove.effect;
         const abilityName = nextMove.abilityName;
+        if(!isUndefined(typeEffective)) {
+          // Either '' or Message
+          newBoard[unitPos].actionMessage = abilityName + '! ' + typeEffective;
+        } else {
+          newBoard[unitPos].actionMessage = '';
+        }
         let newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         if(Object.keys(effect).length){
@@ -628,12 +646,16 @@ class App extends Component {
       counter += 1;
     }
     if(actionStack.length === 0){
-      const winningTeam = Object.values(battleStartBoard)[0].team;
-      // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
-      if(winningTeam === 0) {
-        dispatch({type: 'UPDATE_MESSAGE', message: 'You won!'}); 
-      } else {
+      if(isUndefined(battleStartBoard)){
         dispatch({type: 'UPDATE_MESSAGE', message: 'You lost!'}); 
+      } else {
+        const winningTeam = Object.values(battleStartBoard)[0].team;
+        // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
+        if(winningTeam === 0) {
+          dispatch({type: 'UPDATE_MESSAGE', message: 'You won!'}); 
+        } else {
+          dispatch({type: 'UPDATE_MESSAGE', message: 'You lost!'}); 
+        }
       }
     }
   }
@@ -673,9 +695,6 @@ class App extends Component {
     return <div>
       <div className='centerWith50 flex' style={{width: '80%'}}>
         <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
-          {'Player ' + this.props.index}
-        </div>
-        <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
           {'Round: ' + this.props.round}
         </div>
         {this.getAmountOfUnitsOnBoard()}
@@ -685,6 +704,9 @@ class App extends Component {
           </div>
           <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
         </div>
+        {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+          {'Enemy ' + (1 - this.props.index) /* Enemy id here, required backend battle refactor*/ } 
+        </div> : '')}
       </div>
       <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
         <div style={{width: '165px'}}>
@@ -693,6 +715,9 @@ class App extends Component {
             <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>
               StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
             </button>
+          </div>
+          <div className='marginTop5 biggerText text_shadow paddingLeft5'>
+            {'Player ' + this.props.index}
           </div>
           <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
             <CSSTransitionGroup
@@ -762,7 +787,7 @@ class App extends Component {
           {this.playerStatsDiv()}
         </div>
       </div>
-      <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent(this) : () => {})}/>
+      <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent(this) : () => '')}/>
       {/*
       <p>battleStartBoard:{JSON.stringify(this.props.battleStartBoard, null, 2)}</p>
       <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>

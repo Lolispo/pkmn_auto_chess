@@ -103,7 +103,7 @@ exports.getLongestBattleTime = (actionStacks) => {
   while (!temp.done) {
     const id = temp.value;
     const actionStack = actionStacks.get(id);
-    const time = actionStack.get(actionStack.size - 1).get('time');
+    const time = (actionStack.get(actionStack.size - 1) ? actionStack.get(actionStack.size - 1).get('time') : 0);
     if (time > longestTime) {
       longestTime = time;
     }

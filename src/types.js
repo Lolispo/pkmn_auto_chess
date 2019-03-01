@@ -28,6 +28,7 @@ const typeMap = new Map({
       'Rock',
       'Steel',
     ]),
+    noDamageAgainst: 'Ghost',
     desc: 'Increases Hp for all units',
     req: List([4, 7, 10]),
     bonusAmount: List([15, 30, 45]),
@@ -92,6 +93,7 @@ const typeMap = new Map({
       'Grass',
       'Dragon',
     ]),
+    noDamageAgainst: 'Ground',
     desc: 'Increases speed for all',
     req: List([2, 4, 6]),
     bonusAmount: List([20, 40, 60]),
@@ -156,6 +158,7 @@ const typeMap = new Map({
       'Bug',
       'Fairy',
     ]),
+    noDamageAgainst: 'Ghost',
     desc: 'Increases Damage for all fighting type units',
     req: List([2, 4, 6]),
     bonusAmount: List([20, 40, 60]),
@@ -174,6 +177,7 @@ const typeMap = new Map({
       'Rock',
       'Ghost',
     ]),
+    noDamageAgainst: 'Steel',
     desc: 'Increases defense for all poison typed units',
     req: List([3, 6, 9]),
     bonusAmount: List([20, 40, 60]),
@@ -196,6 +200,7 @@ const typeMap = new Map({
       'Grass',
       'Bug',
     ]),
+    noDamageAgainst: 'Flying',
     desc: 'Increases defense for all ground typed units',
     req: List([2, 4, 6]),
     bonusAmount: List([30, 60, 90]),
@@ -230,6 +235,7 @@ const typeMap = new Map({
       'Psychic',
       'Steel',
     ]),
+    noDamageAgainst: 'Dark',
     desc: 'Decreases defense for all enemy units',
     req: List([3, 6, 9]),
     bonusAmount: List([20, 40, 60]),
@@ -287,6 +293,7 @@ const typeMap = new Map({
       'Ghost',
     ]),
     ineffectiveAgainst: 'Dark',
+    noDamageAgainst: 'Normal',
     /*
     TODO: Demon ? Only strong if only ghost on board, +50% dmg
           Evasion ? (Since ghost hard to hit)
@@ -296,6 +303,7 @@ const typeMap = new Map({
     name: 'dragon',
     strongAgainst: 'Dragon',
     ineffectiveAgainst: 'Steel',
+    noDamageAgainst: 'Fairy',
     /*
     dratini
     Strong unique
@@ -376,6 +384,18 @@ const isIneffectiveAgainst = async (attackType, defenseType) => {
 };
 
 /**
+ * Type matchup, check for strong against defenseType
+ */
+const hasNoDamageAgainst = async (attackType, defenseType) => {
+  const noDamage = typeMap.get(attackType).get('noDamageAgainst');
+  if (!f.isUndefined(noDamage)) {
+    const lowerCase = noDamage.toLowerCase();
+    return (lowerCase.includes(defenseType) ? 0.0 : 1.0);
+  }
+  return 1.0;
+};
+
+/**
  * Returns type factor for attack
  * 2 if attackType is effective against defenseType
  * 0.5 if defenseType is resistance against attackType
@@ -383,8 +403,9 @@ const isIneffectiveAgainst = async (attackType, defenseType) => {
 const calcTypeFactor = async (attackType, defenseType) => {
   const strengthRatio = await isStrongAgainst(attackType, defenseType);
   const ineffectiveRatio = await isIneffectiveAgainst(attackType, defenseType);
+  const noEffectRatio = await hasNoDamageAgainst(attackType, defenseType);
   // console.log('@calcTypeFactor', attackType, defenseType, strengthRatio, ineffectiveRatio);
-  return strengthRatio * ineffectiveRatio;
+  return strengthRatio * ineffectiveRatio * noEffectRatio;
 };
 
 /**

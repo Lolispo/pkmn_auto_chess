@@ -12,12 +12,12 @@ Temp: 1 hp per level
 ## Backend
 
 In Battle Change (IMPORTANT):
-    Quickfix, disable buying during battle
-    Save player changes made during battle to be received after the battle
-    ToggleLock: Interact with server and set it to be saved into the player just created
-    Buy Unit: 
-    Refresh Unit: 
-    Buy Exp
+    Fix: Move endbattle logic to after time and there take LATEST player received
+    Store latest version of player in session @ every player update
+        ToggleLock: Interact with server and set it to be saved into the player just created
+        Buy Unit: 
+        Refresh Unit: 
+        Buy Exp
 
 Move updates:
     Mana updates
@@ -77,28 +77,29 @@ Lose hp from npcRound
 
 Sheets:
     No effect types should be added as ineffective types ATLEAST or Uber ineffective (like 30% damage)
-    Add pokemon with longer range than 1
-        2:
-            Caterpie, weedle, pidgey, spearow
-            Butterfree
-            pikachu
-            venomoth
-            zubat
-            clefairy
-            growlithe
-            drowzee
-            voltorb
-            koffing
-            elekid
-            snorlax
-            dratini
-        3:
-            gastly
-            magnemite
-            Abra
-            Blastoise
-            charizard
-            mew/mewtwo/articuno/moltres/zapdos
+    
+Longer range than 1
+    2:
+        Caterpie, weedle, pidgey, spearow
+        Butterfree
+        pikachu
+        venomoth
+        zubat
+        clefairy
+        growlithe
+        drowzee
+        voltorb
+        koffing
+        elekid
+        snorlax
+        dratini
+    3:
+        gastly
+        magnemite
+        Abra
+        Blastoise
+        charizard
+        mew/mewtwo/articuno/moltres/zapdos
 
 Check money: Feels like you get a lot of money
 
