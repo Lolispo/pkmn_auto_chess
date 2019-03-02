@@ -12,7 +12,21 @@ let sessions = Map({}); // Maps sessionIds to sessions
 
 const TIME_FACTOR = 15;
 
+const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId');
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
+
+const emitMessage = (socket, io, sessionId, func) => {
+  const iter = connectedPlayers.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const socketId = temp.value;
+    const connectedUser = connectedPlayers.get(socketId);
+    if(connectedUser.get('sessionId') === sessionId || (sessionId === true && (connectedUser.get('sessionId') === true || connectedUser.get('sessionId') === false))) {
+      func(socketId);
+    }
+    temp = iter.next();
+  }
+}
 
 const countReadyPlayers = (isReadyAction, socket, io) => {
   const iter = connectedPlayers.keys();
@@ -30,11 +44,20 @@ const countReadyPlayers = (isReadyAction, socket, io) => {
     temp = iter.next();
   }
   if (counterReady === counterPlayersWaiting) {
-    io.emit('ALL_READY', counterReady, counterPlayersWaiting, true);
+    emitMessage(socket, io, true, (socketId) => {
+      io.to(socketId).emit('ALL_READY', counterReady, counterPlayersWaiting, true);
+    });
+    // io.emit('ALL_READY', counterReady, counterPlayersWaiting, true);
   } else if (!isReadyAction) { // Someone went unready
-    io.emit('ALL_READY', counterReady, counterPlayersWaiting, false);
+    emitMessage(socket, io, true, (socketId) => {
+      io.to(socketId).emit('ALL_READY', counterReady, counterPlayersWaiting, false);
+    });
+    // io.emit('ALL_READY', counterReady, counterPlayersWaiting, false);
   } else {
-    io.emit('READY', counterReady, counterPlayersWaiting);
+    emitMessage(socket, io, true, (socketId) => {
+      io.to(socketId).emit('READY', counterReady, counterPlayersWaiting);
+    });
+    // io.emit('READY', counterReady, counterPlayersWaiting);
   }
 };
 
@@ -92,7 +115,10 @@ module.exports = (socket, io) => {
       io.to(`${id}`).emit('NEW_PLAYER', sessionConnectedPlayers.get(id));
       temp = iter.next();
     }
-    io.emit('UPDATED_STATE', stateToSend);
+    // io.emit('UPDATED_STATE', stateToSend);
+    emitMessage(socket, io, sessionId, (socketId) => {
+      io.to(socketId).emit('UPDATED_STATE', stateToSend);
+    });
   });
 
   // disconnect logic
@@ -122,8 +148,9 @@ module.exports = (socket, io) => {
     // const state = await gameJS.toggleLock(fromJS(stateParam), index);
     const prevLock = (fromJS(stateParam)).getIn(['players', index, 'locked']);
     console.log('Toggling Lock for Shop! prev lock =', prevLock);
-    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     socket.emit('LOCK_TOGGLED', index, !prevLock);
+    const state = await gameJS.toggleLock((fromJS(stateParam)), index);
+    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
   });
 
   socket.on('BUY_UNIT', async (stateParam, pieceIndex) => {
@@ -260,8 +287,12 @@ module.exports = (socket, io) => {
           // Send to users, not all
           sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
           const stateToSend = getStateToSend(stateEndedTurn);
-          io.emit('END_BATTLE');
-          io.emit('UPDATED_STATE', stateToSend);
+          emitMessage(socket, io, sessionId, (socketId) => {
+            io.to(socketId).emit('END_BATTLE');
+            io.to(socketId).emit('UPDATED_STATE', stateToSend);
+            // io.emit('END_BATTLE');
+            // io.emit('UPDATED_STATE', stateToSend);
+          });
         }, longestTime);
       } else {
         const newSession = session.set('counter', counter).set('prepBattleState', prepBattleState);

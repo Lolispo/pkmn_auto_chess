@@ -60,11 +60,6 @@ ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
 
 Callback too many units
     = ?
-
-Lose hp from npcRound
-
-Sheets:
-    No effect types should be added as ineffective types ATLEAST or Uber ineffective (like 30% damage)
     
 Longer range than 1
     2:
@@ -162,19 +157,14 @@ Sound
 
 Support for mouse only gameplay
     Add options to withdraw and sell piece with mouse
+    Button appear for option to sell piece with mouse when unit selected
+        Button in left bar below selected unit info
 
 RefreshPiece cost 2 gold, more clear
 
 Display winner of battle more clear
 
 ## Communication
-
-session is undefined, causes server crash
-
-if refresh on battle start, start new game -> first battle finishes => replaces new game
-    setTimeout check if session still exist
-    Insession: Loop over connectedPlayers in session and use io.to
-    Unready/Ready: io.to users where connectedUser.session == true || false
 
 ## Tests
 
