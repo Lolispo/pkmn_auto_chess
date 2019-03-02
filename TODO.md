@@ -11,30 +11,16 @@ Temp: 1 hp per level
 
 ## Backend
 
-In Battle Change (IMPORTANT):
-    Fix: Move endbattle logic to after time and there take LATEST player received
-    Store latest version of player in session @ every player update
-        ToggleLock: Interact with server and set it to be saved into the player just created
-        Buy Unit: 
-        Refresh Unit: 
-        Buy Exp
-
 Move updates:
     Mana updates
         Move manaIncrease function logic to 2 functions
         One calculate mana changes and return the value
             Can also be used in move
         The other calculates newBoard from manaChanges calculated
-    Attack / Spell effectivness stored in move
 
 Apply buffs for all of same type
     CHECK ME (All paras get bug buff)
         Currently works for paras when alone, not when 2 are there
-
-endTurn first calculated after battle is visually simualted
-    Supports locking of shop and selling pieces for other income bonuses
-        Potential for abuse if before battle have over certain amount, income from that, and then buy a lot
-    Move it out of the battle functions, battlefunctions return relevant data (winner)
 
 end game when peoplePlaying > 2 from start and only one left
     Game over logic
@@ -55,6 +41,7 @@ Information moving to get to frontend:
             boardBuffs
 
 Handle empty boards for battle
+    Should still visualize the enemy units
 
 Pieces:
     Max 9 units for each player
@@ -63,6 +50,7 @@ Pieces:
 Aoe damage logic
 
 Matchup system
+    Moved to function but still needs logic figured out
 
 first move
 
