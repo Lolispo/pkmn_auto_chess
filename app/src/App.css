@@ -166,6 +166,18 @@ body {
   padding-left: 5px;
 }
 
+.goldImageSmall {
+  height: 18px;
+  width: 18px;
+  padding-top: 1px;
+  padding-left: 5px;
+}
+
+.goldImageTextSmall {
+  margin-top: 3px; 
+  margin-left: 7px;
+}
+
 .biggerText{
   font-size: 22px;
 }

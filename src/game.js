@@ -1119,9 +1119,11 @@ async function markBoardBonuses(board) {
     // Solo buffs
     const types = board.get(unitPos).get('type'); // Value or List
     if (!f.isUndefined(types.size)) { // List
+      let newUnit = unit;
       for (let i = 0; i < types.size; i++) {
         if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types.get(i)))) {
-          const newUnit = typesJS.getBuffFuncSolo(types.get(i))(unit, typeBuffMapSolo.get(String(team)).get(types.get(i)))
+          console.log('@markBoardBonuses Marking unit', newUnit.get('name'));
+          newUnit = typesJS.getBuffFuncSolo(types.get(i))(newUnit, typeBuffMapSolo.get(String(team)).get(types.get(i)))
             .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types.get(i)).get('name'))); // Add buff to unit
           newBoard = await newBoard.set(unitPos, newUnit);
         }
@@ -1129,7 +1131,7 @@ async function markBoardBonuses(board) {
     } else { // Value
       // console.log(typeBuffMapSolo.get(String(team)), typeBuffMapSolo.get(String(team)).get(types), types, team)
       if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types))) {
-        // console.log(typesJS.getBuffFuncSolo(types))
+        console.log('@markBoardBonuses Marking unit', unit.get('name'));
         const newUnit = typesJS.getBuffFuncSolo(types)(unit, typeBuffMapSolo.get(String(team)).get(types))
           .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types).get('name'))); // Add buff to unit
         newBoard = await newBoard.set(unitPos, newUnit);

@@ -18,10 +18,6 @@ Move updates:
             Can also be used in move
         The other calculates newBoard from manaChanges calculated
 
-Apply buffs for all of same type
-    CHECK ME (All paras get bug buff)
-        Currently works for paras when alone, not when 2 are there
-
 end game when peoplePlaying > 2 from start and only one left
     Game over logic
     otherwise let play until dead (good for testing and singleplayer)
@@ -88,9 +84,20 @@ Check money: Feels like you get a lot of money
 
 ## Frontend
 
-Animation on actionMessage
+ActionMessage:
+    Put on receivers end instead, test this
+    Position on top of unit
+
+Animations: 
+    Animation on actionMessage (Damage and effective)
+        Fadeout and move down
+    Animation on pokemonImg
+        Move in direction of attack and then move back (start of animation slow)
+    Level up animation -> too full bar and down to zero (or xp over 0)
+    Hp bar changes animation
 
 Code: Event code only in one place
+    placepieceevent in 2 spots currently
 
 Startscreen: 
     Update connected on disconnect
@@ -104,9 +111,6 @@ Startscreen:
 TopBar:
     Add option to choose playerNames
     Piece Image
-    
-Levelup:
-    Level up animation -> too full bar and down to zero (or xp over 0)
 
 Battle
     Show mana bar
@@ -114,7 +118,6 @@ Battle
         Max 200, 50/200 => 25% mana bar full
         Change color of manabar when above ability.cost
     Select units working during battle (Investigate)
-    Show damage dealt from unit to target, apply css animation of movement in that direction
 
 Infopanel
     Show bars in infopanel screen for stats (Easier comparisons)
@@ -125,13 +128,11 @@ Infopanel
     Pokedex look?
 
 Shop
-    Buy unit third of shop div
-    Rest is infopanel selectable
+    Buy unit button, third of shop div size
+    Rest is infopanel selectable, information from unit before buying
 
 Scoreboard: 
-    Fix player+hp order being displayed correctly
-        Show player name on screen somewhere too make more clear
-    Stick to right side
+    Css me
     Make players clickable
         Show their board when that is done
 
@@ -140,14 +141,18 @@ Board css:
     Fix z-index (or something) to place selected on top
         outline ugly, not on right side
     Display Which unit will be called back/selected when too many units on board
+        Noted todo in backend
         Gray background or something
-        Requires replacement of code
 
-Cache Information
+Cache More Information
     Cache images/gifs (Store image, paddingTop, width and height, might not work)
 
-Use Message more, especially for errors
-    Red text if error
+Message:
+    Update position and size to be overboard and use for vital information
+        Css required a lot
+    Use Message more, especially for errors
+        Red text if error
+    Display winner of battle more clear
 
 Show permenent buffs at left of board  
 
@@ -159,10 +164,6 @@ Support for mouse only gameplay
     Add options to withdraw and sell piece with mouse
     Button appear for option to sell piece with mouse when unit selected
         Button in left bar below selected unit info
-
-RefreshPiece cost 2 gold, more clear
-
-Display winner of battle more clear
 
 ## Communication
 

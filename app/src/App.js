@@ -391,7 +391,7 @@ class App extends Component {
           : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
         </div>
         <div style={{paddingTop: '15px'}}>
-          <div>
+          {/*<div>
             <span>Hp: </span>
             <span style={{position: 'relative'}}>
               <div className='levelBar overlap' style={{width: String(s.hp/150 * 100) + '%'}}></div>
@@ -399,7 +399,7 @@ class App extends Component {
                 {` ${s.hp}`}
               </div>
             </span>
-          </div>
+          </div>*/}
           <span className='center'>{`Hp: ${s.hp}\n`}</span>
           <span>{`Attack: ${s.attack}\n`}</span>
           <span>{`Defense: ${s.defense}\n`}</span>
@@ -555,13 +555,14 @@ class App extends Component {
         console.log('Move from', unitPos, 'to', target);
         delete newBoard[unitPos];        // Remove unit from previous pos
         newBoard[target] = unit;         // Add unit to new pos on board
+        newBoard[unitPos].actionMessage = '';
         return newBoard;
       case 'attack':
         // TODO: Animate attack on unitPos
         if(isUndefined(newBoard[target])){
           console.log('Time to crash: ', newBoard, target, value);
         }
-        if(!isUndefined(typeEffective)) {
+        if(typeEffective !== '') {
           // Either '' or Message
           newBoard[unitPos].actionMessage = value + '! ' + typeEffective;
         } else {
@@ -580,7 +581,7 @@ class App extends Component {
         // TODO: Check spell effects
         const effect = nextMove.effect;
         const abilityName = nextMove.abilityName;
-        if(!isUndefined(typeEffective)) {
+        if(typeEffective !== '') {
           // Either '' or Message
           newBoard[unitPos].actionMessage = abilityName + '! ' + value + '! ' + typeEffective;
         } else {
@@ -777,7 +778,11 @@ class App extends Component {
                     <img className='lockImage' onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
                   </div>
                   <div style={{paddingTop: '10px'}}>
-                    <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>   
+                    <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>
+                  </div>
+                  <div className='flex'>
+                    <div className='text_shadow goldImageTextSmall'>2</div>
+                    <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
                   </div>
                 </div>
                 <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
