@@ -48,8 +48,8 @@ const configureSocket = dispatch => {
     dispatch({ type: 'READY', playersReady: playersReady, connectedPlayers: connectedPlayers});
   });
   
-  socket.on('BATTLE_TIME', (actionStacks, battleStartBoards) => {
-    dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards});
+  socket.on('BATTLE_TIME', (actionStacks, battleStartBoards, enemy) => {
+    dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards, enemy});
   });
 
   socket.on('END_BATTLE', () => {

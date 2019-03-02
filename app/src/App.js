@@ -268,9 +268,15 @@ class Cell extends Component {
           <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
           </div> : '')*/
         const actionMessage = (pokemon && pokemon.actionMessage !== '' ? 
-          <div className='text_shadow' style={{position: 'absolute'}}>
+        <CSSTransitionGroup
+          transitionName="messageUpdate"
+          transitionEnterTimeout={1500}
+          transitionLeave={false}>
+          <div className='text_shadow actionMessage' style={{position: 'absolute'}}>
             {pokemon.actionMessage}
-          </div> : '');
+          </div> 
+        </CSSTransitionGroup>
+          : '');
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           return <div style={{position: 'relative'}}>
@@ -557,9 +563,9 @@ class App extends Component {
         }
         if(!isUndefined(typeEffective)) {
           // Either '' or Message
-          newBoard[unitPos].actionMessage = typeEffective;
+          newBoard[unitPos].actionMessage = value + '! ' + typeEffective;
         } else {
-          newBoard[unitPos].actionMessage = '';
+          newBoard[unitPos].actionMessage = value;
         }
         const newHp = newBoard[target].hp - value;
         console.log('Attack from', unitPos, 'with', value, 'damage, newHp', newHp);
@@ -576,9 +582,9 @@ class App extends Component {
         const abilityName = nextMove.abilityName;
         if(!isUndefined(typeEffective)) {
           // Either '' or Message
-          newBoard[unitPos].actionMessage = abilityName + '! ' + typeEffective;
+          newBoard[unitPos].actionMessage = abilityName + '! ' + value + '! ' + typeEffective;
         } else {
-          newBoard[unitPos].actionMessage = '';
+          newBoard[unitPos].actionMessage = value;
         }
         let newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
@@ -705,7 +711,7 @@ class App extends Component {
           <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
         </div>
         {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
-          {'Enemy ' + (1 - this.props.index) /* Enemy id here, required backend battle refactor*/ } 
+          {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
         </div> : '')}
       </div>
       <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
@@ -828,6 +834,7 @@ const mapStateToProps = state => ({
   expToReach: state.expToReach,
   gold: state.gold,
   onGoingBattle: state.onGoingBattle,
+  enemyIndex: state.enemyIndex,
   startBattle: state.startBattle,
   actionStack: state.actionStack,
   battleStartBoard: state.battleStartBoard,

@@ -1241,6 +1241,31 @@ async function prepareBattle(board1, board2) {
   return result.set('startBoard', boardWithMovement);
 }
 
+async function buildMatchups(players) {
+  let matchups = Map({});
+  const playerIter = players.keys();
+  let tempPlayer = playerIter.next();
+  let iter;
+  let nextPlayer;
+  const firstPlayer = tempPlayer.value;
+  while (true) {
+    const currentPlayer = tempPlayer.value;
+    iter = playerIter.next();
+    if (iter.done) {
+      nextPlayer = firstPlayer;
+    } else {
+      nextPlayer = iter.value;
+    }
+    matchups = matchups.set(currentPlayer, nextPlayer);
+    if (iter.done) {
+      break;
+    } else {
+      tempPlayer = iter;
+    }
+  }
+  return matchups;
+}
+
 /**
  * Randomize Opponents for state
  * TODO: Randomize opponent pairs, shuffle indexes before iterator
@@ -1250,24 +1275,13 @@ async function prepareBattle(board1, board2) {
  */
 async function battleTime(stateParam) {
   let state = stateParam;
-  let actionStacks = Map({});
-  let startingBoards = Map({});
-  const playerIter = state.get('players').keys();
-  let tempPlayer = playerIter.next();
-  let iter;
-  let nextPlayer;
-  const firstPlayer = tempPlayer.value;
-  // TODO: Future: All battles calculate concurrently
-  while (true) {
-    const currentPlayer = tempPlayer.value;
-    iter = playerIter.next();
-    if (iter.done) {
-      nextPlayer = firstPlayer;
-    } else {
-      nextPlayer = iter.value;
-    }
-    const index = currentPlayer;
-    const enemy = nextPlayer;
+  let matchups = await buildMatchups(state.get('players'));
+  let battleObject = Map({matchups});
+  const iter = matchups.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const index = temp.value;
+    const enemy = matchups.get(temp.value);
     // console.log('@battleTime pairing: ', pairing, nextPlayer);
     const board1 = state.getIn(['players', index, 'board']);
     const board2 = state.getIn(['players', enemy, 'board']);
@@ -1275,44 +1289,38 @@ async function battleTime(stateParam) {
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     const resultBattle = await result;
 
-    // TODO: Send actionStack to frontend and startBoard
+    // For visualization of battle
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
-    actionStacks = actionStacks.set(index, actionStack);
-    startingBoards = startingBoards.set(index, startBoard);
+    battleObject = battleObject.setIn(['actionStacks', index], actionStack);
+    battleObject = battleObject.setIn(['startingBoards', index], startBoard);
 
+    // For endbattle calculations
     const winner = (resultBattle.get('winner') === 0);
-    const newBoard = resultBattle.get('board');
+    const finalBoard = resultBattle.get('board');
+    battleObject = battleObject.setIn(['winners', index], winner);
+    battleObject = battleObject.setIn(['finalBoards', index], finalBoard);
+    
     // console.log('@battleTime newBoard, finished board result', newBoard); // Good print, finished board
     // Store rivals logic
     const prevRivals = state.getIn(['players', index, 'rivals']);
     state = state.setIn(['players', index, 'rivals'], prevRivals.set(enemy, (prevRivals.get(enemy) || 0) + 1));
-    // TODO: Move endBattle logic outside of this function
-    // winner & newBoard & isPvpRound & enemy index required
-    // Requires refactor / remake of getting opponent order, too consistently get same order / calculate before hand
-    const round = state.get('round');
-    const newStateAfterBattle = await endBattle(state, index, winner, newBoard, true, enemy);
-    if (newStateAfterBattle.get('round') === round + 1) {
-      state = newStateAfterBattle;
-    } else {
-      state = state.setIn(['players', index], newStateAfterBattle.getIn(['players', index]));
-    }
 
-    if (iter.done) {
-      break;
-    } else {
-      tempPlayer = iter;
-    }
+    temp = iter.next();
   }
   // Post battle state
   const newState = await state;
-  return Map({}).set('state', newState).set('startingBoards', startingBoards).set('actionStacks', actionStacks);
+  return Map({
+    state: newState,
+    battleObject,
+    roundType: 'pvp',
+    preBattleState: stateParam,
+  });
 }
 
 async function npcRound(stateParam, npcBoard) {
   let state = stateParam;
-  let actionStacks = Map({});
-  let startingBoards = Map({});
+  let battleObject = Map({});
   const playerIter = state.get('players').keys();
   let tempPlayer = playerIter.next();
   // TODO: Future: All battles calculate concurrently
@@ -1323,28 +1331,27 @@ async function npcRound(stateParam, npcBoard) {
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     const resultBattle = await result;
 
-    // TODO: Send actionStack to frontend and startBoard
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
-    actionStacks = actionStacks.set(currentPlayer, actionStack);
-    startingBoards = startingBoards.set(currentPlayer, startBoard);
+    battleObject = battleObject.setIn(['actionStacks', currentPlayer], actionStack);
+    battleObject = battleObject.setIn(['startingBoards', currentPlayer], startBoard);
 
+    // For endbattle calculations
     const winner = (resultBattle.get('winner') === 0);
-    const newBoard = resultBattle.get('board');
+    const finalBoard = resultBattle.get('board');
+    battleObject = battleObject.setIn(['winners', currentPlayer], winner);
+    battleObject = battleObject.setIn(['finalBoards', currentPlayer], finalBoard);
 
-    // TODO Npc: Give bonuses for beating npcs, special money or something
-    const round = state.get('round');
-    const newStateAfterBattle = await endBattle(state, currentPlayer, winner, newBoard, false);
-    if (newStateAfterBattle.get('round') === round + 1) {
-      state = newStateAfterBattle;
-    } else {
-      state = state.setIn(['players', currentPlayer], newStateAfterBattle.getIn(['players', currentPlayer]));
-    }
     tempPlayer = playerIter.next();
   }
   // Post battle state
-  const newState = await state;
-  return Map({}).set('state', newState).set('startingBoards', startingBoards).set('actionStacks', actionStacks);
+  const newState = await state;  
+  return Map({
+    state: newState,
+    battleObject,
+    roundType: 'npc',
+    preBattleState: stateParam,
+  });
 }
 
 /**
@@ -1419,16 +1426,14 @@ exports.battleSetup = async (stateParam) => {
   }
   const round = state.get('round');
   switch (gameConstantsJS.getRoundType(round)) {
+    case 'gym':
     case 'npc':
       const boardNpc = await gameConstantsJS.getSetRound(round);
-      return (await npcRound(state, boardNpc)).set('preBattleState', state);
-    case 'gym':
-      const boardGym = await gameConstantsJS.getSetRound(round);
-      return (await npcRound(state, boardGym)).set('preBattleState', state);
+      return npcRound(state, boardNpc);
     case 'shop':
     case 'pvp':
     default:
-      return (await battleTime(state)).set('preBattleState', state);
+      return battleTime(state);
   }
 };
 
@@ -1522,30 +1527,64 @@ async function calcDamageTaken(boardUnits) {
  *      Calculate amount of hp to lose
  * Parameters: Enemy player index, winningAmount = damage? (units or damage)
  */
-async function endBattle(stateParam, playerIndex, winner, finishedBoard, isPvP, enemyPlayerIndex) {
+const endBattle = async(stateParam, playerIndex, winner, finishedBoard, roundType, enemyPlayerIndex) =>  {
   let state = stateParam;
   // console.log('@endBattle', state, playerIndex, winner, enemyPlayerIndex);
-  if (isPvP) {
-    const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
-    if (winner) {
-      state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
-      const newStreak = (streak < 0 ? 0 : +streak + 1);
-      state = state.setIn(['players', playerIndex, 'streak'], newStreak);
-    } else {
-      const hpToRemove = await calcDamageTaken(finishedBoard);
-      state = await removeHp(state, playerIndex, hpToRemove);
-      const newStreak = (streak > 0 ? 0 : +streak - 1);
-      state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+  const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
+  if (winner) { // Winner
+    // TODO: Npc rewards and gym rewards
+    switch(roundType){
+      case 'pvp':
+        state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
+        const newStreak = (streak < 0 ? 0 : +streak + 1);
+        state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+        break;
+      case 'npc':
+      case 'gym':
+      case 'shop':
+      default:
+    }
+  } else { // Loser
+    switch(roundType){
+      case 'pvp':
+      case 'npc':
+        const hpToRemove = await calcDamageTaken(finishedBoard);
+        state = await removeHp(state, playerIndex, hpToRemove);
+        const newStreak = (streak > 0 ? 0 : +streak - 1);
+        state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+        break;
+      case 'gym':
+      case 'shop':
+      default:
     }
   }
   const round = state.get('round');
   // console.log('@endBattle prep', stateParam.get('players'));
   const potentialEndTurn = await prepEndTurn(state, playerIndex);
-  if (potentialEndTurn.get('round') === round + 1) {
-    // TODO: Send information to users
-
-  }
   return potentialEndTurn;
+}
+
+exports.endBattleForAll = async (stateParam, winners, finalBoards, matchups, roundType) => {
+  let tempState = stateParam;
+  const iter = stateParam.get('players').keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const tempIndex = temp.value;
+    const winner = winners.get(tempIndex);
+    const finalBoard = finalBoards.get(tempIndex);
+    const enemy = (matchups ? matchups.get(tempIndex) : undefined);
+    // winner & newBoard & isPvpRound & enemy index required
+    const round = tempState.get('round');
+    const newStateAfterBattle = await endBattle(tempState, tempIndex, winner, finalBoard, roundType, enemy);
+    if (newStateAfterBattle.get('round') === round + 1) {
+      tempState = newStateAfterBattle;
+    } else {
+      tempState = state.setIn(['players', tempIndex], newStateAfterBattle.getIn(['players', tempIndex]));
+    }
+    temp = iter.next();
+  }
+  const newState = await tempState;
+  return newState;
 }
 
 /**

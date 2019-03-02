@@ -122,6 +122,7 @@ module.exports = (socket, io) => {
     // const state = await gameJS.toggleLock(fromJS(stateParam), index);
     const prevLock = (fromJS(stateParam)).getIn(['players', index, 'locked']);
     console.log('Toggling Lock for Shop! prev lock =', prevLock);
+    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     socket.emit('LOCK_TOGGLED', index, !prevLock);
   });
 
@@ -133,6 +134,7 @@ module.exports = (socket, io) => {
     const state = await gameJS.buyUnit(stateWithPieces, index, pieceIndex);
     // Gold, shop, hand
     console.log('Bought unit at', pieceIndex, 'discarded =', state.get('discardedPieces'));
+    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     socket.emit('UPDATED_STATE', getStateToSend(state)); // Was updateplayer
     // socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
@@ -144,6 +146,7 @@ module.exports = (socket, io) => {
     const state = await gameJS.buyExp(stateWithPieces, index);
     // Gold, shop, hand
     console.log('Bought exp');
+    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
 
@@ -154,6 +157,7 @@ module.exports = (socket, io) => {
     console.log('Refreshes Shop, level', state.getIn(['players', index, 'level']));
     // Requires Shop and Pieces
     // socket.emit('UPDATED_PIECES', state);
+    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
@@ -218,35 +222,44 @@ module.exports = (socket, io) => {
 
         const obj = await gameJS.battleSetup(prepBSWithPieces);
         const newState = obj.get('state');
-        console.log('@sc.battleReady Players in state after Battle', newState.getIn(['players']));
         const preBattleState = obj.get('preBattleState');
-        console.log('@sc.battleReady Pre battle state', preBattleState.getIn(['players']));
-        const actionStacks = obj.get('actionStacks');
-        const startingBoards = obj.get('startingBoards');
+        const roundType = obj.get('roundType');
+        const battleObject = obj.get('battleObject');
+        // console.log('@sc.battleReady Players in state after Battle', newState.getIn(['players']));
+        // console.log('@sc.battleReady Pre battle state', preBattleState.getIn(['players']));
+        const actionStacks = battleObject.get('actionStacks');
+        const startingBoards = battleObject.get('startingBoards');
+        
+        const winners = battleObject.get('winners');
+        const finalBoards = battleObject.get('finalBoards');
+        const matchups = battleObject.get('matchups');
+
+        sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, newState);
+        sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
+        const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
+        
         const iter = connectedSessionPlayers.keys();
         let temp = iter.next();
-        sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
-        const stateToSend = getStateToSend(newState);
-        const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
         while (!temp.done) {
           const socketId = temp.value;
           const tempIndex = connectedSessionPlayers.get(socketId);
+          const enemy = (matchups ? matchups.get(tempIndex) : undefined);
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
-          // TODO: Send enemy name
           io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
-          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards);
+          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, enemy);
           temp = iter.next();
         }
-        setTimeout(() => {
-          /*
-            TODO: Build state to send
-            Rearrange code:
-            battleSetup shouldn't contain endBattle
-            send battle states to frontends
-            THEN here in setTimeout, do endBattle
-            updateSessionPieces from endTurn (here after endbattles)
-          */
+        setTimeout(async () => {
+          // After all battles are over
+          console.log('Time to End Battle')
+          const stateAfterBattle = sessionJS.buildStateAfterBattle(socket.id, connectedPlayers, sessions, newState);
+          // Endbattle and get endTurned state
+          const stateEndedTurn = await gameJS.endBattleForAll(stateAfterBattle, winners, finalBoards, matchups, roundType)
+          
+          // Send to users, not all
+          sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
+          const stateToSend = getStateToSend(stateEndedTurn);
           io.emit('END_BATTLE');
           io.emit('UPDATED_STATE', stateToSend);
         }, longestTime);

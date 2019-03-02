@@ -48,6 +48,13 @@
   padding-top: 70%;
 }
 
+.actionMessage {
+  animation: 3s ease-in-out 0s 1 infinite both running fadeOut;
+  margin-top: 25px;
+  margin-left: 3px;
+  font-size: 14px;
+}
+
 .paddingLeft5{
   padding-left: 5px;
 }
@@ -184,6 +191,16 @@ body {
 @keyframes invis {
   from  {opacity: 0.5;}
   to    {opacity: 1;}
+}
+
+@keyframes fadeOut {
+  from  {
+    opacity: 1;
+  }
+  to    
+  {
+    opacity: 0.01;
+  }
 }
 
 .example-enter {

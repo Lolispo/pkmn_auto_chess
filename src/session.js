@@ -29,6 +29,7 @@ exports.makeSession = (connectedPlayersInit, pieces) => Map({
   counter: START_COUNTER_VALUE,
   pieces,
   discardedPieces: List([]),
+  players: Map({}),
 });
 
 exports.createUser = socketId => Map({
@@ -93,6 +94,25 @@ exports.updateSessionPieces = (socketId, connectedPlayers, sessions, state) => {
   const session = sessions.get(sessionId);
   const newSession = session.set('pieces', state.get('pieces')).set('discardedPieces', state.get('discardedPieces'));
   // console.log('@updateSessionPieces', newSession.getIn(['pieces', 0, 0]), session.getIn(['pieces', 0, 0]))
+  return sessions.set(sessionId, newSession);
+};
+
+exports.buildStateAfterBattle = (socketId, connectedPlayers, sessions, state) => {
+  const session = getSession(socketId, connectedPlayers, sessions);
+  return state.set('players', session.get('players'));
+}
+
+exports.updateSessionPlayers = (socketId, connectedPlayers, sessions, state) => {
+  const sessionId = connectedPlayers.get(socketId).get('sessionId');
+  const session = sessions.get(sessionId);
+  const newSession = session.set('players', state.get('players'));
+  return sessions.set(sessionId, newSession);
+};
+
+exports.updateSessionPlayer = (socketId, connectedPlayers, sessions, state, index) => {
+  const sessionId = connectedPlayers.get(socketId).get('sessionId');
+  const session = sessions.get(sessionId);
+  const newSession = session.setIn(['players', index], state.getIn(['players', index]));
   return sessions.set(sessionId, newSession);
 };
 

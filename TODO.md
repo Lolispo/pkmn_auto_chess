@@ -105,6 +105,8 @@ Check money: Feels like you get a lot of money
 
 ## Frontend
 
+Animation on actionMessage
+
 Code: Event code only in one place
 
 Startscreen: 
@@ -226,6 +228,8 @@ Cleanup comments, better structure
 Potential to use more functional code, map/filter
 
 ## Optional Features
+
+Crit
 
 Chat system on left hand or bottom right of screen
     Use it for information about other people's upgrades

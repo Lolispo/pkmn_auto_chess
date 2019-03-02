@@ -20,6 +20,7 @@ const reducer = (
     expToReach: -1,
     gold: -1,
     onGoingBattle: false,
+    enemyIndex: -1,
     startBattle: false,
     actionStack: {},
     battleStartBoard: {},
@@ -106,6 +107,7 @@ const reducer = (
       state = {
         ...state,
         onGoingBattle: true,
+        enemyIndex: action.enemy,
         actionStack,
         battleStartBoard,
         startBattle: true
