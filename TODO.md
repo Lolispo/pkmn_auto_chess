@@ -84,6 +84,10 @@ Check money: Feels like you get a lot of money
 
 ## Frontend
 
+Css:
+    Grey out / disable clicking units / refreshShop/ buyExp when you don't have enough money
+
+
 ActionMessage:
     Put on receivers end instead, test this
     Position on top of unit
@@ -132,7 +136,7 @@ Shop
     Rest is infopanel selectable, information from unit before buying
 
 Scoreboard: 
-    Css me
+    Css me, Stick to right like a menu
     Make players clickable
         Show their board when that is done
 
@@ -157,6 +161,9 @@ Message:
 Show permenent buffs at left of board  
 
 Timer
+    On top or left, very visible
+    BattleTime effect to setTimeout function
+    After endbattle, start this setTimeout for battleTime function
 
 Sound
 
@@ -208,18 +215,32 @@ Potential to use more functional code, map/filter
 
 ## Optional Features
 
-Crit
+Login with name system
+    Requires start page
+    Starts game with player.name set for all players
+        Display player.name instead of player.index in own name and enemy name during battle
+        Also scoreboard show name
+    Features for stored logins (same account every game):
+        Login system
+        Stats for player:
+            Wins/Losses
+            Favorite units possibility 
 
-Chat system on left hand or bottom right of screen
-    Use it for information about other people's upgrades
+Crit
+    Suggestion: 20% chance crit 1.5x damage
+
+Chat system bottom right, below shop
+    Give piece upgrade information there for players
 
 Type buffs - Add typebuffs from sheets directly
 
 Shuffle deck of pieces when 20 (40?) pieces are discarded? Chance for not all pieces should be in every game
 
 Shop: Modal?
+    Allows for centering board and more dynamic layout
 
 eevee:
+    Currently: Random evolution
     Placement of eevees decides evolution!
     Evolution based on amount of unit types on board
     Temp: Random
