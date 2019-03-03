@@ -432,6 +432,12 @@ class App extends Component {
             {pokeEl}
           </div>
           {this.buildStats()}
+          <div className='centerWith50 marginTop5'>
+            <button className='normalButton' onClick={() => {
+              const from = this.props.selectedUnit.pos;
+              this.sellPieceEvent(from);
+            }}>Sell {pokemon.display_name}</button>
+          </div>
         </div>
       }
     }

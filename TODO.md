@@ -181,11 +181,6 @@ Sound:
         Timer click (close to 0)
         Unit upgrade
 
-Support for mouse only gameplay
-    Add options to withdraw and sell piece with mouse
-    Button appear for option to sell piece with mouse when unit selected
-        Button in left bar below selected unit info
-
 ## Communication
 
 ## Tests
