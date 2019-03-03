@@ -38,7 +38,7 @@ const countReadyPlayers = (isReadyAction, socket, io) => {
   while (!temp.done) {
     const id = temp.value;
     // Compares to true since sessionId = true => ready (if value -> not ready)
-    const sessionId = connectedPlayers.get(id).get('sessionId');
+    const sessionId = getSessionId(id);
     // console.log('@inside - sessionId for', temp.value, ':', sessionId, connectedPlayers.get(id), connectedPlayers.get(id).get('sessionId'));
     counterReady = (sessionId === true ? counterReady + 1 : counterReady);
     counterPlayersWaiting = (sessionId === false || sessionId === true ? counterPlayersWaiting + 1 : counterPlayersWaiting);
@@ -80,6 +80,7 @@ module.exports = (socket, io) => {
     console.log('@Give_id', socket.id);
     const newUser = sessionJS.createUser(socket.id);
     connectedPlayers = connectedPlayers.set(socket.id, newUser);
+    countReadyPlayers(false, socket, io);
     // TODO: Handle many connected players
   });
 
@@ -142,6 +143,7 @@ module.exports = (socket, io) => {
         }
       }
       connectedPlayers = connectedPlayers.delete(socket.id);
+      countReadyPlayers(false, socket, io);
     }
   });
 
@@ -222,7 +224,7 @@ module.exports = (socket, io) => {
     const index = getPlayerIndex(socket.id);
     const state = fromJS(stateParam); // Shouldn't require pieces in battle
     const amount = state.get('amountOfPlayers');
-    const sessionId = connectedPlayers.get(socket.id).get('sessionId');
+    const sessionId = getSessionId(socket.id);
     const session = sessions.get(sessionId);
     const connectedSessionPlayers = session.get('connectedPlayers');
     let counter = session.get('counter');

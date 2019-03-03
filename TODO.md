@@ -96,7 +96,6 @@ Code: Event code only in one place
     Move to separate file and import, requires sending props
 
 Startscreen: 
-    Update connected on disconnect
     If connection with host is gone, exit game
         If server is restarted, terminate all active games
     Features:
