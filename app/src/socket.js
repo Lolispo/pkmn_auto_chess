@@ -6,6 +6,7 @@ import io from 'socket.io-client';
 import ipAdressFromFile from './ip.js';
 
 const ipAdress = 'http://' + ipAdressFromFile + ':8000';
+console.log('Connecting to ' + ipAdress + ' ...');
 const socket = io(ipAdress);
 
 // Receiving information
