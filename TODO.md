@@ -76,10 +76,6 @@ Check money: Feels like you get a lot of money
 
 ## Frontend
 
-Change so ip adress to server isn't loaded from file, instead put in client
-    Connected to an ip address, use same address but with port :8000
-    Get ip address / URL -> use it in socket
-
 Css:
     Grey out / show isDisabled for clicking shopUnits / refreshShop/ buyExp when you don't have enough money
 

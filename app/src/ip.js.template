@@ -1,4 +1,0 @@
-// Remove .template
-var ip = 'INSERT_SERVER_IP';
-
-export default ip;

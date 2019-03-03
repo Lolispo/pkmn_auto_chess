@@ -3,9 +3,9 @@
 // src/socket.js
 import io from 'socket.io-client';
 
-import ipAdressFromFile from './ip.js';
-
-const ipAdress = 'http://' + ipAdressFromFile + ':8000';
+const url = window.location.href;
+const ip = url.split(':3000')[0].split('http://')[1];
+const ipAdress = 'http://' + ip + ':8000';
 console.log('Connecting to ' + ipAdress + ' ...');
 const socket = io(ipAdress);
 
