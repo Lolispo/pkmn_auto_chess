@@ -56,6 +56,10 @@ const configureSocket = dispatch => {
     dispatch({ type: 'END_BATTLE'});
   });
 
+  socket.on('END_GAME', winningPlayer => {
+    dispatch({ type: 'END_GAME', winningPlayer});
+  });
+
   socket.on('SET_STATS', (name, stats) => {
     console.log('@socket.setStats')
     dispatch({ type: 'SET_STATS', name, stats});

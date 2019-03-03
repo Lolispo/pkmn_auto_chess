@@ -78,12 +78,13 @@ class PokemonImage extends Component{
 }
 
 class Pokemon extends Component{
+  
   buyUnitEvent = (index) => {
     // You have enough money to buy this unit
     // Unit != null
     // Hand is not full
     // console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
-    if(this.props.shopPokemon){
+    if(this.props.shopPokemon && this.props.newProps.gameIsLive){
       if(this.props.newProps.gold >= this.props.shopPokemon.cost){
         const size = Object.keys(this.props.newProps.myHand).length
         if(size < 8){
@@ -201,7 +202,7 @@ class Cell extends Component {
     // to is on valid part of the board
     const prop = this.props.newProps;
     const from = String(fromParam);
-    if(from && to){
+    if(from && to && prop.gameIsLive){
       console.log('@placePieceEvent',from, to);
       const splitted = to.split(',');
       const fromSplitted = from.split(',');
@@ -339,7 +340,7 @@ class App extends Component {
 
   refreshShopEvent = () => {
     // You have enough money to refresh
-    if(this.props.gold >= 2){
+    if(this.props.gold >= 2 && this.props.gameIsLive){
       refreshShop(this.props.storedState)
     } else{
       updateMessage(this.props, 'Not enough gold!');
@@ -348,7 +349,7 @@ class App extends Component {
 
   buyExp = () => {
     // You have enough money to buy exp
-    if(this.props.gold >= 5){
+    if(this.props.gold >= 5 && this.props.gameIsLive){
       buyExp(this.props.storedState)
     } else{
       updateMessage(this.props, 'Not enough gold!');
@@ -439,7 +440,7 @@ class App extends Component {
     // to is on valid part of the board
     const prop = this.props;
     const from = String(fromParam);
-    if(from && to){
+    if(from && to && prop.gameIsLive){
       console.log('@placePieceEvent',from, to);
       const splitted = to.split(',');
       const fromSplitted = from.split(',');
@@ -460,13 +461,13 @@ class App extends Component {
     // Hand is not full
     const prop = this.props;
     const size = Object.keys(prop.myHand).length
-    if(size < 8){
-      if(prop.myBoard[from] && !prop.onGoingBattle){ // From contains unit
+    if(prop.myBoard[from] && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
+      if(size < 8){
         withdrawPiece(prop.storedState, String(from));
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
+      } else{
+        updateMessage(prop, 'Hand is full!');
       }
-    } else{
-      updateMessage(prop, 'Hand is full!');
     }
   }
 
@@ -474,7 +475,7 @@ class App extends Component {
     const prop = this.props;
     const validUnit = (prop.selectedUnit.isBoard ? prop.myBoard[from] : prop.myHand[from])
     console.log('@sellPiece', validUnit, from, prop.selectedUnit.isBoard)
-    if(validUnit && !prop.onGoingBattle){ // From contains unit
+    if(validUnit && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
       sellPiece(prop.storedState, String(from));
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
     } else{
@@ -820,6 +821,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
+  gameIsLive: state.gameIsLive, 
   index: state.index,
   ready: state.ready,
   playersReady: state.playersReady,

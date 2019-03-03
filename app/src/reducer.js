@@ -2,6 +2,7 @@
 
 const reducer = (
   state = {
+    gameIsLive: false,
     index: -1,
     ready: false,
     playersReady: -1,
@@ -80,7 +81,7 @@ const reducer = (
       break;
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);
-      state = { ...state, index: action.index}
+      state = { ...state, index: action.index, gameIsLive: true}
       break;
     case 'TOGGLE_READY':
       state = { ...state, ready: !state.ready}
@@ -135,6 +136,9 @@ const reducer = (
       break;
     case 'END_BATTLE':
       state = {...state, onGoingBattle: false, round: state.round + 1}
+      break;
+    case 'END_GAME':
+      state = {...state, gameIsLive: false, message: action.winningPlayer + ' won the game'}
       break;
     default:
       break;

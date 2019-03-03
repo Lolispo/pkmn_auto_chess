@@ -1590,16 +1590,6 @@ exports.endBattleForAll = async (stateParam, winners, finalBoards, matchups, rou
 }
 
 /**
- * Marks the only remaining player as the winner
- */
-function gameOver(state) {
-  const winningPlayer = state.get('players').values().next().value;
-  console.log('GAME OVER, winner =', winningPlayer);
-  // TODO Send this information to everyone
-  return state;
-}
-
-/**
  * Remove hp from player
  * Mark player as defeated if hp <= 0, by removal of player from players
  * Also decrease amountOfPlayers
@@ -1610,9 +1600,6 @@ async function removeHp(state, playerIndex, hpToRemove) {
     const newState = state.set('players', state.get('players').delete(playerIndex));
     const amountOfPlayers = newState.get('amountOfPlayers') - 1;
     const removedPlayerState = newState.set('amountOfPlayers', amountOfPlayers);
-    if (amountOfPlayers === 1) {
-      return gameOver(removedPlayerState);
-    }
     return removedPlayerState;
   }
   return state.setIn(['players', playerIndex, 'hp'], currentHp - hpToRemove);
