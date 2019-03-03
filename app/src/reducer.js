@@ -30,6 +30,7 @@ const reducer = (
     stats: {},
     statsMap: {},
     round: 1,
+    musicEnabled: true,
   },
   action
 ) => {
@@ -122,7 +123,7 @@ const reducer = (
       state = {...state, startBattle: action.value}
       break;
     case 'UPDATE_BATTLEBOARD':
-        console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
+        // console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
         state = {...state, battleStartBoard: action.board, message: action.moveNumber}
         // console.log('state', state);
         break;
@@ -136,6 +137,9 @@ const reducer = (
       break;
     case 'END_BATTLE':
       state = {...state, onGoingBattle: false, round: state.round + 1}
+      break;
+    case 'TOGGLE_MUSIC':
+      state = {...state, musicEnabled: !state.musicEnabled}
       break;
     case 'END_GAME':
       state = {...state, gameIsLive: false, message: action.winningPlayer + ' won the game'}

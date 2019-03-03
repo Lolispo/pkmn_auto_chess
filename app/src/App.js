@@ -11,6 +11,7 @@ import lockedLock from './assets/lockedLock.png';
 import openLock from './assets/openLock.png';
 import goldCoin from './assets/goldCoin.png';
 import refreshShopImage from './assets/refreshShop.png';
+import { getAudio, getBackgroundAudio } from './audio.js';
 
 class PokemonImage extends Component{
 
@@ -78,7 +79,7 @@ class PokemonImage extends Component{
 }
 
 class Pokemon extends Component{
-  
+
   buyUnitEvent = (index) => {
     // You have enough money to buy this unit
     // Unit != null
@@ -97,7 +98,7 @@ class Pokemon extends Component{
       }
     }
   }
-  
+
   render(){
     let content;
     if(!isUndefined(this.props.shopPokemon)){
@@ -419,6 +420,7 @@ class App extends Component {
   selectedUnitInformation = () => {
     const className = 'center text_shadow infoPanel';
     const noSelected = <div className={`${className}`} style={{paddingTop: '40px', paddingLeft: '18px'}}>No unit selected</div>
+    let ref = React.createRef();
     if(!isUndefined(this.props.selectedUnit)){
       let pokemon = (this.props.selectedUnit.isBoard ? this.props.myBoard[this.props.selectedUnit.pos] : this.props.myHand[this.props.selectedUnit.pos]);
       if(pokemon){
@@ -430,6 +432,9 @@ class App extends Component {
             {pokeEl}
           </div>
           {this.buildStats()}
+          <div>
+            <audio ref={ref} src={getAudio(pokemon.name)} onLoadStart={() => ref.current.volume = 0.1} autoPlay/>
+          </div>
         </div>
       }
     }
@@ -556,7 +561,7 @@ class App extends Component {
         console.log('Move from', unitPos, 'to', target);
         delete newBoard[unitPos];        // Remove unit from previous pos
         newBoard[target] = unit;         // Add unit to new pos on board
-        newBoard[unitPos].actionMessage = '';
+        // newBoard[unitPos].actionMessage = '';
         return newBoard;
       case 'attack':
         // TODO: Animate attack on unitPos
@@ -699,6 +704,21 @@ class App extends Component {
     </div>
   }
 
+  playMusic = () => {
+    let source = '';
+    if(this.props.onGoingBattle){
+      if(this.props.enemyIndex) {
+        source = getBackgroundAudio('pvpbattle');
+      } else {
+        source = getBackgroundAudio('battle');
+      }
+    } else {
+      source = getBackgroundAudio('idle');
+    }
+    const ref = React.createRef();
+    return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = 0.1} autoPlay/>
+  }
+
   render() {
     return <div>
       <div className='centerWith50 flex' style={{width: '80%'}}>
@@ -745,6 +765,12 @@ class App extends Component {
           </div>
           <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
           {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
+          <div className='centerWith50 marginTop5'>
+            <button className='normalButton' onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
+              {(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}
+            </button>
+            {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')}
+          </div>
         </div>
         <div>
           <div>
@@ -850,6 +876,7 @@ const mapStateToProps = state => ({
   stats: state.stats,
   statsMap: state.statsMap,
   round: state.round,
+  musicEnabled: state.musicEnabled,
 });
 
 export default connect(mapStateToProps)(App);

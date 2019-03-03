@@ -1581,7 +1581,7 @@ exports.endBattleForAll = async (stateParam, winners, finalBoards, matchups, rou
     if (newStateAfterBattle.get('round') === round + 1) {
       tempState = newStateAfterBattle;
     } else {
-      tempState = state.setIn(['players', tempIndex], newStateAfterBattle.getIn(['players', tempIndex]));
+      tempState = tempState.setIn(['players', tempIndex], newStateAfterBattle.getIn(['players', tempIndex]));
     }
     temp = iter.next();
   }

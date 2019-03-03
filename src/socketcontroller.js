@@ -307,7 +307,7 @@ module.exports = (socket, io) => {
     }
   });
 
-  socket.on('GET_STATS', async (name) => {
+  socket.on('GET_STATS', async name => {
     const stats = pokemonJS.getStats(name);
     const ability = await abilitiesJS.getAbility(name);
     let newStats = (await stats).set('abilityType', ability.get('type'));

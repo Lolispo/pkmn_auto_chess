@@ -166,6 +166,9 @@ Timer
     After endbattle, start this setTimeout for battleTime function
 
 Sound
+    Music controls left bar
+    Load sounds correctly for each unit
+        Currently all same sound file
 
 Support for mouse only gameplay
     Add options to withdraw and sell piece with mouse
