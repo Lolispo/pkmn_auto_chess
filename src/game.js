@@ -1515,9 +1515,12 @@ async function calcDamageTaken(boardUnits) {
   // console.log('@calcDamageTaken', boardUnits.size, boardUnits)
   const keysIter = boardUnits.keys();
   let tempUnit = keysIter.next();
+  // Each surviving piece does damage based on its level: 1+floor(level/3)
+  // Level 1-2 units do 1 damage, 3-5 do 2 damage, 6-8 do 3 damage, level 9 do 4 damage
   while (!tempUnit.done) {
     const stats = await pokemonJS.getStats(boardUnits.get(tempUnit.value).get('name'));
-    sum += +stats.get('cost');
+    const level = +stats.get('cost');
+    sum += 1 + Math.floor(level / 3);
     tempUnit = keysIter.next();
   }
   return sum;

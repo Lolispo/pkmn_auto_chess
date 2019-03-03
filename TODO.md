@@ -5,13 +5,7 @@
 Cost of dota auto chess upgraded units
     Level 2, type 4 -> sells for 6 (his level) +2 for now
 
-Hp to lose
-Each surviving piece does damage based on its level: 1+floor(level/3)
-Level 1-2 units do 1 damage, 3-5 do 2 damage, 6-8 do 3 damage, level 9 do 4 damage
-
 ## Backend
-
-Fix hp to lose
 
 Move updates:
     Mana updates
@@ -19,10 +13,6 @@ Move updates:
         One calculate mana changes and return the value
             Can also be used in move
         The other calculates newBoard from manaChanges calculated
-
-end game when peoplePlaying > 2 from start and only one left
-    Game over logic
-    otherwise let play until dead (good for testing and singleplayer)
 
 Information moving to get to frontend:
     Gold information calculation
