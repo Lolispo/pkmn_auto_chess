@@ -5,6 +5,7 @@ const gameJS = require('./game');
 const sessionJS = require('./session');
 const pokemonJS = require('./pokemon');
 const abilitiesJS = require('./abilities');
+const typesJS = require('./types');
 const f = require('./f');
 
 let connectedPlayers = Map({}); // Stores connected players, socketids -> ConnectedUser
@@ -103,8 +104,8 @@ module.exports = (socket, io) => {
     // Set pieces in Session
     const newSession = sessionJS.makeSession(sessionConnectedPlayers, state.get('pieces'));
     sessions = sessions.set(sessionId, newSession);
+    const typeDescriptions = typesJS.buildTypeString();
     console.log('Starting game!');
-
     // Send to all connected sockets
     const stateToSend = getStateToSend(state); // .setIn(['players', '0', 'gold'], 1000);
     console.log('@startGame', socket.id, sessionConnectedPlayers, stateToSend);
@@ -113,6 +114,7 @@ module.exports = (socket, io) => {
     while (!temp.done) {
       const id = temp.value;
       io.to(`${id}`).emit('NEW_PLAYER', sessionConnectedPlayers.get(id));
+      io.to(`${id}`).emit('SET_TYPE_BONUSES', typeDescriptions);
       temp = iter.next();
     }
     // io.emit('UPDATED_STATE', stateToSend);

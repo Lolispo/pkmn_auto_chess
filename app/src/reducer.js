@@ -29,6 +29,7 @@ const reducer = (
     mouseOverId: -1,
     stats: {},
     statsMap: {},
+    typeStatsString: undefined,
     round: 1,
     musicEnabled: true,
     soundEnabled: true,
@@ -105,6 +106,9 @@ const reducer = (
       const statsMap = state.statsMap;
       statsMap[action.name] = action.stats;
       state = {...state, name: action.name, stats: action.stats, statsMap}
+      break;
+    case 'SET_TYPE_BONUSES':
+      state = {...state, typeStatsString: action.typeDescs}
       break;
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];

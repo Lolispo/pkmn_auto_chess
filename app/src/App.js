@@ -733,6 +733,20 @@ class App extends Component {
     return (this.props.soundEnabled ? <audio ref={ref} src={this.props.selectedSound } onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
   }
 
+  buildHelp = () => {
+    let s = 'Information:\n';
+    s += 'Hotkeys:\n';
+    s += 'Q: Place Unit\n';
+    s += 'W: Withdraw Unit\n';
+    s += 'E: Sell Unit\n';
+    s += 'F: Buy Exp\n';
+    s += 'D: Refresh Shop\n';
+    if(this.props.typeStatsString){
+      s += this.props.typeStatsString;
+    }
+    alert(s);
+  }
+
   render() {
     return <div>
       <div className='centerWith50 flex' style={{width: '80%'}}>
@@ -758,8 +772,13 @@ class App extends Component {
               StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
             </button>
           </div>
-          <div className='marginTop5 biggerText text_shadow paddingLeft5'>
-            {'Player ' + this.props.index}
+          <div className='flex'>
+            <div className='marginTop5 biggerText text_shadow paddingLeft5' style={{marginTop: '15px'}}>
+              {'Player ' + this.props.index}
+            </div>
+            <div className='marginTop5 paddingLeft5'>
+              <button className={'normalButton'} onClick={this.buildHelp}>Help</button>
+            </div>
           </div>
           <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
             <CSSTransitionGroup
@@ -905,6 +924,7 @@ const mapStateToProps = state => ({
   mouseOverId: state.mouseOverId,
   stats: state.stats,
   statsMap: state.statsMap,
+  typeStatsString: state.typeStatsString,
   round: state.round,
   musicEnabled: state.musicEnabled,
   soundEnabled: state.soundEnabled,

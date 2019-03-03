@@ -64,6 +64,10 @@ const configureSocket = dispatch => {
     console.log('@socket.setStats')
     dispatch({ type: 'SET_STATS', name, stats});
   });
+
+  socket.on('SET_TYPE_BONUSES', (descs) => {
+    dispatch({ type: 'SET_TYPE_BONUSES', typeDescs: descs});
+  });
   
   return socket;
 };

@@ -5,11 +5,13 @@
 Cost of dota auto chess upgraded units
     Level 2, type 4 -> sells for 6 (his level) +2 for now
 
-How much hp to lose? 1 point per level of unit
-Definitely not, 6 level 6 units would be 36 hp, more like 14 damage from them (6-0)
-Temp: 1 hp per level
+Hp to lose
+Each surviving piece does damage based on its level: 1+floor(level/3)
+Level 1-2 units do 1 damage, 3-5 do 2 damage, 6-8 do 3 damage, level 9 do 4 damage
 
 ## Backend
+
+Fix hp to lose
 
 Move updates:
     Mana updates
@@ -167,12 +169,16 @@ Timer
 Chat system bottom right, below shop
     Give piece upgrade information there for players
 
+Help Message:
+    Show type information temporarily
+
 Sound: 
     Set position, moves a lot when selecting and deselecting unit
     onVolumeChange slider change directly (ref usage)
     One of these:
         Allow sound to be played if press something on stats screen (not autoPlay)
         Play sound again when unit is pressed (currently only when other unit has been pressed in between)
+    Add hotkey m for toggle mute (for music or both)
     More sounds:
         Battle end sound 
         Levelup sound (Pokemon levelup sound)
