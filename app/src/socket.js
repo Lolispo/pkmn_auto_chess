@@ -3,7 +3,10 @@
 // src/socket.js
 import io from 'socket.io-client';
 
-const socket = io('http://192.168.0.28:8000');
+import ipAdressFromFile from './ip.js';
+
+const ipAdress = 'http://' + ipAdressFromFile + ':8000';
+const socket = io(ipAdress);
 
 // Receiving information
 const configureSocket = dispatch => {
