@@ -154,8 +154,9 @@ class Board extends Component {
   }
   
   renderBoard(data) {
+    let counter = 0;
     return data.map((datarow) => {
-      return <div className='boardRow'>{
+      return <div className='boardRow' key={counter++}>{
         datarow.map((dataitem) => {
           return (
             <div key={dataitem.x * datarow.length + dataitem.y}>
@@ -719,7 +720,7 @@ class App extends Component {
       source = getBackgroundAudio('idle');
     }
     const ref = React.createRef();
-    return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/>
+    return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = this.props.volume} loop autoPlay/>
   }
 
   handleVolumeChange = (e) => {
