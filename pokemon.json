@@ -359,7 +359,7 @@
   "sandshrew": {
     "name": "sandshrew",
     "display_name": "Sandshrew☆",
-    "cost": 1,
+    "cost": 3,
     "hp": 50,
     "attack": 75,
     "defense": 85,
@@ -371,7 +371,7 @@
   "sandslash": {
     "name": "sandslash",
     "display_name": "Sandslash☆☆",
-    "cost": 3,
+    "cost": 5,
     "hp": 75,
     "attack": 100,
     "defense": 110,
@@ -500,7 +500,7 @@
   "vulpix": {
     "name": "vulpix",
     "display_name": "Vulpix☆",
-    "cost": 2,
+    "cost": 1,
     "hp": 38,
     "attack": 41,
     "defense": 40,
@@ -512,7 +512,7 @@
   "ninetales": {
     "name": "ninetales",
     "display_name": "Ninetales☆☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 73,
     "attack": 76,
     "defense": 75,
@@ -683,7 +683,7 @@
   "diglett": {
     "name": "diglett",
     "display_name": "Diglett☆",
-    "cost": 2,
+    "cost": 1,
     "hp": 10,
     "attack": 55,
     "defense": 25,
@@ -695,7 +695,7 @@
   "dugtrio": {
     "name": "dugtrio",
     "display_name": "Dugtrio☆☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 35,
     "attack": 80,
     "defense": 50,

@@ -598,7 +598,7 @@ class App extends Component {
         }
         let newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
-        if(Object.keys(effect).length){
+        if(effect && Object.keys(effect).length){
           console.log('SPELL EFFECT Not Empty: ', effect);
           Object.keys(effect).forEach(e => {
             const unitPosEffect = newBoard[e];

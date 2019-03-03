@@ -255,13 +255,6 @@ eevee:
 
 Second wave 2 rattatas seem strong
 
-Too Weak:
-    Diglett 2->1
-    Vulpix 2->1
-
-Too Strong:
-    Sandshrew 1->3(2)
-
 ## New features to add (Not as core)
 
 Find a way of choosing pokemon in play
