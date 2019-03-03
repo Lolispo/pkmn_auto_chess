@@ -255,6 +255,10 @@ eevee:
 
 Second wave 2 rattatas seem strong
 
+More level 2 units, find weak 3s or strong 1s
+
+Magikarp nerf price
+
 ## New features to add (Not as core)
 
 Find a way of choosing pokemon in play
