@@ -85,11 +85,10 @@ Check money: Feels like you get a lot of money
 ## Frontend
 
 Css:
-    Grey out / disable clicking units / refreshShop/ buyExp when you don't have enough money
-
+    Grey out / show isDisabled for clicking shopUnits / refreshShop/ buyExp when you don't have enough money
 
 ActionMessage:
-    Put on receivers end instead, test this
+    Put .actionMessage on receivers end instead, DamageTaken instead of given displayed
     Position on top of unit
 
 Animations: 
@@ -102,18 +101,20 @@ Animations:
 
 Code: Event code only in one place
     placepieceevent in 2 spots currently
+    Move to separate file and import, requires sending props
 
 Startscreen: 
     Update connected on disconnect
-    Make different actions invalid if game isn't live
     If connection with host is gone, exit game
-    Allow to start game without all connected sockets ready
-        Countdown and start with all ready players when countdown finishes
-    Add leaveGame button
-        Are you sure you want to leave? Prompt
+        If server is restarted, terminate all active games
+    Features:
+        Allow to start game without all connected sockets ready
+            Countdown and start with all ready players when countdown finishes
+        Add leaveGame button
+            Are you sure you want to leave? Prompt
 
 TopBar:
-    Add option to choose playerNames
+    Add option to choose playerNames, do login system for this
     Piece Image
 
 Battle
@@ -127,7 +128,8 @@ Infopanel
     Show bars in infopanel screen for stats (Easier comparisons)
     Show all evolutions, highlight selected unit
     Click on evolution, expand that unit
-        Name on evolution
+        evoName: evoImage
+        ^Click -> stats for evolution in indexed tree follows
     Level of unit displayed (Cost, worth to sell)
     Pokedex look?
 
@@ -148,9 +150,6 @@ Board css:
         Noted todo in backend
         Gray background or something
 
-Cache More Information
-    Cache images/gifs (Store image, paddingTop, width and height, might not work)
-
 Message:
     Update position and size to be overboard and use for vital information
         Css required a lot
@@ -165,10 +164,22 @@ Timer
     BattleTime effect to setTimeout function
     After endbattle, start this setTimeout for battleTime function
 
-Sound
-    Music controls left bar
-    Load sounds correctly for each unit
-        Currently all same sound file
+Chat system bottom right, below shop
+    Give piece upgrade information there for players
+
+Sound: 
+    Set position, moves a lot when selecting and deselecting unit
+    onVolumeChange slider change directly (ref usage)
+    One of these:
+        Allow sound to be played if press something on stats screen (not autoPlay)
+        Play sound again when unit is pressed (currently only when other unit has been pressed in between)
+    More sounds:
+        Battle end sound 
+        Levelup sound (Pokemon levelup sound)
+        Game won (Victory! (Trainer))
+        Not valid press (not enough money etc)
+        Timer click (close to 0)
+        Unit upgrade
 
 Support for mouse only gameplay
     Add options to withdraw and sell piece with mouse
@@ -191,6 +202,9 @@ Test lifesteal functionality
 
 Load / Set time factor better
 
+Cache More Information
+    Cache images/gifs (Store image, paddingTop, width and height, might not work)
+
 Make elements % based instead of pixel based
 
 Give information that playarea isn't in focus when it isn't
@@ -207,6 +221,8 @@ cleanup async usage, using Promise.all in places where multíple calculations ar
     let results = await Promise.all([ getValueA, getValueB, getValueC ]); 
 
 ## Cleanup / Refactor
+
+Consistent naming of pokemon unit and piece (Unit preferred)
 
 Separate logic into more files if possible
 
@@ -231,9 +247,6 @@ Login with name system
 
 Crit
     Suggestion: 20% chance crit 1.5x damage
-
-Chat system bottom right, below shop
-    Give piece upgrade information there for players
 
 Type buffs - Add typebuffs from sheets directly
 

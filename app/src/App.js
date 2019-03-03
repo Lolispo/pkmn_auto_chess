@@ -420,10 +420,10 @@ class App extends Component {
   selectedUnitInformation = () => {
     const className = 'center text_shadow infoPanel';
     const noSelected = <div className={`${className}`} style={{paddingTop: '40px', paddingLeft: '18px'}}>No unit selected</div>
-    let ref = React.createRef();
     if(!isUndefined(this.props.selectedUnit)){
       let pokemon = (this.props.selectedUnit.isBoard ? this.props.myBoard[this.props.selectedUnit.pos] : this.props.myHand[this.props.selectedUnit.pos]);
       if(pokemon){
+        this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getAudio(pokemon.name)});
         const pokeEl= <PokemonImage name={pokemon.name} sideLength={50}/>;
         // console.log('@selectedUnitInformation', pokemon.display_name, pokemon)
         return <div className={className}>
@@ -432,9 +432,6 @@ class App extends Component {
             {pokeEl}
           </div>
           {this.buildStats()}
-          <div>
-            <audio ref={ref} src={getAudio(pokemon.name)} onLoadStart={() => ref.current.volume = 0.1} autoPlay/>
-          </div>
         </div>
       }
     }
@@ -685,7 +682,7 @@ class App extends Component {
       list.push(<div key={i}>{'Player ' + players[sortedPlayersByHp[i]].index + ': ' + players[sortedPlayersByHp[i]].hp + ' hp'}</div>)
     }
     // console.log('@PlayerStatsDiv', sortedPlayersByHp);
-    return <div className='text_shadow' style={{paddingTop: '45px'}}>
+    return <div className='text_shadow biggerText' style={{paddingTop: '45px'}}>
       Scoreboard:  
       {list}
     </div>
@@ -716,7 +713,18 @@ class App extends Component {
       source = getBackgroundAudio('idle');
     }
     const ref = React.createRef();
-    return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = 0.1} autoPlay/>
+    return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/>
+  }
+
+  handleVolumeChange = (e) => {
+    const newVolume = e.target.value / 100; // this.audioElement.length * 
+    console.log('@handleVolumechange', e.target.value)
+    this.props.dispatch({type: 'CHANGE_VOLUME', newVolume})
+  }
+
+  unitSound = () => {
+    let ref = React.createRef();
+    return (this.props.soundEnabled ? <audio ref={ref} src={this.props.selectedSound } onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
   }
 
   render() {
@@ -762,15 +770,31 @@ class App extends Component {
           </div>
           <div>
             {this.selectedUnitInformation()}
+            {this.unitSound()}
           </div>
-          <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
-          {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
           <div className='centerWith50 marginTop5'>
             <button className='normalButton' onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
               {(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}
             </button>
+            <button className='normalButton marginTop5' onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
+              {(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}
+            </button>
             {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')}
           </div>
+          <div className='paddingLeft5'>
+            Volume: 
+            <input
+              type="range"
+              className="volume-bar"
+              value={this.props.volume * 100}
+              min="0"
+              max="100"
+              step="0.01"
+              onChange={this.handleVolumeChange}
+              />
+          </div>
+          <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
+          {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
         </div>
         <div>
           <div>
@@ -877,6 +901,9 @@ const mapStateToProps = state => ({
   statsMap: state.statsMap,
   round: state.round,
   musicEnabled: state.musicEnabled,
+  soundEnabled: state.soundEnabled,
+  selectedSound: state.selectedSound,
+  volume: state.volume,
 });
 
 export default connect(mapStateToProps)(App);

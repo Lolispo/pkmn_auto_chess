@@ -31,6 +31,9 @@ const reducer = (
     statsMap: {},
     round: 1,
     musicEnabled: true,
+    soundEnabled: true,
+    selectedSound: '',
+    volume: 0.1,
   },
   action
 ) => {
@@ -140,6 +143,16 @@ const reducer = (
       break;
     case 'TOGGLE_MUSIC':
       state = {...state, musicEnabled: !state.musicEnabled}
+      break;
+    case 'TOGGLE_SOUND':
+      state = {...state, soundEnabled: !state.soundEnabled}
+      break;
+    case 'CHANGE_VOLUME':
+      console.log('@reducer.ChangeVolume', action.newVolume)
+      state = {...state, volume: action.newVolume}
+      break;
+    case 'NEW_UNIT_SOUND':
+      state = {...state, selectedSound: action.newAudio}
       break;
     case 'END_GAME':
       state = {...state, gameIsLive: false, message: action.winningPlayer + ' won the game'}
