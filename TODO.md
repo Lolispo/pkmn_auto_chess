@@ -78,6 +78,10 @@ Check money: Feels like you get a lot of money
 
 ## Frontend
 
+Exchange help message from alert to something else, stops actions
+
+Found crash when board is undefined, maybe connected to Poison
+
 Css:
     Grey out / show isDisabled for clicking shopUnits / refreshShop/ buyExp when you don't have enough money
 

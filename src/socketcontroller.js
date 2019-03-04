@@ -287,7 +287,7 @@ module.exports = (socket, io) => {
           const stateAfterBattle = sessionJS.buildStateAfterBattle(socket.id, connectedPlayers, sessions, newState);
           // Endbattle and get endTurned state
           const stateEndedTurn = await gameJS.endBattleForAll(stateAfterBattle, winners, finalBoards, matchups, roundType)
-          if (stateEndedTurn.get('amountOfPlayers') === 1 && connectedPlayers.size > 1) { // Allow solo play
+          if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
             emitMessage(socket, io, sessionId, (socketId) => {
               io.to(socketId).emit('END_GAME', winningPlayer);

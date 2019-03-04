@@ -159,7 +159,7 @@ const reducer = (
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'END_GAME':
-      state = {...state, gameIsLive: false, message: action.winningPlayer + ' won the game'}
+      state = {...state, gameIsLive: false, message: 'Player ' + action.winningPlayer.index + ' won the game'}
       break;
     default:
       break;

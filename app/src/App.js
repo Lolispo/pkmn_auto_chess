@@ -636,7 +636,7 @@ class App extends Component {
         }
         return newBoard;
       default:
-        console.log('error');
+        console.log('error action = ', action);
     }
   }
 
@@ -745,7 +745,7 @@ class App extends Component {
     if(this.props.typeStatsString){
       s += this.props.typeStatsString;
     }
-    alert(s);
+    alert(s); // Don't allow this, pauses battle
   }
 
   render() {
