@@ -383,7 +383,7 @@
   "nidoran-f": {
     "name": "nidoran-f",
     "display_name": "Nidoran ♀☆",
-    "cost": 1,
+    "cost": 2,
     "hp": 55,
     "attack": 47,
     "defense": 52,
@@ -395,7 +395,7 @@
   "nidorina": {
     "name": "nidorina",
     "display_name": "Nidorina☆☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 70,
     "attack": 62,
     "defense": 67,
@@ -408,7 +408,7 @@
   "nidoqueen": {
     "name": "nidoqueen",
     "display_name": "Nidoqueen☆☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 90,
     "attack": 82,
     "defense": 87,
@@ -423,7 +423,7 @@
   "nidoran-m": {
     "name": "nidoran-m",
     "display_name": "Nidoran ♂☆",
-    "cost": 1,
+    "cost": 2,
     "hp": 46,
     "attack": 57,
     "defense": 40,
@@ -435,7 +435,7 @@
   "nidorino": {
     "name": "nidorino",
     "display_name": "Nidorino☆☆",
-    "cost": 3,
+    "cost": 4,
     "hp": 61,
     "attack": 72,
     "defense": 57,
@@ -448,7 +448,7 @@
   "nidoking": {
     "name": "nidoking",
     "display_name": "Nidoking☆☆☆",
-    "cost": 5,
+    "cost": 6,
     "hp": 81,
     "attack": 92,
     "defense": 77,
@@ -1079,7 +1079,7 @@
   "magnemite": {
     "name": "magnemite",
     "display_name": "Magnemite☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 25,
     "attack": 35,
     "defense": 70,
@@ -1094,7 +1094,7 @@
   "magneton": {
     "name": "magneton",
     "display_name": "Magneton☆☆",
-    "cost": 6,
+    "cost": 5,
     "hp": 50,
     "attack": 60,
     "defense": 95,
@@ -1109,7 +1109,7 @@
   "magnezone": {
     "name": "magnezone",
     "display_name": "Magnezone☆☆☆",
-    "cost": 8,
+    "cost": 7,
     "hp": 70,
     "attack": 70,
     "defense": 115,
@@ -1503,7 +1503,7 @@
   },
   "jynx": {
     "name": "jynx",
-    "display_name": "Jynx☆",
+    "display_name": "Jynx☆☆",
     "cost": 5,
     "hp": 65,
     "attack": 50,
@@ -1530,7 +1530,7 @@
   },
   "electabuzz": {
     "name": "electabuzz",
-    "display_name": "Electabuzz☆",
+    "display_name": "Electabuzz☆☆",
     "cost": 6,
     "hp": 65,
     "attack": 83,
@@ -1566,7 +1566,7 @@
   },
   "magmar": {
     "name": "magmar",
-    "display_name": "Magmar☆",
+    "display_name": "Magmar☆☆",
     "cost": 6,
     "hp": 65,
     "attack": 95,
@@ -1730,7 +1730,7 @@
   "munchlax": {
     "name": "munchlax",
     "display_name": "Munchlax☆",
-    "cost": 5,
+    "cost": 4,
     "hp": 135,
     "attack": 85,
     "defense": 40,
@@ -1741,8 +1741,8 @@
   },
   "snorlax": {
     "name": "snorlax",
-    "display_name": "Snorlax☆",
-    "cost": 7,
+    "display_name": "Snorlax☆☆",
+    "cost": 6,
     "hp": 160,
     "attack": 110,
     "defense": 65,

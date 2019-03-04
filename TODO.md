@@ -14,6 +14,8 @@ Move updates:
             Can also be used in move
         The other calculates newBoard from manaChanges calculated
 
+No target move (splash) shouldnt deal damage (curr 1 it seems)
+
 Information moving to get to frontend:
     Gold information calculation
         Move outside of function, calculate at gold changes and update frontend
@@ -224,6 +226,9 @@ Potential to use more functional code, map/filter
 
 ## Optional Features
 
+Spinning wheel animating time between moves for all pokemon
+    Easier to see when a unit does move
+
 Login with name system
     Requires start page
     Starts game with player.name set for all players
@@ -253,11 +258,14 @@ eevee:
 
 ## Balance
 
+Strongest 1: 
+
 Second wave 2 rattatas seem strong
 
-More level 2 units, find weak 3s or strong 1s
-
-Magikarp nerf price
+Rhyhorn 4 -> 5?
+Horsea 4 -> 3? Is dragon tho on kingdra
+elekid 4 -> 3?
+Check slowpoke - really slow
 
 ## New features to add (Not as core)
 
