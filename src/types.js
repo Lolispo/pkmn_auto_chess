@@ -440,18 +440,37 @@ exports.getTypeFactor = async (attackType, typesDefender) => {
   return calcTypeFactor(attackType, typesDefender);
 };
 
+const getStringFromList = list => {
+  console.log('@getStringFromList', list)
+  if(!list.size){
+    return list;
+  }
+  let s = list.get(0);
+  for(let i = 1; i < list.size; i++){
+    s += ', ' + list.get(i);
+  }
+  return s;
+}
+
 exports.buildTypeString = () => {
   const iter = typeMap.keys();
   let temp = iter.next();
-  let s = 'Type bonuses:\n'
+  let s = 'Types:\n';
+  let typeDesc = 'Type bonuses:\n';
   while (!temp.done) {
     const type = typeMap.get(temp.value);
+    let name = type.get('name');
+    let tempString = name.charAt(0).toUpperCase() + name.slice(1) + ': ';
+    if(type.get('strongAgainst')) tempString += '\n-   Strong against: ' + getStringFromList(type.get('strongAgainst'));
+    if(type.get('ineffectiveAgainst')) tempString += '\n-   Ineffective against: ' + getStringFromList(type.get('ineffectiveAgainst'));
+    if(type.get('noDamageAgainst')) tempString += '\n-   No effect against: ' + getStringFromList(type.get('noDamageAgainst'));
+    s += tempString + '\n';
     if(!f.isUndefined(type.get('desc'))){
-      s += type.get('desc') + '\n';
+      typeDesc += type.get('desc') + '\n';
     }
     temp = iter.next();
   }
-  return s;
+  return [s, typeDesc];
 }
 
 exports.getType = name => typeMap.get(name);

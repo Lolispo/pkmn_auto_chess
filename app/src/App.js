@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 import React, { Component } from 'react';
-import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece, getStats} from './socket';
+import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece, getStats, sendMessage} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
@@ -318,6 +318,10 @@ class Cell extends Component {
 
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {chatMessageInput: ''};
+  }
   // Event listener example, can be attached to example buttons
   
   // Event logic
@@ -550,6 +554,21 @@ class App extends Component {
     });
   }
 
+  damageUnit = async (newBoard, target, value, unitPos, actionMessageTarget, actionMessageAttacker) => {
+    if(isUndefined(newBoard[target])){
+      console.log('Time to crash: ', newBoard, target, value);
+    }
+    if(actionMessageTarget)   newBoard[target].actionMessage = actionMessageTarget;
+    if(actionMessageAttacker) newBoard[unitPos].actionMessage = actionMessageAttacker;
+    const newHp = newBoard[target].hp - value;
+    if(newHp <= 0){
+      delete newBoard[target]; 
+    } else {
+      newBoard[target].hp = newHp;
+    }
+    return newBoard;
+  }
+  
   renderMove = async (nextMove, board, timeToWait) => {
     let newBoard = board;
     await this.wait(timeToWait);
@@ -562,43 +581,35 @@ class App extends Component {
     const unit = newBoard[unitPos];  // Save unit from prev pos
     switch(action) {
       case 'move':
-        console.log('Move from', unitPos, 'to', target);
-        delete newBoard[unitPos];        // Remove unit from previous pos
-        newBoard[target] = unit;         // Add unit to new pos on board
-        // newBoard[unitPos].actionMessage = '';
-        return newBoard;
+      console.log('Move from', unitPos, 'to', target);
+      delete newBoard[unitPos];        // Remove unit from previous pos
+      newBoard[target] = unit;         // Add unit to new pos on board
+      // newBoard[unitPos].actionMessage = '';
+      return newBoard;
       case 'attack':
         // TODO: Animate attack on unitPos
-        if(isUndefined(newBoard[target])){
-          console.log('Time to crash: ', newBoard, target, value);
-        }
-        if(typeEffective !== '') {
-          // Either '' or Message
-          newBoard[unitPos].actionMessage = value + '! ' + typeEffective;
+        console.log('Attack from', unitPos, 'with', value, 'damage');
+        let actionMessage = '';
+        if(typeEffective !== '') { // Either '' or Message
+          actionMessage = '- ' + value + '! ' + typeEffective;
         } else {
-          newBoard[unitPos].actionMessage = value;
+          actionMessage = '- ' + value;
         }
-        const newHp = newBoard[target].hp - value;
-        console.log('Attack from', unitPos, 'with', value, 'damage, newHp', newHp);
-        if(newHp <= 0){
-          delete newBoard[target]; 
-        } else {
-          newBoard[target].hp = newHp;
-        }
-        return newBoard;
+        return this.damageUnit(newBoard, target, value, unitPos, actionMessage);
       case 'spell':
         // TODO: Animations
         // TODO: Check spell effects
         const effect = nextMove.effect;
         const abilityName = nextMove.abilityName;
-        if(typeEffective !== '') {
-          // Either '' or Message
-          newBoard[unitPos].actionMessage = abilityName + '! ' + value + '! ' + typeEffective;
+        let actionMessageTarget = '';
+        let actionMessageAttacker = abilityName + '!';
+        if(typeEffective !== '') { // Either '' or Message
+          actionMessageTarget = '- ' + value + '! ' + typeEffective;
         } else {
-          newBoard[unitPos].actionMessage = value;
+          actionMessageTarget = '- ' + value;
         }
-        let newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
+        let newHpSpell = newBoard[target].hp - value;
         if(effect && Object.keys(effect).length){
           console.log('SPELL EFFECT Not Empty: ', effect);
           Object.keys(effect).forEach(e => {
@@ -615,12 +626,14 @@ class App extends Component {
                 case 'noTarget':
                 case 'dot':
                   // TODO Visualize 'dot' is appled to unit
+                  actionMessageTarget = actionMessageTarget + '! Dot applied'
                   break;
                 case 'heal':
                   if(unitPosEffect === target){
                     newHpSpell += valueEffect;
                   } else {
                     newBoard[unitPosEffect].hp = newBoard[unitPosEffect].hp + valueEffect;
+                    actionMessageAttacker = actionMessageAttacker + '! Heal for ' + valueEffect;
                   }
                   break;
                 // case buffs, not required in theory for attack or defence, since not visible
@@ -633,8 +646,15 @@ class App extends Component {
           delete newBoard[target]; 
         } else {
           newBoard[target].hp = newHpSpell;
+          newBoard[target].actionMessage = actionMessageTarget;
         }
+        newBoard[unitPos].actionMessage = actionMessageAttacker;
         return newBoard;
+      case 'dotDamage': 
+        // TODO: Animate Poison Damage on unitPos
+        console.log('Poison damage on', unitPos, 'with', value, 'damage');
+        actionMessage = '- ' + value +' Dot!';
+        return this.damageUnit(newBoard, target, value, unitPos, actionMessage);
       default:
         console.log('error action = ', action);
     }
@@ -734,18 +754,54 @@ class App extends Component {
     return (this.props.soundEnabled ? <audio ref={ref} src={this.props.selectedSound } onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
   }
 
+  handleChatSubmit = (event) => {
+    sendMessage(this.state.chatMessageInput);
+    this.setState({chatMessageInput: ''})
+    event.preventDefault();
+  }
+
   buildHelp = () => {
     let s = 'Information:\n';
-    s += 'Hotkeys:\n';
-    s += 'Q: Place Unit\n';
-    s += 'W: Withdraw Unit\n';
-    s += 'E: Sell Unit\n';
-    s += 'F: Buy Exp\n';
-    s += 'D: Refresh Shop\n';
-    if(this.props.typeStatsString){
-      s += this.props.typeStatsString;
+    let s2 = 'Hotkeys:\n';
+    s2 += 'Q: Place Unit\n';
+    s2 += 'W: Withdraw Unit\n';
+    s2 += 'E: Sell Unit\n';
+    s2 += 'F: Buy Exp\n';
+    s2 += 'D: Refresh Shop\n';
+    let chat = false;
+    switch(this.props.helpMode){
+      case 'types':
+        if(this.props.typeStatsString){
+          s += this.props.typeStatsString;
+        } else {
+          s += s2;
+        }
+        break;
+      case 'typeBonuses':
+        if(this.props.typeBonusString){
+          s += this.props.typeBonusString;
+        } else {
+          s += s2;
+        }
+        break;
+      case 'hotkeys':
+        s += s2;
+        break;
+      case 'chat':
+      default:
+          s = 'Chat:\n';
+          s += this.props.chatMessage;
+          chat = true;
+        break;
     }
-    alert(s); // Don't allow this, pauses battle
+    const content = <div className='helpText text_shadow'>{s}</div>;
+    return (chat ? <div>{content}
+    <form onSubmit={this.handleChatSubmit}>
+      <label>
+        <input type="text" value={this.state.chatMessageInput} onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
+      </label>
+      <input type="submit" value="Submit" />
+    </form></div> : content);
   }
 
   render() {
@@ -776,9 +832,6 @@ class App extends Component {
           <div className='flex'>
             <div className='marginTop5 biggerText text_shadow paddingLeft5' style={{marginTop: '15px'}}>
               {'Player ' + this.props.index}
-            </div>
-            <div className='marginTop5 paddingLeft5'>
-              <button className={'normalButton'} onClick={this.buildHelp}>Help</button>
             </div>
           </div>
           <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
@@ -841,38 +894,51 @@ class App extends Component {
             <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
           </div>
         </div>
-        <div className='paddingLeft5'>
-          <div>
-            <div>
-              <div className='flex'>
-                <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
-                <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
-                <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
-              </div>
-              <div className='flex'>
-                <div className='' style={{paddingTop: '60px', paddingLeft: '24px'}}>
-                  <div>
-                    <img className='lockImage' onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
-                  </div>
-                  <div style={{paddingTop: '10px'}}>
-                    <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>
+        <div>
+          <div className='flex'>
+            <div className='paddingLeft5'>
+              <div>
+                <div>
+                  <div className='flex'>
+                    <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
+                    <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
+                    <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
                   </div>
                   <div className='flex'>
-                    <div className='text_shadow goldImageTextSmall'>2</div>
-                    <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
+                    <div className='' style={{paddingTop: '60px', paddingLeft: '24px'}}>
+                      <div>
+                        <img className='lockImage' onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
+                      </div>
+                      <div style={{paddingTop: '10px'}}>
+                        <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>
+                      </div>
+                      <div className='flex'>
+                        <div className='text_shadow goldImageTextSmall'>2</div>
+                        <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
+                      </div>
+                    </div>
+                    <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
+                    <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
                   </div>
                 </div>
-                <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
-                <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
               </div>
+            </div>
+            <div>
+              {this.playerStatsDiv()}
             </div>
           </div>
           <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
             <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
           </div>
-        </div>
-        <div>
-          {this.playerStatsDiv()}
+          <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
+            <button className={'normalButton'} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>{(this.props.help ? 'Hide Help' : 'Show Help')}</button>
+            {(this.props.help ? <div className='text_shadow marginTop5'>
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'chat'})}/>Chat 
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'hotkeys'})}/>Hotkeys 
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'types'})}/>Types
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
+          </div>
+          {(this.props.help ? this.buildHelp() : '')}
         </div>
       </div>
       <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent(this) : () => '')}/>
@@ -904,6 +970,9 @@ const mapStateToProps = state => ({
   connectedPlayers: state.connectedPlayers,
   allReady: state.allReady,
   message: state.message,
+  help: state.help,
+  helpMode: state.helpMode,
+  chatMessage: state.chatMessage,
   storedState: state.storedState,
   pieces: state.pieces,
   players: state.players,
@@ -926,6 +995,7 @@ const mapStateToProps = state => ({
   stats: state.stats,
   statsMap: state.statsMap,
   typeStatsString: state.typeStatsString,
+  typeBonusString: state.typeBonusString,
   round: state.round,
   musicEnabled: state.musicEnabled,
   soundEnabled: state.soundEnabled,

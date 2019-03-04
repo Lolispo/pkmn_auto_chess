@@ -69,9 +69,14 @@ const configureSocket = dispatch => {
     dispatch({ type: 'SET_STATS', name, stats});
   });
 
-  socket.on('SET_TYPE_BONUSES', (descs) => {
-    dispatch({ type: 'SET_TYPE_BONUSES', typeDescs: descs});
+  socket.on('SET_TYPE_BONUSES', (descs, bonuses) => {
+    dispatch({ type: 'SET_TYPE_BONUSES', typeDescs: descs, typeBonuses: bonuses});
   });
+
+  socket.on('NEW_CHAT_MESSAGE', message => {
+    dispatch({ type: 'NEW_CHAT_MESSAGE', newMessage: message});
+  });
+  
   
   return socket;
 };
@@ -124,6 +129,10 @@ export const battleReady = (state) => {
 
 export const getStats = (name) => {
   socket.emit('GET_STATS', name);
+}
+
+export const sendMessage = message => {
+  socket.emit('SEND_MESSAGE', message);
 }
 
 export default configureSocket;

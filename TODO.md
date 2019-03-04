@@ -29,6 +29,8 @@ Information moving to get to frontend:
             Every unit has buff or empty
         Set on left side of board, buffs
             boardBuffs
+        Use this information, typeBuffs in the stats panel
+            If type is buffed, show green + 25 for example at the hp for the unit
 
 Handle empty boards for battle
     Should still visualize the enemy units
@@ -76,14 +78,26 @@ Longer range than 1
 
 Check money: Feels like you get a lot of money
 
+Type displayName
+
 ## Frontend
 
-Exchange help message from alert to something else, stops actions
+KeyInput
+    If chat input is in focus, disable hotkey logic
 
-Found crash when board is undefined, maybe connected to Poison
+ActionMessage coloring
+    Green for spells
+    Red/White when you take damage
+
+Ability displayNames
+
+Help Messages
+    Temp: Bottom right with a toggle
+    Also show information about resistance weaknesses from types here
 
 Css:
     Grey out / show isDisabled for clicking shopUnits / refreshShop/ buyExp when you don't have enough money
+    Nidoran display name new line in button
 
 ActionMessage:
     Put .actionMessage on receivers end instead, DamageTaken instead of given displayed
@@ -115,6 +129,7 @@ TopBar:
     Piece Image
 
 Battle
+    Clear actionMessages after all moves are done
     Show mana bar
         Requires mana changes to be sent in move, added in backend todo
         Max 200, 50/200 => 25% mana bar full
@@ -175,6 +190,7 @@ Sound:
         Play sound again when unit is pressed (currently only when other unit has been pressed in between)
     Add hotkey m for toggle mute (for music or both)
     More sounds:
+        Sell unit sound *clir
         Battle end sound 
         Levelup sound (Pokemon levelup sound)
         Game won (Victory! (Trainer))
@@ -183,6 +199,9 @@ Sound:
         Unit upgrade
 
 ## Communication
+
+If reconnected to server, update look to start layout
+    If server disconnected mid game, make the user go back to main menu if game was cancelled
 
 ## Tests
 

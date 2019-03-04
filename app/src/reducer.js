@@ -9,6 +9,10 @@ const reducer = (
     connectedPlayers: -1,
     allReady: false,
     message: 'default',
+    help: false,
+    helpMode: '',
+    chatMessage: '',
+    chatMessages: [],
     storedState: {},
     pieces: [],
     players: {},
@@ -29,9 +33,10 @@ const reducer = (
     mouseOverId: -1,
     stats: {},
     statsMap: {},
-    typeStatsString: undefined,
+    typeStatsString: '',
+    typeBonusString: '',
     round: 1,
-    musicEnabled: true,
+    musicEnabled: false,
     soundEnabled: true,
     selectedSound: '',
     volume: 0.1,
@@ -101,6 +106,12 @@ const reducer = (
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message}
       break;
+    case 'TOGGLE_HELP':
+      state = {...state, help: !state.help}
+      break;
+    case 'SET_HELP_MODE':
+      state = {...state, helpMode: action.helpMode}    
+      break;
     case 'SET_STATS':
       console.log('Updating stats', action.name, action.stats)
       const statsMap = state.statsMap;
@@ -108,7 +119,7 @@ const reducer = (
       state = {...state, name: action.name, stats: action.stats, statsMap}
       break;
     case 'SET_TYPE_BONUSES':
-      state = {...state, typeStatsString: action.typeDescs}
+      state = {...state, typeStatsString: action.typeDescs, typeBonusString: action.typeBonuses}
       break;
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];
@@ -159,7 +170,12 @@ const reducer = (
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'END_GAME':
+      console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
       state = {...state, gameIsLive: false, message: 'Player ' + action.winningPlayer.index + ' won the game'}
+      break;
+    case 'NEW_CHAT_MESSAGE':
+      state = {...state, chatMessage: state.chatMessage + action.newMessage + '\n'}
+      state.chatMessages.push(action.newMessage)
       break;
     default:
       break;

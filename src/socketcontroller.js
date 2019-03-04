@@ -115,7 +115,7 @@ module.exports = (socket, io) => {
     while (!temp.done) {
       const id = temp.value;
       io.to(`${id}`).emit('NEW_PLAYER', sessionConnectedPlayers.get(id));
-      io.to(`${id}`).emit('SET_TYPE_BONUSES', typeDescriptions);
+      io.to(`${id}`).emit('SET_TYPE_BONUSES', typeDescriptions[0], typeDescriptions[1]);
       temp = iter.next();
     }
     // io.emit('UPDATED_STATE', stateToSend);
@@ -288,6 +288,7 @@ module.exports = (socket, io) => {
           // Endbattle and get endTurned state
           const stateEndedTurn = await gameJS.endBattleForAll(stateAfterBattle, winners, finalBoards, matchups, roundType)
           if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
+            console.log('ENDING GAME!')
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
             emitMessage(socket, io, sessionId, (socketId) => {
               io.to(socketId).emit('END_GAME', winningPlayer);
@@ -309,6 +310,16 @@ module.exports = (socket, io) => {
         sessions = sessions.set(sessionId, newSession);
       }
     }
+  });
+
+  socket.on('SEND_MESSAGE', async message => {
+    // TODO: Login: Player name here instead
+    const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
+    const newMessage = playerName + ': ' + message;
+    sessionJS.pushSessionMessage(socket.id, connectedPlayers, sessions, newMessage);
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('NEW_CHAT_MESSAGE', newMessage);
+    });
   });
 
   socket.on('GET_STATS', async name => {

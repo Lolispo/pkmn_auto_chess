@@ -30,6 +30,7 @@ exports.makeSession = (connectedPlayersInit, pieces) => Map({
   pieces,
   discardedPieces: List([]),
   players: Map({}),
+  messages: List([]),
 });
 
 exports.createUser = socketId => Map({
@@ -114,6 +115,19 @@ exports.updateSessionPlayer = (socketId, connectedPlayers, sessions, state, inde
   const session = sessions.get(sessionId);
   const newSession = session.setIn(['players', index], state.getIn(['players', index]));
   return sessions.set(sessionId, newSession);
+};
+
+exports.pushSessionMessage = (socketId, connectedPlayers, sessions, message) => {
+  const sessionId = connectedPlayers.get(socketId).get('sessionId');
+  const session = sessions.get(sessionId);
+  const newSession = session.set('messages', session.get('messages').push(message));
+  return sessions.set(sessionId, newSession);
+};
+
+exports.getPlayerID = (socketId, connectedPlayers, sessions, message) => {
+  const sessionId = connectedPlayers.get(socketId).get('sessionId');
+  const session = sessions.get(sessionId);
+  return session.get('connectedPlayers').get(socketId);
 };
 
 exports.getLongestBattleTime = (actionStacks) => {
