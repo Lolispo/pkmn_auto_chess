@@ -16,21 +16,29 @@ Move updates:
 
 No target move (splash) shouldnt deal damage (curr 1 it seems)
 
-Information moving to get to frontend:
-    Gold information calculation
-        Move outside of function, calculate at gold changes and update frontend
-        Maybe streak is received on frontend and everything can then be calculated there already?
-    PlacePieceEvent:
-        Types
-        Which units to be sent back
+Gold information calculation
+    Move outside of function, calculate at gold changes and update frontend
+    Maybe streak is received on frontend and everything can then be calculated there already?
+
+PlacePieceEvent (All piece interactions):
     Type bonuses calculations, what combos are active
+        Current logic in: markBoardBonuses
         Recalculate and update unitbuffs and boardBuffs on piece interactions
         Set on board units (not battle, already had)
             Every unit has buff or empty
-        Set on left side of board, buffs
-            boardBuffs
+        Render on left side of board, buffs
+            boardBuffs, [players, 0, boardBuffs]
         Use this information, typeBuffs in the stats panel
             If type is buffed, show green + 25 for example at the hp for the unit
+    Which units to be sent back
+        Current logic in: fixTooManyUnits
+        Move logic so units to be called back is already marked in the state
+            'expendableUnit': true
+        In frontend: if (unit.expendableUnit) Color me
+    Piece Upgrade occured
+        event NEW_CHAT_MESSAGE with unit upgraded for which player
+        States returned where upgrade might have occured (PlacePiece) should 
+            have a check for if it occured or not, and send message update if it did
 
 Handle empty boards for battle
     Should still visualize the enemy units
@@ -45,6 +53,7 @@ Matchup system
     Moved to function but still needs logic figured out
 
 first move
+    Current Logic in: setRandomFirstMove
 
 Finish abilities implementation (teleport)
 
@@ -82,6 +91,10 @@ Type displayName
 
 ## Frontend
 
+Add icons for types, to be used for buffs
+    Can be inspired from card icons if none are found
+        Hard for fighting / ground
+
 KeyInput
     If chat input is in focus, disable hotkey logic
 
@@ -92,8 +105,8 @@ ActionMessage coloring
 Ability displayNames
 
 Help Messages
-    Temp: Bottom right with a toggle
-    Also show information about resistance weaknesses from types here
+    Color Type messages so easier to read fast
+    Font color / text shadow feels weird overall here
 
 Css:
     Grey out / show isDisabled for clicking shopUnits / refreshShop/ buyExp when you don't have enough money
