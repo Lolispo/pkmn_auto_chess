@@ -32,9 +32,9 @@
     "power": 30,
     "acc_range": 0.9
   },
-  "flamethrower ": {
-    "name": "flamethrower ",
-    "displayName": "Flamethrower ",
+  "flamethrower": {
+    "name": "flamethrower",
+    "displayName": "Flamethrower",
     "type": "fire",
     "power": 90,
     "effect": [

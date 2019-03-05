@@ -608,8 +608,8 @@ class App extends Component {
         } else {
           actionMessageTarget = '- ' + value;
         }
-        console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         let newHpSpell = newBoard[target].hp - value;
+        console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         if(effect && Object.keys(effect).length){
           console.log('SPELL EFFECT Not Empty: ', effect);
           Object.keys(effect).forEach(e => {

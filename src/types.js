@@ -220,7 +220,7 @@ const typeMap = new Map({
       'Rock',
       'Steel',
     ]),
-    desc: 'Flying: [3, 6, 9] Increases defense for all ground typed units [30, 60, 90]',
+    desc: 'Flying: [3, 6, 9] Increases defense for all flying typed units [30, 60, 90]',
     req: List([3, 6, 9]),
     bonusAmount: List([30, 60, 90]),
     bonusType: 'bonus',

@@ -7,6 +7,15 @@ Cost of dota auto chess upgraded units
 
 ## Backend
 
+Matchup system
+    Do Random as temp
+    More advanced TODO
+
+Player eliminated logic
+    Move all pieces back to pieces in session
+        hand + board
+    Send information to frontend that you are out, display something else
+
 Move updates:
     Mana updates
         Move manaIncrease function logic to 2 functions
@@ -40,6 +49,9 @@ PlacePieceEvent (All piece interactions):
         States returned where upgrade might have occured (PlacePiece) should 
             have a check for if it occured or not, and send message update if it did
 
+New_CHAT_MESSAGE
+    Separate sender, message, pieceUpgradeMessage, battleResult
+
 Handle empty boards for battle
     Should still visualize the enemy units
 
@@ -49,18 +61,16 @@ Pieces:
 
 Aoe damage logic
 
-Matchup system
-    Moved to function but still needs logic figured out
-
-first move
-    Current Logic in: setRandomFirstMove
-
 Finish abilities implementation (teleport)
 
 ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
 
-Callback too many units
-    = ?
+Move
+    Don't move furthest away immeditely, move in max steps 1-3 in correct direction
+        Otherwise high speed means => jump into all enemies and die
+
+first move
+    Current Logic in: setRandomFirstMove
     
 Longer range than 1
     2:
@@ -85,11 +95,28 @@ Longer range than 1
         charizard
         mew/mewtwo/articuno/moltres/zapdos
 
-Check money: Feels like you get a lot of money
-
-Type displayName
+Level 5 unit upgrades?
 
 ## Frontend
+
+Crash: 
+    Geodude game@1162 . typesJS.getBuffFuncAll(...) is not a function
+        Problem due to Rock and Ground both having increaseDefense?
+    Heal effect crash: @635 App, Cannot read property hp of undefined
+    Move type undefined after ember applied dot
+        Check ember tests, dot for fire
+    Weird bug, battle crash, pos undefined
+        Board is undefined for that battle
+        Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
+
+BattleResults in chat
+Opponent HP red color
+
+Npc wave: koffing, ekans
+
+Add next round opponent
+    pvp, gym battle, npc
+    Add/Find images for gym leaders
 
 Add icons for types, to be used for buffs
     Can be inspired from card icons if none are found
@@ -101,8 +128,12 @@ KeyInput
 ActionMessage coloring
     Green for spells
     Red/White when you take damage
+    ^These two should probably be positioned differently
+        Damage directly on unit, fading and going up
+        Spell top right of unit, fading to the right
 
 Ability displayNames
+Type displayName
 
 Help Messages
     Color Type messages so easier to read fast
@@ -205,16 +236,22 @@ Sound:
     More sounds:
         Sell unit sound *clir
         Battle end sound 
+            Happy cheer / Sad cheer
         Levelup sound (Pokemon levelup sound)
         Game won (Victory! (Trainer))
         Not valid press (not enough money etc)
         Timer click (close to 0)
         Unit upgrade
 
+Credits somewhere in frontend (P and R.Music)
+
 ## Communication
 
 If reconnected to server, update look to start layout
     If server disconnected mid game, make the user go back to main menu if game was cancelled
+
+Sessions: 
+    Room join /url
 
 ## Tests
 
@@ -265,6 +302,7 @@ Potential to use more functional code, map/filter
 Spinning wheel animating time between moves for all pokemon
     Easier to see when a unit does move
 
+Reconnect feature
 Login with name system
     Requires start page
     Starts game with player.name set for all players
@@ -302,6 +340,8 @@ Rhyhorn 4 -> 5?
 Horsea 4 -> 3? Is dragon tho on kingdra
 elekid 4 -> 3?
 Check slowpoke - really slow
+
+Sheets dps check for balance
 
 ## New features to add (Not as core)
 
