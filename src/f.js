@@ -103,3 +103,5 @@ exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());
 exports.push = (state, id, value) => state.set(id, state.get(id).push(value));
 
 exports.shuffle = (state, id) => state.set(id, shuffle(state.get(id)));
+
+exports.shuffleImmutable = list => shuffle(list);

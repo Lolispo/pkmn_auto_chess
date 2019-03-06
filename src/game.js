@@ -1,6 +1,6 @@
 // Author: Petter Andersson
 
-const { Map, List, Set } = require('immutable');
+const { Map, List, Set, fromJS } = require('immutable');
 
 const pokemonJS = require('./pokemon');
 const deckJS = require('./deck');
@@ -1239,32 +1239,45 @@ async function prepareBattle(board1, board2) {
   const boardWithBonuses = await markBoardBonuses(board);
   // f.print(boardWithBonuses);
   const boardWithMovement = await setRandomFirstMove(boardWithBonuses);
+  if(f.isUndefined(boardWithMovement)){
+    console.log('@prepareBattle UNDEFINED BOARD', board1, board2);
+  }
   const result = await startBattle(boardWithMovement);
   return result.set('startBoard', boardWithMovement);
 }
 
 async function buildMatchups(players) {
   let matchups = Map({});
-  const playerIter = players.keys();
-  let tempPlayer = playerIter.next();
-  let iter;
-  let nextPlayer;
-  const firstPlayer = tempPlayer.value;
-  while (true) {
-    const currentPlayer = tempPlayer.value;
-    iter = playerIter.next();
-    if (iter.done) {
-      nextPlayer = firstPlayer;
-    } else {
-      nextPlayer = iter.value;
-    }
-    matchups = matchups.set(currentPlayer, nextPlayer);
-    if (iter.done) {
-      break;
-    } else {
-      tempPlayer = iter;
+  const jsPlayers = players.toJS();
+  const keys = Object.keys(jsPlayers);
+  const immutableKeys = fromJS(Object.keys(jsPlayers));
+  let shuffledKeys = f.shuffleImmutable(immutableKeys);
+  console.log('@buildMatchups Keys', players, keys, shuffledKeys);
+  for(let i = 0; i < keys.length; i++){
+    const pid = keys[i];
+    console.log('@buildMatchups Key', i, pid)
+    for(let j = shuffledKeys.size - 1; j >= 0; j--){
+      const innerPid = shuffledKeys.get(j);
+      console.log('@buildMatchups inner', j, innerPid)
+      if(innerPid !== pid){ // Make matchup
+        matchups = matchups.set(pid, innerPid);
+        shuffledKeys = shuffledKeys.delete(j);
+        break;
+      } else if(j === 0){ // Last index, last player is on itself alone
+        console.log('@buildMatchups last swap', j, innerPid, pid, shuffledKeys.get(innerPid))
+        // Swap with first player that doesn't have last player as opponent
+        for(let k = 0; k < keys.length - 1; k++){
+          const currentKEnemy = matchups.get(keys[k]);
+          if(currentKEnemy !== innerPid){
+            matchups = matchups.set(pid, currentKEnemy);
+            matchups = matchups.set(keys[k], innerPid);
+            break;
+          }
+        }
+      }
     }
   }
+  console.log('@buildMatchups', matchups);
   return matchups;
 }
 

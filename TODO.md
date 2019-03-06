@@ -8,7 +8,7 @@ Cost of dota auto chess upgraded units
 ## Backend
 
 Matchup system
-    Do Random as temp
+    Temp: Random
     More advanced TODO
 
 Player eliminated logic
@@ -227,6 +227,7 @@ Help Message:
     Show type information temporarily
 
 Sound: 
+    Music before any game starts
     Set position, moves a lot when selecting and deselecting unit
     onVolumeChange slider change directly (ref usage)
     One of these:
@@ -335,6 +336,7 @@ eevee:
 Strongest 1: 
 
 Second wave 2 rattatas seem strong
+    Metapods / spearows something
 
 Rhyhorn 4 -> 5?
 Horsea 4 -> 3? Is dragon tho on kingdra
@@ -342,6 +344,9 @@ elekid 4 -> 3?
 Check slowpoke - really slow
 
 Sheets dps check for balance
+
+New abilities:
+    Raticate hyper fang
 
 ## New features to add (Not as core)
 
