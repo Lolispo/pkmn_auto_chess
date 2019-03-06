@@ -144,7 +144,7 @@ const reducer = (
       break;
     case 'UPDATE_BATTLEBOARD':
         // console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
-        state = {...state, battleStartBoard: action.board, message: action.moveNumber}
+        state = {...state, battleStartBoard: action.board, message: 'Move ' + action.moveNumber}
         // console.log('state', state);
         break;
     case 'SELECT_UNIT':

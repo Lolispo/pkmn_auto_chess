@@ -48,10 +48,6 @@
   padding-top: 70%;
 }
 
-.test_animation {
-  animation: 1s ease-in-out 0s alternate infinite both running;
-}
-
 .actionMessage {
   animation: fadeOut 1.5s ease-in-out 0s infinite;
   margin-top: 25px;
@@ -189,19 +185,6 @@ body {
   font-size: 22px;
 }
 
-.messageUpdate {
-  animation: 0.5s ease-in-out 0s infinite alternate both running invis;
-}
-
-.messageUpdate-enter {
-  opacity: 0.01;
-}
-
-.messageUpdate-enter.messageUpdate-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
 @keyframes shrinkDown {
   from  {transform: scale(1);}
   to    {transform: scale(0.3);}
@@ -239,6 +222,117 @@ body {
   }
 }
 
+.messageUpdate {
+  animation: 0.5s ease-in-out 0s infinite alternate both running invis;
+}
+
+.messageUpdate-enter {
+  opacity: 0.01;
+}
+
+.messageUpdate-enter.messageUpdate-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+/*
+.messageUpdate::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  bottom: -50%;
+  left: -50%;
+  background: linear-gradient(to bottom, rgba(229, 172, 142, 0), rgba(255,255,255,0.5) 50%, rgba(229, 172, 142, 0));
+  transform: rotateZ(60deg) translate(-5em, 7.5em);
+}
+*/
+.test_animation {
+  animation: attackUp 0.5s ease-in-out 0s alternate infinite both running;
+}
+
+.winningAnimation {
+  animation: jump 0.5s ease-in-out 0s alternate infinite both running;
+}
+
+@keyframes jump {
+  from  {margin-top: -20px;}
+  to    {margin-top: 0px;}
+}
+
+@keyframes attackN {
+  from  {margin-top: -40px;}
+  to    {margin-top: 0px;}
+}
+
+@keyframes attackNE {
+  from  {margin-top: -40px; margin-left: 40px;}
+  to    {margin-top: 0px; margin-left: 0px;}
+}
+
+@keyframes attackNW {
+  from  {margin-top: -40px; margin-left: -40px;}
+  to    {margin-top: 0px; margin-left: 0px;}
+}
+
+@keyframes attackW {
+  from  {margin-left: -40px;}
+  to    {margin-left: 0px;}
+}
+
+@keyframes attackE {
+  from  {margin-left: 40px;}
+  to    {margin-left: 0px;}
+}
+
+@keyframes attackS {
+  from  {margin-top: 40px;}
+  to    {margin-top: 0px;}
+}
+
+@keyframes attackSE {
+  from  {margin-top: 40px; margin-left: 40px;}
+  to    {margin-top: 0px; margin-left: 0px;}
+}
+
+@keyframes attackSW {
+  from  {margin-top: 40px; margin-left: -40px;}
+  to    {margin-top: 0px; margin-left: 0px;}
+}
+
+.animateN {
+  animation: attackN 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+.animateNW {
+  animation: attackNW 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+.animateNE {
+  animation: attackNE 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+.animateW {
+  animation: attackW 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+.animateE {
+  animation: attackE 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+.animateS {
+  animation: attackS 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+.animateSW {
+  animation: attackSW 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+.animateSE {
+  animation: attackSE 0.5s ease-in-out 0s alternate 1 both running;
+}
+
+
+
 .example-enter {
   transform: scale(0.3);
 }
@@ -272,11 +366,20 @@ body {
 
 }
 
+.absolute {
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
 .hpBar {
   text-align: center;
   border: 1px solid black;
   position: absolute; 
-  margin-top: 5px;
+  margin-top: 69px;
+  font-size: 12px;
   /*
   position: absolute;
   max-width: 84px;*/

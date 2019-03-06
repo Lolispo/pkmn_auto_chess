@@ -522,6 +522,8 @@ function getMovePos(board, closestEnemyPos, range, team) {
 
 /**
  * return closest enemy and marks if within range or not
+ * If someones at spot && its enemy unit
+ * Does this handle positioning good for both teams?
  * Map({closestEnemy, withinRange})
  */
 function getClosestEnemy(board, unitPos, range, team) {
@@ -533,17 +535,21 @@ function getClosestEnemy(board, unitPos, range, team) {
     const withinRange = i <= range;
     // console.log(withinRange, x, y, i, (x-i), (y-i))
     for (let j = x - i; j <= x + i; j++) {
-      if (!f.isUndefined(board.get(f.pos(j, y - i))) && board.get(f.pos(j, y - i)).get('team') === enemyTeam) { // SW
-        return Map({ closestEnemy: f.pos(j, y - i), withinRange });
-      } if (!f.isUndefined(board.get(f.pos(j, y + i))) && board.get(f.pos(j, y + i)).get('team') === enemyTeam) { // NW
-        return Map({ closestEnemy: f.pos(j, y + i), withinRange });
+      if (!f.isUndefined(board.get(f.pos(j, y - i))) && board.get(f.pos(j, y - i)).get('team') === enemyTeam) {
+        const direction = (j < x ? 'SW' : j === x ? 'S' : 'SE');
+        return Map({ closestEnemy: f.pos(j, y - i), withinRange, direction});
+      } if (!f.isUndefined(board.get(f.pos(j, y + i))) && board.get(f.pos(j, y + i)).get('team') === enemyTeam) {
+        const direction = (j < x ? 'NW' : j === x ? 'N' : 'NE');
+        return Map({ closestEnemy: f.pos(j, y + i), withinRange, direction});
       }
     }
     for (let j = y - i + 1; j < y + i; j++) {
-      if (!f.isUndefined(board.get(f.pos(x - i, j))) && board.get(f.pos(x - i, j)).get('team') === enemyTeam) { // SW
-        return Map({ closestEnemy: f.pos(x - i, j), withinRange });
-      } if (!f.isUndefined(board.get(f.pos(x + i, j))) && board.get(f.pos(x + i, j)).get('team') === enemyTeam) { // NW
-        return Map({ closestEnemy: f.pos(x + i, j), withinRange });
+      if (!f.isUndefined(board.get(f.pos(x - i, j))) && board.get(f.pos(x - i, j)).get('team') === enemyTeam) {
+        const direction = (j < y ? 'SW' : j === y ? 'W' : 'NW');
+        return Map({ closestEnemy: f.pos(x - i, j), withinRange, direction});
+      } if (!f.isUndefined(board.get(f.pos(x + i, j))) && board.get(f.pos(x + i, j)).get('team') === enemyTeam) {
+        const direction = (j < y ? 'SE' : j === y ? 'E' : 'NE');
+        return Map({ closestEnemy: f.pos(x + i, j), withinRange, direction});
       }
     }
   }
@@ -778,7 +784,6 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const ability = await abilitiesJS.getAbility(unit.get('name'));
     // TODO Check aoe / notarget here instead
     // console.log('@spell ability', ability)
-    // TODO: Some ability still crashes - oddish fixed
     if (f.isUndefined(ability)) {
       console.log(`${unit.get('name')} buggy ability`);
     }
@@ -803,7 +808,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       battleOver = await isBattleOver(newBoard, team);
     }
     const move = Map({
-      unitPos, action, value: abilityDamage, abilityName, target, effect, typeEffective: gameConstantsJS.getTypeEffectString(typeFactor),
+      unitPos, action, value: abilityDamage, abilityName, target, effect, 
+      typeEffective: gameConstantsJS.getTypeEffectString(typeFactor), direction: enemyPos.get('direction'),
     });
     return Map({
       nextMove: move,
@@ -815,7 +821,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
   const team = unit.get('team');
   let tarpos;
   if (!f.isUndefined(optPreviousTarget)) {
-    tarpos = Map({ closestEnemy: optPreviousTarget, withinRange: true });
+    tarpos = Map({ closestEnemy: optPreviousTarget.get('target'), withinRange: true, direction: optPreviousTarget.get('direction')});
   } else {
     tarpos = getClosestEnemy(board, unitPos, range, team);
   }
@@ -841,7 +847,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       newBoardMana = await manaIncrease(newBoard, unitPos, target);
     }
     const move = Map({
-      unitPos, action, value, target, typeEffective: gameConstantsJS.getTypeEffectString(typeFactor),
+      unitPos, action, value, target, 
+      typeEffective: gameConstantsJS.getTypeEffectString(typeFactor), direction: enemyPos.get('direction'),
     });
     return Map({
       nextMove: move,
@@ -935,7 +942,8 @@ async function startBattle(boardParam) {
     if (!f.isUndefined(previousMove)) { // Use same target as last round
       // console.log('previousMove in @startBattle', previousMove.get('nextMove').get('target'));
       const previousTarget = previousMove.get('nextMove').get('target');
-      nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove, previousTarget);
+      const previousDirection = previousMove.get('nextMove').get('direction');
+      nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove, Map({target: previousTarget, direction: previousDirection}));
     } else {
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove);
     }

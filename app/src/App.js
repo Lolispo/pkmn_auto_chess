@@ -66,7 +66,7 @@ class PokemonImage extends Component{
           transitionEnterTimeout={300}
           transitionLeave={false}>
           <img
-            className={`pokemonImg ${this.props.name}`}
+            className={`pokemonImg ${this.props.name}${this.props.classList}`}
             key={src}
             style={{paddingTop: paddingTop, width: width, height: height}}
             src={src}
@@ -272,19 +272,16 @@ class Cell extends Component {
           <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
           </div> : '')*/
         const actionMessage = (pokemon && pokemon.actionMessage !== '' ? 
-        <CSSTransitionGroup
-          transitionName="messageUpdate"
-          transitionEnterTimeout={1500}
-          transitionLeave={false}>
           <div className='text_shadow actionMessage' style={{position: 'absolute'}}>
             {pokemon.actionMessage}
-          </div> 
-        </CSSTransitionGroup>
+          </div>
           : '');
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
+          const classList = (pokemon.winningAnimation ? ' winningAnimation' : '') + (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '') + ' absolute';
+          console.log('@rendereding pokemonImage classList', classList)
           return <div style={{position: 'relative'}}>
-            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList}/>
             {hpBar}
             {/*manaBar*/}
             {actionMessage}
@@ -390,6 +387,10 @@ class App extends Component {
       return String(x);
     }
     return String(x) + ',' + String(y);
+  }
+
+  getPosCoords = (pos) => {
+    return pos.split(',');
   }
 
   statsMap = {};
@@ -577,13 +578,28 @@ class App extends Component {
       setTimeout(resolve, ms);
     });
   }
+  
+  getAttackDirectionClass = (unitPos, target) => {
+    const length = 85;
+    const posUnit = this.getPosCoords(unitPos);
+    const ux = posUnit[0];
+    const uy = posUnit[1];
+    const posTarget = this.getPosCoords(target);
+    const tx = posTarget[0];
+    const ty = posTarget[1];
+    
+  }
 
-  damageUnit = async (newBoard, target, value, unitPos, actionMessageTarget, actionMessageAttacker) => {
+  damageUnit = async (newBoard, target, value, unitPos, direction, actionMessageTarget, actionMessageAttacker) => {
     if(isUndefined(newBoard[target])){
       console.log('Time to crash: ', newBoard, target, value);
     }
     if(actionMessageTarget)   newBoard[target].actionMessage = actionMessageTarget;
     if(actionMessageAttacker) newBoard[unitPos].actionMessage = actionMessageAttacker;
+    console.log('direction: ' + direction)
+    if(direction !== '') {
+      newBoard[unitPos].attackAnimation = 'animate' + direction; 
+    }
     const newHp = newBoard[target].hp - value;
     if(newHp <= 0){
       delete newBoard[target]; 
@@ -592,7 +608,7 @@ class App extends Component {
     }
     return newBoard;
   }
-  
+
   renderMove = async (nextMove, board, timeToWait) => {
     let newBoard = board;
     await this.wait(timeToWait);
@@ -602,14 +618,15 @@ class App extends Component {
     const value = nextMove.value;
     const unitPos = nextMove.unitPos;
     const typeEffective = nextMove.typeEffective;
+    const direction = nextMove.direction
     const unit = newBoard[unitPos];  // Save unit from prev pos
     switch(action) {
       case 'move':
-      console.log('Move from', unitPos, 'to', target);
-      delete newBoard[unitPos];        // Remove unit from previous pos
-      newBoard[target] = unit;         // Add unit to new pos on board
-      // newBoard[unitPos].actionMessage = '';
-      return newBoard;
+        console.log('Move from', unitPos, 'to', target);
+        delete newBoard[unitPos];        // Remove unit from previous pos
+        newBoard[target] = unit;         // Add unit to new pos on board
+        // newBoard[unitPos].actionMessage = '';
+        return newBoard;
       case 'attack':
         // TODO: Animate attack on unitPos
         console.log('Attack from', unitPos, 'with', value, 'damage');
@@ -619,7 +636,7 @@ class App extends Component {
         } else {
           actionMessage = '- ' + value;
         }
-        return this.damageUnit(newBoard, target, value, unitPos, actionMessage);
+        return this.damageUnit(newBoard, target, value, unitPos, direction, actionMessage);
       case 'spell':
         // TODO: Animations
         // TODO: Check spell effects
@@ -678,10 +695,21 @@ class App extends Component {
         // TODO: Animate Poison Damage on unitPos
         console.log('Poison damage on', unitPos, 'with', value, 'damage');
         actionMessage = '- ' + value +' Dot!';
-        return this.damageUnit(newBoard, target, value, unitPos, actionMessage);
+        return this.damageUnit(newBoard, target, value, unitPos, direction, actionMessage);
       default:
         console.log('error action = ', action);
     }
+  }
+
+  endOfBattleClean = (battleBoard) => {
+    const unitsAlive = Object.keys(battleBoard);
+    for(let i = 0; i < unitsAlive.length; i++){
+      // Jumping animation
+      battleBoard[unitsAlive[i]].winningAnimation = true;
+      console.log('Setting winningAnimation', unitsAlive[i], battleBoard[unitsAlive[i]]);
+      battleBoard[unitsAlive[i]].actionMessage = '';
+    }
+    return battleBoard;
   }
 
   startBattleEvent = async (self) => {
@@ -710,6 +738,8 @@ class App extends Component {
       if(isUndefined(battleStartBoard)){
         dispatch({type: 'UPDATE_MESSAGE', message: 'You lost!'}); 
       } else {
+        board = await this.endOfBattleClean(battleStartBoard);
+        dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
         const winningTeam = Object.values(battleStartBoard)[0].team;
         // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
         if(winningTeam === 0) {

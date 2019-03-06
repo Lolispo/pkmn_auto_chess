@@ -92,6 +92,8 @@ Longer range than 1
         charizard
         mew/mewtwo/articuno/moltres/zapdos
 
+Ability ranges implementation requries check for if ability.withinRange
+
 Level 5 unit upgrades?
 
 ## Frontend
