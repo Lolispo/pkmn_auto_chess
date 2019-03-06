@@ -110,7 +110,6 @@ Crash:
         Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
 
 BattleResults in chat
-Opponent HP red color
 
 Npc wave: koffing, ekans
 

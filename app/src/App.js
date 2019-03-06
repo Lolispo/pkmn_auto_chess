@@ -265,7 +265,8 @@ class Cell extends Component {
         // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
         pokemon = this.props.newProps.battleStartBoard[this.state.pos]
         const hpBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
-          <div className='hpBar text_shadow' style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
+          <div className={`hpBar text_shadow ${(this.props.isBoard ? (pokemon.team === 0 ? 'friendlyBar' : 'enemyBar') : '')}`} 
+          style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
           </div> : '')
         /*const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>

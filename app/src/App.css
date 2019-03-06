@@ -250,7 +250,6 @@ body {
 }
 
 .hpBar {
-  background-color: green;
   text-align: center;
   border: 1px solid black;
   position: absolute; 
@@ -259,6 +258,14 @@ body {
   position: absolute;
   max-width: 84px;*/
   /*margin-left: 1px;*/
+}
+
+.friendlyBar {
+  background-color: green;
+}
+
+.enemyBar {
+  background-color: red;
 }
 
 .manaBar {
