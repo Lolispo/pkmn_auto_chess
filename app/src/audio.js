@@ -7,6 +7,10 @@ import pokemonCenter from './assets/Music/pokemonCenter.mp3';
 import trainerBattle from './assets/Music/trainerBattle.mp3';
 import rivalTheme from './assets/Music/rivalTheme.mp3';
 
+// Sound Effects
+
+import sellSound from './assets/SoundEffects/sellSound.mp3';
+
 // Pokemon
 import bulbasaur from './assets/pokemonCries/001 - Bulbasaur.wav'
 import ivysaur from './assets/pokemonCries/002 - Ivysaur.wav'
@@ -307,5 +311,14 @@ export function getBackgroundAudio(name) {
     case 'idle':
     default:  
       return pokemonCenter;
+  }
+}
+
+export function getSoundEffect(name){
+  switch(name){
+    case 'sellUnit':
+      return sellSound;
+    default:
+      return undefined;
   }
 }

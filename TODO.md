@@ -227,22 +227,26 @@ Help Message:
     Show type information temporarily
 
 Sound: 
-    Music before any game starts
-    Set position, moves a lot when selecting and deselecting unit
+    Tech:
+        Figure out how to play music in element many times
+            Either throuhg re-rendering or playing
+    New Music/Sounds:
+        Music before any game starts
+        More sounds:
+            Sell unit sound *clir
+            Battle end sound 
+                Happy cheer / Sad cheer
+            Levelup sound (Pokemon levelup sound)
+            Game won (Victory! (Trainer))
+            Not valid press (not enough money etc)
+            Timer click (close to 0)
+            Unit upgrade
+    Set position of mute buttons, moves a lot when selecting and deselecting unit
     onVolumeChange slider change directly (ref usage)
     One of these:
         Allow sound to be played if press something on stats screen (not autoPlay)
         Play sound again when unit is pressed (currently only when other unit has been pressed in between)
     Add hotkey m for toggle mute (for music or both)
-    More sounds:
-        Sell unit sound *clir
-        Battle end sound 
-            Happy cheer / Sad cheer
-        Levelup sound (Pokemon levelup sound)
-        Game won (Victory! (Trainer))
-        Not valid press (not enough money etc)
-        Timer click (close to 0)
-        Unit upgrade
 
 Credits somewhere in frontend (P and R.Music)
 
@@ -270,6 +274,7 @@ Load / Set time factor better
 
 Cache More Information
     Cache images/gifs (Store image, paddingTop, width and height, might not work)
+        Store gifs locally, resave with sizes and padding set
 
 Make elements % based instead of pixel based
 

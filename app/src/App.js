@@ -11,7 +11,7 @@ import lockedLock from './assets/lockedLock.png';
 import openLock from './assets/openLock.png';
 import goldCoin from './assets/goldCoin.png';
 import refreshShopImage from './assets/refreshShop.png';
-import { getAudio, getBackgroundAudio } from './audio.js';
+import { getAudio, getBackgroundAudio, getSoundEffect } from './audio.js';
 
 class PokemonImage extends Component{
 
@@ -317,6 +317,28 @@ class Cell extends Component {
 }
 
 
+class Audio extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      props: this.props.newProps,
+      loop: this.props.loopEnabled || false,
+      source: this.props.source,
+      volume: this.props.newProps.volume,
+    };
+  }
+
+  render() {
+    console.log('@Audio', this.state.source, this.state.props.soundEffect);
+    const ref = React.createRef();
+    if(this.state.loop){
+      return <audio ref={ref} src={this.state.source} onLoadStart={() => ref.current.volume = this.state.volume} loop autoPlay/>
+    } else {
+      return <audio ref={ref} src={this.state.source} onLoadStart={() => ref.current.volume = this.state.volume} autoPlay/>
+    }
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -491,6 +513,7 @@ class App extends Component {
     if(validUnit && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
       sellPiece(prop.storedState, String(from));
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
     } else{
       updateMessage(prop, 'Invalid target to sell!', from);
     }
@@ -741,6 +764,7 @@ class App extends Component {
     }
     const ref = React.createRef();
     return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = this.props.volume} loop autoPlay/>
+    return <Audio loopEnabled={true} source={source} newProps={this.props}/>
   }
 
   handleVolumeChange = (e) => {
@@ -751,7 +775,14 @@ class App extends Component {
 
   unitSound = () => {
     let ref = React.createRef();
-    return (this.props.soundEnabled ? <audio ref={ref} src={this.props.selectedSound } onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
+    return (this.props.soundEnabled ? <audio ref={ref} src={this.props.selectedSound} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
+    return <Audio loopEnabled={false} source={this.props.selectedSound} newProps={this.props}/>
+  }
+
+  soundEffect = () => {
+    let ref = React.createRef();
+    return (this.props.soundEnabled ? <audio ref={ref} src={this.props.soundEffect} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay>{this.props.soundEffectSwitch}</audio> : '')
+    return <Audio loopEnabled={false} source={this.props.soundEffect} newProps={this.props}/>
   }
 
   handleChatSubmit = (event) => {
@@ -850,6 +881,7 @@ class App extends Component {
           <div>
             {this.selectedUnitInformation()}
             {this.unitSound()}
+            {this.soundEffect()}
           </div>
           <div className='centerWith50 marginTop5'>
             <button className='normalButton' onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
@@ -1000,6 +1032,8 @@ const mapStateToProps = state => ({
   musicEnabled: state.musicEnabled,
   soundEnabled: state.soundEnabled,
   selectedSound: state.selectedSound,
+  soundEffect: state.soundEffect,
+  soundEffectSwitch: state.soundEffectSwitch,
   volume: state.volume,
 });
 
