@@ -40,7 +40,6 @@ const reducer = (
     soundEnabled: true,
     selectedSound: '',
     soundEffect: '',
-    soundEffectSwitch: false,
     volume: 0.05,
   },
   action
@@ -172,12 +171,8 @@ const reducer = (
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'NEW_SOUND_EFFECT':
-      console.log('@NewSoundEffect', action.newSoundEffect, state.soundEffect)
-      if(state.soundEffect === action.newSoundEffect){
-        state = {...state, soundEffectSwitch: !state.soundEffectSwitch}
-      } else {
-        state = {...state, soundEffect: action.newSoundEffect}
-      }
+      console.log('@NewSoundEffect', action.newSoundEffect, 'x', state.soundEffect)
+      state = {...state, soundEffect: action.newSoundEffect}
       break;
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');

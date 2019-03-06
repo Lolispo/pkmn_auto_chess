@@ -515,7 +515,10 @@ class App extends Component {
     if(validUnit && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
       sellPiece(prop.storedState, String(from));
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: ''});
+      setTimeout(() => {
+        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
+      }, 100);
     } else{
       updateMessage(prop, 'Invalid target to sell!', from);
     }
@@ -810,7 +813,7 @@ class App extends Component {
 
   soundEffect = () => {
     let ref = React.createRef();
-    return (this.props.soundEnabled ? <audio ref={ref} src={this.props.soundEffect} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay>{this.props.soundEffectSwitch}</audio> : '')
+    return (this.props.soundEnabled ? <audio ref={ref} src={this.props.soundEffect} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
     return <Audio loopEnabled={false} source={this.props.soundEffect} newProps={this.props}/>
   }
 
@@ -1064,7 +1067,6 @@ const mapStateToProps = state => ({
   soundEnabled: state.soundEnabled,
   selectedSound: state.selectedSound,
   soundEffect: state.soundEffect,
-  soundEffectSwitch: state.soundEffectSwitch,
   volume: state.volume,
 });
 
