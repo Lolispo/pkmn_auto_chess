@@ -49,7 +49,7 @@
 }
 
 .actionMessage {
-  animation: fadeOut 1.5s ease-in-out 0s infinite;
+  animation: fadeOutDown 1.5s ease-in-out 0s infinite;
   margin-top: 25px;
   margin-left: 3px;
   font-size: 14px;
@@ -195,6 +195,11 @@ body {
   to    {opacity: 1;}
 }
 
+@keyframes fadeOut {
+  from  {opacity: 1;}
+  to    {opacity: 0.01;}
+}
+
 @keyframes disco {
   from  {margin-left: 0;}
   to    {margin-left: 30px;}
@@ -210,7 +215,7 @@ body {
   to    {font-size: 13px;}
 }
 
-@keyframes fadeOut {
+@keyframes fadeOutDown {
   from  {
     opacity: 1;
     margin-top: 0px;
@@ -331,6 +336,9 @@ body {
   animation: attackSE 0.5s ease-in 0s alternate 1 both running;
 }
 
+.animateSE {
+  animation: shrinkDown 1s ease-in 0s alternate 1 both running;
+}
 
 
 .example-enter {

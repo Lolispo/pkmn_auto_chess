@@ -594,7 +594,12 @@ class App extends Component {
     }
     const newHp = newBoard[target].hp - value;
     if(newHp <= 0){
+      // TODO: Animation then remove
+      newBoard[target].attackAnimation = 'animateDead'; 
       delete newBoard[target]; 
+/*      await setTimeout(() => {
+      }, 1)
+*/
     } else {
       newBoard[target].hp = newHp;
     }
