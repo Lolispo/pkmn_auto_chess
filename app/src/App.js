@@ -578,17 +578,6 @@ class App extends Component {
       setTimeout(resolve, ms);
     });
   }
-  
-  getAttackDirectionClass = (unitPos, target) => {
-    const length = 85;
-    const posUnit = this.getPosCoords(unitPos);
-    const ux = posUnit[0];
-    const uy = posUnit[1];
-    const posTarget = this.getPosCoords(target);
-    const tx = posTarget[0];
-    const ty = posTarget[1];
-    
-  }
 
   damageUnit = async (newBoard, target, value, unitPos, direction, actionMessageTarget, actionMessageAttacker) => {
     if(isUndefined(newBoard[target])){

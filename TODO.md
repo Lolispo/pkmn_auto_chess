@@ -124,6 +124,7 @@ KeyInput
     If chat input is in focus, disable hotkey logic
 
 ActionMessage coloring
+    positioning
     Green for spells
     Red/White when you take damage
     ^These two should probably be positioned differently
