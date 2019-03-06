@@ -4,6 +4,9 @@
 
 ## Backend
 
+Target Priorities
+    Make more like move priority, in front of you first
+
 Matchup system
     Temp: Random
     More advanced TODO
@@ -149,6 +152,7 @@ ActionMessage:
     Position on top of unit
 
 Animations: 
+    Death Animations
     Animation on actionMessage (Damage and effective)
         Fadeout and move down
     Animation on pokemonImg

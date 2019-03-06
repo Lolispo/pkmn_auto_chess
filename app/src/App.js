@@ -598,9 +598,8 @@ class App extends Component {
     return newBoard;
   }
 
-  renderMove = async (nextMove, board, timeToWait) => {
+  renderMove = async (nextMove, board) => {
     let newBoard = board;
-    await this.wait(timeToWait);
     // console.log('@Time: ', timeToWait, board);
     const action = nextMove.action;
     const target = nextMove.target;
@@ -701,6 +700,12 @@ class App extends Component {
     return battleBoard;
   }
 
+  removeClassAnimation = (nextMove, board) => {
+    const unitPos = nextMove.unitPos;
+    board[unitPos].attackAnimation = '';
+    return board;
+  }
+
   startBattleEvent = async (self) => {
     const { dispatch, actionStack, battleStartBoard } = self.props;
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
@@ -717,7 +722,11 @@ class App extends Component {
       if(isUndefined(board)){
         console.log('CHECK ME: Board is undefined', board, nextMove, nextRenderTime);
       }
-      board = await this.renderMove(nextMove, board, nextRenderTime);
+      await this.wait(nextRenderTime);
+      // Fix remove class Animation
+      board = await this.removeClassAnimation(nextMove, board);
+      dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
+      board = await this.renderMove(nextMove, board);
       // console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
       currentTime = time;
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
