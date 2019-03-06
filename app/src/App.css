@@ -48,8 +48,12 @@
   padding-top: 70%;
 }
 
+.test_animation {
+  animation: 1s ease-in-out 0s alternate infinite both running;
+}
+
 .actionMessage {
-  animation: 3s ease-in-out 0s 1 infinite both running fadeOut;
+  animation: fadeOut 1.5s ease-in-out 0s infinite;
   margin-top: 25px;
   margin-left: 3px;
   font-size: 14px;
@@ -150,7 +154,9 @@
   /*font-size: 16pt;*/
 }
 
-
+.growAnimation {
+  animation: growText 1s ease-in-out 0s alternate infinite both running;
+}
 
 body {
   margin: 20px;
@@ -206,13 +212,30 @@ body {
   to    {opacity: 1;}
 }
 
+@keyframes disco {
+  from  {margin-left: 0;}
+  to    {margin-left: 30px;}
+}
+
+@keyframes grow {
+  from  {transform: scale(1);}
+  to    {transform: scale(1.05);}
+}
+
+@keyframes growText {
+  from  {font-size: 12px;}
+  to    {font-size: 13px;}
+}
+
 @keyframes fadeOut {
   from  {
     opacity: 1;
+    margin-top: 0px;
   }
   to    
   {
     opacity: 0.01;
+    margin-top: 30px;
   }
 }
 

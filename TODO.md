@@ -2,9 +2,6 @@
 
 ## Check in Auto Chess
 
-Cost of dota auto chess upgraded units
-    Level 2, type 4 -> sells for 6 (his level) +2 for now
-
 ## Backend
 
 Matchup system
@@ -141,6 +138,8 @@ Help Messages
 Css:
     Grey out / show isDisabled for clicking shopUnits / refreshShop/ buyExp when you don't have enough money
     Nidoran display name new line in button
+    Color of shop cost should be red when above money
+        Same for RefreshPieces gold number
 
 ActionMessage:
     Put .actionMessage on receivers end instead, DamageTaken instead of given displayed

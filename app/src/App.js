@@ -856,8 +856,10 @@ class App extends Component {
       <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
         <div style={{width: '165px'}}>
           <div className='flex'> 
-            <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-            <button className={'normalButton' + (this.props.level !== -1 ? ' hidden': '')} onClick={this.startGame}>
+            <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')} 
+            ${(this.props.level !== -1 ? ' hidden': '')}`} onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
+            <button className={`normalButton ${(this.props.level !== -1 ? ' hidden': '')} 
+            ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
               StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
             </button>
           </div>
@@ -961,10 +963,10 @@ class App extends Component {
             </div>
           </div>
           <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
-            <button className='normalButton' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
+            <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
           </div>
           <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
-            <button className={'normalButton'} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>{(this.props.help ? 'Hide Help' : 'Show Help')}</button>
+            <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>{(this.props.help ? 'Hide Help' : 'Show Help')}</button>
             {(this.props.help ? <div className='text_shadow marginTop5'>
             <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'chat'})}/>Chat 
             <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'hotkeys'})}/>Hotkeys 
