@@ -73,8 +73,8 @@ const configureSocket = dispatch => {
     dispatch({ type: 'SET_TYPE_BONUSES', typeDescs: descs, typeBonuses: bonuses});
   });
 
-  socket.on('NEW_CHAT_MESSAGE', message => {
-    dispatch({ type: 'NEW_CHAT_MESSAGE', newMessage: message});
+  socket.on('NEW_CHAT_MESSAGE', (senderMessage, message) => {
+    dispatch({ type: 'NEW_CHAT_MESSAGE', senderMessage, newMessage: message});
   });
   
   

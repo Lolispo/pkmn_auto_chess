@@ -311,7 +311,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   const boardUnits = state.getIn(['players', playerIndex, 'board']);
   const name = piece.get('name');
   const stats = await pokemonJS.getStats(name);
-  if (f.isUndefined(stats.get('evolves_to'))) return state;
+  if (f.isUndefined(stats.get('evolves_to'))) return Map({state, upgradeOccured: false});
   let pieceCounter = 0;
   let positions = List([]);
   const keysIter = boardUnits.keys();
@@ -325,6 +325,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     tempUnit = keysIter.next();
   }
   if (pieceCounter >= 3) { // Upgrade unit @ position
+    console.log('UPGRADING UNIT', name);
     let board = state.getIn(['players', playerIndex, 'board']);
     for (let i = 0; i < positions.size; i++) {
       board = board.delete(positions.get(i));
@@ -339,9 +340,11 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
       newPiece = await getBoardUnit(evolvesTo, f.x(position), f.y(position));
     }
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
-    return checkPieceUpgrade(state, playerIndex, newPiece, position);
+    const evolutionDisplayName = (await pokemonJS.getStats(evolvesTo)).get('display_name');
+    console.log('evolutionDisplayName', evolutionDisplayName);
+    return (await checkPieceUpgrade(state, playerIndex, newPiece, position)).set('upgradeOccured', evolutionDisplayName);
   }
-  return state;
+  return Map({state, upgradeOccured: false});
 }
 
 /**
@@ -368,23 +371,28 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     state = state.setIn(['players', playerIndex, 'board'], newBoard);
   }
   let newPiece;
+  let upgradeOccured = false;
   if (f.checkHandUnit(toPosition)) { // to hand
     newPiece = state.getIn(['players', playerIndex, 'hand', toPosition]);
     state = state.setIn(['players', playerIndex, 'hand', toPosition], piece);
   } else { // to board
     newPiece = state.getIn(['players', playerIndex, 'board', toPosition]);
     state = state.setIn(['players', playerIndex, 'board', toPosition], piece);
-    state = await checkPieceUpgrade(state, playerIndex, piece, toPosition);
+    const obj = await checkPieceUpgrade(state, playerIndex, piece, toPosition);
+    state = obj.get('state')
+    upgradeOccured = obj.get('upgradeOccured');
   }
   if (shouldSwap && !f.isUndefined(newPiece)) {
     if (f.checkHandUnit(fromPosition)) {
       state = state.setIn(['players', playerIndex, 'hand', fromPosition], newPiece.set('position', fromPosition));
     } else {
       state = state.setIn(['players', playerIndex, 'board', fromPosition], newPiece.set('position', fromPosition));
-      state = await checkPieceUpgrade(state, playerIndex, newPiece, fromPosition);
+      const obj = await checkPieceUpgrade(state, playerIndex, newPiece, fromPosition);
+      state = obj.get('state')
+      upgradeOccured = obj.get('upgradeOccured');
     }
   }
-  return state;
+  return Map({state, upgradeOccured});
 }
 
 exports._placePiece = async (stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') => placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap);
@@ -414,7 +422,7 @@ async function getFirstAvailableSpot(state, playerIndex) {
 async function withdrawPiece(state, playerIndex, piecePosition) {
   const benchPosition = await getFirstAvailableSpot(state, playerIndex);
   // TODO: Handle placePiece return upgradeOccured
-  return placePiece(state, playerIndex, piecePosition, benchPosition, false);
+  return (await placePiece(state, playerIndex, piecePosition, benchPosition, false)).get('state');
 }
 
 exports._withdrawPiece = async (state, playerIndex, piecePosition) => withdrawPiece(state, playerIndex, piecePosition);
@@ -675,7 +683,9 @@ async function healUnit(board, unitPos, heal) {
  */
 async function useAbility(board, ability, damage, unitPos, target) {
   const manaCost = ability.get('mana') || abilitiesJS.getAbilityDefault('mana');
-  let newBoard = board.setIn([unitPos, 'mana'], board.getIn([unitPos, 'mana']) - manaCost);
+  const newMana = board.getIn([unitPos, 'mana']) - manaCost;
+  const manaChanges = Map({unitPos: newMana});
+  let newBoard = board.setIn([unitPos, 'mana'], newMana);
   let effectMap = Map({});
   if (!f.isUndefined(ability.get('effect'))) {
     const effect = ability.get('effect');
@@ -731,7 +741,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
         console.log('@useAbility - default, mode =', mode);
     }
   }
-  return Map({ board: (await removeHpBattle(newBoard, target, damage)), effect: effectMap });
+  return Map({ board: (await removeHpBattle(newBoard, target, damage)), effect: effectMap, manaChanges});
 }
 
 /**
@@ -833,6 +843,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     // console.log('@abilityResult', abilityResult)
     const removedHPBoard = abilityResult.get('board');
     const effect = abilityResult.get('effect');
+    const manaChanges = abilityResult.get('manaChanges');
     // Do game over check
     const newBoard = removedHPBoard.get('board');
     // console.log('@spell', newBoard)
@@ -841,7 +852,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       battleOver = await isBattleOver(newBoard, team);
     }
     const move = Map({
-      unitPos, action, value: abilityDamage, abilityName, target, effect, 
+      unitPos, action, value: abilityDamage, abilityName, target, effect, manaChanges,
       typeEffective: gameConstantsJS.getTypeEffectString(typeFactor), direction: enemyPos.get('direction'),
     });
     return Map({
@@ -883,9 +894,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       newBoardMana = await manaChangeBoard(newBoard, manaChanges);
     }
     const move = Map({
-      unitPos, action, value, target, 
+      unitPos, action, value, target, manaChanges,
       typeEffective: gameConstantsJS.getTypeEffectString(typeFactor), direction: enemyPos.get('direction'),
-      manaChanges,
     });
     return Map({
       nextMove: move,

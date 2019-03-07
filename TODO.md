@@ -16,13 +16,6 @@ Player eliminated logic
         hand + board
     Send information to frontend that you are out, display something else
 
-Move updates:
-    Mana updates
-        Move manaIncrease function logic to 2 functions
-        One calculate mana changes and return the value
-            Can also be used in move
-        The other calculates newBoard from manaChanges calculated
-
 No target move (splash) shouldnt deal damage (curr 1 it seems)
 
 Gold information calculation
@@ -146,7 +139,10 @@ Help Messages
     Font color / text shadow feels weird overall here
 
 Css:
+    Only one rattata at level 2 is cheering
+        Check if only applied to one
     Nidoran display name new line in button
+    Eevee evolutions stats screen
 
 ActionMessage:
     Position on top of unit
@@ -184,7 +180,6 @@ Battle
         Requires mana changes to be sent in move, added in backend todo
         Max 200, 50/200 => 25% mana bar full
         Change color of manabar when above ability.cost
-    Select units working during battle (Investigate)
 
 Infopanel
     Show bars in infopanel screen for stats (Easier comparisons)
@@ -359,7 +354,9 @@ Sheets dps check for balance
 New abilities:
     Raticate hyper fang
 
-gym: brock ez
+gym All probably too ez
+    Increase amount of units
+        Add of same type, from other trainers in gym or of same unit
 
 ## New features to add (Not as core)
 

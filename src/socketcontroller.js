@@ -29,6 +29,13 @@ const emitMessage = (socket, io, sessionId, func) => {
   }
 }
 
+const newChatMessage = (socket, io, socketIdParam, senderName, newMessage) => {
+  sessionJS.pushSessionMessage(socketIdParam, connectedPlayers, sessions, newMessage);
+  emitMessage(socket, io, getSessionId(socketIdParam), (socketId) => {
+    io.to(socketId).emit('NEW_CHAT_MESSAGE', senderName, newMessage);
+  });
+}
+
 const countReadyPlayers = (isReadyAction, socket, io) => {
   const iter = connectedPlayers.keys();
   let temp = iter.next();
@@ -196,7 +203,14 @@ module.exports = (socket, io) => {
   socket.on('PLACE_PIECE', async (stateParam, from, to) => {
     const index = getPlayerIndex(socket.id);
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
-    const state = await gameJS._placePiece(stateWithPieces, index, from, to);
+    const obj = await gameJS._placePiece(stateWithPieces, index, from, to);
+    const state = obj.get('state');
+    const evolutionDisplayName = obj.get('upgradeOccured');
+    console.log('@PlacePieceSocket', evolutionDisplayName);
+    if(evolutionDisplayName){
+      const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
+      newChatMessage(socket, io, socket.id, playerName + ' -> ', evolutionDisplayName);
+    }
     console.log('Place piece at ', from, ' at', to);
     // Hand and board
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
@@ -315,11 +329,7 @@ module.exports = (socket, io) => {
   socket.on('SEND_MESSAGE', async message => {
     // TODO: Login: Player name here instead
     const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
-    const newMessage = playerName + ': ' + message;
-    sessionJS.pushSessionMessage(socket.id, connectedPlayers, sessions, newMessage);
-    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
-      io.to(socketId).emit('NEW_CHAT_MESSAGE', newMessage);
-    });
+    newChatMessage(socket, io, socket.id, playerName + ': ', message);
   });
 
   socket.on('GET_STATS', async name => {

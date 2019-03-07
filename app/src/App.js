@@ -222,10 +222,10 @@ class Cell extends Component {
   }
 
   handleCellClick(el){
-    const unit = (el.props.isBoard ? el.props.newProps.myBoard[this.state.pos] : el.props.newProps.myHand[this.state.pos]);
+    const unit = (el.props.isBoard ? (el.props.newProps.onGoingBattle ? el.props.newProps.battleStartBoard[this.state.pos] : el.props.newProps.myBoard[this.state.pos]) : el.props.newProps.myHand[this.state.pos]);
     const prevSelectedUnit = el.props.newProps.selectedUnit;
     console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
-    console.log(' -', el.props.isBoard, this.state.pos, unit, prevSelectedUnit)
+    console.log(' -', el.props.isBoard, el.props.newProps.onGoingBattle, this.state.pos, unit, prevSelectedUnit)
     // If unit selected -> presses empty -> place piece 
     if(this.state.pos !== prevSelectedUnit.pos){ // Shouldn't do anything if same tile as SELECT_UNIT Tile
       el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit}});
@@ -233,6 +233,7 @@ class Cell extends Component {
       el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {isBoard: el.props.isBoard, pos: ''}});
     }
     if(unit){ // Pressed unit
+      console.log('Get Stats for ', unit.name)
       this.getStatsEvent(el.props.newProps, unit.name);
     } else if(prevSelectedUnit.pos && this.state.pos !== prevSelectedUnit.pos && prevSelectedUnit.unit){ // Pressed empty cell
       this.placePieceEvent(prevSelectedUnit.pos, this.state.pos);
@@ -269,7 +270,7 @@ class Cell extends Component {
           style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
           </div> : '')
         const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
-          <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+          <div className={`manaBar text_shadow ${(pokemon.mana > pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
           </div> : '')
         const actionMessage = (pokemon && pokemon.actionMessage && pokemon.actionMessage !== '' ? 
           <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
@@ -450,7 +451,8 @@ class App extends Component {
     const className = 'center text_shadow infoPanel';
     const noSelected = <div className={`${className}`} style={{paddingTop: '40px', paddingLeft: '18px'}}>No unit selected</div>
     if(!isUndefined(this.props.selectedUnit)){
-      let pokemon = (this.props.selectedUnit.isBoard ? this.props.myBoard[this.props.selectedUnit.pos] : this.props.myHand[this.props.selectedUnit.pos]);
+      let pokemon = (this.props.selectedUnit.isBoard ? (this.props.onGoingBattle ? this.props.battleStartBoard[this.props.selectedUnit.pos] 
+        : this.props.myBoard[this.props.selectedUnit.pos]) : this.props.myHand[this.props.selectedUnit.pos]);
       if(pokemon){
         this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getAudio(pokemon.name)});
         const pokeEl= <PokemonImage name={pokemon.name} sideLength={50}/>;
@@ -834,6 +836,13 @@ class App extends Component {
     event.preventDefault();
   }
 
+  // TODO: Fix not working
+  scrollToBottom = () => {
+    if(this.messagesEnd !== null){
+      this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
   buildHelp = () => {
     let s = 'Information:\n';
     let s2 = 'Hotkeys:\n';
@@ -843,6 +852,7 @@ class App extends Component {
     s2 += 'F: Buy Exp\n';
     s2 += 'D: Refresh Shop\n';
     let chat = false;
+    let messageCollection = [];
     switch(this.props.helpMode){
       case 'types':
         if(this.props.typeStatsString){
@@ -863,19 +873,24 @@ class App extends Component {
         break;
       case 'chat':
       default:
-          s = 'Chat:\n';
-          s += this.props.chatMessage;
+          
+          //s += this.props.chatMessage;
+          for(let i = 0; i < this.props.chatMessages.length; i++){
+            messageCollection.push(<div key={i}><span className='text_shadow'>{this.props.senderMessages[i]}</span><span>{this.props.chatMessages[i]}</span></div>);
+          }
           chat = true;
         break;
     }
-    const content = <div className='helpText text_shadow'>{s}</div>;
-    return (chat ? <div>{content}
+    return (chat ? <div>{<div className='helpText'><span className='text_shadow'>Chat:</span><div>{messageCollection}</div>
+    <div style={{ float:"left", clear: "both" }}
+      ref={(el) => { this.messagesEnd = el;}}>
+    </div></div>}
     <form onSubmit={this.handleChatSubmit}>
       <label>
-        <input type="text" value={this.state.chatMessageInput} onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
+        <input className='textInput' type="text" value={this.state.chatMessageInput} onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
       </label>
       <input type="submit" value="Submit" />
-    </form></div> : content);
+    </form></div> : <div className='helpText'>{s}</div>);
   }
 
   render() {
@@ -1054,6 +1069,8 @@ const mapStateToProps = state => ({
   help: state.help,
   helpMode: state.helpMode,
   chatMessage: state.chatMessage,
+  senderMessages: state.senderMessages,
+  chatMessages: state.chatMessages,
   storedState: state.storedState,
   pieces: state.pieces,
   players: state.players,

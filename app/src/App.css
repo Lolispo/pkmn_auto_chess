@@ -282,13 +282,13 @@ body {
 }
 
 @keyframes attackNE {
-  from  {margin-top: -40px; margin: auto; margin-left: 40px;}
-  to    {margin-top: 0px;  margin: auto; margin-left: 0px;}
+  from  {margin-top: -40px; margin-left: 40px;}
+  to    {margin-top: 0px;  margin-left: 0px;}
 }
 
 @keyframes attackNW {
-  from  {margin-top: -40px; margin: auto; margin-left: -40px;}
-  to    {margin-top: 0px;  margin: auto; margin-left: 0px;}
+  from  {margin-top: -40px; margin-left: -40px;}
+  to    {margin-top: 0px; margin-left: 0px;}
 }
 
 @keyframes attackW {
@@ -307,45 +307,45 @@ body {
 }
 
 @keyframes attackSE {
-  from  {margin-top: 40px; margin: auto; margin-left: 40px;}
-  to    {margin-top: 0px;  margin: auto; margin-left: 0px;}
+  from  {margin-top: 40px; margin-left: 40px;}
+  to    {margin-top: 0px; margin-left: 0px;}
 }
 
 @keyframes attackSW {
-  from  {margin-top: 40px; margin: auto; margin-left: -40px;}
-  to    {margin-top: 0px; margin: auto; margin-left: 0px;}
+  from  {margin-top: 40px; margin-left: -40px;}
+  to    {margin-top: 0px; margin-left: 0px;}
 }
 
 .animateN {
-  animation: attackN 0.65s ease-in 0s alternate 1 both running;
+  animation: attackN 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateNW {
-  animation: attackNW 0.65s ease-in 0s alternate 1 both running;
+  animation: attackNW 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateNE {
-  animation: attackNE 0.65s ease-in 0s alternate 1 both running;
+  animation: attackNE 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateW {
-  animation: attackW 0.65s ease-in 0s alternate 1 both running;
+  animation: attackW 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateE {
-  animation: attackE 0.65s ease-in 0s alternate 1 both running;
+  animation: attackE 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateS {
-  animation: attackS 0.65s ease-in 0s alternate 1 both running;
+  animation: attackS 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateSW {
-  animation: attackSW 0.65s ease-in 0s alternate 1 both running;
+  animation: attackSW 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateSE {
-  animation: attackSE 0.65s ease-in 0s alternate 1 both running;
+  animation: attackSE 0.3s ease-in 0s alternate 1 both running;
 }
 
 .animateDead {
@@ -380,6 +380,11 @@ body {
   overflow: auto;
   height: 200px;
   width: 550px;
+}
+
+.textInput {
+  width: 300px;
+  max-width: 300px;
 }
 
 .barDiv {
@@ -420,6 +425,10 @@ body {
   position: absolute; 
   margin-top: 83px;
   font-size: 12px;
+}
+
+.colorPurple {
+  background-color: rgb(117, 34, 117);
 }
 
 .levelDiv {

@@ -9,10 +9,11 @@ const reducer = (
     connectedPlayers: -1,
     allReady: false,
     message: 'default',
-    help: false,
+    help: true,
     helpMode: '',
     chatMessage: '',
     chatMessages: [],
+    senderMessages: [],
     storedState: {},
     pieces: [],
     players: {},
@@ -180,7 +181,8 @@ const reducer = (
       break;
     case 'NEW_CHAT_MESSAGE':
       state = {...state, chatMessage: state.chatMessage + action.newMessage + '\n'}
-      state.chatMessages.push(action.newMessage)
+      state.senderMessages.push(action.senderMessage);
+      state.chatMessages.push(action.newMessage);
       break;
     default:
       break;
