@@ -894,16 +894,18 @@ class App extends Component {
   }
 
   render() {
-    const mainMenu = <div className='centerWith50'>
-      <h1 className='titleCard'>Pokemon Auto Chess</h1>
-      <div></div>
-      <div className='flex'> 
-        <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
-        onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-        <button className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
-          StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
-        </button>
+    const mainMenu = <div>
+      <div className='titleCard text_shadow'>Pokemon Auto Chess</div>
+      <div className='startButtons'>
+        <div className='flex'> 
+          <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
+          onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
+          <button className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
+            StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
+          </button>
+        </div>
       </div>
+
     </div>
     const topBar = <div className='centerWith50 flex' style={{width: '80%'}}>
         <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
@@ -1037,7 +1039,7 @@ class App extends Component {
         </div>
         {(this.props.help ? this.buildHelp() : '')}
       </div>;
-    return (this.props.gameIsLive ? <div>
+    return (this.props.gameIsLive ? <div className='gameDiv'>
       {topBar}
       <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
         {leftSideBar}

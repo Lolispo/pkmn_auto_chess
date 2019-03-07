@@ -1,13 +1,35 @@
 /* Author: Petter Andersson */
 
+body {
+  margin: 0px; /*20px*/
+  padding: 0px;
+  font-family: sans-serif;
+  background: lightblue;
+  /*background-image: url(https://i.imgur.com/VOPXdoh.jpg) no-repeat;*/
+}
+
 .mainMenu {
   width: 1920px;
   height: 1080px;
-  background-image: url(./assets/backgroundMainMenu.jpg);
+  background-repeat: no-repeat;
+  /*background-image: url(./assets/backgroundMainMenu.jpg);*/
+  background-image: url(./assets/pikachuBackground.gif);
 }
 
 .titleCard {
   padding-top: 50px;
+  padding-left: 400px;
+  font-size: 30px;
+  font-weight: bold;
+  padding-bottom: 30px;
+}
+
+.startButtons {
+  padding-left: 600px;
+}
+
+.gameDiv {
+  margin: 20px;
 }
 
 .pokemonShopText {
@@ -172,14 +194,6 @@
 
 .growAnimation {
   animation: growText 1s ease-in-out 0s alternate infinite both running;
-}
-
-body {
-  margin: 20px;
-  padding: 0;
-  font-family: sans-serif;
-  background: lightblue;
-  /*background-image: url(https://i.imgur.com/VOPXdoh.jpg) no-repeat;*/
 }
 
 .goldImage {
