@@ -266,6 +266,8 @@ Sessions:
 
 ## Tests
 
+Tests are broken, fix
+
 More tests in general, easier to test in theory when frontend done
 
 Test combos/buffs from types
@@ -348,9 +350,6 @@ eevee:
 
 Strongest 1: 
 
-Second wave 2 rattatas seem strong
-    Metapods / spearows something
-
 Rhyhorn 4 -> 5?
 Horsea 4 -> 3? Is dragon tho on kingdra
 elekid 4 -> 3?
@@ -361,9 +360,7 @@ Sheets dps check for balance
 New abilities:
     Raticate hyper fang
 
-gym All probably too ez
-    Increase amount of units
-        Add of same type, from other trainers in gym or of same unit
+gym balance
 
 ## New features to add (Not as core)
 

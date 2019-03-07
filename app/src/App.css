@@ -522,7 +522,8 @@ body {
   position: absolute;
   top: 0px;
   left: 0px;
-  border: 1px solid lightblue;
+  /*border: 1px solid lightblue;*/
+  border: 1px solid rgb(33, 33, 33);
   border-radius: 10px;
   padding-top: 5px;
 }
