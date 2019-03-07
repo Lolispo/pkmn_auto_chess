@@ -11,9 +11,8 @@ body {
 .mainMenu {
   width: 1920px;
   height: 1080px;
-  background-repeat: no-repeat;
-  /*background-image: url(./assets/backgroundMainMenu.jpg);*/
-  background-image: url(./assets/pikachuBackground.gif);
+  /*background-image: url(./assets/backgroundMainMenu.jpg) no-repeat;*/
+  background: url(./assets/pikachuBackground.gif) no-repeat;
 }
 
 .titleCard {
@@ -146,7 +145,8 @@ body {
   width: 85px; 
   height: 85px;
   background-color: gray;
-  background: url(https://i.gyazo.com/f5c31403dc3840b9b276c3e8d3e178d3.png) no-repeat;
+  /*background: url(https://i.gyazo.com/f5c31403dc3840b9b276c3e8d3e178d3.png) no-repeat;*/
+  background: url(./assets/grass.gif) no-repeat;
   background-size: 85px 85px;
 }
 

@@ -109,7 +109,7 @@ Crash:
         Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
 
 mainMenu
-    Fix background on whole body / root (currently for mainMenu element)
+    Add more functionality, not important tho
 
 BattleResults in chat
 
