@@ -164,7 +164,7 @@ module.exports = (socket, io) => {
     // console.log('Discarded pieces inc', fromJS(stateParam).get('discardedPieces'));
     const state = await gameJS.buyUnit(stateWithPieces, index, pieceIndex);
     // Gold, shop, hand
-    console.log('Bought unit at', pieceIndex, 'discarded =', state.get('discardedPieces'));
+    console.log('Bought unit at', pieceIndex, '#discarded =', state.get('discardedPieces').size);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     socket.emit('UPDATED_STATE', getStateToSend(state)); // Was updateplayer
@@ -329,7 +329,7 @@ module.exports = (socket, io) => {
     if (ability.get('displayName')) {
       newStats = newStats.set('abilityDisplayName', ability.get('displayName'));
     }
-    console.log('Retrieving stats for', name, newStats);
+    console.log('Retrieving stats for', name); // , newStats);
     socket.emit('SET_STATS', name, newStats);
   });
 };

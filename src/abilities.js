@@ -37,7 +37,7 @@ const abilitiesMap = loadImmutableAbilitiesJSON();
 exports.getDefault = name => abilityDefaults.get(name);
 
 exports.getAbility = async (name) => {
-  console.log('@abilties.getAbility', name);
+  // console.log('@abilties.getAbility', name);
   const ability = (await pokemonJS.getStats(name)).get('ability');
   return (await abilitiesMap).get(ability);
 };

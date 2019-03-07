@@ -271,8 +271,8 @@ class Cell extends Component {
         /*const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
           </div> : '')*/
-        const actionMessage = (pokemon && pokemon.actionMessage !== '' ? 
-          <div className='text_shadow actionMessage' style={{position: 'absolute'}}>
+        const actionMessage = (pokemon && pokemon.actionMessage && pokemon.actionMessage !== '' ? 
+          <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
             {pokemon.actionMessage}
           </div>
           : '');

@@ -115,6 +115,10 @@ Crash:
         Board is undefined for that battle, or something
         Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
 
+mainMenu
+    !gameIsLive -> Render ready and startButton
+        More alternatives
+
 BattleResults in chat
 
 Npc wave: koffing, ekans

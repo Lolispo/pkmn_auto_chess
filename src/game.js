@@ -214,7 +214,7 @@ exports.createBattleBoard = async (inputList) => {
  */
 exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   let state = stateParam;
-  console.log('@buyunit', unitID, playerIndex, f.pos(unitID));
+  // console.log('@buyunit', unitID, playerIndex, f.pos(unitID));
   // console.log(state.getIn(['players', playerIndex, 'shop']));
   let shop = state.getIn(['players', playerIndex, 'shop']);
   const unit = shop.get(f.pos(unitID)).get('name');
@@ -225,7 +225,7 @@ exports.buyUnit = async (stateParam, playerIndex, unitID) => {
     const hand = state.getIn(['players', playerIndex, 'hand']);
     const unitInfo = await pokemonJS.getStats(unit);
     const handIndex = await getFirstAvailableSpot(state, playerIndex); // TODO: Go: Get first best hand index
-    console.log('@buyUnit handIndex', handIndex);
+    // console.log('@buyUnit handIndex', handIndex);
     const unitHand = await getBoardUnit(unit, f.x(handIndex));
     // console.log('@buyUnit unitHand', unitHand)
     state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
@@ -356,13 +356,13 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   let piece;
   let state = stateParam;
   if (f.checkHandUnit(fromPosition)) { // from hand
-    console.log('@placePiece placeOnBoard', fromPosition, state.getIn(['players', playerIndex, 'hand']));
+    // console.log('@placePiece placeOnBoard', fromPosition, state.getIn(['players', playerIndex, 'hand']));
     piece = state.getIn(['players', playerIndex, 'hand', fromPosition]).set('position', toPosition);
     const newHand = state.getIn(['players', playerIndex, 'hand']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'hand'], newHand);
   } else { // from board
-    console.log('@placePiece', fromPosition);
-    console.log('@placePiece board', state.getIn(['players', playerIndex, 'board']));
+    // console.log('@placePiece', fromPosition);
+    // console.log('@placePiece board', state.getIn(['players', playerIndex, 'board']));
     piece = state.getIn(['players', playerIndex, 'board', fromPosition]).set('position', toPosition);
     const newBoard = state.getIn(['players', playerIndex, 'board']).delete(fromPosition);
     state = state.setIn(['players', playerIndex, 'board'], newBoard);
@@ -1180,6 +1180,9 @@ async function markBoardBonuses(board) {
       tempEnemy = enemyDebuffIter.next();
     }
     tempUnit = boardKeysIter.next();
+  }
+  if(f.isUndefined(newBoard) || Object.keys(newBoard).length === 0){
+    console.log('@markBoardBonuses CHECK ME', newBoard);
   }
   return newBoard;
 }

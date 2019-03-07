@@ -61,6 +61,10 @@
   margin-top: 25px;
 }
 
+.actionMessagePadding {
+  padding-left: 10px !important;
+}
+
 .paddingLeft5{
   padding-left: 5px;
 }
@@ -313,38 +317,38 @@ body {
 }
 
 .animateN {
-  animation: attackN 0.5s ease-in 0s alternate 1 both running;
+  animation: attackN 0.65s ease-in 0s alternate 1 both running;
 }
 
 .animateNW {
-  animation: attackNW 0.5s ease-in 0s alternate 1 both running;
+  animation: attackNW 0.65s ease-in 0s alternate 1 both running;
 }
 
 .animateNE {
-  animation: attackNE 0.5s ease-in 0s alternate 1 both running;
+  animation: attackNE 0.65s ease-in 0s alternate 1 both running;
 }
 
 .animateW {
-  animation: attackW 0.5s ease-in 0s alternate 1 both running;
+  animation: attackW 0.65s ease-in 0s alternate 1 both running;
 }
 
 .animateE {
-  animation: attackE 0.5s ease-in 0s alternate 1 both running;
+  animation: attackE 0.65s ease-in 0s alternate 1 both running;
 }
 
 .animateS {
-  animation: attackS 0.5s ease-in 0s alternate 1 both running;
+  animation: attackS 0.65s ease-in 0s alternate 1 both running;
 }
 
 .animateSW {
-  animation: attackSW 0.5s ease-in 0s alternate 1 both running;
+  animation: attackSW 0.65s ease-in 0s alternate 1 both running;
 }
 
 .animateSE {
-  animation: attackSE 0.5s ease-in 0s alternate 1 both running;
+  animation: attackSE 0.65s ease-in 0s alternate 1 both running;
 }
 
-.animateSE {
+.animateDead {
   animation: shrinkDown 1s ease-in 0s alternate 1 both running;
 }
 
