@@ -139,10 +139,11 @@ Help Messages
     Font color / text shadow feels weird overall here
 
 Css:
-    Only one rattata at level 2 is cheering
+    WinningAnimation:    Only one rattata at level 2 is cheering
         Check if only applied to one
     Nidoran display name new line in button
     Eevee evolutions stats screen
+    Mark default radio button in bottom right as Chat (Make selected)
 
 ActionMessage:
     Position on top of unit
@@ -254,6 +255,7 @@ Credits somewhere in frontend (P and R.Music)
 ## Communication
 
 If reconnected to server, update look to start layout
+    set !gameIsLive on connect, and make a lot of game factors depend on that var
     If server disconnected mid game, make the user go back to main menu if game was cancelled
 
 Sessions: 

@@ -279,7 +279,7 @@ class Cell extends Component {
           : '');
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
-          const classList = (pokemon.winningAnimation ? ' winningAnimation' : '') + (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '') + ' absolute';
+          const classList = (pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '')) + ' absolute';
           // console.log('@rendereding pokemonImage classList', classList)
           return <div style={{position: 'relative'}}>
             <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList}/>
@@ -720,7 +720,7 @@ class App extends Component {
 
   removeClassAnimation = (nextMove, board) => {
     const unitPos = nextMove.unitPos;
-    if(board[unitPos]){
+    if(board && board[unitPos]){
       board[unitPos].attackAnimation = '';
     }
     return board;

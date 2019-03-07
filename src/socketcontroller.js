@@ -171,7 +171,7 @@ module.exports = (socket, io) => {
     // console.log('Discarded pieces inc', fromJS(stateParam).get('discardedPieces'));
     const state = await gameJS.buyUnit(stateWithPieces, index, pieceIndex);
     // Gold, shop, hand
-    console.log('Bought unit at', pieceIndex, '#discarded =', state.get('discardedPieces').size);
+    console.log('Bought unit at', pieceIndex, '. #discarded =', state.get('discardedPieces').size);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     socket.emit('UPDATED_STATE', getStateToSend(state)); // Was updateplayer
@@ -206,12 +206,12 @@ module.exports = (socket, io) => {
     const obj = await gameJS._placePiece(stateWithPieces, index, from, to);
     const state = obj.get('state');
     const evolutionDisplayName = obj.get('upgradeOccured');
-    console.log('@PlacePieceSocket', evolutionDisplayName);
+    //  console.log('@PlacePieceSocket', evolutionDisplayName);
     if(evolutionDisplayName){
       const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
       newChatMessage(socket, io, socket.id, playerName + ' -> ', evolutionDisplayName);
     }
-    console.log('Place piece at ', from, ' at', to);
+    console.log('Place piece from', from, 'at', to, '(evolution =', evolutionDisplayName + ')');
     // Hand and board
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
@@ -259,7 +259,7 @@ module.exports = (socket, io) => {
         // Set Session to reset counter and remove prepBattleStatess
         const newSession = (session.get('prepBattleState') ? session.set('counter', 0).delete('prepBattleState') : session.set('counter', 0));
         sessions = sessions.set(sessionId, newSession);
-        console.log('@sc.battleReady Ready for battle!');
+        console.log('@sc.battleReady Starting Battle');
         // console.log('@sc.battleReady state', prepBattleState.getIn(['players']));
         // Battle
         const prepBSWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, prepBattleState);

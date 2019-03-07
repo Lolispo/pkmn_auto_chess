@@ -707,7 +707,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
         return Map({ board: Map({ board: newBoard }) });
       case 'lifesteal':
         const lsFactor = (!f.isUndefined(args) ? args.get(0) : abilitiesJS.getAbilityDefault('lifestealValue'));
-        newBoard = await healUnit(newBoard, unitPos, lsFactor * damage);
+        newBoard = await healUnit(newBoard, unitPos, Math.round(lsFactor * damage));
         effectMap = effectMap.setIn([unitPos, 'heal'], lsFactor * damage);
         break;
       case 'dot':
@@ -1464,7 +1464,7 @@ async function fixTooManyUnits(state, playerIndex) {
     chosenUnit = cheapestCostIndex.get(chosenIndex);
   }
   // Withdraw if possible unit, otherwise sell
-  console.log('@FixTooManyUnits Check keys', state.get('players'));
+  // console.log('@FixTooManyUnits Check keys', state.get('players'));
   let newState;
   // TODO: Inform Client about update
   if (state.getIn(['players', playerIndex, 'hand']).size < 8) {
