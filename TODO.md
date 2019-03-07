@@ -7,8 +7,12 @@
 Target Priorities
     Make more like move priority, in front of you first
 
+Messages show level 3 upgrade as well
+    2 messages for these upgrades
+
 Matchup system
     Temp: Random
+    Does it work for 3 players?
     More advanced TODO
 
 Player eliminated logic
@@ -93,6 +97,9 @@ Ability ranges implementation requries check for if ability.withinRange
 
 Level 5 unit upgrades?
 
+Attack priority
+    Type effective?
+
 Add next round opponent
     pvp, gym battle, npc
     Add/Find images for gym leaders
@@ -100,6 +107,9 @@ Add next round opponent
 Mana per hit -> mana per damage
 
 ## Frontend
+
+Restart reset more variables
+    SoundEffect unitSound chat reset
 
 Crash: 
     Geodude game@1162 . typesJS.getBuffFuncAll(...) is not a function
@@ -109,15 +119,13 @@ Crash:
     Weird bug, battle crash, pos undefined <- IMPORTANT TO FIX
         Board is undefined for that battle, or something
         Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
+    Psychic Debuff enemy units crash
+        Only for 2 units? Kadabra Kadabra slowbro
 
 mainMenu
-    Add Pokemon Image over gif - Pokemon Logo
-    Auto chess Logo over gif
     Add more functionality, not important tho
 
 BattleResults in chat
-
-Npc wave: koffing, ekans
 
 Add icons for types, to be used for buffs
     Can be inspired from card icons if none are found
@@ -148,6 +156,7 @@ Css:
     Nidoran display name new line in button
     Eevee evolutions stats screen
     Mark default radio button in bottom right as Chat (Make selected)
+    Auto scroll down chat
 
 ActionMessage:
     Position on top of unit

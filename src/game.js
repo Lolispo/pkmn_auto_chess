@@ -1045,7 +1045,7 @@ async function startBattle(boardParam) {
         battleOver = battleOver || await isBattleOver(board, 1 - team);
         // Delete every key mapping to nextMoveResult
         // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
-        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, target);
+        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
       }
       // console.log('@dotDamage', dotDamage);
       f.printBoard(board, move);
@@ -1226,7 +1226,7 @@ async function markBoardBonuses(board) {
       const buff = tempEnemy.value;
       const bonusValue = typeBuffMapAll.get(String(enemyTeam)).get(buff);
       const buffText = `${buff} -${bonusValue}`;
-      const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), bonusValue)
+      const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), bonusValue) // Crash here
         .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
       newBoard = await newBoard.set(unitPos, newUnit);
       tempEnemy = enemyDebuffIter.next();
