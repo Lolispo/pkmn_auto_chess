@@ -11,7 +11,9 @@ import lockedLock from './assets/lockedLock.png';
 import openLock from './assets/openLock.png';
 import goldCoin from './assets/goldCoin.png';
 import refreshShopImage from './assets/refreshShop.png';
-import { getAudio, getBackgroundAudio, getSoundEffect } from './audio.js';
+import pokemonLogo from './assets/pokemonLogo.png';
+import autoChess from './assets/AutoChess.png';
+import { getAudio, getSoundEffect } from './audio.js';
 
 class PokemonImage extends Component{
 
@@ -890,7 +892,11 @@ class App extends Component {
 
   render() {
     const mainMenu = <div>
-      <div className='titleCard text_shadow'>Pokemon Auto Chess</div>
+      <div className='logos'>
+        <img src={pokemonLogo} alt='pokemonLogo'/>
+        <img src={autoChess} alt='autoChessLogo'/>
+      </div>
+      {/*<div className='titleCard text_shadow'>Pokemon Auto Chess</div>*/}
       <div className='startButtons'>
         <div className='flex'> 
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
@@ -911,7 +917,7 @@ class App extends Component {
           <div className='marginTop5 biggerText'>
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
-          <img className='goldImage' src={goldCoin} alt='goldCoin'></img>
+          <img className='goldImage' src={goldCoin} alt='goldCoin'/>
         </div>
         {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
           {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
@@ -937,7 +943,7 @@ class App extends Component {
           <button className='normalButton marginTop5' onClick={this.buyExp}>Buy Exp</button>
           <div className='flex marginTop5'>
             <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
-            <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
+            <img className='goldImageSmall' src={goldCoin} alt='goldCoin'/>
           </div>
         </div>
         <div>
@@ -1008,7 +1014,7 @@ class App extends Component {
                     </div>
                     <div className='flex'>
                       <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
-                      <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
+                      <img className='goldImageSmall' src={goldCoin} alt='goldCoin'/>
                     </div>
                   </div>
                   <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>

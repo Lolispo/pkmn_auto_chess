@@ -16,12 +16,9 @@ body {
   background: url(./assets/pikachuBackground.gif) no-repeat;
 }
 
-.titleCard {
-  padding-top: 50px;
-  padding-left: 400px;
-  font-size: 30px;
-  font-weight: bold;
-  padding-bottom: 30px;
+.logos {
+  display: grid; 
+  padding-left: 150px;
 }
 
 .startButtons {

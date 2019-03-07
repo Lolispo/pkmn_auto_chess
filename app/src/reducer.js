@@ -1,6 +1,6 @@
 // Author: Petter Andersson
 
-import { getBackgroundAudio, getSoundEffect } from './audio.js';
+import { getBackgroundAudio } from './audio.js';
 
 const reducer = (
   state = {

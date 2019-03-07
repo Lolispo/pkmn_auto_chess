@@ -97,6 +97,8 @@ Add next round opponent
     pvp, gym battle, npc
     Add/Find images for gym leaders
 
+Mana per hit -> mana per damage
+
 ## Frontend
 
 Crash: 
@@ -109,6 +111,8 @@ Crash:
         Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
 
 mainMenu
+    Add Pokemon Image over gif - Pokemon Logo
+    Auto chess Logo over gif
     Add more functionality, not important tho
 
 BattleResults in chat
