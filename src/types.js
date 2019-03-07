@@ -441,7 +441,7 @@ exports.getTypeFactor = async (attackType, typesDefender) => {
 };
 
 const getStringFromList = list => {
-  console.log('@getStringFromList', list)
+  // console.log('@getStringFromList', list)
   if(!list.size){
     return list;
   }

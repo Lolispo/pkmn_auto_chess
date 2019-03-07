@@ -268,9 +268,9 @@ class Cell extends Component {
           <div className={`hpBar text_shadow ${(this.props.isBoard ? (pokemon.team === 0 ? 'friendlyBar' : 'enemyBar') : '')}`} 
           style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
           </div> : '')
-        /*const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
-          <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
-          </div> : '')*/
+        const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
+          <div className='manaBar text_shadow' style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+          </div> : '')
         const actionMessage = (pokemon && pokemon.actionMessage && pokemon.actionMessage !== '' ? 
           <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
             {pokemon.actionMessage}
@@ -283,7 +283,7 @@ class Cell extends Component {
           return <div style={{position: 'relative'}}>
             <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList}/>
             {hpBar}
-            {/*manaBar*/}
+            {manaBar}
             {actionMessage}
           </div>
         }
@@ -582,7 +582,7 @@ class App extends Component {
     });
   }
 
-  damageUnit = async (newBoard, target, value, unitPos, direction, actionMessageTarget, actionMessageAttacker) => {
+  damageUnit = async (newBoard, target, value, unitPos, direction, actionMessageTarget, manaChanges, actionMessageAttacker) => {
     if(isUndefined(newBoard[target])){
       console.log('Time to crash: ', newBoard, target, value);
     }
@@ -591,6 +591,13 @@ class App extends Component {
     console.log('direction: ' + direction)
     if(direction !== '') {
       newBoard[unitPos].attackAnimation = 'animate' + direction; 
+    }
+    if(manaChanges && Object.keys(manaChanges).length){
+      Object.keys(manaChanges).forEach(e => {
+        const unitPosManaChange = newBoard[e];
+        const newMana = manaChanges[e];
+        unitPosManaChange.mana = newMana;
+      });
     }
     const newHp = newBoard[target].hp - value;
     if(newHp <= 0){
@@ -614,7 +621,8 @@ class App extends Component {
     const value = nextMove.value;
     const unitPos = nextMove.unitPos;
     const typeEffective = nextMove.typeEffective;
-    const direction = nextMove.direction
+    const direction = nextMove.direction;
+    const manaChanges = nextMove.manaChanges;
     const unit = newBoard[unitPos];  // Save unit from prev pos
     switch(action) {
       case 'move':
@@ -625,14 +633,14 @@ class App extends Component {
         return newBoard;
       case 'attack':
         // TODO: Animate attack on unitPos
-        console.log('Attack from', unitPos, 'with', value, 'damage');
+        console.log('Attack from', unitPos, 'to', target, 'with', value, 'damage');
         let actionMessage = '';
         if(typeEffective !== '') { // Either '' or Message
           actionMessage = '- ' + value + '! ' + typeEffective;
         } else {
           actionMessage = '- ' + value;
         }
-        return this.damageUnit(newBoard, target, value, unitPos, direction, actionMessage);
+        return this.damageUnit(newBoard, target, value, unitPos, direction, actionMessage, manaChanges);
       case 'spell':
         // TODO: Animations
         // TODO: Check spell effects
@@ -646,9 +654,9 @@ class App extends Component {
           actionMessageTarget = '- ' + value;
         }
         let newHpSpell = newBoard[target].hp - value;
-        console.log('Spell (' + abilityName + ') from', unitPos, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
+        console.log('Spell (' + abilityName + ') from', unitPos, 'to', target, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         if(effect && Object.keys(effect).length){
-          console.log('SPELL EFFECT Not Empty: ', effect);
+          console.log('SPELL EFFECT: ', effect);
           Object.keys(effect).forEach(e => {
             const unitPosEffect = newBoard[e];
             const effectToApplyOnUnit = effect[e];

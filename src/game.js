@@ -612,15 +612,28 @@ async function removeHpBattle(board, unitPos, hpToRemove, percent = false) {
  * TODO: Maybe, Load from defaults here, so mana stats don't have to be stored in vain
  */
 async function manaIncrease(board, unitPos, enemyPos) {
+  let manaChanges = Map({});
   const unitMana = board.get(unitPos).get('mana');
   const unitManaInc = board.get(unitPos).get('mana_hit_given');
-  const newBoard = board.setIn([unitPos, 'mana'], +unitMana + +unitManaInc);
+  manaChanges = manaChanges.set(unitPos, +unitMana + +unitManaInc);
   if (!f.isUndefined(enemyPos)) {
     const enemyMana = board.get(enemyPos).get('mana');
     const enemyManaInc = board.get(enemyPos).get('mana_hit_taken');
-    return newBoard.setIn([enemyPos, 'mana'], +enemyMana + +enemyManaInc);
+    return manaChanges.set(enemyPos, +enemyMana + +enemyManaInc);
   }
-  return newBoard;
+  return manaChanges;
+}
+
+async function manaChangeBoard(boardParam, manaChanges){
+  let board = boardParam;
+  const iter = manaChanges.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const pid = temp.value;
+    board = board.setIn([pid, 'mana'], manaChanges.get(pid));
+    temp = iter.next();
+  }
+  return board;
 }
 
 /**
@@ -859,16 +872,20 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     let battleOver = false;
     let allowSameMove = false;
     let newBoardMana;
+    let manaChanges;
     if (removedHPBoard.get('unitDied')) { // Check if battle ends
       battleOver = await isBattleOver(newBoard, team);
-      newBoardMana = await manaIncrease(newBoard, unitPos); // target = dead
+      manaChanges = await manaIncrease(newBoard, unitPos); // target = dead
+      newBoardMana = await manaChangeBoard(newBoard, manaChanges);
     } else { // Mana increase, return newBoard
       allowSameMove = true;
-      newBoardMana = await manaIncrease(newBoard, unitPos, target);
+      manaChanges = await manaIncrease(newBoard, unitPos, target);
+      newBoardMana = await manaChangeBoard(newBoard, manaChanges);
     }
     const move = Map({
       unitPos, action, value, target, 
       typeEffective: gameConstantsJS.getTypeEffectString(typeFactor), direction: enemyPos.get('direction'),
+      manaChanges,
     });
     return Map({
       nextMove: move,

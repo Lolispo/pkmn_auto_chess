@@ -417,9 +417,9 @@ body {
   background-color: blue;
   text-align: center;
   border: 1px solid black;
-  padding-top: 15px;
   position: absolute; 
-  margin-top: 5px;
+  margin-top: 83px;
+  font-size: 12px;
 }
 
 .levelDiv {
