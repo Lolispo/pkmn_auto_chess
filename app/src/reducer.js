@@ -59,6 +59,7 @@ const reducer = (
         exp: action.newState.players[state.index].exp,
         expToReach: action.newState.players[state.index].expToReach,
         gold: action.newState.players[state.index].gold,
+        ready: false,
       };
       console.log(action.newState)
       console.log(state);
@@ -103,7 +104,7 @@ const reducer = (
       break;
     case 'ALL_READY':
       console.log('AllReady', action.playersReady, action.connectedPlayers, action.value)
-      state = { ...state, playersReady: action.playersReady, connectedPlayers: action.connectedPlayers, allReady: action.value}
+      state = { ...state, playersReady: action.playersReady, connectedPlayers: action.connectedPlayers, allReady: action.value, gameIsLive: false}
       break;
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message}

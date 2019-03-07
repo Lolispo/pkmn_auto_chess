@@ -109,8 +109,7 @@ Crash:
         Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
 
 mainMenu
-    !gameIsLive -> Render ready and startButton
-        More alternatives
+    Fix background on whole body / root (currently for mainMenu element)
 
 BattleResults in chat
 
@@ -254,9 +253,7 @@ Credits somewhere in frontend (P and R.Music)
 
 ## Communication
 
-If reconnected to server, update look to start layout
-    set !gameIsLive on connect, and make a lot of game factors depend on that var
-    If server disconnected mid game, make the user go back to main menu if game was cancelled
+Auto Ready options
 
 Sessions: 
     Room join /url

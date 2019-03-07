@@ -894,8 +894,18 @@ class App extends Component {
   }
 
   render() {
-    return <div>
-      <div className='centerWith50 flex' style={{width: '80%'}}>
+    const mainMenu = <div className='centerWith50'>
+      <h1 className='titleCard'>Pokemon Auto Chess</h1>
+      <div></div>
+      <div className='flex'> 
+        <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
+        onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
+        <button className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
+          StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
+        </button>
+      </div>
+    </div>
+    const topBar = <div className='centerWith50 flex' style={{width: '80%'}}>
         <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
           {'Round: ' + this.props.round}
         </div>
@@ -909,152 +919,133 @@ class App extends Component {
         {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
           {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
         </div> : '')}
+      </div>;
+    const leftSideBar = <div style={{width: '165px'}}>
+        <div className='flex'>
+          <div className='marginTop5 biggerText text_shadow paddingLeft5' style={{marginTop: '15px'}}>
+            {'Player ' + this.props.index}
+          </div>
+        </div>
+        <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
+          <CSSTransitionGroup
+            transitionName="messageUpdate"
+            transitionEnterTimeout={500}
+            transitionLeave={false}>
+            <div>
+              {'Message: ' + this.props.message}
+            </div>
+          </CSSTransitionGroup>
+        </div>
+        <div className = 'centerWith50'>
+          <button className='normalButton marginTop5' onClick={this.buyExp}>Buy Exp</button>
+          <div className='flex marginTop5'>
+            <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
+            <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
+          </div>
+        </div>
+        <div>
+          {this.selectedUnitInformation()}
+          {this.unitSound()}
+          {this.soundEffect()}
+        </div>
+        <div className='centerWith50 marginTop5'>
+          <button className={`normalButton ${(!this.props.musicEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
+            {(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}
+          </button>
+          <button className={`normalButton marginTop5 ${(!this.props.soundEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
+            {(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}
+          </button>
+          {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')}
+        </div>
+        <div className='paddingLeft5'>
+          Volume: 
+          <input
+            type="range"
+            className="volume-bar"
+            value={this.props.volume * 100}
+            min="0"
+            max="100"
+            step="0.01"
+            onChange={this.handleVolumeChange}
+            />
+        </div>
+        <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
+        {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
       </div>
-      <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
-        <div style={{width: '165px'}}>
-          <div className='flex'> 
-            <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')} 
-            ${(this.props.level !== -1 ? ' hidden': '')}`} onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-            <button className={`normalButton ${(this.props.level !== -1 ? ' hidden': '')} 
-            ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
-              StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
-            </button>
+    const boardDiv = <div>
+        <div>
+          <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
+        </div>
+        <div className='levelDiv'>
+          <div className='levelBar overlap' style={{width: (this.props.expToReach !== 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
+          <div className='biggerText centerWith50 overlap levelText'>
+            <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
+            {/*<span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>*/}
           </div>
-          <div className='flex'>
-            <div className='marginTop5 biggerText text_shadow paddingLeft5' style={{marginTop: '15px'}}>
-              {'Player ' + this.props.index}
-            </div>
+          <div className='overlap text_shadow marginTop5 paddingLeft5 levelTextExp'>
+            {'Exp: ' + this.props.exp + '/' + this.props.expToReach}
           </div>
-          <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
-            <CSSTransitionGroup
-              transitionName="messageUpdate"
-              transitionEnterTimeout={500}
-              transitionLeave={false}>
-              <div>
-                {'Message: ' + this.props.message}
-              </div>
-            </CSSTransitionGroup>
-          </div>
-          <div className = 'centerWith50'>
-            <button className='normalButton marginTop5' onClick={this.buyExp}>Buy Exp</button>
-            <div className='flex marginTop5'>
-              <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
-              <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
-            </div>
-          </div>
-          <div>
-            {this.selectedUnitInformation()}
-            {this.unitSound()}
-            {this.soundEffect()}
-          </div>
-          <div className='centerWith50 marginTop5'>
-            <button className={`normalButton ${(!this.props.musicEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
-              {(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}
-            </button>
-            <button className={`normalButton marginTop5 ${(!this.props.soundEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
-              {(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}
-            </button>
-            {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')}
-          </div>
+          {/*<div className='paddingLeft5 center'>_____________________________________________________________________________</div>*/}
+        </div>
+        <div className='flex center'>
+          <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
+        </div>
+      </div>;
+    const rightSide = <div>
+        <div className='flex'>
           <div className='paddingLeft5'>
-            Volume: 
-            <input
-              type="range"
-              className="volume-bar"
-              value={this.props.volume * 100}
-              min="0"
-              max="100"
-              step="0.01"
-              onChange={this.handleVolumeChange}
-              />
-          </div>
-          <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
-          {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
-        </div>
-        <div>
-          <div>
-            <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
-          </div>
-          <div className='levelDiv'>
-            <div className='levelBar overlap' style={{width: (this.props.expToReach !== 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
-            <div className='biggerText centerWith50 overlap levelText'>
-              <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
-              {/*<span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>*/}
-            </div>
-            <div className='overlap text_shadow marginTop5 paddingLeft5 levelTextExp'>
-              {'Exp: ' + this.props.exp + '/' + this.props.expToReach}
-            </div>
-            {/*<div className='paddingLeft5 center'>_____________________________________________________________________________</div>*/}
-          </div>
-          <div className='flex center'>
-            <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
-          </div>
-        </div>
-        <div>
-          <div className='flex'>
-            <div className='paddingLeft5'>
+            <div>
               <div>
-                <div>
-                  <div className='flex'>
-                    <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
-                    <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
-                    <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
-                  </div>
-                  <div className='flex'>
-                    <div className='' style={{paddingTop: '60px', paddingLeft: '24px'}}>
-                      <div>
-                        <img className='lockImage' onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
-                      </div>
-                      <div style={{paddingTop: '10px'}}>
-                        <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>
-                      </div>
-                      <div className='flex'>
-                        <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
-                        <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
-                      </div>
+                <div className='flex'>
+                  <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
+                  <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
+                  <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
+                </div>
+                <div className='flex'>
+                  <div className='' style={{paddingTop: '60px', paddingLeft: '24px'}}>
+                    <div>
+                      <img className='lockImage' onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
                     </div>
-                    <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
-                    <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
+                    <div style={{paddingTop: '10px'}}>
+                      <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>
+                    </div>
+                    <div className='flex'>
+                      <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
+                      <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
+                    </div>
                   </div>
+                  <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
+                  <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
                 </div>
               </div>
             </div>
-            <div>
-              {this.playerStatsDiv()}
-            </div>
           </div>
-          <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
-            <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
+          <div>
+            {this.playerStatsDiv()}
           </div>
-          <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
-            <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>{(this.props.help ? 'Hide Help' : 'Show Help')}</button>
-            {(this.props.help ? <div className='text_shadow marginTop5'>
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'chat'})}/>Chat 
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'hotkeys'})}/>Hotkeys 
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'types'})}/>Types
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
-          </div>
-          {(this.props.help ? this.buildHelp() : '')}
         </div>
+        <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
+          <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
+        </div>
+        <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
+          <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>{(this.props.help ? 'Hide Help' : 'Show Help')}</button>
+          {(this.props.help ? <div className='text_shadow marginTop5'>
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'chat'})}/>Chat 
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'hotkeys'})}/>Hotkeys 
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'types'})}/>Types
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
+        </div>
+        {(this.props.help ? this.buildHelp() : '')}
+      </div>;
+    return (this.props.gameIsLive ? <div>
+      {topBar}
+      <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
+        {leftSideBar}
+        {boardDiv}
+        {rightSide}
       </div>
       <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent(this) : () => '')}/>
-      {/*
-      <p>battleStartBoard:{JSON.stringify(this.props.battleStartBoard, null, 2)}</p>
-      <div>{'Board: ' + JSON.stringify(this.props.myBoard, null, 2)}</div>
-      <div>{'Hand: ' + JSON.stringify(this.props.myHand, null, 2)}</div>
-      <p>Index:{JSON.stringify(this.props.index, null, 2)}</p>
-      <p>players:{JSON.stringify(this.props.players, null, 2)}</p>
-      <p>player:{JSON.stringify(this.props.player, null, 2)}</p>
-      <p>myShop:{JSON.stringify(this.props.myShop, null, 2)}</p>
-      <p>myHand:{JSON.stringify(this.props.myHand, null, 2)}</p>
-      <p>myBoard:{JSON.stringify(this.props.myBoard, null, 2)}</p>
-      <p>lock:{JSON.stringify(this.props.lock, null, 2)}</p>
-      <p>level:{JSON.stringify(this.props.level, null, 2)}</p>
-      <p>exp:{JSON.stringify(this.props.exp, null, 2)}</p>
-      <p>gold:{JSON.stringify(this.props.gold, null, 2)}</p>
-      <p>State:{JSON.stringify(this.props.storedState, null, 2)}</p>
-      */}
-    </div>;
+    </div> : <div className='mainMenu'>{mainMenu}</div>);
   }
 }
 
