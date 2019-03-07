@@ -5,6 +5,7 @@ import { getBackgroundAudio } from './audio.js';
 const reducer = (
   state = {
     gameIsLive: false,
+    connected: false,
     index: -1,
     ready: false,
     playersReady: -1,
@@ -98,6 +99,9 @@ const reducer = (
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);
       state = { ...state, index: action.index, gameIsLive: true}
+      break;
+    case 'SET_CONNECTED':
+      state = {...state, connected: action.connected};
       break;
     case 'TOGGLE_READY':
       state = { ...state, ready: !state.ready}

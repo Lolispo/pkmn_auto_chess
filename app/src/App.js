@@ -902,7 +902,7 @@ class App extends Component {
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
-            StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
+            StartGame{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
           </button>
         </div>
       </div>
@@ -1054,6 +1054,7 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   gameIsLive: state.gameIsLive, 
+  connected: state.connected,
   index: state.index,
   ready: state.ready,
   playersReady: state.playersReady,

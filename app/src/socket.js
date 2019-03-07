@@ -14,7 +14,13 @@ const configureSocket = dispatch => {
   // make sure our socket is connected to the port
   socket.on('connect', () => {
     console.log('connected');
+    dispatch({type: 'SET_CONNECTED', connected: true})
     giveId();
+  });
+
+  socket.on('disconnect', () => {
+    dispatch({type: 'SET_CONNECTED', connected: false})
+    console.log('disconnected');
   });
 
   // the socket.on method is like an event listener
