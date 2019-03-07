@@ -523,6 +523,22 @@ function getMovePos(board, closestEnemyPos, range, team) {
   return undefined;
 }
 
+function getStepMovePos(board, unitPos, closestEnemyPos, range, team) {
+  const x = f.x(closestEnemyPos);
+  const y = f.y(closestEnemyPos);
+  const ux = f.x(unitPos);
+  const uy = f.y(unitPos);
+  const stepsToTake = Math.random() * 3 + 1; // 1 - 3
+  const rangeToTarget = Math.floor(Math.sqrt((uy - y)**2 + (ux - x)**2));
+  if(stepsToTake > rangeToTarget){ // Within range, move to closest available space
+    return getMovePos(board,  closestEnemyPos, range, team);
+  } else{ // More TOWARDS unit with stepsToTake amount of steps
+    for (let i = stepsToTake; i > 0; i--) {
+      // TODO: Check for available spots at stepsToTake away from unitPos towards closestEnemyPos
+    }
+    return unitPos;
+  }
+}
 
 /**
  * return closest enemy and marks if within range or not

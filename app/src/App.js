@@ -799,7 +799,7 @@ class App extends Component {
     }
     const ref = React.createRef();
     return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = this.props.volume} loop autoPlay/>
-    return <Audio loopEnabled={true} source={source} newProps={this.props}/>
+    // return <Audio loopEnabled={true} source={source} newProps={this.props}/>
   }
 
   handleVolumeChange = (e) => {
@@ -811,13 +811,13 @@ class App extends Component {
   unitSound = () => {
     let ref = React.createRef();
     return (this.props.soundEnabled ? <audio ref={ref} src={this.props.selectedSound} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
-    return <Audio loopEnabled={false} source={this.props.selectedSound} newProps={this.props}/>
+    // return <Audio loopEnabled={false} source={this.props.selectedSound} newProps={this.props}/>
   }
 
   soundEffect = () => {
     let ref = React.createRef();
     return (this.props.soundEnabled ? <audio ref={ref} src={this.props.soundEffect} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
-    return <Audio loopEnabled={false} source={this.props.soundEffect} newProps={this.props}/>
+    // return <Audio loopEnabled={false} source={this.props.soundEffect} newProps={this.props}/>
   }
 
   handleChatSubmit = (event) => {
