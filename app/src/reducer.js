@@ -63,10 +63,11 @@ const reducer = (
         exp: action.newState.players[state.index].exp,
         expToReach: action.newState.players[state.index].expToReach,
         gold: action.newState.players[state.index].gold,
+        round: action.newState.round,
         ready: false,
       };
-      console.log(action.newState)
-      console.log(state);
+      console.log('New State', action.newState)
+      // console.log(state);
 
       break;
     case 'NEW_PIECES':

@@ -793,6 +793,7 @@ async function deleteNextMoveResultEntries(unitMoveMapParam, targetToRemove) {
   let unitMoveMap = unitMoveMapParam;
   const keysIter = unitMoveMap.keys();
   let tempUnit = keysIter.next();
+  // console.log('@deleteNextMoveResultEntries', unitMoveMap, targetToRemove);
   while (!tempUnit.done) {
     const tempPrevMove = unitMoveMap.get(tempUnit.value);
     const target = tempPrevMove.get('nextMove').get('target');
@@ -1011,10 +1012,18 @@ async function startBattle(boardParam) {
       const nextMoveAction = nextMoveResult.get('nextMove').get('action');
       if (nextMoveAction === 'attack' || nextMoveAction === 'spell') { // Unit attacked died
         // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
+        if(f.isUndefined(nextMoveResult.get('nextMove').get('target'))){
+          console.log('@nextMove attack/spell delete undefined', nextMoveResult.get('nextMove').get('target'), nextMoveBoard, nextUnitToMove);
+        }
         unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove').get('target'));
       } else if (nextMoveAction === 'move') { // Unit moved, remove units that used to attack him
         // console.log('Deleting all keys connected to this: ', nextUnitToMove)
+        if(f.isUndefined(nextUnitToMove)){
+          console.log('@nextMove move delete undefined', nextUnitToMove, board);
+        }
         unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
+      } else {
+        console.log('@nextMove, CHECK shouldnt get here', nextMoveAction);
       }
     }
     board = result.get('newBoard');
@@ -1036,7 +1045,7 @@ async function startBattle(boardParam) {
         battleOver = battleOver || await isBattleOver(board, 1 - team);
         // Delete every key mapping to nextMoveResult
         // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
-        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, move);
+        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, target);
       }
       // console.log('@dotDamage', dotDamage);
       f.printBoard(board, move);

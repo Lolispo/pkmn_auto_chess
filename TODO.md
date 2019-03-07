@@ -142,6 +142,7 @@ Help Messages
     Font color / text shadow feels weird overall here
 
 Css:
+    Bonus hp as shield bar (Original hp + bonus)
     Prettier Volume slider
     WinningAnimation: Check me
     Nidoran display name new line in button
@@ -154,6 +155,7 @@ ActionMessage:
 Animations: 
     Units turn small
     Death Animations
+        Flip 90 degrees and then fade
     Animation on actionMessage (Damage and effective)
         Fadeout and move down
     Level up animation -> too full bar and down to zero (or xp over 0)

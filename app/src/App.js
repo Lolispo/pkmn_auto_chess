@@ -267,15 +267,15 @@ class Cell extends Component {
       // console.log('@getValue', this.props.isBoard && this.props.newProps.onGoingBattle)
       if(this.props.isBoard && this.props.newProps.onGoingBattle && this.props.newProps.battleStartBoard){ // Battle
         // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
-        pokemon = this.props.newProps.battleStartBoard[this.state.pos]
+        pokemon = this.props.newProps.battleStartBoard[this.state.pos];
         const hpBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className={`hpBar text_shadow ${(this.props.isBoard ? (pokemon.team === 0 ? 'friendlyBar' : 'enemyBar') : '')}`} 
           style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
-          </div> : '')
+          </div> : '');
         const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
-          ${(pokemon.mana > pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
-          </div> : '')
+          ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+          </div> : '');
         const actionMessage = (pokemon && pokemon.actionMessage && pokemon.actionMessage !== '' ? 
           <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
             {pokemon.actionMessage}
