@@ -17,6 +17,7 @@ body {
 }
 
 .logos {
+  padding-top: 50px;
   display: grid; 
   padding-left: 150px;
 }
