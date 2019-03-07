@@ -4,7 +4,7 @@ body {
   margin: 0px; /*20px*/
   padding: 0px;
   font-family: sans-serif;
-  background: black;
+  background: rgb(33, 33, 33);
   /*background: lightblue;*/
   /*background-image: url(https://i.imgur.com/VOPXdoh.jpg) no-repeat;*/
 }
@@ -141,7 +141,8 @@ body {
 }
 
 .cell {
-  border: 1px solid lightblue;
+  /*border: 1px solid lightblue;*/
+  border: 1px solid rgb(33, 33, 33);
   border-radius: 8px;
   width: 85px; 
   height: 85px;
@@ -224,6 +225,11 @@ body {
 	text-decoration:none;
   text-shadow:0px 1px 0px #528ecc;
   height: 45px;
+  text-shadow:
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px 1px 0 #000,
+  1px 1px 0 #000;
 }
 
 .normalButton:hover {

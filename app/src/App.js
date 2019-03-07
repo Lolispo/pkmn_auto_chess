@@ -271,7 +271,8 @@ class Cell extends Component {
           style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
           </div> : '')
         const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
-          <div className={`manaBar text_shadow ${(pokemon.mana > pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+          <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
+          ${(pokemon.mana > pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
           </div> : '')
         const actionMessage = (pokemon && pokemon.actionMessage && pokemon.actionMessage !== '' ? 
           <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
@@ -973,7 +974,7 @@ class App extends Component {
           <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
         </div>
         <div className='levelDiv'>
-          <div className='levelBar overlap' style={{width: (this.props.expToReach !== 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
+          <div className={`levelBar overlap ${(this.props.exp === 0 ? 'hidden' : '')}`} style={{width: (this.props.expToReach !== 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
           <div className='biggerText centerWith50 overlap levelText'>
             <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
             {/*<span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>*/}

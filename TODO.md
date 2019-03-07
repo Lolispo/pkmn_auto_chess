@@ -138,9 +138,8 @@ Help Messages
     Font color / text shadow feels weird overall here
 
 Css:
-    Bars invisible if width = 0%, manaBar and ExpBar
-    WinningAnimation:    Only one rattata at level 2 is cheering
-        Check if only applied to one
+    Prettier Volume slider
+    WinningAnimation: Check me
     Nidoran display name new line in button
     Eevee evolutions stats screen
     Mark default radio button in bottom right as Chat (Make selected)
@@ -153,10 +152,9 @@ Animations:
     Death Animations
     Animation on actionMessage (Damage and effective)
         Fadeout and move down
-    Animation on pokemonImg
-        Move in direction of attack and then move back (start of animation slow)
     Level up animation -> too full bar and down to zero (or xp over 0)
     Hp bar changes animation
+    growAnimation looks bad on firefox, instant instead of in stages
 
 Code: Event code only in one place
     placepieceevent in 2 spots currently
@@ -236,6 +234,7 @@ Sound:
             Either throuhg re-rendering or playing
     New Music/Sounds:
         Music before any game starts
+        Battle Music same style as idle music?
         More sounds:
             Sell unit sound *clir
             Battle end sound 
@@ -272,6 +271,8 @@ Test dot damage functionality
 Test lifesteal functionality
 
 ## Code / Javascript Check me
+
+Firefox Check
 
 Load / Set time factor better
 
