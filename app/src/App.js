@@ -119,7 +119,7 @@ class Pokemon extends Component{
                   <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
                 </div>
                 : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
-              {'$' + this.props.shopPokemon.cost}
+              {<span className={(this.props.newProps.gold < this.props.shopPokemon.cost ? 'redFont' : '')}>{'$' + this.props.shopPokemon.cost}</span>}
             </div>
           </div>
     } else {
@@ -279,7 +279,7 @@ class Cell extends Component {
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           const classList = (pokemon.winningAnimation ? ' winningAnimation' : '') + (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '') + ' absolute';
-          console.log('@rendereding pokemonImage classList', classList)
+          // console.log('@rendereding pokemonImage classList', classList)
           return <div style={{position: 'relative'}}>
             <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList}/>
             {hpBar}
@@ -669,7 +669,7 @@ class App extends Component {
                   if(unitPosEffect === target){
                     newHpSpell += valueEffect;
                   } else {
-                    newBoard[unitPosEffect].hp = newBoard[unitPosEffect].hp + valueEffect;
+                    newBoard[e].hp = newBoard[e].hp + valueEffect;
                     actionMessageAttacker = actionMessageAttacker + '! Heal for ' + valueEffect;
                   }
                   break;
@@ -710,7 +710,9 @@ class App extends Component {
 
   removeClassAnimation = (nextMove, board) => {
     const unitPos = nextMove.unitPos;
-    board[unitPos].attackAnimation = '';
+    if(board[unitPos]){
+      board[unitPos].attackAnimation = '';
+    }
     return board;
   }
 
@@ -778,11 +780,7 @@ class App extends Component {
   getAmountOfUnitsOnBoard = () => {
     const unitsOnBoard = Object.keys(this.props.myBoard).length;
     const level = this.props.level;
-    let color;
-    if(unitsOnBoard > level) {
-      color = 'red'
-    }
-    const content = <span style={{color: color}}>{unitsOnBoard}</span>
+    const content = <span className={(unitsOnBoard > level ? 'redFont' : '')}>{unitsOnBoard}</span>
     return <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
       Pieces: {content} / {level}
     </div>
@@ -916,6 +914,10 @@ class App extends Component {
           </div>
           <div className = 'centerWith50'>
             <button className='normalButton marginTop5' onClick={this.buyExp}>Buy Exp</button>
+            <div className='flex marginTop5'>
+              <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
+              <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
+            </div>
           </div>
           <div>
             {this.selectedUnitInformation()}
@@ -923,10 +925,10 @@ class App extends Component {
             {this.soundEffect()}
           </div>
           <div className='centerWith50 marginTop5'>
-            <button className='normalButton' onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
+            <button className={`normalButton ${(!this.props.musicEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
               {(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}
             </button>
-            <button className='normalButton marginTop5' onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
+            <button className={`normalButton marginTop5 ${(!this.props.soundEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
               {(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}
             </button>
             {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')}
@@ -956,7 +958,7 @@ class App extends Component {
               <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
               {/*<span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>*/}
             </div>
-            <div className='overlap text_shadow marginTop5 paddingLeft5'>
+            <div className='overlap text_shadow marginTop5 paddingLeft5 levelTextExp'>
               {'Exp: ' + this.props.exp + '/' + this.props.expToReach}
             </div>
             {/*<div className='paddingLeft5 center'>_____________________________________________________________________________</div>*/}
@@ -984,7 +986,7 @@ class App extends Component {
                         <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>
                       </div>
                       <div className='flex'>
-                        <div className='text_shadow goldImageTextSmall'>2</div>
+                        <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
                         <img className='goldImageSmall' src={goldCoin} alt='goldCoin'></img>
                       </div>
                     </div>

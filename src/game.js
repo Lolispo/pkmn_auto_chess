@@ -348,6 +348,9 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
  * Place piece
  * Swap functionality by default, if something is there already
  * * Assumes that only half of the board is placed on
+ * TODO: Mark units to be sent back if too many
+ *       Do buff calculations and mark on board
+ *       Return if PieceUpgrade occured Map({state, upgradeOccured: true})
  */
 async function placePiece(stateParam, playerIndex, fromPosition, toPosition, shouldSwap = 'true') {
   let piece;
@@ -410,6 +413,7 @@ async function getFirstAvailableSpot(state, playerIndex) {
  */
 async function withdrawPiece(state, playerIndex, piecePosition) {
   const benchPosition = await getFirstAvailableSpot(state, playerIndex);
+  // TODO: Handle placePiece return upgradeOccured
   return placePiece(state, playerIndex, piecePosition, benchPosition, false);
 }
 
@@ -795,7 +799,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     // console.log('@nextmove - ability target: ', target, enemyPos)
     const typeFactor = await typesJS.getTypeFactor(ability.get('type'), board.get(target).get('type'));
     const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), typeFactor);
-    const abilityName = ability.get('name');
+    const abilityName = ability.get('displayName');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
     // console.log('@abilityResult', abilityResult)
     const removedHPBoard = abilityResult.get('board');
@@ -950,6 +954,9 @@ async function startBattle(boardParam) {
     const result = await nextMoveResult;
     battleOver = result.get('battleOver');
     const madeMove = result.get('nextMove').set('time', unit.get('next_move'));
+    if(f.isUndefined(result.get('newBoard'))){
+      console.log('@startBattle CHECK ME', madeMove, board)
+    }
     f.printBoard(result.get('newBoard'), madeMove);
 
     actionStack = actionStack.push(madeMove);
@@ -1260,19 +1267,19 @@ async function buildMatchups(players) {
   const keys = Object.keys(jsPlayers);
   const immutableKeys = fromJS(Object.keys(jsPlayers));
   let shuffledKeys = f.shuffleImmutable(immutableKeys);
-  console.log('@buildMatchups Keys', players, keys, shuffledKeys);
+  // console.log('@buildMatchups Keys', players, keys, shuffledKeys);
   for(let i = 0; i < keys.length; i++){
     const pid = keys[i];
-    console.log('@buildMatchups Key', i, pid)
+    // console.log('@buildMatchups Key', i, pid)
     for(let j = shuffledKeys.size - 1; j >= 0; j--){
       const innerPid = shuffledKeys.get(j);
-      console.log('@buildMatchups inner', j, innerPid)
+      // console.log('@buildMatchups inner', j, innerPid)
       if(innerPid !== pid){ // Make matchup
         matchups = matchups.set(pid, innerPid);
         shuffledKeys = shuffledKeys.delete(j);
         break;
       } else if(j === 0){ // Last index, last player is on itself alone
-        console.log('@buildMatchups last swap', j, innerPid, pid, shuffledKeys.get(innerPid))
+        // console.log('@buildMatchups last swap', j, innerPid, pid, shuffledKeys.get(innerPid))
         // Swap with first player that doesn't have last player as opponent
         for(let k = 0; k < keys.length - 1; k++){
           const currentKEnemy = matchups.get(keys[k]);
@@ -1285,7 +1292,7 @@ async function buildMatchups(players) {
       }
     }
   }
-  console.log('@buildMatchups', matchups);
+  // console.log('@buildMatchups', matchups);
   return matchups;
 }
 

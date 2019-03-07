@@ -45,6 +45,7 @@ PlacePieceEvent (All piece interactions):
             'expendableUnit': true
         In frontend: if (unit.expendableUnit) Color me
     Piece Upgrade occured
+        Current logic in: checkPieceUpgrade
         event NEW_CHAT_MESSAGE with unit upgraded for which player
         States returned where upgrade might have occured (PlacePiece) should 
             have a check for if it occured or not, and send message update if it did
@@ -99,25 +100,24 @@ Ability ranges implementation requries check for if ability.withinRange
 
 Level 5 unit upgrades?
 
+Add next round opponent
+    pvp, gym battle, npc
+    Add/Find images for gym leaders
+
 ## Frontend
 
 Crash: 
     Geodude game@1162 . typesJS.getBuffFuncAll(...) is not a function
         Problem due to Rock and Ground both having increaseDefense?
-    Heal effect crash: @635 App, Cannot read property hp of undefined
     Move type undefined after ember applied dot
         Check ember tests, dot for fire
-    Weird bug, battle crash, pos undefined
-        Board is undefined for that battle
+    Weird bug, battle crash, pos undefined <- IMPORTANT TO FIX
+        Board is undefined for that battle, or something
         Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
 
 BattleResults in chat
 
 Npc wave: koffing, ekans
-
-Add next round opponent
-    pvp, gym battle, npc
-    Add/Find images for gym leaders
 
 Add icons for types, to be used for buffs
     Can be inspired from card icons if none are found
@@ -142,16 +142,13 @@ Help Messages
     Font color / text shadow feels weird overall here
 
 Css:
-    Grey out / show isDisabled for clicking shopUnits / refreshShop/ buyExp when you don't have enough money
     Nidoran display name new line in button
-    Color of shop cost should be red when above money
-        Same for RefreshPieces gold number
 
 ActionMessage:
-    Put .actionMessage on receivers end instead, DamageTaken instead of given displayed
     Position on top of unit
 
 Animations: 
+    Units turn small
     Death Animations
     Animation on actionMessage (Damage and effective)
         Fadeout and move down
@@ -357,6 +354,8 @@ Sheets dps check for balance
 
 New abilities:
     Raticate hyper fang
+
+gym: brock ez
 
 ## New features to add (Not as core)
 

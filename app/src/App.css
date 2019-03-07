@@ -27,6 +27,10 @@
   background-size: 120px 180px;*/
 }
 
+.redFont {
+  color: red !important;
+}
+
 .pokemonShopHalf {
   margin-left: 21px;
 }
@@ -49,10 +53,12 @@
 }
 
 .actionMessage {
-  animation: fadeOutDown 1.5s ease-in-out 0s infinite;
+  animation: fadeOutDown 2s ease-in-out 0s infinite;
   margin-top: 25px;
   margin-left: 3px;
   font-size: 14px;
+  padding-left: 35px;
+  margin-top: 25px;
 }
 
 .paddingLeft5{
@@ -217,13 +223,15 @@ body {
 
 @keyframes fadeOutDown {
   from  {
+    margin: auto;
     opacity: 1;
     margin-top: 0px;
   }
   to    
   {
+    margin: auto;
     opacity: 0.01;
-    margin-top: 30px;
+    margin-top: 20px;
   }
 }
 
@@ -270,23 +278,23 @@ body {
 }
 
 @keyframes attackNE {
-  from  {margin-top: -40px; margin-left: 40px;}
-  to    {margin-top: 0px; margin-left: 0px;}
+  from  {margin-top: -40px; margin: auto; margin-left: 40px;}
+  to    {margin-top: 0px;  margin: auto; margin-left: 0px;}
 }
 
 @keyframes attackNW {
-  from  {margin-top: -40px; margin-left: -40px;}
-  to    {margin-top: 0px; margin-left: 0px;}
+  from  {margin-top: -40px; margin: auto; margin-left: -40px;}
+  to    {margin-top: 0px;  margin: auto; margin-left: 0px;}
 }
 
 @keyframes attackW {
-  from  {margin-left: -40px;}
-  to    {margin-left: 0px;}
+  from  {margin: auto; margin-left: -40px;}
+  to    {margin: auto; margin-left: 0px;}
 }
 
 @keyframes attackE {
-  from  {margin-left: 40px;}
-  to    {margin-left: 0px;}
+  from  {margin: auto; margin-left: 40px;}
+  to    {margin: auto; margin-left: 0px;}
 }
 
 @keyframes attackS {
@@ -295,13 +303,13 @@ body {
 }
 
 @keyframes attackSE {
-  from  {margin-top: 40px; margin-left: 40px;}
-  to    {margin-top: 0px; margin-left: 0px;}
+  from  {margin-top: 40px; margin: auto; margin-left: 40px;}
+  to    {margin-top: 0px;  margin: auto; margin-left: 0px;}
 }
 
 @keyframes attackSW {
-  from  {margin-top: 40px; margin-left: -40px;}
-  to    {margin-top: 0px; margin-left: 0px;}
+  from  {margin-top: 40px; margin: auto; margin-left: -40px;}
+  to    {margin-top: 0px; margin: auto; margin-left: 0px;}
 }
 
 .animateN {
@@ -413,6 +421,8 @@ body {
 .levelDiv {
   position: relative;
   height: 26px;
+  padding-top: 5px;
+  padding-bottom: 2px;
 }
 
 .levelBar {
@@ -423,10 +433,16 @@ body {
   left: 0px;
   border: 1px solid lightblue;
   border-radius: 10px;
+  padding-top: 5px;
 }
 
 .levelText {
   padding-left: 310px;
+  padding-top: 4px;
+}
+
+.levelTextExp {
+  padding-top: 4px;
 }
 
 .overlap {
