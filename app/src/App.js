@@ -233,7 +233,8 @@ class Cell extends Component {
       el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {isBoard: el.props.isBoard, pos: ''}});
     }
     if(unit){ // Pressed unit
-      console.log('Get Stats for ', unit.name)
+      console.log('Get Stats for', unit.name)
+      el.props.newProps.dispatch({ type: 'NEW_UNIT_SOUND', newAudio: ''});
       this.getStatsEvent(el.props.newProps, unit.name);
     } else if(prevSelectedUnit.pos && this.state.pos !== prevSelectedUnit.pos && prevSelectedUnit.unit){ // Pressed empty cell
       this.placePieceEvent(prevSelectedUnit.pos, this.state.pos);
@@ -797,18 +798,12 @@ class App extends Component {
   }
 
   playMusic = () => {
-    let source = '';
-    if(this.props.onGoingBattle){
-      if(this.props.enemyIndex) {
-        source = getBackgroundAudio('pvpbattle');
-      } else {
-        source = getBackgroundAudio('battle');
-      }
-    } else {
-      source = getBackgroundAudio('idle');
+    console.log('@playMusic', this.props.music);
+    const el = <audio ref='MusicEl' src={this.props.music} onLoadStart={() => this.refs.MusicEl.volume = this.props.volume} loop autoPlay/>;
+    if(this.refs.MusicEl){
+      this.refs.MusicEl.volume = this.props.volume;
     }
-    const ref = React.createRef();
-    return <audio ref={ref} src={source} onLoadStart={() => ref.current.volume = this.props.volume} loop autoPlay/>
+    return el;
     // return <Audio loopEnabled={true} source={source} newProps={this.props}/>
   }
 
@@ -844,7 +839,7 @@ class App extends Component {
   }
 
   buildHelp = () => {
-    let s = 'Information:\n';
+    let s = '';
     let s2 = 'Hotkeys:\n';
     s2 += 'Q: Place Unit\n';
     s2 += 'W: Withdraw Unit\n';
@@ -873,15 +868,14 @@ class App extends Component {
         break;
       case 'chat':
       default:
-          
           //s += this.props.chatMessage;
           for(let i = 0; i < this.props.chatMessages.length; i++){
-            messageCollection.push(<div key={i}><span className='text_shadow'>{this.props.senderMessages[i]}</span><span>{this.props.chatMessages[i]}</span></div>);
+            messageCollection.push(<div key={i}><span className='text_shadow bold'>{this.props.senderMessages[i]}</span><span>{this.props.chatMessages[i]}</span></div>);
           }
           chat = true;
         break;
     }
-    return (chat ? <div>{<div className='helpText'><span className='text_shadow'>Chat:</span><div>{messageCollection}</div>
+    return (chat ? <div>{<div className='helpText text_shadow'><span className='bold'>Chat:</span><div>{messageCollection}</div>
     <div style={{ float:"left", clear: "both" }}
       ref={(el) => { this.messagesEnd = el;}}>
     </div></div>}
@@ -889,8 +883,8 @@ class App extends Component {
       <label>
         <input className='textInput' type="text" value={this.state.chatMessageInput} onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
       </label>
-      <input type="submit" value="Submit" />
-    </form></div> : <div className='helpText'>{s}</div>);
+      <input className='text_shadow' type="submit" value="Submit" />
+    </form></div> : <div className='helpText text_shadow'><span className='bold'>{'Information:\n'}</span>{s}</div>);
   }
 
   render() {
@@ -900,8 +894,8 @@ class App extends Component {
         <div className='flex'> 
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-          <button className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
-            StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : '')}
+          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
+            StartGame{(this.props.playersReady !== -1 ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
           </button>
         </div>
       </div>
@@ -957,9 +951,9 @@ class App extends Component {
           <button className={`normalButton marginTop5 ${(!this.props.soundEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
             {(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}
           </button>
-          {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')}
+          {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')} 
         </div>
-        <div className='paddingLeft5'>
+        <div className='paddingLeft5 marginTop5 text_shadow'>
           Volume: 
           <input
             type="range"
@@ -971,7 +965,7 @@ class App extends Component {
             onChange={this.handleVolumeChange}
             />
         </div>
-        <div>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
+        <div className='text_shadow'>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
         {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
       </div>
     const boardDiv = <div>
@@ -1031,7 +1025,7 @@ class App extends Component {
         </div>
         <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
           <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>{(this.props.help ? 'Hide Help' : 'Show Help')}</button>
-          {(this.props.help ? <div className='text_shadow marginTop5'>
+          {(this.props.help ? <div className='text_shadow marginTop15'>
           <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'chat'})}/>Chat 
           <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'hotkeys'})}/>Hotkeys 
           <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'types'})}/>Types
@@ -1092,6 +1086,7 @@ const mapStateToProps = state => ({
   soundEnabled: state.soundEnabled,
   selectedSound: state.selectedSound,
   soundEffect: state.soundEffect,
+  music: state.music,
   volume: state.volume,
 });
 

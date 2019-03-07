@@ -138,6 +138,7 @@ Help Messages
     Font color / text shadow feels weird overall here
 
 Css:
+    Bars invisible if width = 0%, manaBar and ExpBar
     WinningAnimation:    Only one rattata at level 2 is cheering
         Check if only applied to one
     Nidoran display name new line in button
@@ -228,6 +229,8 @@ Help Message:
     Show type information temporarily
 
 Sound: 
+    On volume change: 
+        Use refs to change volumes for MusicEl, somehow
     Tech:
         Figure out how to play music in element many times
             Either throuhg re-rendering or playing

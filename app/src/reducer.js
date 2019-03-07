@@ -1,5 +1,7 @@
 // Author: Petter Andersson
 
+import { getBackgroundAudio, getSoundEffect } from './audio.js';
+
 const reducer = (
   state = {
     gameIsLive: false,
@@ -41,6 +43,7 @@ const reducer = (
     soundEnabled: true,
     selectedSound: '',
     soundEffect: '',
+    music: getBackgroundAudio('idle'),
     volume: 0.05,
   },
   action
@@ -129,6 +132,7 @@ const reducer = (
       const battleStartBoard = action.battleStartBoards[state.index];
       state = {
         ...state,
+        music: (action.enemy ? getBackgroundAudio('pvpbattle') : getBackgroundAudio('battle')),
         onGoingBattle: true,
         enemyIndex: action.enemy,
         actionStack,
@@ -149,15 +153,13 @@ const reducer = (
         // console.log('state', state);
         break;
     case 'SELECT_UNIT':
-      // TODO: Mark unit as selected Css
       state = {...state, selectedUnit: action.selectedUnit}
       break;
     case 'SET_MOUSEOVER_ID':
-      // console.log('@reducer.setMouseOverId', action.mouseOverId);
       state = {...state, mouseOverId: action.mouseOverId}
       break;
     case 'END_BATTLE':
-      state = {...state, onGoingBattle: false, round: state.round + 1}
+      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle')}
       break;
     case 'TOGGLE_MUSIC':
       state = {...state, musicEnabled: !state.musicEnabled}
@@ -167,9 +169,10 @@ const reducer = (
       break;
     case 'CHANGE_VOLUME':
       console.log('@reducer.ChangeVolume', action.newVolume)
-      state = {...state, volume: action.newVolume}
+      state = {...state, volume: action.newVolume, music: state.music}
       break;
     case 'NEW_UNIT_SOUND':
+      console.log('reducer.NewUnitSound', action.newAudio);
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'NEW_SOUND_EFFECT':
