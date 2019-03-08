@@ -5,6 +5,7 @@
 Mana: 15% of damage to mana or 10
     Math.min(0.15 * damage, 10);
     For both giving and receiving
+    Double amount for spellheavy units
 
 ## Backend
 
@@ -112,6 +113,8 @@ Add next round opponent
 Mana per hit -> mana per damage
 
 ## Frontend
+
+Rendering board more efficient, think immutable 
 
 confetti on win http://www.cagrimmett.com/til/2018/01/05/css-confetti.html
 

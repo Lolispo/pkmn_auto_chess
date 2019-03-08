@@ -140,7 +140,7 @@ const reducer = (
       console.log('Updating stats', action.name, action.stats)
       const statsMap = state.statsMap;
       statsMap[action.name] = action.stats;
-      state = {...state, name: action.name, stats: action.stats, statsMap: [...statsMap]}
+      state = {...state, name: action.name, stats: action.stats, statsMap: statsMap}
       break;
     case 'SET_TYPE_BONUSES':
       state = {...state, typeStatsString: action.typeDescs, typeBonusString: action.typeBonuses}

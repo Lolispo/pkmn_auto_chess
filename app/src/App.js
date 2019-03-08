@@ -712,7 +712,8 @@ class App extends Component {
         actionMessage = '- ' + value +' Dot!';
         return this.damageUnit(newBoard, target, value, unitPos, direction, actionMessage);
       default:
-        console.log('error action = ', action);
+        console.log('error action = ', action, nextMove);
+        return board;
     }
   }
 
@@ -836,7 +837,6 @@ class App extends Component {
 */
   soundEffects = () => {
     let audioObjects = [];
-    console.log('@SoundEffects');
     for(let i = 0; i < this.props.soundEffects.length; i++){
       const source = this.props.soundEffects[i];
       if(source === '')
