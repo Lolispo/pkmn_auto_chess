@@ -332,7 +332,7 @@ class Audio extends Component {
   }
 
   render() {
-    console.log('@Audio', this.state.source, this.state.props.soundEffect);
+    console.log('@Audio', this.state.source);
     const ref = React.createRef();
     if(this.state.loop){
       return <audio ref={ref} src={this.state.source} onLoadStart={() => ref.current.volume = this.state.volume} loop autoPlay/>
@@ -521,10 +521,7 @@ class App extends Component {
     if(validUnit && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
       sellPiece(prop.storedState, String(from));
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: ''});
-      setTimeout(() => {
-        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
-      }, 100);
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
     } else{
       updateMessage(prop, 'Invalid target to sell!', from);
     }
@@ -766,6 +763,7 @@ class App extends Component {
         // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
         if(winningTeam === 0) {
           dispatch({type: 'UPDATE_MESSAGE', message: 'You won!'}); 
+          dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
         } else {
           dispatch({type: 'UPDATE_MESSAGE', message: 'You lost!'}); 
         }
@@ -801,7 +799,7 @@ class App extends Component {
   }
 
   playMusic = () => {
-    console.log('@playMusic', this.props.music);
+    // console.log('@playMusic', this.props.music);
     const el = <audio ref='MusicEl' src={this.props.music} onLoadStart={() => this.refs.MusicEl.volume = this.props.volume} loop autoPlay/>;
     if(this.refs.MusicEl){
       this.refs.MusicEl.volume = this.props.volume;
@@ -821,10 +819,25 @@ class App extends Component {
     return (this.props.soundEnabled ? <audio ref={ref} src={this.props.selectedSound} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
     // return <Audio loopEnabled={false} source={this.props.selectedSound} newProps={this.props}/>
   }
-
+/*
   soundEffect = () => {
     let ref = React.createRef();
     return (this.props.soundEnabled ? <audio ref={ref} src={this.props.soundEffect} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/> : '')
+    // return <Audio loopEnabled={false} source={this.props.soundEffect} newProps={this.props}/>
+  }
+*/
+  soundEffects = () => {
+    let audioObjects = [];
+    for(let i = 0; i < this.props.soundEffects.length; i++){
+      const source = this.props.soundEffects[i];
+      if(source === '')
+        break;
+      let ref = React.createRef();
+      const audioEl = <audio ref={ref} key={'soundEffect' + i} src={source} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/>;
+      const chatSound = getSoundEffect('pling');
+      audioObjects.push((this.props.soundEnabled && source !== chatSound) || (source === chatSound && this.props.chatSoundEnabled) ? audioEl : '');
+    }
+    return audioObjects;
     // return <Audio loopEnabled={false} source={this.props.soundEffect} newProps={this.props}/>
   }
 
@@ -949,7 +962,7 @@ class App extends Component {
         <div>
           {this.selectedUnitInformation()}
           {this.unitSound()}
-          {this.soundEffect()}
+          {this.soundEffects()}
         </div>
         <div className='centerWith50 marginTop5'>
           <button className={`normalButton ${(!this.props.musicEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
@@ -1031,7 +1044,14 @@ class App extends Component {
           <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
         </div>
         <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
-          <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>{(this.props.help ? 'Hide Help' : 'Show Help')}</button>
+          <div className='flex'>
+            <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>
+              {(this.props.help ? 'Hide Help' : 'Show Help')}
+            </button>
+            <button style={{marginLeft: '5px'}} className={`normalButton`} onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})}>
+              {(this.props.chatSoundEnabled ? 'Mute Chat': 'Unmute Chat')}
+            </button>
+          </div>
           {(this.props.help ? <div className='text_shadow marginTop15'>
           <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'chat'})}/>Chat 
           <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'hotkeys'})}/>Hotkeys 
@@ -1092,8 +1112,10 @@ const mapStateToProps = state => ({
   round: state.round,
   musicEnabled: state.musicEnabled,
   soundEnabled: state.soundEnabled,
+  chatSoundEnabled: state.chatSoundEnabled,
   selectedSound: state.selectedSound,
   soundEffect: state.soundEffect,
+  soundEffects: state.soundEffects,
   music: state.music,
   volume: state.volume,
 });

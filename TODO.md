@@ -6,6 +6,7 @@
 
 Target Priorities
     Make more like move priority, in front of you first
+        Weaknesses
 
 Messages show level 3 upgrade as well
     2 messages for these upgrades
@@ -108,6 +109,8 @@ Mana per hit -> mana per damage
 
 ## Frontend
 
+confetti on win http://www.cagrimmett.com/til/2018/01/05/css-confetti.html
+
 Restart reset more variables
     SoundEffect unitSound chat reset
 
@@ -141,9 +144,6 @@ ActionMessage coloring
     ^These two should probably be positioned differently
         Damage directly on unit, fading and going up
         Spell top right of unit, fading to the right
-
-Ability displayNames
-Type displayName
 
 Help Messages
     Color Type messages so easier to read fast
@@ -185,7 +185,6 @@ Startscreen:
             Are you sure you want to leave? Prompt
 
 TopBar:
-    Add option to choose playerNames, do login system for this
     Piece Image
 
 Battle
@@ -219,10 +218,10 @@ Board css:
         outline ugly, not on right side
     Display Which unit will be called back/selected when too many units on board
         Noted todo in backend
-        Gray background or something
+        Gray tinted background or something
 
 Message:
-    Update position and size to be overboard and use for vital information
+    Update position and size of message to be overlayed over the board and use for vital information
         Css required a lot
     Use Message more, especially for errors
         Red text if error
@@ -242,33 +241,30 @@ Help Message:
     Show type information temporarily
 
 Sound: 
-    On volume change: 
-        Use refs to change volumes for MusicEl, somehow
-    Tech:
-        Figure out how to play music in element many times
-            Either throuhg re-rendering or playing
+    Disconnect sound
+    Multiple sound effect variables?
+        To play concurrently
     New Music/Sounds:
-        Music before any game starts
+        Music before any game starts, gold theme main menu
         Battle Music same style as idle music?
         More sounds:
-            Sell unit sound *clir
+            Battle start sound, horn
+            player levelup sound
             Battle end sound 
-                Happy cheer / Sad cheer
-            Levelup sound (Pokemon levelup sound)
+                Sad cheer, aww
             Game won (Victory! (Trainer))
             Not valid press (not enough money etc)
+                Use on invalid attempts, message invalid is made now
             Timer click (close to 0)
-            Unit upgrade
     Set position of mute buttons, moves a lot when selecting and deselecting unit
-    onVolumeChange slider change directly (ref usage)
-    One of these:
-        Allow sound to be played if press something on stats screen (not autoPlay)
-        Play sound again when unit is pressed (currently only when other unit has been pressed in between)
     Add hotkey m for toggle mute (for music or both)
 
 Credits somewhere in frontend (P and R.Music)
 
 ## Communication
+
+disconnect make win if alone
+    Disable when reconnect allowed
 
 Auto Ready options
 
@@ -325,6 +321,8 @@ Cleanup comments, better structure
 Potential to use more functional code, map/filter
 
 ## Optional Features
+
+Https
 
 Spinning wheel animating time between moves for all pokemon
     Easier to see when a unit does move

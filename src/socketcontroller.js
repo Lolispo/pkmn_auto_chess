@@ -29,10 +29,11 @@ const emitMessage = (socket, io, sessionId, func) => {
   }
 }
 
-const newChatMessage = (socket, io, socketIdParam, senderName, newMessage) => {
+const newChatMessage = (socket, io, socketIdParam, senderName, newMessage, type='chat') => {
+  console.log('SendingMessage');
   sessionJS.pushSessionMessage(socketIdParam, connectedPlayers, sessions, newMessage);
   emitMessage(socket, io, getSessionId(socketIdParam), (socketId) => {
-    io.to(socketId).emit('NEW_CHAT_MESSAGE', senderName, newMessage);
+    io.to(socketId).emit('NEW_CHAT_MESSAGE', senderName, newMessage, type);
   });
 }
 
@@ -145,8 +146,11 @@ module.exports = (socket, io) => {
           console.log('Removing Session:', sessionId, '(All players left)');
           sessions = sessions.delete(sessionId);
         } else {
-          console.log('Still Players left in session:', sessionId);
-          sessions = updatedSession;
+          const playersLeft = updatedSession.get('connectedPlayers').size;
+          console.log('Session ' + sessionId + ' players left: ', playersLeft);
+          const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
+          sessions = sessions.set(sessionId, updatedSession);
+          newChatMessage(socket, io, socket.id, playerName + ' disconnected - ', playersLeft + ' still connected', 'disconnect');
         }
       }
       connectedPlayers = connectedPlayers.delete(socket.id);
@@ -209,7 +213,7 @@ module.exports = (socket, io) => {
     //  console.log('@PlacePieceSocket', evolutionDisplayName);
     if(evolutionDisplayName){
       const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
-      newChatMessage(socket, io, socket.id, playerName + ' -> ', evolutionDisplayName);
+      newChatMessage(socket, io, socket.id, playerName + ' -> ', evolutionDisplayName, 'pieceUpgrade');
     }
     console.log('Place piece from', from, 'at', to, '(evolution =', evolutionDisplayName + ')');
     // Hand and board
@@ -328,6 +332,7 @@ module.exports = (socket, io) => {
 
   socket.on('SEND_MESSAGE', async message => {
     // TODO: Login: Player name here instead
+    console.log('@SendMessage', message)
     const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
     newChatMessage(socket, io, socket.id, playerName + ': ', message);
   });

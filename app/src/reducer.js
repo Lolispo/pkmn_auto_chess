@@ -1,6 +1,6 @@
 // Author: Petter Andersson
 
-import { getBackgroundAudio } from './audio.js';
+import { getBackgroundAudio, getSoundEffect } from './audio.js';
 
 const reducer = (
   state = {
@@ -40,10 +40,11 @@ const reducer = (
     typeStatsString: '',
     typeBonusString: '',
     round: 1,
-    musicEnabled: true,
+    musicEnabled: false,
     soundEnabled: true,
+    chatSoundEnabled: true,
     selectedSound: '',
-    soundEffect: '',
+    soundEffects: ['', '', '', '', '','', '', '', '', '','', '', '', '', '','', '', '', '', ''],
     music: getBackgroundAudio('idle'),
     volume: 0.05,
   },
@@ -172,26 +173,53 @@ const reducer = (
     case 'TOGGLE_SOUND':
       state = {...state, soundEnabled: !state.soundEnabled}
       break;
+    case 'TOGGLE_CHAT_SOUND':
+      console.log(state.chatSoundEnabled)
+      state = {...state, chatSoundEnabled: !state.chatSoundEnabled}
+      break;
     case 'CHANGE_VOLUME':
       console.log('@reducer.ChangeVolume', action.newVolume)
       state = {...state, volume: action.newVolume, music: state.music}
       break;
     case 'NEW_UNIT_SOUND':
-      console.log('reducer.NewUnitSound', action.newAudio);
+      // console.log('reducer.NewUnitSound', action.newAudio);
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'NEW_SOUND_EFFECT':
-      console.log('@NewSoundEffect', action.newSoundEffect, 'x', state.soundEffect)
-      state = {...state, soundEffect: action.newSoundEffect}
+      console.log('@NewSoundEffect', action.newSoundEffect)
+      for(let i = 0; i < state.soundEffects.length; i++){
+        if(state.soundEffects[i] !== action.newSoundEffect){
+          state.soundEffects[i] = action.newSoundEffect;
+          break;
+        }
+      }
       break;
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
-      state = {...state, gameIsLive: false, message: 'Player ' + action.winningPlayer.index + ' won the game'}
+      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', gameEnded: action.winningPlayer, }
       break;
     case 'NEW_CHAT_MESSAGE':
-      state = {...state, chatMessage: state.chatMessage + action.newMessage + '\n'}
+      console.log('@NEW_CHAT_MESSAGE', action.chatType)
       state.senderMessages.push(action.senderMessage);
       state.chatMessages.push(action.newMessage);
+      let soundEffect;
+      switch(action.chatType){
+        case 'pieceUpgrade':
+          soundEffect = getSoundEffect('lvlup');
+          break;
+        case 'disconnect':
+        case 'chat':
+        default:
+          soundEffect = getSoundEffect('pling');
+      }
+      for(let i = 0; i < state.soundEffects.length; i++){
+        if(state.soundEffects[i] !== soundEffect){
+          console.log('Setting audio', i, soundEffect)
+          state.soundEffects[i] = soundEffect;
+          break;
+        }
+      }
+      state = {...state, chatMessage: state.chatMessage + action.newMessage + '\n'}
       break;
     default:
       break;

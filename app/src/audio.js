@@ -10,6 +10,9 @@ import rivalTheme from './assets/Music/rivalTheme.mp3';
 // Sound Effects
 
 import sellSound from './assets/SoundEffects/sellSound.mp3';
+import cheer from './assets/SoundEffects/cheer.mp3';
+import lvlup from './assets/SoundEffects/lvlup.mp3';
+import pling from './assets/SoundEffects/pling.mp3';
 
 // Pokemon
 import bulbasaur from './assets/pokemonCries/001 - Bulbasaur.wav'
@@ -318,6 +321,12 @@ export function getSoundEffect(name){
   switch(name){
     case 'sellUnit':
       return sellSound;
+    case 'cheer':
+      return cheer;
+    case 'lvlup':
+      return lvlup;
+    case 'pling':
+      return pling;
     default:
       return undefined;
   }
