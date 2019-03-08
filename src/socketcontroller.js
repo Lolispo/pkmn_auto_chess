@@ -126,7 +126,6 @@ module.exports = (socket, io) => {
       io.to(`${id}`).emit('SET_TYPE_BONUSES', typeDescriptions[0], typeDescriptions[1]);
       temp = iter.next();
     }
-    // io.emit('UPDATED_STATE', stateToSend);
     emitMessage(socket, io, sessionId, (socketId) => {
       io.to(socketId).emit('UPDATED_STATE', stateToSend);
     });
@@ -178,8 +177,8 @@ module.exports = (socket, io) => {
     console.log('Bought unit at', pieceIndex, '. #discarded =', state.get('discardedPieces').size);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
-    socket.emit('UPDATED_STATE', getStateToSend(state)); // Was updateplayer
-    // socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    // socket.emit('UPDATED_STATE', getStateToSend(state)); // Was updateplayer
+    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
 
   socket.on('BUY_EXP', async (stateParam) => {
@@ -314,12 +313,11 @@ module.exports = (socket, io) => {
           } else {
             // Send to users, not all
             sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
+            sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
             const stateToSend = getStateToSend(stateEndedTurn);
             emitMessage(socket, io, sessionId, (socketId) => {
               io.to(socketId).emit('END_BATTLE');
               io.to(socketId).emit('UPDATED_STATE', stateToSend);
-              // io.emit('END_BATTLE');
-              // io.emit('UPDATED_STATE', stateToSend);
             });
           }
         }, longestTime);

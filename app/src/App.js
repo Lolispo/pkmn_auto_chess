@@ -864,7 +864,7 @@ class App extends Component {
     s2 += 'D: Refresh Shop\n';
     let chat = false;
     let messageCollection = [];
-    switch(this.props.helpMode){
+    switch(this.props.chatHelpMode){
       case 'types':
         if(this.props.typeStatsString){
           s += this.props.typeStatsString;
@@ -1053,10 +1053,10 @@ class App extends Component {
             </button>
           </div>
           {(this.props.help ? <div className='text_shadow marginTop15'>
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'chat'})}/>Chat 
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'hotkeys'})}/>Hotkeys 
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'types'})}/>Types
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', helpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>Chat 
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'hotkeys'})}/>Hotkeys 
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'types'})}/>Types
+          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
         </div>
         {(this.props.help ? this.buildHelp() : '')}
       </div>;
@@ -1082,12 +1082,10 @@ const mapStateToProps = state => ({
   allReady: state.allReady,
   message: state.message,
   help: state.help,
-  helpMode: state.helpMode,
-  chatMessage: state.chatMessage,
+  chatHelpMode: state.chatHelpMode,
   senderMessages: state.senderMessages,
   chatMessages: state.chatMessages,
   storedState: state.storedState,
-  pieces: state.pieces,
   players: state.players,
   player: state.player,
   myHand: state.myHand,

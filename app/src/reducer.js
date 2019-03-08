@@ -13,12 +13,10 @@ const reducer = (
     allReady: false,
     message: 'default',
     help: true,
-    helpMode: '',
-    chatMessage: '',
+    chatHelpMode: '',
     chatMessages: [],
     senderMessages: [],
     storedState: {},
-    pieces: [],
     players: {},
     myHand: {},
     myBoard: {},
@@ -53,7 +51,7 @@ const reducer = (
   switch (action.type) { // Listens to events dispatched from from socket.js
     case 'NEW_STATE':
       // Update state with incoming data from server
-      state = { ...state, pieces: action.newState.pieces, 
+      state = { ...state,  
         storedState: action.newState,
         message: 'Received State', 
         players: action.newState.players,
@@ -65,17 +63,9 @@ const reducer = (
         expToReach: action.newState.players[state.index].expToReach,
         gold: action.newState.players[state.index].gold,
         round: action.newState.round,
-        ready: false,
       };
       console.log('New State', action.newState)
       // console.log(state);
-
-      break;
-    case 'NEW_PIECES':
-      console.log('@New Pieces', action.newState.discardedPieces)
-      state = { ...state, pieces: action.newState.pieces}
-      state.storedState.pieces = action.newState.pieces;
-      state.storedState.discardedPieces = action.newState.discardedPieces;
       break;
     case 'UPDATE_PLAYER':
       console.log('updating player', action.index, action.player);
@@ -100,7 +90,29 @@ const reducer = (
       break;
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);
-      state = { ...state, index: action.index, gameIsLive: true}
+      state = { ...state, 
+        index: action.index, 
+        gameIsLive: true,
+        ready: false,
+        playersReady: -1,
+        connectedPlayers: -1,
+        allReady: false,
+        message: 'default',
+        help: true,
+        chatHelpMode: '',
+        chatMessages: [],
+        senderMessages: [],
+        storedState: {},
+        lock: false,
+        onGoingBattle: false,
+        enemyIndex: -1,
+        startBattle: false,
+        actionStack: {},
+        battleStartBoard: {},
+        selectedUnit: -1,
+        soundEffects: ['', '', '', '', '','', '', '', '', '','', '', '', '', '','', '', '', '', ''],
+        music: getBackgroundAudio('idle'),
+      }
       break;
     case 'SET_CONNECTED':
       state = {...state, connected: action.connected};
@@ -122,7 +134,7 @@ const reducer = (
       state = {...state, help: !state.help}
       break;
     case 'SET_HELP_MODE':
-      state = {...state, helpMode: action.helpMode}    
+      state = {...state, chatHelpMode: action.chatHelpMode}    
       break;
     case 'SET_STATS':
       console.log('Updating stats', action.name, action.stats)
@@ -219,7 +231,6 @@ const reducer = (
           break;
         }
       }
-      state = {...state, chatMessage: state.chatMessage + action.newMessage + '\n'}
       break;
     default:
       break;

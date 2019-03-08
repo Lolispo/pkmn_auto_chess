@@ -31,7 +31,7 @@ const configureSocket = dispatch => {
     console.log('Updating pieces'); // Only send the pieces instead
     dispatch({ type: 'NEW_PIECES', newState: state});
   });
-
+  
   socket.on('UPDATED_STATE', state => {
     console.log('Updating state');
     dispatch({ type: 'NEW_STATE', newState: state});

@@ -2,6 +2,10 @@
 
 ## Check in Auto Chess
 
+Mana: 15% of damage to mana or 10
+    Math.min(0.15 * damage, 10);
+    For both giving and receiving
+
 ## Backend
 
 Target Priorities
@@ -233,12 +237,6 @@ Timer
     On top or left, very visible
     BattleTime effect to setTimeout function
     After endbattle, start this setTimeout for battleTime function
-
-Chat system bottom right, below shop
-    Give piece upgrade information there for players
-
-Help Message:
-    Show type information temporarily
 
 Sound: 
     Disconnect sound
