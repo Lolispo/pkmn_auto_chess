@@ -30,7 +30,6 @@ const emitMessage = (socket, io, sessionId, func) => {
 }
 
 const newChatMessage = (socket, io, socketIdParam, senderName, newMessage, type='chat') => {
-  console.log('SendingMessage');
   sessionJS.pushSessionMessage(socketIdParam, connectedPlayers, sessions, newMessage);
   emitMessage(socket, io, getSessionId(socketIdParam), (socketId) => {
     io.to(socketId).emit('NEW_CHAT_MESSAGE', senderName, newMessage, type);
@@ -330,7 +329,6 @@ module.exports = (socket, io) => {
 
   socket.on('SEND_MESSAGE', async message => {
     // TODO: Login: Player name here instead
-    console.log('@SendMessage', message)
     const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
     newChatMessage(socket, io, socket.id, playerName + ': ', message);
   });

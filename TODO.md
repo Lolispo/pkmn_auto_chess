@@ -263,6 +263,7 @@ Credits somewhere in frontend (P and R.Music)
 
 disconnect make win if alone
     Disable when reconnect allowed
+    disconnect problematic during battle
 
 Auto Ready options
 

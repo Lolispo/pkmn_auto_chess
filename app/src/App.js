@@ -94,9 +94,11 @@ class Pokemon extends Component{
           buyUnit(this.props.newProps.storedState, index);
         } else{
           updateMessage(this.props.newProps, 'Hand is full!');
+          this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
         }
       } else{
         updateMessage(this.props.newProps, 'Not enough gold!');
+        this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
   }
@@ -219,6 +221,7 @@ class Cell extends Component {
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       } else {
         updateMessage(prop, 'Invalid target placing!');
+        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
   }
@@ -496,6 +499,7 @@ class App extends Component {
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       } else {
         updateMessage(prop, 'Invalid target placing!');
+        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
   }
@@ -510,6 +514,7 @@ class App extends Component {
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       } else{
         updateMessage(prop, 'Hand is full!');
+        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
   }
@@ -524,6 +529,7 @@ class App extends Component {
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
     } else{
       updateMessage(prop, 'Invalid target to sell!', from);
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     }
   }
 

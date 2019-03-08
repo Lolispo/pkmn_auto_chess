@@ -42,7 +42,7 @@ const reducer = (
     soundEnabled: true,
     chatSoundEnabled: true,
     selectedSound: '',
-    soundEffects: ['', '', '', '', '','', '', '', '', '','', '', '', '', '','', '', '', '', ''],
+    soundEffects: ['', '', '', '', '','', '', '', '', ''],
     music: getBackgroundAudio('idle'),
     volume: 0.05,
   },
@@ -110,7 +110,7 @@ const reducer = (
         actionStack: {},
         battleStartBoard: {},
         selectedUnit: -1,
-        soundEffects: ['', '', '', '', '','', '', '', '', '','', '', '', '', '','', '', '', '', ''],
+        soundEffects: ['', '', '', '', '','', '', '', '', ''],
         music: getBackgroundAudio('idle'),
       }
       break;
@@ -198,10 +198,12 @@ const reducer = (
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'NEW_SOUND_EFFECT':
-      console.log('@NewSoundEffect', action.newSoundEffect)
-      for(let i = 0; i < state.soundEffects.length; i++){
-        if(state.soundEffects[i] !== action.newSoundEffect){
-          state.soundEffects[i] = action.newSoundEffect;
+    for(let i = 0; i < state.soundEffects.length; i++){
+      if(state.soundEffects[i] !== action.newSoundEffect){
+          console.log('@NewSoundEffect', i, action.newSoundEffect)
+          const soundEffects = state.soundEffects;
+          soundEffects[i] = action.newSoundEffect
+          state = {...state, soundEffects};
           break;
         }
       }
@@ -211,9 +213,11 @@ const reducer = (
       state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', gameEnded: action.winningPlayer, }
       break;
     case 'NEW_CHAT_MESSAGE':
-      console.log('@NEW_CHAT_MESSAGE', action.chatType)
-      state.senderMessages.push(action.senderMessage);
-      state.chatMessages.push(action.newMessage);
+      console.log('@NEW_CHAT_MESSAGE', action.chatType);
+      const { senderMessages, chatMessages } = state;
+      senderMessages.push(action.senderMessage);
+      chatMessages.push(action.newMessage);
+      state = {...state, senderMessages, chatMessages};
       let soundEffect;
       switch(action.chatType){
         case 'pieceUpgrade':
@@ -226,8 +230,10 @@ const reducer = (
       }
       for(let i = 0; i < state.soundEffects.length; i++){
         if(state.soundEffects[i] !== soundEffect){
-          console.log('Setting audio', i, soundEffect)
-          state.soundEffects[i] = soundEffect;
+          console.log('Setting audio', i, soundEffect);
+          const soundEffects = state.soundEffects;
+          soundEffects[i] = soundEffect
+          state = {...state, soundEffects};
           break;
         }
       }
