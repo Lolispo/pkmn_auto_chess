@@ -378,15 +378,17 @@ class App extends Component {
       refreshShop(this.props.storedState)
     } else{
       updateMessage(this.props, 'Not enough gold!');
+      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     }
   }
 
-  buyExp = () => {
+  buyExpEvent = () => {
     // You have enough money to buy exp
     if(this.props.gold >= 5 && this.props.gameIsLive){
       buyExp(this.props.storedState)
     } else{
       updateMessage(this.props, 'Not enough gold!');
+      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     }
   }
 
@@ -579,7 +581,7 @@ class App extends Component {
         this.refreshShopEvent();
         break;
       case 'f':
-        this.buyExp();
+        this.buyExpEvent();
         break;
       default:
     }
@@ -960,7 +962,7 @@ class App extends Component {
           </CSSTransitionGroup>
         </div>
         <div className = 'centerWith50'>
-          <button className='normalButton marginTop5' onClick={this.buyExp}>Buy Exp</button>
+          <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
           <div className='flex marginTop5'>
             <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
             <img className='goldImageSmall' src={goldCoin} alt='goldCoin'/>
