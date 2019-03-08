@@ -495,7 +495,6 @@ function allowedCoordinate(board,pos) {
 function getMovePos(board, closestEnemyPos, range, team) {
   const x = f.x(closestEnemyPos);
   const y = f.y(closestEnemyPos);
-  let pos;
   for (let i = range; i >= 1; i--) {
     if (team === 0) { // S team
       if (allowedCoordinate(board, f.pos(x, y - i))) { // S

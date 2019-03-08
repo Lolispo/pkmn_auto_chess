@@ -131,15 +131,15 @@ Restart reset more variables
     SoundEffect unitSound chat reset
 
 Crash: 
-    Geodude game@1162 . typesJS.getBuffFuncAll(...) is not a function
-        Problem due to Rock and Ground both having increaseDefense?
-    Move type undefined after ember applied dot
-        Check ember tests, dot for fire
-    Weird bug, battle crash, pos undefined <- IMPORTANT TO FIX
-        Board is undefined for that battle, or something
-        Check if board can be undefined from combineBoards, markBoardBonuses, setRandomFirstMove
-    Psychic Debuff enemy units crash
-        Only for 2 units? Kadabra Kadabra slowbro
+    
+
+Test:  
+    3 Upgrade
+    3 psychic - crashed
+    Player loses
+    Player disconnects
+        During battle or normally
+    
 
 mainMenu
     Add more functionality, not important tho
