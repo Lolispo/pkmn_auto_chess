@@ -619,14 +619,16 @@ async function removeHpBattle(board, unitPos, hpToRemove, percent = false) {
  * Supports enemy being dead
  * TODO: Maybe, Load from defaults here, so mana stats don't have to be stored in vain
  */
-async function manaIncrease(board, unitPos, enemyPos) {
+async function manaIncrease(board, damage, unitPos, enemyPos) {
   let manaChanges = Map({});
   const unitMana = board.get(unitPos).get('mana');
-  const unitManaInc = board.get(unitPos).get('mana_hit_given');
+  const unitManaMult = board.get(unitPos).get('mana_multiplier');
+  const unitManaInc = Math.round(Math.min(unitManaMult * damage, 15));
   manaChanges = manaChanges.set(unitPos, +unitMana + +unitManaInc);
   if (!f.isUndefined(enemyPos)) {
     const enemyMana = board.get(enemyPos).get('mana');
-    const enemyManaInc = board.get(enemyPos).get('mana_hit_taken');
+    const enemyManaMult = board.get(enemyPos).get('mana_multiplier');
+    const enemyManaInc = Math.round(Math.min(enemyManaMult * damage, 15));
     return manaChanges.set(enemyPos, +enemyMana + +enemyManaInc);
   }
   return manaChanges;
@@ -887,11 +889,11 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     let manaChanges;
     if (removedHPBoard.get('unitDied')) { // Check if battle ends
       battleOver = await isBattleOver(newBoard, team);
-      manaChanges = await manaIncrease(newBoard, unitPos); // target = dead
+      manaChanges = await manaIncrease(newBoard, value, unitPos); // target = dead
       newBoardMana = await manaChangeBoard(newBoard, manaChanges);
     } else { // Mana increase, return newBoard
       allowSameMove = true;
-      manaChanges = await manaIncrease(newBoard, unitPos, target);
+      manaChanges = await manaIncrease(newBoard, value, unitPos, target);
       newBoardMana = await manaChangeBoard(newBoard, manaChanges);
     }
     const move = Map({
@@ -1254,8 +1256,9 @@ async function createBattleUnit(unit, unitPos, team) {
     .set('ability', unitStats.get('ability'))
     .set('defense', unitStats.get('defense') || pokemonJS.getStatsDefault('defense'))
     .set('speed', pokemonJS.getStatsDefault('upperLimitSpeed') - (unitStats.get('speed') || pokemonJS.getStatsDefault('speed')))
-    .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
-    .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'))
+    /*.set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
+    .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken'))*/
+    .set('mana_multiplier', unitStats.get('mana_multiplier') || pokemonJS.getStatsDefault('mana_multiplier'))
     .set('position', unitPos)
     .set('manaCost', (await ability).get('mana') || abilitiesJS.getDefault('mana'));
 }

@@ -9,8 +9,11 @@ const f = require('./f');
  */
 const defaultStat = Map({
   evolves_from: undefined, // None Assumed
+  /*
   mana_hit_given: 10,
   mana_hit_taken: 10,
+  */
+  mana_multiplier: 1,
   mana: 0,
   speed: 100, // Temp test, lower = faster (Time between attacks)
   upperLimitSpeed: 200,
