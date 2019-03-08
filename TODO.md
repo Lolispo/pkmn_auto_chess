@@ -9,9 +9,16 @@ Mana: 15% of damage to mana or 10
 
 ## Backend
 
+Add longestTimeAllowed for battle, where a tie occurs
+
+Dps stats after round
+
+Weak against type list (Currently only strong against, ineffective and no effect)
+
 Target Priorities
     Make more like move priority, in front of you first
         Weaknesses
+    Never stick on a target where attacks are < x1
 
 Messages show level 3 upgrade as well
     2 messages for these upgrades
@@ -28,9 +35,13 @@ Player eliminated logic
 
 No target move (splash) shouldnt deal damage (curr 1 it seems)
 
-Gold information calculation
-    Move outside of function, calculate at gold changes and update frontend
-    Maybe streak is received on frontend and everything can then be calculated there already?
+Gold:
+    Reward for winning battle?
+    Streak for losing?
+    Gold information calculation
+        Move outside of function, calculate at gold changes and update frontend
+        Maybe streak is received on frontend and everything can then be calculated there already?
+        Show streak / next gold
 
 PlacePieceEvent (All piece interactions):
     Type bonuses calculations, what combos are active
@@ -110,8 +121,6 @@ Add next round opponent
     pvp, gym battle, npc
     Add/Find images for gym leaders
 
-Mana per hit -> mana per damage
-
 ## Frontend
 
 Rendering board more efficient, think immutable 
@@ -145,6 +154,8 @@ KeyInput
     If chat input is in focus, disable hotkey logic
 
 ActionMessage coloring
+    Multiple actionMessages to support taken multiple instance of damage?
+        Have to figure out that they only render once
     positioning
     Green for spells
     Red/White when you take damage
@@ -157,6 +168,8 @@ Help Messages
     Font color / text shadow feels weird overall here
 
 Css:
+    Shine the lock a bit, fades into background
+    Attack left animation return too far to the left
     Bonus hp as shield bar (Original hp + bonus)
     Prettier Volume slider
     WinningAnimation: Check me
@@ -164,6 +177,9 @@ Css:
     Eevee evolutions stats screen
     Mark default radio button in bottom right as Chat (Make selected)
     Auto scroll down chat
+
+SellPieceEvent:
+    Allow selling piece not in battle during battle
 
 ActionMessage:
     Position on top of unit
@@ -246,6 +262,7 @@ Sound:
     Multiple sound effect variables?
         To play concurrently
     New Music/Sounds:
+        Different sounds for own upgrade?
         Music before any game starts, gold theme main menu
         Battle Music same style as idle music?
         More sounds:
@@ -358,6 +375,9 @@ eevee:
     Temp: Random
 
 ## Balance
+
+Speed might be too strong atm
+    Buff tanky units
 
 Strongest 1: 
 

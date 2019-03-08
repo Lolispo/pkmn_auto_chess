@@ -342,7 +342,9 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
     const evolutionDisplayName = (await pokemonJS.getStats(evolvesTo)).get('display_name');
     console.log('evolutionDisplayName', evolutionDisplayName);
-    return (await checkPieceUpgrade(state, playerIndex, newPiece, position)).set('upgradeOccured', evolutionDisplayName);
+    const nextPieceUpgrade = await checkPieceUpgrade(state, playerIndex, newPiece, position);
+    // Get both upgrades
+    return nextPieceUpgrade.set('upgradeOccured', List([evolutionDisplayName]).concat(nextPieceUpgrade.get('upgradeOccured') || List([])));
   }
   return Map({state, upgradeOccured: false});
 }
@@ -478,6 +480,12 @@ async function sellPiece(state, playerIndex, piecePosition) {
 
 exports._sellPiece = (state, playerIndex, piecePosition) => sellPiece(state, playerIndex, piecePosition);
 
+function allowedCoordinate(board,pos) {
+  const x = f.x(pos);
+  const y = f.y(pos);
+  return f.isUndefined(board.get(pos)) && x >= 0 && x < 8 && y >= 0 && y < 8;
+}
+
 /**
  * Get first available spot at max range away from closest enemy
  * spot that is at maximal possible range from enemy, otherwise closer
@@ -487,41 +495,42 @@ exports._sellPiece = (state, playerIndex, piecePosition) => sellPiece(state, pla
 function getMovePos(board, closestEnemyPos, range, team) {
   const x = f.x(closestEnemyPos);
   const y = f.y(closestEnemyPos);
+  let pos;
   for (let i = range; i >= 1; i--) {
     if (team === 0) { // S team
-      if (f.isUndefined(board.get(f.pos(x, y - i)))) { // S
+      if (allowedCoordinate(board, f.pos(x, y - i))) { // S
         return f.pos(x, y - i);
-      } if (f.isUndefined(board.get(f.pos(x - i, y - i)))) { // SW
+      } if (allowedCoordinate(board, f.pos(x - i, y - i))) { // SW
         return f.pos(x - i, y - i);
-      } if (f.isUndefined(board.get(f.pos(x + i, y - i)))) { // SE
+      } if (allowedCoordinate(board, f.pos(x + i, y - i))) { // SE
         return f.pos(x + i, y - i);
-      } if (f.isUndefined(board.get(f.pos(x - i, y)))) { // W
+      } if (allowedCoordinate(board, f.pos(x - i, y))) { // W
         return f.pos(x - i, y);
-      } if (f.isUndefined(board.get(f.pos(x + i, y)))) { // E
+      } if (allowedCoordinate(board, f.pos(x + i, y))) { // E
         return f.pos(x + i, y);
-      } if (f.isUndefined(board.get(f.pos(x, y + i)))) { // N
+      } if (allowedCoordinate(board, f.pos(x, y + i))) { // N
         return f.pos(x, y + i);
-      } if (f.isUndefined(board.get(f.pos(x - i, y + i)))) { // NW
+      } if (allowedCoordinate(board, f.pos(x - i, y + i))) { // NW
         return f.pos(x - i, y + i);
-      } if (f.isUndefined(board.get(f.pos(x + i, y + i)))) { // NE
+      } if (allowedCoordinate(board, f.pos(x + i, y + i))) { // NE
         return f.pos(x + i, y + i);
       }
     } else { // N team
-      if (f.isUndefined(board.get(f.pos(x, y + i)))) { // N
+      if (allowedCoordinate(board, f.pos(x, y + i))) { // N
         return f.pos(x, y + i);
-      } if (f.isUndefined(board.get(f.pos(x + i, y + i)))) { // NE
+      } if (allowedCoordinate(board, f.pos(x + i, y + i))) { // NE
         return f.pos(x + i, y + i);
-      } if (f.isUndefined(board.get(f.pos(x - i, y + i)))) { // NW
+      } if (allowedCoordinate(board, f.pos(x - i, y + i))) { // NW
         return f.pos(x - i, y + i);
-      } if (f.isUndefined(board.get(f.pos(x + i, y)))) { // E
+      } if (allowedCoordinate(board, f.pos(x + i, y))) { // E
         return f.pos(x + i, y);
-      } if (f.isUndefined(board.get(f.pos(x - i, y)))) { // W
+      } if (allowedCoordinate(board, f.pos(x - i, y))) { // W
         return f.pos(x - i, y);
-      } if (f.isUndefined(board.get(f.pos(x, y - i)))) { // S
+      } if (allowedCoordinate(board, f.pos(x, y - i))) { // S
         return f.pos(x, y - i);
-      } if (f.isUndefined(board.get(f.pos(x + i, y - i)))) { // SE
+      } if (allowedCoordinate(board, f.pos(x + i, y - i))) { // SE
         return f.pos(x + i, y - i);
-      } if (f.isUndefined(board.get(f.pos(x - i, y - i)))) { // SW
+      } if (allowedCoordinate(board, f.pos(x - i, y - i))) { // SW
         return f.pos(x - i, y - i);
       }
     }
@@ -1181,6 +1190,7 @@ async function markBoardBonuses(board) {
   const boardKeysIter = board.keys();
   let tempUnit = boardKeysIter.next();
   let newBoard = board;
+  console.log('IM A FUNCTION', typesJS.getEnemyDebuff('psychic'));
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);
@@ -1228,7 +1238,7 @@ async function markBoardBonuses(board) {
       const buff = tempEnemy.value;
       const bonusValue = typeBuffMapAll.get(String(enemyTeam)).get(buff);
       const buffText = `${buff} -${bonusValue}`;
-      const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), bonusValue) // Crash here
+      const newUnit = typesJS.getEnemyDebuff(buff)(newBoard.get(unitPos), bonusValue) // Crash here
         .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
       newBoard = await newBoard.set(unitPos, newUnit);
       tempEnemy = enemyDebuffIter.next();
@@ -1559,9 +1569,9 @@ async function endTurn(stateParam) {
     const streakGold = Math.min(Math.floor(
       (streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1),
     ), 3);
-    // console.log(`@playerEndTurn Gold: p[${i + 1}]: `,
-    // `${gold}, ${income_basic}, ${bonusGold}, ${streakGold}`);
     const newGold = gold + income_basic + bonusGold + streakGold;
+    console.log(`@playerEndTurn Gold: p[${i + 1}]: `,
+     `${gold}, ${income_basic}, ${bonusGold}, ${streakGold} (${streak}) = ${newGold}`);
     state = state.setIn(['players', index, 'gold'], newGold);
     // console.log(i, '\n', state.get('pieces').get(0));
     // state = state.set(i, state.getIn(['players', i]));
@@ -1649,7 +1659,6 @@ const endBattle = async(stateParam, playerIndex, winner, finishedBoard, roundTyp
       default:
     }
   }
-  const round = state.get('round');
   // console.log('@endBattle prep', stateParam.get('players'));
   const potentialEndTurn = await prepEndTurn(state, playerIndex);
   return potentialEndTurn;

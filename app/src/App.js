@@ -664,6 +664,9 @@ class App extends Component {
         } else {
           actionMessageTarget = '- ' + value;
         }
+        if(direction !== '') {
+          newBoard[unitPos].attackAnimation = 'animate' + direction; 
+        }
         let newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'to', target, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         if(effect && Object.keys(effect).length){

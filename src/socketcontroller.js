@@ -210,8 +210,10 @@ module.exports = (socket, io) => {
     const evolutionDisplayName = obj.get('upgradeOccured');
     //  console.log('@PlacePieceSocket', evolutionDisplayName);
     if(evolutionDisplayName){
-      const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
-      newChatMessage(socket, io, socket.id, playerName + ' -> ', evolutionDisplayName, 'pieceUpgrade');
+      for(let i = 0; i < evolutionDisplayName.size; i++){
+        const playerName = 'Player ' + sessionJS.getPlayerID(socket.id, connectedPlayers, sessions);
+        newChatMessage(socket, io, socket.id, playerName + ' -> ', evolutionDisplayName.get(i), 'pieceUpgrade');
+      }
     }
     console.log('Place piece from', from, 'at', to, '(evolution =', evolutionDisplayName + ')');
     // Hand and board

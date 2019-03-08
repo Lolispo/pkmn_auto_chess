@@ -481,6 +481,8 @@ exports.getBuffFuncSolo = name => typeMap.get(name).get('bonus');
 
 exports.getBuffFuncAll = name => typeMap.get(name).get('allBonus');
 
+exports.getEnemyDebuff = name => typeMap.get(name).get('enemyDebuff');
+
 exports.getBonusType = name => typeMap.get(name).get('bonusType');
 
 /*
