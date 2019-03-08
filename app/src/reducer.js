@@ -140,7 +140,7 @@ const reducer = (
       console.log('Updating stats', action.name, action.stats)
       const statsMap = state.statsMap;
       statsMap[action.name] = action.stats;
-      state = {...state, name: action.name, stats: action.stats, statsMap}
+      state = {...state, name: action.name, stats: action.stats, statsMap: [...statsMap]}
       break;
     case 'SET_TYPE_BONUSES':
       state = {...state, typeStatsString: action.typeDescs, typeBonusString: action.typeBonuses}
@@ -203,7 +203,7 @@ const reducer = (
           console.log('@NewSoundEffect', i, action.newSoundEffect)
           const soundEffects = state.soundEffects;
           soundEffects[i] = action.newSoundEffect
-          state = {...state, soundEffects};
+          state = {...state, soundEffects: [...soundEffects]};
           break;
         }
       }
@@ -215,9 +215,7 @@ const reducer = (
     case 'NEW_CHAT_MESSAGE':
       console.log('@NEW_CHAT_MESSAGE', action.chatType);
       const { senderMessages, chatMessages } = state;
-      senderMessages.push(action.senderMessage);
-      chatMessages.push(action.newMessage);
-      state = {...state, senderMessages, chatMessages};
+      state = {...state, senderMessages: senderMessages.concat(action.senderMessage), chatMessages: chatMessages.concat(action.newMessage)};
       let soundEffect;
       switch(action.chatType){
         case 'pieceUpgrade':
@@ -233,7 +231,7 @@ const reducer = (
           console.log('Setting audio', i, soundEffect);
           const soundEffects = state.soundEffects;
           soundEffects[i] = soundEffect
-          state = {...state, soundEffects};
+          state = {...state, soundEffects: [...soundEffects]};
           break;
         }
       }
