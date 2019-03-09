@@ -52,7 +52,7 @@ const reducer = (
     typeStatsString: '',
     typeBonusString: '',
     round: 1,
-    musicEnabled: false,
+    musicEnabled: true,
     soundEnabled: true,
     chatSoundEnabled: true,
     selectedSound: '',
@@ -244,6 +244,7 @@ const reducer = (
           break;
         case 'playerEliminated':
         case 'disconnect':
+
           break;
         case 'chat':
         default:

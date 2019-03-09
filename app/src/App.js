@@ -1014,7 +1014,7 @@ class App extends Component {
             </div>
           </CSSTransitionGroup>
         </div>
-        <Timer startTime={10} key={this.props.round} startTimer={this.props.startTimer} storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer>
+        <Timer startTime={20} key={this.props.round} startTimer={this.props.startTimer} storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer>
         <div className = 'centerWith50'>
           <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
           <div className='flex marginTop5'>
