@@ -31,16 +31,17 @@ const pos = (x, y) => {
 
 
 const x = (pos) => {
-  // return pos.get('x');
-  // return pos.get(0);
-  const splitted = pos.split(',');
-  const curr = splitted[0];
-  return (isUndefined(curr) ? curr : parseInt(curr));
+  if(!isUndefined(pos)){
+    const splitted = pos.split(',');
+    const curr = splitted[0];
+    return (isUndefined(curr) ? curr : parseInt(curr));
+  } else {
+    console.log('pos is undefined WE ARE FUCKED');
+    return 0;
+  }
 };
 
 const y = (pos) => {
-  // return pos.get(1);
-  // return pos.get('y');
   const splitted = pos.split(',');
   const curr = splitted[1];
   return (isUndefined(curr) ? curr : parseInt(curr));
@@ -63,12 +64,15 @@ exports.reverseUnitPos = posInput => pos(7 - x(posInput), 7 - y(posInput));
 // exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal version
 exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
 
+
 exports.printBoard = async (boardParam, moveParam) => {
   const board = await boardParam;
   const move = await moveParam;
   const keysIter = board.keys();
   let tempUnit = keysIter.next();
-  // console.log(move)
+  if(isUndefined(board) || isUndefined(move)){
+    console.log('@printBoard', board, move)
+  }
   console.log(` -- Move @${move.get('time')}: ${move.get('action')} ${(move.get('action') === 'attack' ? move.get('direction') : '')}`);
   while (!tempUnit.done) {
     // console.log('@printBoard', tempUnit.value, board, moveParam)

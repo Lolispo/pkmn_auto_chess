@@ -121,7 +121,23 @@ Add next round opponent
     pvp, gym battle, npc
     Add/Find images for gym leaders
 
+Flying longer movement
+
+Path find A* next pos
+
+2 weedle -> bug bonus
+
+max mana? Instead of letting it go over
+
 ## Frontend
+
+Error logic in frontend, move to constructor instead of render (battleStartDetection)
+
+Color Battle Ready Temp
+
+Start without all there!
+
+dragndrop
 
 Rendering board more efficient, think immutable 
 
@@ -129,13 +145,16 @@ confetti on win http://www.cagrimmett.com/til/2018/01/05/css-confetti.html
 
 Restart reset more variables
     SoundEffect unitSound chat reset
+    OnGoingBattle weird
 
 Crash: 
-    
+    FrontEnd battle not matched, some units survive that shouldnt
+    Disabled printing since weird
 
 Test:  
     3 Upgrade
     3 psychic - crashed
+        Remove im a function print
     Player loses
     Player disconnects
         During battle or normally
@@ -282,6 +301,7 @@ Credits somewhere in frontend (P and R.Music)
 ## Communication
 
 disconnect make win if alone
+    Disconnect detect on frontend
     Disable when reconnect allowed
     disconnect problematic during battle
 
@@ -378,6 +398,9 @@ eevee:
 
 Speed might be too strong atm
     Buff tanky units
+
+Abra cheaper
+    Probably fine after movement change
 
 Strongest 1: 
 

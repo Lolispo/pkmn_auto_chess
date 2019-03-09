@@ -10,8 +10,8 @@ body {
 }
 
 .mainMenu {
-  width: 1920px;
-  height: 1080px;
+  width: 100vw;
+  height: 100vh;
   /*background-image: url(./assets/backgroundMainMenu.jpg) no-repeat;*/
   background: url(./assets/pikachuBackground.gif) no-repeat;
 }
@@ -104,9 +104,15 @@ body {
 }
 
 .infoPanel {
+  height: 350px;
   padding-top: 5px;
   padding-bottom: 50px;
   white-space: pre-line;
+}
+
+.noSelected{
+  padding-top: 100px;
+  padding-left: 18px;
 }
 
 .textAlignCenter {
@@ -146,7 +152,7 @@ body {
   height: 85px;
   background-color: gray;
   /*background: url(https://i.gyazo.com/f5c31403dc3840b9b276c3e8d3e178d3.png) no-repeat;*/
-  background: url(./assets/grass.gif) no-repeat;
+  background: url(./assets/grass2.gif) no-repeat;
   background-size: 85px 85px;
 }
 
@@ -175,7 +181,7 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .oldNormalButton {
@@ -274,6 +280,15 @@ body {
   font-size: 22px;
 }
 
+.timerText{
+  text-align: center;
+  font-size: 70px;
+}
+
+.timerDiv{
+  height: 80px;
+}
+
 @keyframes shrinkDown {
   from  {transform: scale(1);}
   to    {transform: scale(0.3);}
@@ -351,48 +366,48 @@ body {
 }
 
 @keyframes jump {
-  from  {margin-top: -20px;}
-  to    {margin-top: 0px;}
+  from  {transform: translate(0px, -20px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackN {
-  from  {margin-top: -40px;}
-  to    {margin-top: 0px;}
+  from  {transform: translate(0px, -40px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackNE {
-  from  {margin-top: -40px; margin-left: 40px;}
-  to    {margin-top: 0px;  margin-left: 0px;}
+  from  {transform: translate(40px, -40px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackNW {
-  from  {margin-top: -40px; margin-left: -40px;}
-  to    {margin-top: 0px; margin-left: 0px;}
+  from  {transform: translate(-40px, -40px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackW {
-  from  {margin: auto; margin-left: -40px;}
-  to    {margin: auto; margin-left: 0px;}
+  from  {transform: translate(-40px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackE {
-  from  {margin: auto; margin-left: 40px;}
-  to    {margin: auto; margin-left: 0px;}
+  from  {transform: translate(40px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackS {
-  from  {margin-top: 40px;}
-  to    {margin-top: 0px;}
+  from  {transform: translate(0px, 40px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackSE {
-  from  {margin-top: 40px; margin-left: 40px;}
-  to    {margin-top: 0px; margin-left: 0px;}
+  from  {transform: translate(40px, 40px);}
+  to    {transform: translate(0px);}
 }
 
 @keyframes attackSW {
-  from  {margin-top: 40px; margin-left: -40px;}
-  to    {margin-top: 0px; margin-left: 0px;}
+  from  {transform: translate(-40px, 40px);}
+  to    {transform: translate(0px);}
 }
 
 .animateN {
@@ -457,7 +472,7 @@ body {
   padding-left: 5px;
   margin-top: 5px;
   overflow: auto;
-  height: 200px;
+  height: 250px;
   width: 550px;
 }
 

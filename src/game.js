@@ -536,7 +536,7 @@ function getMovePos(board, closestEnemyPos, range, team) {
   }
   // TODO: if no spot available, move closer to enemy?
   // Temp: no move
-  return undefined;
+  return f.pos();
 }
 
 function getStepMovePos(board, unitPos, closestEnemyPos, range, team) {
@@ -711,6 +711,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
           effectMap = effectMap.setIn([unitPos, `buff${args.get(0)}`], buffValue);
         }
       case 'teleport':
+        console.log('@teleport')
       case 'transform':
       case 'noTarget':
         console.log('@useAbility - noTarget return for mode =', mode);
@@ -917,7 +918,10 @@ async function nextMove(board, unitPos, optPreviousTarget) {
   } // Move action
   const closestEnemyPos = enemyPos.get('closestEnemy');
   const movePos = getMovePos(board, closestEnemyPos, range, team);
-  const newBoard = board.set(movePos, unit.set('position', movePos)).delete(unitPos);
+  let newBoard;
+  if(!f.isUndefined(movePos)){
+    newBoard = board.set(movePos, unit.set('position', movePos)).delete(unitPos);
+  }
   const action = 'move';
   const move = Map({ unitPos, action, target: movePos });
   return Map({ nextMove: move, newBoard });
@@ -945,6 +949,9 @@ async function getUnitWithNextMove(board) {
   }
   // Find nextMove unit
   if (lowestNextMove.size === 1) {
+    if(f.isUndefined(lowestNextMove.get(0))){
+      console.log('@getUnitWithNextMove Undefined', board)
+    }
     return lowestNextMove.get(0);
   }
   // Decide order of equal next move units
@@ -1003,6 +1010,9 @@ async function startBattle(boardParam) {
       const previousDirection = previousMove.get('nextMove').get('direction');
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove, Map({target: previousTarget, direction: previousDirection}));
     } else {
+      if(f.isUndefined(nextUnitToMove)){
+        console.log('Unit is undefined')
+      }
       nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove);
     }
     const result = await nextMoveResult;
@@ -1042,6 +1052,7 @@ async function startBattle(boardParam) {
     const team = board.getIn([nextUnitToMove, 'team']);
     const dotObj = await handleDotDamage(board, nextUnitToMove, team);
     if (!f.isUndefined(dotObj.get('damage'))) {
+      console.log('@Dot Damage');
       board = await dotObj.get('board');
       // console.log('@dotDamage battleover', battleOver, dotObj.get('battleOver'), battleOver || dotObj.get('battleOver'));
       const action = 'dotDamage';
@@ -1057,7 +1068,7 @@ async function startBattle(boardParam) {
         // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
         unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
       }
-      // console.log('@dotDamage', dotDamage);
+      console.log('@dotDamage', dotDamage);
       f.printBoard(board, move);
       actionStack = actionStack.push(Map({ nextMove: move, newBoard: board }).set('time', unit.get('next_move')));
     }
@@ -1235,7 +1246,7 @@ async function markBoardBonuses(board) {
     let tempEnemy = enemyDebuffIter.next();
     while (!tempEnemy.done) {
       const buff = tempEnemy.value;
-      const bonusValue = typeBuffMapAll.get(String(enemyTeam)).get(buff);
+      const bonusValue = typeEnemyDebuffMap.get(String(enemyTeam)).get(buff);
       const buffText = `${buff} -${bonusValue}`;
       const newUnit = typesJS.getEnemyDebuff(buff)(newBoard.get(unitPos), bonusValue) // Crash here
         .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
@@ -1311,9 +1322,9 @@ async function prepareBattle(board1, board2) {
   // Lose when empty, even if enemy no units aswell (tie with no damage taken)
   const board = await combineBoards(board1, board2);
   if (board1.size === 0) {
-    return Map({ actionStack: List([]), winner: 1, board});
+    return Map({ actionStack: List([]), winner: 1, board, 'startBoard': board});
   } if (board2.size === 0) {
-    return Map({ actionStack: List([]), winner: 0, board});
+    return Map({ actionStack: List([]), winner: 0, board, 'startBoard': board});
   }
 
   // f.print(board, '@prepareBattle')

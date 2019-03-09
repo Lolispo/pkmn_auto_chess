@@ -2,6 +2,19 @@
 
 import { getBackgroundAudio, getSoundEffect } from './audio.js';
 
+const getNewSoundEffects = (soundEffects, newSoundEffect) => {
+  let newSoundEffects = soundEffects;
+  console.log('@getNewSoundEffects', soundEffects, soundEffects.length)
+  for(let i = 0; i < soundEffects.length; i++){
+    if(soundEffects[i] !== newSoundEffect){
+      console.log('@NewSoundEffect', i, newSoundEffect)
+      newSoundEffects[i] = newSoundEffect;
+      break;
+    }
+  }
+  return newSoundEffects;
+}
+
 const reducer = (
   state = {
     gameIsLive: false,
@@ -45,9 +58,11 @@ const reducer = (
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
     music: getBackgroundAudio('idle'),
     volume: 0.05,
+    startTimer: false,
   },
   action
 ) => {
+  let tempSoundEffects;
   switch (action.type) { // Listens to events dispatched from from socket.js
     case 'NEW_STATE':
       // Update state with incoming data from server
@@ -112,6 +127,7 @@ const reducer = (
         selectedUnit: -1,
         soundEffects: ['', '', '', '', '','', '', '', '', ''],
         music: getBackgroundAudio('idle'),
+        startTimer: true,
       }
       break;
     case 'SET_CONNECTED':
@@ -148,14 +164,17 @@ const reducer = (
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];
       const battleStartBoard = action.battleStartBoards[state.index];
+      console.log('@battle_time', state.soundEffects)
+      tempSoundEffects = getNewSoundEffects(state.soundEffects, getSoundEffect('horn'));
       state = {
         ...state,
         music: (action.enemy ? getBackgroundAudio('pvpbattle') : getBackgroundAudio('battle')),
+        soundEffects: [...tempSoundEffects],
         onGoingBattle: true,
         enemyIndex: action.enemy,
         actionStack,
         battleStartBoard,
-        startBattle: true
+        startBattle: true,
       }
       console.log('@battleTime actionStack', state.actionStack);
       console.log('@battleTime battleStartBoard', state.battleStartBoard)
@@ -176,8 +195,13 @@ const reducer = (
     case 'SET_MOUSEOVER_ID':
       state = {...state, mouseOverId: action.mouseOverId}
       break;
-    case 'END_BATTLE':
-      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle')}
+    case 'END_BATTLE':  
+      console.log('Battle ended', state.startTimer)
+      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), startTimer: true}
+      break;
+    case 'DISABLE_START_TIMER':
+      state = {...state, startTimer: false}
+      console.log('Disabled start timer')
       break;
     case 'TOGGLE_MUSIC':
       state = {...state, musicEnabled: !state.musicEnabled}
@@ -198,15 +222,8 @@ const reducer = (
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'NEW_SOUND_EFFECT':
-    for(let i = 0; i < state.soundEffects.length; i++){
-      if(state.soundEffects[i] !== action.newSoundEffect){
-          console.log('@NewSoundEffect', i, action.newSoundEffect)
-          const soundEffects = state.soundEffects;
-          soundEffects[i] = action.newSoundEffect
-          state = {...state, soundEffects: [...soundEffects]};
-          break;
-        }
-      }
+      tempSoundEffects = getNewSoundEffects(state.soundEffects, action.newSoundEffect);
+      state = {...state, soundEffects: [...tempSoundEffects]};
       break;
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
@@ -226,15 +243,8 @@ const reducer = (
         default:
           soundEffect = getSoundEffect('pling');
       }
-      for(let i = 0; i < state.soundEffects.length; i++){
-        if(state.soundEffects[i] !== soundEffect){
-          console.log('Setting audio', i, soundEffect);
-          const soundEffects = state.soundEffects;
-          soundEffects[i] = soundEffect
-          state = {...state, soundEffects: [...soundEffects]};
-          break;
-        }
-      }
+      tempSoundEffects = getNewSoundEffects(state.soundEffects, soundEffect);
+      state = {...state, soundEffects: [...tempSoundEffects]};
       break;
     default:
       break;

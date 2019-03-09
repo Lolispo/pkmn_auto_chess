@@ -345,6 +345,51 @@ class Audio extends Component {
   }
 }
 
+class Timer extends Component {
+
+  constructor(props) {
+    super(props);
+    console.log('Rendering Timer')
+    this.state = {
+      seconds: '00',
+    }
+    this.startCountDown = this.startCountDown.bind(this);
+    this.tick = this.tick.bind(this);
+    if(this.props.startTimer){
+      this.startCountDown();
+      this.props.dispatch({type: 'DISABLE_START_TIMER'})
+    }
+  }
+
+  tick() {
+    const sec = this.secondsRemaining;
+    this.setState({
+      seconds: sec
+    })
+    if (sec < 10) {
+      this.setState({
+        seconds: '0' + this.state.seconds,
+      })
+    }
+    if (sec === 0) {
+      clearInterval(this.intervalHandle);
+      battleReady(this.props.storedState);
+    }
+    this.secondsRemaining--
+  }
+  
+  startCountDown() {
+    this.intervalHandle = setInterval(this.tick, 1000);
+    this.secondsRemaining = this.props.startTime;
+  }
+
+  render () {
+    return <div className='timerDiv'>
+      <div key={this.props.key} className='text_shadow timerText'>{(this.state.seconds != '00' ? this.state.seconds : '')}</div>
+    </div>
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -361,10 +406,8 @@ class App extends Component {
     this.props.ready ? unready() : ready();
   };
 
-  startGame = () => {
-    // TODO: Css affected by this.props.allReady
-    if(this.props.allReady){
-      // TODO: Actually start game
+  startGameEvent = (forceStart=false) => {
+    if(this.props.allReady || forceStart){
       console.log('Starting')
       startGame(this.props.playersReady);
     } else {
@@ -458,7 +501,7 @@ class App extends Component {
 
   selectedUnitInformation = () => {
     const className = 'center text_shadow infoPanel';
-    const noSelected = <div className={`${className}`} style={{paddingTop: '40px', paddingLeft: '18px'}}>No unit selected</div>
+    const noSelected = <div className={className}><div className={`noSelected`}>No unit selected</div></div>
     if(!isUndefined(this.props.selectedUnit)){
       let pokemon = (this.props.selectedUnit.isBoard ? (this.props.onGoingBattle ? this.props.battleStartBoard[this.props.selectedUnit.pos] 
         : this.props.myBoard[this.props.selectedUnit.pos]) : this.props.myHand[this.props.selectedUnit.pos]);
@@ -540,6 +583,9 @@ class App extends Component {
     // console.log(event.key, event.currentTarget)
     const prop = this.props;
     let from;
+    switch(event.target.tagName){
+      case 'INPUT': return;
+    }
     switch(event.key){
       case '1':
       case '2':
@@ -926,8 +972,11 @@ class App extends Component {
         <div className='flex'> 
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGame}>
+          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGameEvent}>
             StartGame{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
+          </button>
+          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers ? '' : 'hidden')}`} onClick={() => this.startGameEvent(true)}>
+            Force Start Game{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
           </button>
         </div>
       </div>
@@ -964,6 +1013,7 @@ class App extends Component {
             </div>
           </CSSTransitionGroup>
         </div>
+        <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer>
         <div className = 'centerWith50'>
           <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
           <div className='flex marginTop5'>
@@ -1052,9 +1102,6 @@ class App extends Component {
             {this.playerStatsDiv()}
           </div>
         </div>
-        <div style={{paddingTop: '20px', paddingLeft: '10px'}}>
-          <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
-        </div>
         <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
           <div className='flex'>
             <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>
@@ -1063,6 +1110,9 @@ class App extends Component {
             <button style={{marginLeft: '5px'}} className={`normalButton`} onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})}>
               {(this.props.chatSoundEnabled ? 'Mute Chat': 'Unmute Chat')}
             </button>
+            {/*<div style={{marginLeft: '5px'}}>
+              <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
+            </div>*/}
           </div>
           {(this.props.help ? <div className='text_shadow marginTop15'>
           <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>Chat 
@@ -1128,6 +1178,7 @@ const mapStateToProps = state => ({
   soundEffects: state.soundEffects,
   music: state.music,
   volume: state.volume,
+  startTimer: state.startTimer,
 });
 
 export default connect(mapStateToProps)(App);

@@ -104,8 +104,8 @@ module.exports = (socket, io) => {
   });
 
   socket.on('START_GAME', async (amountToPlay) => {
-    const waitingPlayers = connectedPlayers.filter(player => player.get('sessionId') === true || player.get('sessionId') === false);
-    const sessionConnectedPlayers = sessionJS.initializeConnectedPlayers(waitingPlayers);
+    const readyPlayers = connectedPlayers.filter(player => player.get('sessionId') === true); // || player.get('sessionId') === false
+    const sessionConnectedPlayers = sessionJS.initializeConnectedPlayers(readyPlayers);
     const sessionId = sessionJS.findFirstAvailableIndex(sessions);
     connectedPlayers = await sessionJS.updateSessionIds(connectedPlayers, Array.from(sessionConnectedPlayers.keys()), sessionId);
     const state = await gameJS._startGame(amountToPlay);
