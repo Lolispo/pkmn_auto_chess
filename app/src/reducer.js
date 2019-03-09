@@ -60,6 +60,7 @@ const reducer = (
     music: getBackgroundAudio('mainMenu'),
     volume: 0.05,
     startTimer: false,
+    isDead: true,
   },
   action
 ) => {
@@ -132,6 +133,7 @@ const reducer = (
         soundEffects: ['', '', '', '', '','', '', '', '', ''],
         music: getBackgroundAudio('idle'),
         startTimer: true,
+        isDead: false,
       }
       break;
     case 'SET_CONNECTED':
@@ -238,6 +240,9 @@ const reducer = (
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
       state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer}
+      break;
+    case 'DEAD_PLAYER':
+      state = {...state, message: action.message, messageMode: 'big', isDead: true}
       break;
     case 'NEW_CHAT_MESSAGE':
       // console.log('@NEW_CHAT_MESSAGE', action.chatType);

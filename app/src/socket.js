@@ -71,7 +71,10 @@ const configureSocket = dispatch => {
   socket.on('NEW_CHAT_MESSAGE', (senderMessage, message, type) => {
     dispatch({type: 'NEW_CHAT_MESSAGE', senderMessage, newMessage: message, chatType: type});
   });
-  
+
+  socket.on('DEAD_PLAYER', (message) => {
+    dispatch({type: 'DEAD_PLAYER', message});
+  });
   
   return socket;
 };

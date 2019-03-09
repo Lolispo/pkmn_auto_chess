@@ -91,6 +91,11 @@ class Pokemon extends Component{
     // Unit != null
     // Hand is not full
     // console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
+    if(this.props.newProps.isDead){
+      updateMessage(this.props.newProps, 'You are dead! No buying when dead', 'error');
+      this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
     if(this.props.shopPokemon && this.props.newProps.gameIsLive){
       if(this.props.newProps.gold >= this.props.shopPokemon.cost){
         const size = Object.keys(this.props.newProps.myHand).length
@@ -212,6 +217,11 @@ class Cell extends Component {
     // to is on valid part of the board
     const prop = this.props.newProps;
     const from = String(fromParam);
+    if(prop.isDead){
+      updateMessage(prop, 'You are dead!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
     if(from && to && prop.gameIsLive){
       console.log('@placePieceEvent',from, to);
       const splitted = to.split(',');
@@ -234,7 +244,7 @@ class Cell extends Component {
     const unit = (el.props.isBoard ? (el.props.newProps.onGoingBattle ? el.props.newProps.battleStartBoard[this.state.pos] : el.props.newProps.myBoard[this.state.pos]) : el.props.newProps.myHand[this.state.pos]);
     const prevSelectedUnit = el.props.newProps.selectedUnit;
     console.log('@handleCellClick pressed', el.props.value.x, ',', el.props.value.y)
-    console.log(' -', el.props.isBoard, el.props.newProps.onGoingBattle, this.state.pos, unit, prevSelectedUnit)
+    // console.log(' -', el.props.isBoard, el.props.newProps.onGoingBattle, this.state.pos, unit, prevSelectedUnit)
     // If unit selected -> presses empty -> place piece 
     if(this.state.pos !== prevSelectedUnit.pos){ // Shouldn't do anything if same tile as SELECT_UNIT Tile
       el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit}});
@@ -424,6 +434,11 @@ class App extends Component {
 
   refreshShopEvent = () => {
     // You have enough money to refresh
+    if(this.props.isDead){
+      updateMessage(this.props, 'You are dead! No shop interaction when dead', 'error');
+      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
     if(this.props.gold >= 2 && this.props.gameIsLive){
       refreshShop(this.props.storedState)
     } else{
@@ -434,6 +449,11 @@ class App extends Component {
 
   buyExpEvent = () => {
     // You have enough money to buy exp
+    if(this.props.isDead){
+      updateMessage(this.props, 'You are dead! No exp buying when dead', 'error');
+      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
     if(this.props.gold >= 5 && this.props.gameIsLive){
       buyExp(this.props.storedState)
     } else{
@@ -538,8 +558,13 @@ class App extends Component {
     // to is on valid part of the board
     const prop = this.props;
     const from = String(fromParam);
+    if(prop.isDead){
+      updateMessage(prop, 'You are dead!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
     if(from && to && prop.gameIsLive){
-      console.log('@placePieceEvent',from, to);
+      console.log('@placePieceEvent', from, to);
       const splitted = to.split(',');
       const fromSplitted = from.split(',');
       const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
@@ -559,7 +584,12 @@ class App extends Component {
   withdrawPieceEvent = (from) => {
     // Hand is not full
     const prop = this.props;
-    const size = Object.keys(prop.myHand).length
+    if(prop.isDead){
+      updateMessage(prop, 'You are dead!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
+    const size = Object.keys(prop.myHand).length;
     if(prop.myBoard[from] && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
       if(size < 8){
         withdrawPiece(prop.storedState, String(from));
@@ -573,9 +603,16 @@ class App extends Component {
 
   sellPieceEvent = (from) => {
     const prop = this.props;
+    if(prop.isDead){
+      updateMessage(prop, 'You are dead!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
     const validUnit = (prop.selectedUnit.isBoard ? prop.myBoard[from] : prop.myHand[from])
     console.log('@sellPiece', validUnit, from, prop.selectedUnit.isBoard)
-    if(validUnit && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
+    // From contains unit, hand unit is ok during battle
+    // TODO: Remove false && and fix allowing sellPiece during battle, currently weird
+    if(validUnit && prop.gameIsLive && (!prop.onGoingBattle || (false && !prop.selectedUnit.isBoard))){ 
       sellPiece(prop.storedState, String(from));
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
@@ -792,8 +829,8 @@ class App extends Component {
     return board;
   }
 
-  startBattleEvent = async (self) => {
-    const { dispatch, actionStack, battleStartBoard } = self.props;
+  startBattleEvent = async () => {
+    const { dispatch, actionStack, battleStartBoard } = this.props;
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
     let board = battleStartBoard
     let currentTime = 0;
@@ -824,10 +861,10 @@ class App extends Component {
       const winningTeam = (Object.values(battleStartBoard)[0] ? Object.values(battleStartBoard)[0].team : 1);
       // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
       if(winningTeam === 0) {
-        updateMessage(this.props, 'You won!', 'big');
+        updateMessage(this.props, 'Battle won!', 'big');
         dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
       } else {
-        updateMessage(this.props, 'You lost!', 'big');
+        updateMessage(this.props, 'Battle lost!', 'big');
         dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('battleLose')});
       }
     }
@@ -1142,7 +1179,7 @@ class App extends Component {
         {boardDiv}
         {rightSide}
       </div>
-      <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent(this) : () => '')}/>
+      <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent.bind(this)() : () => '')}/>
     </div> : <div className='mainMenu'>{mainMenu}</div>);
   }
 }
@@ -1193,6 +1230,7 @@ const mapStateToProps = state => ({
   music: state.music,
   volume: state.volume,
   startTimer: state.startTimer,
+  isDead: state.isDead,
 });
 
 export default connect(mapStateToProps)(App);

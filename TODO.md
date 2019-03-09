@@ -19,6 +19,7 @@ Test me ingame:
     3 psychic - crashed
     WinningAnimation: Apply to all winning units? (Notice multiple of same type)
     Player loses
+        Shouldn't be able to interact with anything board related
     Player disconnects (Not prio)
         During battle or normally
 
@@ -46,6 +47,9 @@ StepsToTake dependent on pokemon stats
 MoveRemake
     Does it allow jumping over if close enough?
         Better when priorities are set for target better
+
+Is While Iterator problematic if 2 players die same round?
+    Can it continue iterating if element was deleted previously
 
 Player eliminated logic
     Move all pieces back to pieces in session
@@ -82,6 +86,9 @@ PlacePieceEvent (All piece interactions):
 Pieces:
     Max 9 units for each player
         Fixes: Stop spawning units of certain type for player if === 9
+
+SellPieceEvent:
+    Allow selling piece from hand during battle
 
 Add longestTimeAllowed for battle, where a tie occurs
 
@@ -144,23 +151,22 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Select unit
+    Save information on deselect in left side but remove sell button
+
 Message:
     Update player -> information about what was updated from server
-
-You won / lose -> battle won / lost
 
 Timer set to system.time and calculated from that
     If game is canceled, make that timeout clearinterval
 
-SellPieceEvent:
-    Allow selling piece not in battle during battle
 
 Leave Game button
     Prompt (pseudo alert): are you sure you want to leave the game?
 
 Error console logs logic in frontend, move to constructor instead of render (battleStartDetection)
 
-confetti on win http://www.cagrimmett.com/til/2018/01/05/css-confetti.html
+confetti on win
 
 Restart reset more variables
     SoundEffect unitSound chat reset
@@ -231,6 +237,8 @@ Shop
 
 Scoreboard: 
     Css me, Stick to right like a menu
+    Store permantently players with 0 hp
+        When showing scoreboard, append greyed out eliminated players in order of eliminiation
     Streak Showing
     *Later: Name and (preselected)image
     Make players clickable
@@ -372,6 +380,8 @@ eevee:
 
 Speed might be too strong atm
     Buff tanky units
+
+Remove iggly/cleffa trio ? 
 
 Abra 2 -> 1
 

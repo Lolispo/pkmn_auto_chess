@@ -130,6 +130,20 @@ exports.getPlayerID = (socketId, connectedPlayers, sessions, message) => {
   return session.get('connectedPlayers').get(socketId);
 };
 
+exports.findSocketId = (session, pid) => {
+  const sessionPlayers = session.get('connectedPlayers');
+  const iter = sessionPlayers.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const socketId = temp.value;
+    if(sessionPlayers.get(socketId) === pid){
+      return socketId;
+    }
+    temp = iter.next();
+  }
+  return -1;
+}
+
 exports.getLongestBattleTime = (actionStacks) => {
   let longestTime = -1;
   const iter = actionStacks.keys();

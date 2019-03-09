@@ -235,6 +235,8 @@ module.exports = (socket, io) => {
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
     const state = await gameJS._sellPiece(stateWithPieces, index, from);
     console.log('Sell piece at ', from);
+    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
+    sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     // Hand and board
     socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
   });
@@ -318,7 +320,10 @@ module.exports = (socket, io) => {
             if(player.get('dead')){
               stateEndedTurn = gameJS.removeDeadPlayer(stateCheckDead, pid);
               newChatMessage(socket, io, socket.id, playerName + ' Eliminated - ', 'Alive players: ' + stateEndedTurn.get('amountOfPlayers'), 'playerEliminated');
-              // TODO: Find socketid for the dead player
+              const deadPlayerSocketId = sessionJS.findSocketId(session, pid);
+              if(deadPlayerSocketId !== -1){
+                io.to(`${deadPlayerSocketId}`).emit('DEAD_PLAYER', 'You Lost! You finished ' + (stateEndedTurn.get('amountOfPlayers') + 1) + '!');
+              }
               // Send information to that player, so they know they are out
             }
             temp = iter.next();
