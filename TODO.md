@@ -24,21 +24,28 @@ Test me ingame:
 
 ## Backend
 
+Target Priorities
+    Make more like move priority, in front of you first
+    Never stick on a target where attacks are < x1
+        (meh)
+
 Type Bonuses are wrongly typed
     Instead of giving first 15, then 15, it gives first 15 then 30: 
         Combos go insane very fast
     Update description of types to be generated automatically from fields instead of manually typed
 
-Something cool with rivals
+Rivals:
+    When playing against the person you played the most
+    > 3 Battles
+    Make interesting: Keep record of results from battle between players
+    Rival is the one opponent where you have lost and won to most equally
+        People might not have each other as rivals
 
 StepsToTake dependent on pokemon stats
 
 MoveRemake
-    Don't move furthest away immeditely, move in max steps 1-3 in correct direction
-        Otherwise high speed means => jump into all enemies and die
-    Path find A* next pos
-    Currently cant jump over other units
-        Allow if road to pos < stepsToTake?
+    Does it allow jumping over if close enough?
+        Better when priorities are set for target better
 
 Player eliminated logic
     Move all pieces back to pieces in session
@@ -82,11 +89,6 @@ Dps stats after round
 
 Weak against type list (Currently only strong against, ineffective and no effect)
 
-Target Priorities
-    Make more like move priority, in front of you first
-    Never stick on a target where attacks are < x1
-        (meh)
-
 No target move (splash) shouldnt deal damage (curr 1 it seems)
 
 ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
@@ -95,6 +97,7 @@ first move implement
     Current Logic in: setRandomFirstMove
     
 Longer range than 1
+    Requires animation calculate vector instead of fixed amount of pixels
     2:
         Caterpie, weedle, pidgey, spearow
         Butterfree
@@ -147,6 +150,7 @@ Message:
 You won / lose -> battle won / lost
 
 Timer set to system.time and calculated from that
+    If game is canceled, make that timeout clearinterval
 
 SellPieceEvent:
     Allow selling piece not in battle during battle
@@ -250,9 +254,7 @@ Show permenent buffs at left of board
 
 Sound: 
     Scale music so start middle of bar instead -> not as loud possible
-    Instead of Buttons have Icons:
-        Music (note) with red block over
-        Sound: (Stereo look, same as windows, red block over when muted)
+    Chat Mute/unmute icons
     Add hotkey m for toggle mute (for music m, sound n, chat c)
     Disconnect sound
     New Music/Sounds:
@@ -371,22 +373,22 @@ eevee:
 Speed might be too strong atm
     Buff tanky units
 
-Abra cheaper
-    Probably fine after movement change
+Abra 2 -> 1
 
-Strongest 1: 
-
-Rhyhorn 4 -> 5?
-Horsea 4 -> 3? Is dragon tho on kingdra
-elekid 4 -> 3?
-Check slowpoke - really slow
-
-Sheets dps check for balance
+Sheets balance:
+    Rhyhorn 4 -> 5?
+    Horsea 4 -> 3? Is dragon tho on kingdra
+    elekid 4 -> 3?
+    Check slowpoke - really slow
+    Check dps, damage
 
 New abilities:
     Raticate hyper fang
+    jigglypuff sing, something better (really bad)
 
 gym balance
+    Seems really weak, try deeper
+    gym 3 -> needs more units
 
 ## New features to add (Not as core)
 
@@ -405,9 +407,6 @@ Fix working npm script to start both react and node server
     > 3 battles
     Alt1: Either when playing against the person you played the most
         Temp implementation makes this irrelevant
-    Alt2: The person you lost to the most 
-        Problem: People won't be rivals against each other
-    Alt1 Best: Revamp over enemy matchups should be done to make this interesting
 
 #### Items
 

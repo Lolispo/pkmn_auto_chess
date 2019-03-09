@@ -15,6 +15,7 @@ const TIME_FACTOR = 15;
 
 const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId');
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
+const sessionExist = socketId => !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId')));
 
 const emitMessage = (socket, io, sessionId, func) => {
   const iter = connectedPlayers.keys();
@@ -239,6 +240,7 @@ module.exports = (socket, io) => {
   });
 
   socket.on('BATTLE_READY', async (stateParam) => {
+    if(!sessionExist(socket.id)) return;
     const index = getPlayerIndex(socket.id);
     const state = fromJS(stateParam); // Shouldn't require pieces in battle
     const amount = state.get('amountOfPlayers');

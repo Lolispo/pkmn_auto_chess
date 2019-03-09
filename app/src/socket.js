@@ -23,17 +23,7 @@ const configureSocket = dispatch => {
     console.log('disconnected');
   });
 
-  // the socket.on method is like an event listener
-  // just like how our redux reducer works
-  // the different actions that our socket/client will emit
-  // is catched by these listeners
-  socket.on('UPDATED_PIECES', state => {
-    console.log('Updating pieces'); // Only send the pieces instead
-    dispatch({ type: 'NEW_PIECES', newState: state});
-  });
-  
   socket.on('UPDATED_STATE', state => {
-    console.log('Updating state');
     dispatch({ type: 'NEW_STATE', newState: state});
   });
 
@@ -71,7 +61,6 @@ const configureSocket = dispatch => {
   });
 
   socket.on('SET_STATS', (name, stats) => {
-    console.log('@socket.setStats')
     dispatch({ type: 'SET_STATS', name, stats});
   });
 
@@ -80,7 +69,6 @@ const configureSocket = dispatch => {
   });
 
   socket.on('NEW_CHAT_MESSAGE', (senderMessage, message, type) => {
-    // console.log('@newChat', senderMessage, message, type)
     dispatch({type: 'NEW_CHAT_MESSAGE', senderMessage, newMessage: message, chatType: type});
   });
   
@@ -104,19 +92,14 @@ export const giveId = () =>
 export const startGame = amountToPlay => 
   socket.emit('START_GAME', amountToPlay);
 
-export const toggleLock = (state) => {
-  if(state.players) {
-    socket.emit('TOGGLE_LOCK', state);
-  }
-}
+export const toggleLock = (state) => 
+  socket.emit('TOGGLE_LOCK', state);
 
-export const buyUnit = (state, pieceIndex) => {
+export const buyUnit = (state, pieceIndex) =>
   socket.emit('BUY_UNIT', state, pieceIndex);  
-}
 
-export const buyExp = (state) => {
+export const buyExp = (state) =>
   socket.emit('BUY_EXP', state);  
-}
 
 export const refreshShop = (state) => 
   socket.emit('REFRESH_SHOP', state);
@@ -130,16 +113,13 @@ export const withdrawPiece = (state, from) =>
 export const sellPiece = (state, from) => 
   socket.emit('SELL_PIECE', state, from);
 
-export const battleReady = (state) => {
+export const battleReady = (state) => 
   socket.emit('BATTLE_READY', state);
-}
 
-export const getStats = (name) => {
+export const getStats = (name) => 
   socket.emit('GET_STATS', name);
-}
 
-export const sendMessage = message => {
+export const sendMessage = message => 
   socket.emit('SEND_MESSAGE', message);
-}
 
 export default configureSocket;

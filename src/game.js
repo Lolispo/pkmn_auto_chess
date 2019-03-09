@@ -591,66 +591,60 @@ function handleNeighbor(pathFind, board, current, enemyPos, pos) {
 
 async function getStepMovePos(board, unitPos, closestEnemyPos) {
   const stepsToTake = Math.floor(Math.random() * 2 + 1); // 1 - 2
-
-  let pathFind = Map({
-    fromStartScore: Map({}).set(unitPos, 0), // gScore
-    heuristicScore: Map({}).set(unitPos, getHeuristicScore(unitPos, closestEnemyPos)), // fScore
-    toVisit: Set([]).add(unitPos),    // openSet
-    visited: Set([]),                 // closedSet
-    cameFrom: Map({}),                // cameFrom
-  });
-  // console.log('@Path Start', unitPos, closestEnemyPos);
-  while(pathFind.get('toVisit').size > 0) {
-    // console.log('@Path ToVisit: ', pathFind.get('toVisit'))
-    const current = getLowestKey(pathFind.get('toVisit'), pathFind.get('heuristicScore'));
-    if(current === closestEnemyPos){
-      let cameFrom = current;
-      let path = List([]);
-      while(cameFrom !== unitPos) {
-        cameFrom = pathFind.getIn(['cameFrom', cameFrom]);
-        path = path.unshift(cameFrom);
-      }
-      if(path.size <= 1) {
-        console.log('Shouldnt get here @path goal')
-      } else {
-        let index;
-        if(path.size <= stepsToTake){
-          index = path.size - 1;
-        } else {
-          index = stepsToTake;
-        }
-        console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
-        return path.get(index);
-      }
-    }
-    // console.log('@Path Current', current);
-    pathFind = pathFind.set('toVisit', pathFind.get('toVisit').delete(current)).set('visited', pathFind.get('visited').add(current));
-    // console.log('@Path Visited', pathFind.get('visited'));
-
-    const ux = f.x(current);
-    const uy = f.y(current);
-
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux, uy + 1)); // N
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux, uy - 1)); // S
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy)); // E
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy)); // W
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy - 1)); // NW
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy - 1)); // NE
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy + 1)); // SW
-    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy + 1)); // SE
-  }
-  console.log('DIDNT FIND PATH. RETURNING ', unitPos);
-  return unitPos;
-
-  /*
+  const rangeToTarget = getHeuristicScore(unitPos, closestEnemyPos);
   if(stepsToTake > rangeToTarget){ // Within range, move to closest available space
-    return getMovePos(board,  closestEnemyPos, range, team);
+    return getMovePos(board, closestEnemyPos, 1, team);
   } else{ // More TOWARDS unit with stepsToTake amount of steps
-    for (let i = stepsToTake; i > 0; i--) {
-      // TODO: Check for available spots at stepsToTake away from unitPos towards closestEnemyPos
+    let pathFind = Map({
+      fromStartScore: Map({}).set(unitPos, 0), // gScore
+      heuristicScore: Map({}).set(unitPos, rangeToTarget), // fScore
+      toVisit: Set([]).add(unitPos),    // openSet
+      visited: Set([]),                 // closedSet
+      cameFrom: Map({}),                // cameFrom
+    });
+    // console.log('@Path Start', unitPos, closestEnemyPos);
+    while(pathFind.get('toVisit').size > 0) {
+      // console.log('@Path ToVisit: ', pathFind.get('toVisit'))
+      const current = getLowestKey(pathFind.get('toVisit'), pathFind.get('heuristicScore'));
+      if(current === closestEnemyPos){
+        let cameFrom = current;
+        let path = List([]);
+        while(cameFrom !== unitPos) {
+          cameFrom = pathFind.getIn(['cameFrom', cameFrom]);
+          path = path.unshift(cameFrom);
+        }
+        if(path.size <= 1) {
+          console.log('Shouldnt get here @path goal')
+        } else {
+          let index;
+          if(path.size <= stepsToTake){
+            index = path.size - 1;
+          } else {
+            index = stepsToTake;
+          }
+          console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
+          return path.get(index);
+        }
+      }
+      // console.log('@Path Current', current);
+      pathFind = pathFind.set('toVisit', pathFind.get('toVisit').delete(current)).set('visited', pathFind.get('visited').add(current));
+      // console.log('@Path Visited', pathFind.get('visited'));
+  
+      const ux = f.x(current);
+      const uy = f.y(current);
+  
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux, uy + 1)); // N
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux, uy - 1)); // S
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy)); // E
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy)); // W
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy - 1)); // NW
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy - 1)); // NE
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy + 1)); // SW
+      pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy + 1)); // SE
     }
+    console.log('DIDNT FIND PATH. RETURNING ', unitPos);
     return unitPos;
-  }*/
+  }
 }
 
 /**
@@ -658,6 +652,10 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
  * If someones at spot && its enemy unit
  * Does this handle positioning good for both teams?
  * Map({closestEnemy, withinRange})
+ * Current order: SW, NW, S, N, SE, NE, SW, SE, W, E, NW, NE
+ * Wanted order: 
+ *    team 0: N, S, W, E, NW, NE, SW, SE
+ *    team 1: S, N, W, E, SW, SE, NW, NE
  */
 function getClosestEnemy(board, unitPos, range, team) {
   // f.print(board, '@getClosestEnemy board')

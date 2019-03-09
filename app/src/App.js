@@ -353,7 +353,6 @@ class Timer extends Component {
 
   constructor(props) {
     super(props);
-    console.log('Rendering Timer')
     this.state = {
       seconds: '00',
     }
@@ -385,6 +384,10 @@ class Timer extends Component {
   startCountDown() {
     this.intervalHandle = setInterval(this.tick, 1000);
     this.secondsRemaining = this.props.startTime;
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalHandle);
   }
 
   render () {
