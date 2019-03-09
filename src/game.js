@@ -539,13 +539,109 @@ function getMovePos(board, closestEnemyPos, range, team) {
   return f.pos();
 }
 
-function getStepMovePos(board, unitPos, closestEnemyPos, range, team) {
+function getHeuristicScore(unitPos, closestEnemyPos) {
   const x = f.x(closestEnemyPos);
   const y = f.y(closestEnemyPos);
   const ux = f.x(unitPos);
   const uy = f.y(unitPos);
-  const stepsToTake = Math.random() * 3 + 1; // 1 - 3
-  const rangeToTarget = Math.floor(Math.sqrt((uy - y)**2 + (ux - x)**2));
+  return Math.floor((uy - y)**2 + (ux - x)**2);
+}
+
+function getLowestKey(openSet, heuristicMap) {
+  const iter = openSet.keys();
+  let temp = iter.next();
+  let lowestIndex = temp.value;
+  let lowestValue = heuristicMap.get(lowestIndex);
+  while (!temp.done) {
+    const key = temp.value;
+    const value = heuristicMap.get(key);
+    if(value < lowestValue){
+      lowestValue = value;
+      lowestIndex = key;
+    }
+    temp = iter.next();
+  }
+  return lowestIndex
+}
+
+function handleNeighbor(pathFind, board, current, enemyPos, pos) {
+  if(pathFind.get('visited').has(pos)){
+    // console.log('@Path @handleNeighbor Visited', pos)
+    return pathFind;
+  }
+  if(!allowedCoordinate(board, pos) && pos !== enemyPos){ // Taken already
+    // console.log('@Path @handleNeighbor Spot taken', pos, (board.get(pos) ? board.get(pos).get('name') : ''));
+    return pathFind;
+  }
+  const distanceTraveled = pathFind.getIn(['fromStartScore', current]) + 1;
+  console.log('@Path @handleNeighbor', pos, pathFind.get('toVisit')) // !pathFind.get('toVisit').has(pos), pathFind.get('toVisit').has(pos), 
+  // console.log('@Path fromStartScore', distanceTraveled, pathFind.getIn(['fromStartScore', pos]));
+  if(!pathFind.get('toVisit').has(pos)){ // New visited node
+    pathFind = pathFind.set('toVisit', pathFind.get('toVisit').add(pos))
+  } else if(distanceTraveled >= (pathFind.getIn(['fromStartScore', pos]) || 0)){ // Not a better option
+    return pathFind;
+  }
+  // console.log('@Path Path Recorded')
+  // Record path
+  const heuristicScore = distanceTraveled + getHeuristicScore(pos, enemyPos);
+  return pathFind.setIn(['cameFrom', pos], current).setIn(['fromStartScore', pos], distanceTraveled).setIn(['heuristicScore', pos], heuristicScore);
+}
+
+async function getStepMovePos(board, unitPos, closestEnemyPos) {
+  const stepsToTake = Math.floor(Math.random() * 2 + 1); // 1 - 2
+
+  let pathFind = Map({
+    fromStartScore: Map({}).set(unitPos, 0), // gScore
+    heuristicScore: Map({}).set(unitPos, getHeuristicScore(unitPos, closestEnemyPos)), // fScore
+    toVisit: Set([]).add(unitPos),    // openSet
+    visited: Set([]),                 // closedSet
+    cameFrom: Map({}),                // cameFrom
+  });
+  // console.log('@Path Start', unitPos, closestEnemyPos);
+  while(pathFind.get('toVisit').size > 0) {
+    // console.log('@Path ToVisit: ', pathFind.get('toVisit'))
+    const current = getLowestKey(pathFind.get('toVisit'), pathFind.get('heuristicScore'));
+    if(current === closestEnemyPos){
+      // TODO: Get pos steps away
+      let cameFrom = current;
+      let path = List([]);
+      console.log('Finished Path Finding! Reconstruction path ...')
+      while(cameFrom !== unitPos) {
+        cameFrom = pathFind.getIn(['cameFrom', cameFrom]);
+        path = path.unshift(cameFrom);
+      }
+      if(path.size <= 1) {
+        console.log('Shouldnt get here @path goal')
+      } else {
+        if(path.size <= stepsToTake){
+          console.log('Return pos @ index', path.size - 1, path, path.get(path.size - 1))
+          return path.get(path.size - 1);
+        } else {
+          console.log('Return pos @ index', stepsToTake, path, path.get(stepsToTake))
+          return path.get(stepsToTake);
+        }
+      }
+    }
+    // console.log('@Path Current', current);
+    pathFind = pathFind.set('toVisit', pathFind.get('toVisit').delete(current)).set('visited', pathFind.get('visited').add(current));
+    // console.log('@Path Visited', pathFind.get('visited'));
+
+    const ux = f.x(current);
+    const uy = f.y(current);
+
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux, uy + 1)); // N
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux, uy - 1)); // S
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy)); // E
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy)); // W
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy - 1)); // NW
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy - 1)); // NE
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy + 1)); // SW
+    pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy + 1)); // SE
+  }
+  console.log('DIDNT FIND PATH. RETURNING ', unitPos);
+  return unitPos;
+
+  /*
   if(stepsToTake > rangeToTarget){ // Within range, move to closest available space
     return getMovePos(board,  closestEnemyPos, range, team);
   } else{ // More TOWARDS unit with stepsToTake amount of steps
@@ -553,7 +649,7 @@ function getStepMovePos(board, unitPos, closestEnemyPos, range, team) {
       // TODO: Check for available spots at stepsToTake away from unitPos towards closestEnemyPos
     }
     return unitPos;
-  }
+  }*/
 }
 
 /**
@@ -917,12 +1013,17 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     });
   } // Move action
   const closestEnemyPos = enemyPos.get('closestEnemy');
-  const movePos = getMovePos(board, closestEnemyPos, range, team);
+  const movePos = await getStepMovePos(board, unitPos, closestEnemyPos);
+  console.log('Move: ', unitPos, 'to', movePos);
   let newBoard;
-  if(!f.isUndefined(movePos)){
+  let action;
+  if(unitPos === movePos){
+    action = 'noAction';
+    newBoard = board;
+  } else {
     newBoard = board.set(movePos, unit.set('position', movePos)).delete(unitPos);
+    action = 'move';
   }
-  const action = 'move';
   const move = Map({ unitPos, action, target: movePos });
   return Map({ nextMove: move, newBoard });
 }
@@ -997,10 +1098,13 @@ async function startBattle(boardParam) {
   // Start battle
   while (!battleOver) {
     board = await board;
+    console.log('board @startBattle', board)
+    if(f.isUndefined(board)){
+      console.log('board undefined in startBattle')
+    }
     const nextUnitToMove = await getUnitWithNextMove(board);
     const unit = board.get(nextUnitToMove);
     // console.log('\n@startbattle Next unit to do action: ', nextUnitToMove);
-    const nextMoveBoard = board.setIn([nextUnitToMove, 'next_move'], +unit.get('next_move') + +unit.get('speed'));
     const previousMove = unitMoveMap.get(nextUnitToMove);
     // console.log(' --- ', (f.isUndefined(previousMove) ? '' : previousMove.get('nextMove').get('target')), nextUnitToMove)
     let nextMoveResult;
@@ -1008,12 +1112,12 @@ async function startBattle(boardParam) {
       // console.log('previousMove in @startBattle', previousMove.get('nextMove').get('target'));
       const previousTarget = previousMove.get('nextMove').get('target');
       const previousDirection = previousMove.get('nextMove').get('direction');
-      nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove, Map({target: previousTarget, direction: previousDirection}));
+      nextMoveResult = await nextMove(board, nextUnitToMove, Map({target: previousTarget, direction: previousDirection}));
     } else {
       if(f.isUndefined(nextUnitToMove)){
         console.log('Unit is undefined')
       }
-      nextMoveResult = await nextMove(nextMoveBoard, nextUnitToMove);
+      nextMoveResult = await nextMove(board, nextUnitToMove);
     }
     const result = await nextMoveResult;
     battleOver = result.get('battleOver');
@@ -1022,31 +1126,33 @@ async function startBattle(boardParam) {
       console.log('@startBattle CHECK ME', madeMove, board)
     }
     f.printBoard(result.get('newBoard'), madeMove);
-
-    actionStack = actionStack.push(madeMove);
-    if (result.get('allowSameMove')) { // Attack on target in same position for example
-      unitMoveMap = unitMoveMap.set(nextUnitToMove, nextMoveResult);
-      // console.log(' allowing same move, setting for', nextUnitToMove, unitMoveMap.get(nextUnitToMove).get('nextMove').get('target'))
-    } else {
-      // Delete every key mapping to nextMoveResult
-      const nextMoveAction = nextMoveResult.get('nextMove').get('action');
-      if (nextMoveAction === 'attack' || nextMoveAction === 'spell') { // Unit attacked died
-        // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
-        if(f.isUndefined(nextMoveResult.get('nextMove').get('target'))){
-          console.log('@nextMove attack/spell delete undefined', nextMoveResult.get('nextMove').get('target'), nextMoveBoard, nextUnitToMove);
+    const moveAction = result.get('nextMove').get('action');
+    if(moveAction !== 'noAction'){ // Is a valid action
+      actionStack = actionStack.push(madeMove);
+      if (result.get('allowSameMove')) { // Store target to be used as next Target
+        unitMoveMap = unitMoveMap.set(nextUnitToMove, result);
+      } else { // Delete every key mapping to nextMoveResult
+        const nextMoveAction = moveAction;
+        if (nextMoveAction === 'attack' || nextMoveAction === 'spell') { // Unit attacked died
+          // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
+          unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, result.get('nextMove').get('target'));
+        } else if (nextMoveAction === 'move') { // Unit moved, remove units that used to attack him
+          // console.log('Deleting all keys connected to this: ', nextUnitToMove)
+          unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
+        } else {
+          console.log('@nextMove, CHECK shouldnt get here', nextMoveAction, nextMoveAction !== 'noAction', moveAction !== 'noAction');
         }
-        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextMoveResult.get('nextMove').get('target'));
-      } else if (nextMoveAction === 'move') { // Unit moved, remove units that used to attack him
-        // console.log('Deleting all keys connected to this: ', nextUnitToMove)
-        if(f.isUndefined(nextUnitToMove)){
-          console.log('@nextMove move delete undefined', nextUnitToMove, board);
-        }
-        unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
-      } else {
-        console.log('@nextMove, CHECK shouldnt get here', nextMoveAction);
       }
     }
     board = result.get('newBoard');
+    // Calc nextMove value
+    let nextMoveValue;
+    if(moveAction === 'move'){ // Faster recharge on moves
+      nextMoveValue = +unit.get('next_move') + (+unit.get('speed') / 2);
+    } else {
+      nextMoveValue = +unit.get('next_move') + +unit.get('speed');
+    }
+    board = board.setIn([nextUnitToMove, 'next_move'], nextMoveValue);
     if (battleOver) break; // Breaks if battleover (no dot damage if last unit standing)
     // Dot damage
     const team = board.getIn([nextUnitToMove, 'team']);
@@ -1704,10 +1810,7 @@ exports.endBattleForAll = async (stateParam, winners, finalBoards, matchups, rou
 async function removeHp(state, playerIndex, hpToRemove) {
   const currentHp = state.getIn(['players', playerIndex, 'hp']);
   if (currentHp - hpToRemove <= 0) {
-    const newState = state.set('players', state.get('players').delete(playerIndex));
-    const amountOfPlayers = newState.get('amountOfPlayers') - 1;
-    const removedPlayerState = newState.set('amountOfPlayers', amountOfPlayers);
-    return removedPlayerState;
+    return state.setIn(['players', playerIndex, 'dead'], true);
   }
   return state.setIn(['players', playerIndex, 'hp'], currentHp - hpToRemove);
 }

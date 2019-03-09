@@ -11,6 +11,7 @@ import rivalTheme from './assets/Music/rivalTheme.mp3';
 
 import sellSound from './assets/SoundEffects/sellSound.mp3';
 import cheer from './assets/SoundEffects/cheer.mp3';
+import battleLose from './assets/SoundEffects/battleLose.mp3';
 import lvlup from './assets/SoundEffects/lvlup.mp3';
 import pling from './assets/SoundEffects/pling.mp3';
 import invalid from './assets/SoundEffects/invalid.mp3';
@@ -333,6 +334,8 @@ export function getSoundEffect(name){
       return invalid;
     case 'horn':
       return horn;
+    case 'battleLose':
+      return battleLose;
     default:
       return undefined;
   }

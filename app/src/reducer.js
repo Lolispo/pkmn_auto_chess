@@ -25,6 +25,7 @@ const reducer = (
     connectedPlayers: -1,
     allReady: false,
     message: 'default',
+    messageMode: '',
     help: true,
     chatHelpMode: '',
     chatMessages: [],
@@ -69,6 +70,7 @@ const reducer = (
       state = { ...state,  
         storedState: action.newState,
         message: 'Received State', 
+        messageMode: '',
         players: action.newState.players,
         myHand: action.newState.players[state.index].hand,
         myBoard: action.newState.players[state.index].board,
@@ -86,6 +88,7 @@ const reducer = (
       console.log('updating player', action.index, action.player);
       state = { ...state,
         message: 'Updated player', 
+        messageMode: '',
         myHand: action.player.hand,
         myBoard: action.player.board,
         myShop: action.player.shop,
@@ -113,6 +116,7 @@ const reducer = (
         connectedPlayers: -1,
         allReady: false,
         message: 'default',
+        messageMode: '',
         help: true,
         chatHelpMode: '',
         chatMessages: [],
@@ -144,7 +148,7 @@ const reducer = (
       state = { ...state, playersReady: action.playersReady, connectedPlayers: action.connectedPlayers, allReady: action.value, gameIsLive: false}
       break;
     case 'UPDATE_MESSAGE':
-      state = {...state, message: action.message}
+      state = {...state, message: action.message, messageMode: action.messageMode}
       break;
     case 'TOGGLE_HELP':
       state = {...state, help: !state.help}
@@ -186,7 +190,7 @@ const reducer = (
       break;
     case 'UPDATE_BATTLEBOARD':
         // console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
-        state = {...state, battleStartBoard: action.board, message: 'Move ' + action.moveNumber}
+        state = {...state, battleStartBoard: action.board, message: 'Move ' + action.moveNumber, messageMode: ''}
         // console.log('state', state);
         break;
     case 'SELECT_UNIT':
@@ -227,7 +231,7 @@ const reducer = (
       break;
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
-      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', gameEnded: action.winningPlayer, }
+      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, }
       break;
     case 'NEW_CHAT_MESSAGE':
       console.log('@NEW_CHAT_MESSAGE', action.chatType);
@@ -238,7 +242,9 @@ const reducer = (
         case 'pieceUpgrade':
           soundEffect = getSoundEffect('lvlup');
           break;
+        case 'playerEliminated':
         case 'disconnect':
+          break;
         case 'chat':
         default:
           soundEffect = getSoundEffect('pling');

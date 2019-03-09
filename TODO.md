@@ -25,10 +25,16 @@ Test me ingame:
 
 ## Backend
 
+Move: half nextpos speed
+
+StepsToTake dependent on pokemon stats
+
 MoveRemake
     Don't move furthest away immeditely, move in max steps 1-3 in correct direction
         Otherwise high speed means => jump into all enemies and die
     Path find A* next pos
+    Currently cant jump over other units
+        Allow if road to pos < stepsToTake?
 
 Player eliminated logic
     Move all pieces back to pieces in session
@@ -128,6 +134,10 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+You won / lose -> battle won / lost
+
+Timer set to system.time and calculated from that
+
 SellPieceEvent:
     Allow selling piece not in battle during battle
 
@@ -175,6 +185,7 @@ Css:
     Eevee evolutions stats screen
     Mark default radio button in bottom right as Chat (Make selected)
     Auto scroll down chat
+    more obvious you can't place on enemy part of board
 
 Animations: 
     Death Animations
@@ -227,6 +238,9 @@ Message:
 Show permenent buffs at left of board  
 
 Sound: 
+    Instead of Buttons have Icons:
+        Music (note) with red block over
+        Sound: (Stereo look, same as windows, red block over when muted)
     Add hotkey m for toggle mute (for music m, sound n, chat c)
     Disconnect sound
     New Music/Sounds:

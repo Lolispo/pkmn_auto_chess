@@ -13,6 +13,10 @@ import goldCoin from './assets/goldCoin.png';
 import refreshShopImage from './assets/refreshShop.png';
 import pokemonLogo from './assets/pokemonLogo.png';
 import autoChess from './assets/AutoChess.png';
+import soundMuted from './assets/soundMuted.png';
+import sound from './assets/sound.png';
+import music from './assets/note.png';
+import musicMuted from './assets/noteMuted.png';
 import { getAudio, getSoundEffect } from './audio.js';
 
 class PokemonImage extends Component{
@@ -93,11 +97,11 @@ class Pokemon extends Component{
         if(size < 8){
           buyUnit(this.props.newProps.storedState, index);
         } else{
-          updateMessage(this.props.newProps, 'Hand is full!');
+          updateMessage(this.props.newProps, 'Hand is full!', 'error');
           this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
         }
       } else{
-        updateMessage(this.props.newProps, 'Not enough gold!');
+        updateMessage(this.props.newProps, 'Not enough gold!', 'error');
         this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
@@ -220,7 +224,7 @@ class Cell extends Component {
         placePiece(prop.storedState, from, to);
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       } else {
-        updateMessage(prop, 'Invalid target placing!');
+        updateMessage(prop, 'Invalid target placing!', 'error');
         prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
@@ -420,7 +424,7 @@ class App extends Component {
     if(this.props.gold >= 2 && this.props.gameIsLive){
       refreshShop(this.props.storedState)
     } else{
-      updateMessage(this.props, 'Not enough gold!');
+      updateMessage(this.props, 'Not enough gold!', 'error');
       this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     }
   }
@@ -430,7 +434,7 @@ class App extends Component {
     if(this.props.gold >= 5 && this.props.gameIsLive){
       buyExp(this.props.storedState)
     } else{
-      updateMessage(this.props, 'Not enough gold!');
+      updateMessage(this.props, 'Not enough gold!', 'error');
       this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     }
   }
@@ -543,7 +547,7 @@ class App extends Component {
         placePiece(prop.storedState, from, to);
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       } else {
-        updateMessage(prop, 'Invalid target placing!');
+        updateMessage(prop, 'Invalid target placing!', 'error');
         prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
@@ -558,7 +562,7 @@ class App extends Component {
         withdrawPiece(prop.storedState, String(from));
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       } else{
-        updateMessage(prop, 'Hand is full!');
+        updateMessage(prop, 'Hand is full!', 'error');
         prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
     }
@@ -573,7 +577,7 @@ class App extends Component {
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
     } else{
-      updateMessage(prop, 'Invalid target to sell!', from);
+      updateMessage(prop, 'Invalid target to sell! ' + from, 'error');
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     }
   }
@@ -812,19 +816,16 @@ class App extends Component {
       counter += 1;
     }
     if(actionStack.length === 0){
-      if(isUndefined(battleStartBoard)){
-        dispatch({type: 'UPDATE_MESSAGE', message: 'You lost!'}); 
+      board = await this.endOfBattleClean(battleStartBoard);
+      dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
+      const winningTeam = (Object.values(battleStartBoard)[0] ? Object.values(battleStartBoard)[0].team : 1);
+      // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
+      if(winningTeam === 0) {
+        updateMessage(this.props, 'You won!', 'big');
+        dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
       } else {
-        board = await this.endOfBattleClean(battleStartBoard);
-        dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
-        const winningTeam = Object.values(battleStartBoard)[0].team;
-        // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
-        if(winningTeam === 0) {
-          dispatch({type: 'UPDATE_MESSAGE', message: 'You won!'}); 
-          dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
-        } else {
-          dispatch({type: 'UPDATE_MESSAGE', message: 'You lost!'}); 
-        }
+        updateMessage(this.props, 'You lost!', 'big');
+        dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('battleLose')});
       }
     }
   }
@@ -1008,12 +1009,12 @@ class App extends Component {
             transitionName="messageUpdate"
             transitionEnterTimeout={500}
             transitionLeave={false}>
-            <div>
+            <div className={`updateMessage ${(this.props.messageMode === 'big' ? 'goldFont' : (this.props.messageMode === 'error' ? 'redFont' : ''))}`}>
               {'Message: ' + this.props.message}
             </div>
           </CSSTransitionGroup>
         </div>
-        <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer>
+        <Timer startTime={10} key={this.props.round} startTimer={this.props.startTimer} storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer>
         <div className = 'centerWith50'>
           <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
           <div className='flex marginTop5'>
@@ -1027,12 +1028,18 @@ class App extends Component {
           {this.soundEffects()}
         </div>
         <div className='centerWith50 marginTop5'>
-          <button className={`normalButton ${(!this.props.musicEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
+          <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
+            <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? music : musicMuted)} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
+          </div>
+          <div onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
+            <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? sound : soundMuted)} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
+          </div>
+          {/*<button className={`normalButton ${(!this.props.musicEnabled ? 'growAnimation' : '')}`}>
             {(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}
           </button>
-          <button className={`normalButton marginTop5 ${(!this.props.soundEnabled ? 'growAnimation' : '')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
+          <button className={`normalButton marginTop5 ${(!this.props.soundEnabled ? 'growAnimation' : '')}`}>
             {(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}
-          </button>
+          </button>*/}
           {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')} 
         </div>
         <div className='paddingLeft5 marginTop5 text_shadow'>
@@ -1143,6 +1150,7 @@ const mapStateToProps = state => ({
   connectedPlayers: state.connectedPlayers,
   allReady: state.allReady,
   message: state.message,
+  messageMode: state.messageMode,
   help: state.help,
   chatHelpMode: state.chatHelpMode,
   senderMessages: state.senderMessages,

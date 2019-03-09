@@ -304,7 +304,23 @@ module.exports = (socket, io) => {
           console.log('Time to End Battle')
           const stateAfterBattle = sessionJS.buildStateAfterBattle(socket.id, connectedPlayers, sessions, newState);
           // Endbattle and get endTurned state
-          const stateEndedTurn = await gameJS.endBattleForAll(stateAfterBattle, winners, finalBoards, matchups, roundType)
+          
+          const stateCheckDead = await gameJS.endBattleForAll(stateAfterBattle, winners, finalBoards, matchups, roundType)
+          
+          let stateEndedTurn = stateCheckDead;
+          const iter = stateCheckDead.get('players').keys();
+          let temp = iter.next();
+          while (!temp.done) {
+            const pid = temp.value;
+            const player = stateCheckDead.get(pid);
+            if(player.get('dead')){
+              const newState = stateCheckDead.set('players', stateCheckDead.get('players').delete(playerIndex));
+              const amountOfPlayers = newState.get('amountOfPlayers') - 1;
+              newChatMessage(socket, io, socket.id, playerName + ' Eliminated - ', 'Alive players: ' + amountOfPlayers, 'playerEliminated');
+              stateEndedTurn = newState.set('amountOfPlayers', );
+            }
+            temp = iter.next();
+          }
           if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
             console.log('ENDING GAME!')
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
