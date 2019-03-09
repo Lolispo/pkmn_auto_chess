@@ -238,6 +238,7 @@ Message:
 Show permenent buffs at left of board  
 
 Sound: 
+    Scale music so start middle of bar instead -> not as loud possible
     Instead of Buttons have Icons:
         Music (note) with red block over
         Sound: (Stereo look, same as windows, red block over when muted)

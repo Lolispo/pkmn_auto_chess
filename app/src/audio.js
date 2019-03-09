@@ -6,6 +6,7 @@
 import pokemonCenter from './assets/Music/pokemonCenter.mp3';
 import trainerBattle from './assets/Music/trainerBattle.mp3';
 import rivalTheme from './assets/Music/rivalTheme.mp3';
+import goldThemeOriginal from './assets/Music/goldThemeOriginal.mp3';
 
 // Sound Effects
 
@@ -16,6 +17,7 @@ import lvlup from './assets/SoundEffects/lvlup.mp3';
 import pling from './assets/SoundEffects/pling.mp3';
 import invalid from './assets/SoundEffects/invalid.mp3';
 import horn from './assets/SoundEffects/horn.mp3';
+import heGone from './assets/SoundEffects/heGone.mp3';
 
 // Pokemon
 import bulbasaur from './assets/pokemonCries/001 - Bulbasaur.wav'
@@ -307,6 +309,8 @@ export function getAudio(name) {
 
 export function getBackgroundAudio(name) {
   switch(name) {
+    case 'mainMenu':
+      return goldThemeOriginal;
     case 'battle':
     case 'gymbattle':
     case 'pvpbattle':
@@ -336,6 +340,8 @@ export function getSoundEffect(name){
       return horn;
     case 'battleLose':
       return battleLose;
+    case 'disconnect':
+      return heGone;
     default:
       return undefined;
   }

@@ -574,7 +574,7 @@ function handleNeighbor(pathFind, board, current, enemyPos, pos) {
     return pathFind;
   }
   const distanceTraveled = pathFind.getIn(['fromStartScore', current]) + 1;
-  console.log('@Path @handleNeighbor', pos, pathFind.get('toVisit')) // !pathFind.get('toVisit').has(pos), pathFind.get('toVisit').has(pos), 
+  // console.log('@Path @handleNeighbor', pos, pathFind.get('toVisit')) // !pathFind.get('toVisit').has(pos), pathFind.get('toVisit').has(pos), 
   // console.log('@Path fromStartScore', distanceTraveled, pathFind.getIn(['fromStartScore', pos]));
   if(!pathFind.get('toVisit').has(pos)){ // New visited node
     pathFind = pathFind.set('toVisit', pathFind.get('toVisit').add(pos))
@@ -602,10 +602,8 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
     // console.log('@Path ToVisit: ', pathFind.get('toVisit'))
     const current = getLowestKey(pathFind.get('toVisit'), pathFind.get('heuristicScore'));
     if(current === closestEnemyPos){
-      // TODO: Get pos steps away
       let cameFrom = current;
       let path = List([]);
-      console.log('Finished Path Finding! Reconstruction path ...')
       while(cameFrom !== unitPos) {
         cameFrom = pathFind.getIn(['cameFrom', cameFrom]);
         path = path.unshift(cameFrom);
@@ -613,13 +611,14 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
       if(path.size <= 1) {
         console.log('Shouldnt get here @path goal')
       } else {
+        let index;
         if(path.size <= stepsToTake){
-          console.log('Return pos @ index', path.size - 1, path, path.get(path.size - 1))
-          return path.get(path.size - 1);
+          index = path.size - 1;
         } else {
-          console.log('Return pos @ index', stepsToTake, path, path.get(stepsToTake))
-          return path.get(stepsToTake);
+          index = stepsToTake;
         }
+        console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
+        return path.get(index);
       }
     }
     // console.log('@Path Current', current);
@@ -1120,13 +1119,24 @@ async function startBattle(boardParam) {
       nextMoveResult = await nextMove(board, nextUnitToMove);
     }
     const result = await nextMoveResult;
-    battleOver = result.get('battleOver');
-    const madeMove = result.get('nextMove').set('time', unit.get('next_move'));
-    if(f.isUndefined(result.get('newBoard'))){
+    board = result.get('newBoard');
+    const moveAction = result.get('nextMove').get('action');
+    let pos = nextUnitToMove;
+    // Calc nextMove value
+    let nextMoveValue;
+    if(moveAction === 'move'){ // Faster recharge on moves
+      nextMoveValue = +unit.get('next_move') + (+unit.get('speed') / 2);
+      pos = result.get('nextMove').get('target');
+    } else {
+      nextMoveValue = +unit.get('next_move') + +unit.get('speed');
+    }
+    board = board.setIn([pos, 'next_move'], nextMoveValue);
+    console.log('Updating next_move', nextMoveValue, board.get(pos));
+    if(f.isUndefined(board)){
       console.log('@startBattle CHECK ME', madeMove, board)
     }
-    f.printBoard(result.get('newBoard'), madeMove);
-    const moveAction = result.get('nextMove').get('action');
+    const madeMove = result.get('nextMove').set('time', unit.get('next_move'));
+    f.printBoard(board, madeMove);
     if(moveAction !== 'noAction'){ // Is a valid action
       actionStack = actionStack.push(madeMove);
       if (result.get('allowSameMove')) { // Store target to be used as next Target
@@ -1144,18 +1154,10 @@ async function startBattle(boardParam) {
         }
       }
     }
-    board = result.get('newBoard');
-    // Calc nextMove value
-    let nextMoveValue;
-    if(moveAction === 'move'){ // Faster recharge on moves
-      nextMoveValue = +unit.get('next_move') + (+unit.get('speed') / 2);
-    } else {
-      nextMoveValue = +unit.get('next_move') + +unit.get('speed');
-    }
-    board = board.setIn([nextUnitToMove, 'next_move'], nextMoveValue);
+    battleOver = result.get('battleOver');
     if (battleOver) break; // Breaks if battleover (no dot damage if last unit standing)
     // Dot damage
-    const team = board.getIn([nextUnitToMove, 'team']);
+    const team = board.getIn([ , 'team']);
     const dotObj = await handleDotDamage(board, nextUnitToMove, team);
     if (!f.isUndefined(dotObj.get('damage'))) {
       console.log('@Dot Damage');

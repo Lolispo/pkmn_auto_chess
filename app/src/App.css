@@ -16,6 +16,10 @@ body {
   background: url(./assets/pikachuBackground.gif) no-repeat;
 }
 
+.mainMenuSoundDiv {
+  margin-left: 250px;
+}
+
 .logos {
   padding-top: 50px;
   display: grid; 

@@ -312,12 +312,14 @@ module.exports = (socket, io) => {
           let temp = iter.next();
           while (!temp.done) {
             const pid = temp.value;
-            const player = stateCheckDead.get(pid);
+            const player = stateCheckDead.getIn(['players', pid]);
             if(player.get('dead')){
               const newState = stateCheckDead.set('players', stateCheckDead.get('players').delete(playerIndex));
               const amountOfPlayers = newState.get('amountOfPlayers') - 1;
               newChatMessage(socket, io, socket.id, playerName + ' Eliminated - ', 'Alive players: ' + amountOfPlayers, 'playerEliminated');
-              stateEndedTurn = newState.set('amountOfPlayers', );
+              // TODO: Find socketid for the dead player
+              // Send information to that player, so they know they are out
+              stateEndedTurn = newState.set('amountOfPlayers', amountOfPlayers);
             }
             temp = iter.next();
           }

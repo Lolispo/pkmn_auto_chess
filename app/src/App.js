@@ -389,7 +389,7 @@ class Timer extends Component {
 
   render () {
     return <div className='timerDiv'>
-      <div key={this.props.key} className='text_shadow timerText'>{(this.state.seconds != '00' ? this.state.seconds : '')}</div>
+      <div className='text_shadow timerText'>{(this.state.seconds != '00' ? this.state.seconds : '')}</div>
     </div>
   }
 }
@@ -981,7 +981,15 @@ class App extends Component {
           </button>
         </div>
       </div>
-
+      <div className='mainMenuSoundDiv marginTop5'>
+        <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
+          <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? music : musicMuted)} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
+        </div>
+        <div onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
+          <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? sound : soundMuted)} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
+        </div>
+        {(this.props.musicEnabled ? this.playMusic() : '')} 
+      </div>
     </div>
     const topBar = <div className='centerWith50 flex' style={{width: '80%'}}>
         <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
@@ -1034,12 +1042,6 @@ class App extends Component {
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
             <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? sound : soundMuted)} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
           </div>
-          {/*<button className={`normalButton ${(!this.props.musicEnabled ? 'growAnimation' : '')}`}>
-            {(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}
-          </button>
-          <button className={`normalButton marginTop5 ${(!this.props.soundEnabled ? 'growAnimation' : '')}`}>
-            {(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}
-          </button>*/}
           {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')} 
         </div>
         <div className='paddingLeft5 marginTop5 text_shadow'>

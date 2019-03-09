@@ -52,12 +52,12 @@ const reducer = (
     typeStatsString: '',
     typeBonusString: '',
     round: 1,
-    musicEnabled: true,
+    musicEnabled: false,
     soundEnabled: true,
     chatSoundEnabled: true,
     selectedSound: '',
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
-    music: getBackgroundAudio('idle'),
+    music: getBackgroundAudio('mainMenu'),
     volume: 0.05,
     startTimer: false,
   },
@@ -145,7 +145,13 @@ const reducer = (
       break;
     case 'ALL_READY':
       console.log('AllReady', action.playersReady, action.connectedPlayers, action.value)
-      state = { ...state, playersReady: action.playersReady, connectedPlayers: action.connectedPlayers, allReady: action.value, gameIsLive: false}
+      state = { ...state, 
+        playersReady: action.playersReady, 
+        connectedPlayers: action.connectedPlayers, 
+        allReady: action.value, 
+        gameIsLive: false,
+        music: getBackgroundAudio('mainMenu'),
+      }
       break;
     case 'UPDATE_MESSAGE':
       state = {...state, message: action.message, messageMode: action.messageMode}
@@ -231,7 +237,7 @@ const reducer = (
       break;
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
-      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, }
+      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer}
       break;
     case 'NEW_CHAT_MESSAGE':
       console.log('@NEW_CHAT_MESSAGE', action.chatType);
@@ -244,7 +250,7 @@ const reducer = (
           break;
         case 'playerEliminated':
         case 'disconnect':
-
+          soundEffect = getSoundEffect('disconnect');
           break;
         case 'chat':
         default:
