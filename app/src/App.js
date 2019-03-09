@@ -402,7 +402,7 @@ class Timer extends Component {
 
   render () {
     return <div className='timerDiv'>
-      <div className='text_shadow timerText'>{(this.state.seconds != '00' ? this.state.seconds : '')}</div>
+      <div className='text_shadow timerText'>{(this.state.seconds !== '00' ? this.state.seconds : '')}</div>
     </div>
   }
 }
@@ -627,8 +627,8 @@ class App extends Component {
     // console.log(event.key, event.currentTarget)
     const prop = this.props;
     let from;
-    switch(event.target.tagName){
-      case 'INPUT': return;
+    if(event.target.tagName === 'INPUT'){
+      return;
     }
     switch(event.key){
       case '1':
@@ -831,6 +831,9 @@ class App extends Component {
 
   startBattleEvent = async () => {
     const { dispatch, actionStack, battleStartBoard } = this.props;
+    if(this.props.isDead){
+      return;
+    }
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
     let board = battleStartBoard
     let currentTime = 0;
@@ -869,9 +872,6 @@ class App extends Component {
       }
     }
   }
-
-  // TODO: Add listener here to call this.startBattleEvent (Some kind of state change)
-  //     {(this.props.startBattle ? this.startBattleEvent() : '')}
 
   playerStatsDiv = () => {
     const players = this.props.players;
