@@ -4,10 +4,10 @@ import { getBackgroundAudio, getSoundEffect } from './audio.js';
 
 const getNewSoundEffects = (soundEffects, newSoundEffect) => {
   let newSoundEffects = soundEffects;
-  console.log('@getNewSoundEffects', soundEffects, soundEffects.length)
+  // console.log('@getNewSoundEffects', soundEffects, soundEffects.length)
   for(let i = 0; i < soundEffects.length; i++){
     if(soundEffects[i] !== newSoundEffect){
-      console.log('@NewSoundEffect', i, newSoundEffect)
+      // console.log('@NewSoundEffect', i, newSoundEffect)
       newSoundEffects[i] = newSoundEffect;
       break;
     }
@@ -81,11 +81,11 @@ const reducer = (
         gold: action.newState.players[state.index].gold,
         round: action.newState.round,
       };
-      console.log('New State', action.newState)
+      // console.log('New State', action.newState)
       // console.log(state);
       break;
     case 'UPDATE_PLAYER':
-      console.log('updating player', action.index, action.player);
+      // console.log('updating player', action.index, action.player);
       state = { ...state,
         message: 'Updated player', 
         messageMode: '',
@@ -99,10 +99,10 @@ const reducer = (
       };
       state.players[state.index] = action.player
       state.storedState.players[state.index] = action.player;
-      console.log('@Updated player', state.storedState)
+      // console.log('@Updated player', state.storedState)
       break;
     case 'LOCK_TOGGLED':
-      console.log('lock toggled')
+      console.log('Toggled Lock')
       state = {...state, lock: action.lock}
       state.storedState.players[state.index]['locked'] = action.lock;
       break;
@@ -144,7 +144,7 @@ const reducer = (
       state = { ...state, playersReady: action.playersReady, connectedPlayers: action.connectedPlayers}
       break;
     case 'ALL_READY':
-      console.log('AllReady', action.playersReady, action.connectedPlayers, action.value)
+      // console.log('AllReady', action.playersReady, action.connectedPlayers, action.value)
       state = { ...state, 
         playersReady: action.playersReady, 
         connectedPlayers: action.connectedPlayers, 
@@ -163,7 +163,7 @@ const reducer = (
       state = {...state, chatHelpMode: action.chatHelpMode}    
       break;
     case 'SET_STATS':
-      console.log('Updating stats', action.name, action.stats)
+      console.log('Updating stats', action.name); // action.stats)
       const statsMap = state.statsMap;
       statsMap[action.name] = action.stats;
       state = {...state, name: action.name, stats: action.stats, statsMap: statsMap}
@@ -174,7 +174,7 @@ const reducer = (
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];
       const battleStartBoard = action.battleStartBoards[state.index];
-      console.log('@battle_time', state.soundEffects)
+      // console.log('@battle_time', state.soundEffects)
       tempSoundEffects = getNewSoundEffects(state.soundEffects, getSoundEffect('horn'));
       state = {
         ...state,
@@ -186,12 +186,12 @@ const reducer = (
         battleStartBoard,
         startBattle: true,
       }
-      console.log('@battleTime actionStack', state.actionStack);
-      console.log('@battleTime battleStartBoard', state.battleStartBoard)
+      // console.log('@battleTime actionStack', state.actionStack);
+      // console.log('@battleTime battleStartBoard', state.battleStartBoard)
       // TODO: BattleStartBoard contain unneccessary amount of information
       break;
     case 'CHANGE_STARTBATTLE':
-      console.log('FIND ME: Changing StartBattle', action.value);
+      // console.log('FIND ME: Changing StartBattle', action.value);
       state = {...state, startBattle: action.value}
       break;
     case 'UPDATE_BATTLEBOARD':
@@ -211,7 +211,7 @@ const reducer = (
       break;
     case 'DISABLE_START_TIMER':
       state = {...state, startTimer: false}
-      console.log('Disabled start timer')
+      // console.log('Disabled start timer')
       break;
     case 'TOGGLE_MUSIC':
       state = {...state, musicEnabled: !state.musicEnabled}
@@ -220,12 +220,12 @@ const reducer = (
       state = {...state, soundEnabled: !state.soundEnabled}
       break;
     case 'TOGGLE_CHAT_SOUND':
-      console.log(state.chatSoundEnabled)
+      // console.log(state.chatSoundEnabled)
       state = {...state, chatSoundEnabled: !state.chatSoundEnabled}
       break;
     case 'CHANGE_VOLUME':
-      console.log('@reducer.ChangeVolume', action.newVolume)
-      state = {...state, volume: action.newVolume, music: state.music}
+      // console.log('@reducer.ChangeVolume', action.newVolume)
+      state = {...state, volume: action.newVolume}; //, music: state.music}
       break;
     case 'NEW_UNIT_SOUND':
       // console.log('reducer.NewUnitSound', action.newAudio);
@@ -240,7 +240,7 @@ const reducer = (
       state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer}
       break;
     case 'NEW_CHAT_MESSAGE':
-      console.log('@NEW_CHAT_MESSAGE', action.chatType);
+      // console.log('@NEW_CHAT_MESSAGE', action.chatType);
       const { senderMessages, chatMessages } = state;
       state = {...state, senderMessages: senderMessages.concat(action.senderMessage), chatMessages: chatMessages.concat(action.newMessage)};
       let soundEffect;

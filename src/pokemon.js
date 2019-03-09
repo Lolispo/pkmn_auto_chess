@@ -49,6 +49,7 @@ const getBasePokemonLocal = async (name) => {
     return unitStats.get('name');
   }
   // Go down a level
+  console.log('@pokemonJs.getBasePokemon', unitStats.get('evolution_from'), unitStats.get('evolution_from').get('name'))
   return getBasePokemonLocal(unitStats.get('evolution_from').get('name'));
 };
 

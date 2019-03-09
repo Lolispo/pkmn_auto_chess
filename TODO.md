@@ -15,7 +15,6 @@ Crash:
 
 Test me ingame:  
     Different opponents varies for 3 players?
-    2 weedle -> bug bonus?
     Messages show level 3 upgrade as well - check order
     3 psychic - crashed
     WinningAnimation: Apply to all winning units? (Notice multiple of same type)
@@ -25,7 +24,12 @@ Test me ingame:
 
 ## Backend
 
-Move: half nextpos speed
+Type Bonuses are wrongly typed
+    Instead of giving first 15, then 15, it gives first 15 then 30: 
+        Combos go insane very fast
+    Update description of types to be generated automatically from fields instead of manually typed
+
+Something cool with rivals
 
 StepsToTake dependent on pokemon stats
 
@@ -39,7 +43,10 @@ MoveRemake
 Player eliminated logic
     Move all pieces back to pieces in session
         hand + board
-    Send information to frontend that you are out, display something else
+    Send information to frontend that you are out
+        A message is being sent to everyone in chat
+        Disable all board interact functionality for user
+            Same functionality that should be used when spectating a player
 
 Gold:
     Reward for winning battle?
@@ -134,6 +141,9 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Message:
+    Update player -> information about what was updated from server
+
 You won / lose -> battle won / lost
 
 Timer set to system.time and calculated from that
@@ -188,6 +198,7 @@ Css:
     more obvious you can't place on enemy part of board
 
 Animations: 
+    Better move animation
     Death Animations
         Flip 90 degrees and then fade
     Level up animation -> too full bar and down to zero (or xp over 0)
@@ -245,15 +256,14 @@ Sound:
     Add hotkey m for toggle mute (for music m, sound n, chat c)
     Disconnect sound
     New Music/Sounds:
-        Different sounds for own upgrade?
         Music before any game starts, gold theme main menu
         Battle Music same style as idle music?
         More sounds:
-            player levelup sound
-            Battle end sound 
-                Sad cheer, aww
+            Start New Round sound
             Game won (Victory! (Trainer))
             Timer click (close to 0)
+            player levelup sound
+            Different sounds for own upgrade?
 
 Credits somewhere in frontend (P and R.Music)
 

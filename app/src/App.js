@@ -649,7 +649,7 @@ class App extends Component {
     }
     if(actionMessageTarget)   newBoard[target].actionMessage = actionMessageTarget;
     if(actionMessageAttacker) newBoard[unitPos].actionMessage = actionMessageAttacker;
-    console.log('direction: ' + direction)
+    // console.log('direction: ' + direction)
     if(direction !== '') {
       newBoard[unitPos].attackAnimation = 'animate' + direction; 
     }
@@ -869,7 +869,7 @@ class App extends Component {
 
   handleVolumeChange = (e) => {
     const newVolume = e.target.value / 100; // this.audioElement.length * 
-    console.log('@handleVolumechange', e.target.value)
+    // console.log('@handleVolumechange', e.target.value)
     this.props.dispatch({type: 'CHANGE_VOLUME', newVolume})
   }
 
@@ -1022,7 +1022,8 @@ class App extends Component {
             </div>
           </CSSTransitionGroup>
         </div>
-        <Timer startTime={20} key={this.props.round} startTimer={this.props.startTimer} storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer>
+        {this.props.gameIsLive ? <Timer startTime={20} key={this.props.round} startTimer={this.props.startTimer} 
+        storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer> : ''}
         <div className = 'centerWith50'>
           <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
           <div className='flex marginTop5'>

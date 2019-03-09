@@ -456,7 +456,6 @@ async function discardBaseUnits(state, name, depth = '1') {
  */
 async function sellPiece(state, playerIndex, piecePosition) {
   let pieceTemp;
-  // Make this into method, taking pos and get/set, if set take argument to set
   if (f.checkHandUnit(piecePosition)) {
     pieceTemp = state.getIn(['players', playerIndex, 'hand', piecePosition]);
   } else {
@@ -468,9 +467,12 @@ async function sellPiece(state, playerIndex, piecePosition) {
   const gold = state.getIn(['players', playerIndex, 'gold']);
   let newState = state.setIn(['players', playerIndex, 'gold'], +gold + +cost);
   if (f.checkHandUnit(piecePosition)) {
+    const unitToSell = newState.getIn(['players', playerIndex, 'hand', piecePosition]);
     const newHand = newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
+    const newDiscardedPieces = newState.set('discardedPieces', newState.get('discardedPieces').push(unitToSell.get('name')));
     newState = newState.setIn(['players', playerIndex, 'hand'], newHand);
   } else {
+    const unitToSell = newState.getIn(['players', playerIndex, 'board', piecePosition]);
     const newBoard = newState.getIn(['players', playerIndex, 'board']).delete(piecePosition);
     newState = newState.setIn(['players', playerIndex, 'board'], newBoard);
   }
@@ -1097,7 +1099,7 @@ async function startBattle(boardParam) {
   // Start battle
   while (!battleOver) {
     board = await board;
-    console.log('board @startBattle', board)
+    // console.log('board @startBattle', board)
     if(f.isUndefined(board)){
       console.log('board undefined in startBattle')
     }
@@ -1131,7 +1133,7 @@ async function startBattle(boardParam) {
       nextMoveValue = +unit.get('next_move') + +unit.get('speed');
     }
     board = board.setIn([pos, 'next_move'], nextMoveValue);
-    console.log('Updating next_move', nextMoveValue, board.get(pos));
+    // console.log('Updating next_move', nextMoveValue, board.get(pos));
     if(f.isUndefined(board)){
       console.log('@startBattle CHECK ME', madeMove, board)
     }
@@ -1240,12 +1242,14 @@ async function countUniqueOccurences(board) {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);
     const name = unit.get('name');
-    const team = await unit.get('team');
+    const team = unit.get('team');
     // console.log(unique, team, unit, unitPos)
     // console.log('@countUniqueOccurences', unique.get(String(team)), pokemonJS.getBasePokemon(name))
-    if (!unique.get(String(team)).has(pokemonJS.getBasePokemon(name))) { // TODO: Check
+    const basePokemon = await pokemonJS.getBasePokemon(name);
+    if (!unique.get(String(team)).has(basePokemon)) { // TODO: Check
+      console.log('@CountUniqueOccurences Unique', basePokemon, team, unique);
       const newSet = await unique.get(String(team)).add(name);
-      unique = await unique.set(team, newSet); // Store unique version, only count each once
+      unique = await unique.set(String(team), newSet); // Store unique version, only count each once
       const types = unit.get('type'); // Value or List
       if (!f.isUndefined(types.size)) { // List
         for (let i = 0; i < types.size; i++) {
@@ -1816,6 +1820,37 @@ async function removeHp(state, playerIndex, hpToRemove) {
   }
   return state.setIn(['players', playerIndex, 'hp'], currentHp - hpToRemove);
 }
+
+exports.removeDeadPlayer = (stateParam, playerIndex) => {
+  let state = stateParam;
+  const shopUnits = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
+  const board = state.getIn(['players', playerIndex, 'board']);
+  let boardList = List([]);
+  const iter = board.keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const uid = temp.value;
+    const unit = board.get(uid);
+    boardList = boardList.push(unit.get('name'));
+    temp = iter.next();
+  }
+  const hand = state.getIn(['players', playerIndex, 'hand']);
+  let handList = List([]);
+  const iter2 = hand.keys();
+  let temp2 = iter2.next();
+  while (!temp2.done) {
+    const uid = temp2.value;
+    const unit = hand.get(uid);
+    handList = handList.push(unit.get('name'));
+    temp2 = iter2.next();
+  }
+  const playerUnits = shopUnits.concat(boardList).concat(handList);
+  state = state.set('discardedPieces', discPieces.concat(playerUnits));
+  const newState = stateCheckDead.set('players', stateCheckDead.get('players').delete(playerIndex));
+  const amountOfPlayers = newState.get('amountOfPlayers') - 1;
+  newState.set('amountOfPlayers', amountOfPlayers);
+}
+
 
 /**
  * Initialize all shops for all players
