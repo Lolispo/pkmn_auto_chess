@@ -1200,7 +1200,6 @@ async function markBoardBonuses(board) {
   const boardKeysIter = board.keys();
   let tempUnit = boardKeysIter.next();
   let newBoard = board;
-  console.log('IM A FUNCTION', typesJS.getEnemyDebuff('psychic'));
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);

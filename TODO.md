@@ -7,33 +7,33 @@ Mana: 15% of damage to mana or 10
     For both giving and receiving
     Double amount for spellheavy units
 
+## Crash and Tests for ingame
+
+Crash: 
+    FrontEnd battle not matched, some units survive that shouldnt
+    Should have found big crash, didnt check if getMovePos was undefined
+
+Test me ingame:  
+    Different opponents varies for 3 players?
+    2 weedle -> bug bonus?
+    Messages show level 3 upgrade as well - check order
+    3 psychic - crashed
+    WinningAnimation: Apply to all winning units? (Notice multiple of same type)
+    Player loses
+    Player disconnects (Not prio)
+        During battle or normally
+
 ## Backend
 
-Add longestTimeAllowed for battle, where a tie occurs
-
-Dps stats after round
-
-Weak against type list (Currently only strong against, ineffective and no effect)
-
-Target Priorities
-    Make more like move priority, in front of you first
-        Weaknesses
-    Never stick on a target where attacks are < x1
-
-Messages show level 3 upgrade as well
-    2 messages for these upgrades
-
-Matchup system
-    Temp: Random
-    Does it work for 3 players?
-    More advanced TODO
+MoveRemake
+    Don't move furthest away immeditely, move in max steps 1-3 in correct direction
+        Otherwise high speed means => jump into all enemies and die
+    Path find A* next pos
 
 Player eliminated logic
     Move all pieces back to pieces in session
         hand + board
     Send information to frontend that you are out, display something else
-
-No target move (splash) shouldnt deal damage (curr 1 it seems)
 
 Gold:
     Reward for winning battle?
@@ -58,33 +58,27 @@ PlacePieceEvent (All piece interactions):
         Move logic so units to be called back is already marked in the state
             'expendableUnit': true
         In frontend: if (unit.expendableUnit) Color me
-    Piece Upgrade occured
-        Current logic in: checkPieceUpgrade
-        event NEW_CHAT_MESSAGE with unit upgraded for which player
-        States returned where upgrade might have occured (PlacePiece) should 
-            have a check for if it occured or not, and send message update if it did
-
-New_CHAT_MESSAGE
-    Separate sender, message, pieceUpgradeMessage, battleResult
-
-Handle empty boards for battle
-    Should still visualize the enemy units
 
 Pieces:
     Max 9 units for each player
-        Fixes: Stop spawning units of certain type for player if has level 3
+        Fixes: Stop spawning units of certain type for player if === 9
 
-Aoe damage logic
+Add longestTimeAllowed for battle, where a tie occurs
 
-Finish abilities implementation (teleport)
+Dps stats after round
+
+Weak against type list (Currently only strong against, ineffective and no effect)
+
+Target Priorities
+    Make more like move priority, in front of you first
+    Never stick on a target where attacks are < x1
+        (meh)
+
+No target move (splash) shouldnt deal damage (curr 1 it seems)
 
 ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
 
-Move
-    Don't move furthest away immeditely, move in max steps 1-3 in correct direction
-        Otherwise high speed means => jump into all enemies and die
-
-first move
+first move implement
     Current Logic in: setRandomFirstMove
     
 Longer range than 1
@@ -114,6 +108,8 @@ Ability ranges implementation requries check for if ability.withinRange
 
 Level 5 unit upgrades?
 
+More advanced Matchup system
+
 Attack priority
     Type effective?
 
@@ -123,23 +119,22 @@ Add next round opponent
 
 Flying longer movement
 
-Path find A* next pos
-
-2 weedle -> bug bonus
-
 max mana? Instead of letting it go over
+    Cap at abilityCost? Could work good
+
+Aoe damage logic
+
+Finish abilities implementation (teleport)
 
 ## Frontend
 
-Error logic in frontend, move to constructor instead of render (battleStartDetection)
+SellPieceEvent:
+    Allow selling piece not in battle during battle
 
-Color Battle Ready Temp
+Leave Game button
+    Prompt (pseudo alert): are you sure you want to leave the game?
 
-Start without all there!
-
-dragndrop
-
-Rendering board more efficient, think immutable 
+Error console logs logic in frontend, move to constructor instead of render (battleStartDetection)
 
 confetti on win http://www.cagrimmett.com/til/2018/01/05/css-confetti.html
 
@@ -147,30 +142,17 @@ Restart reset more variables
     SoundEffect unitSound chat reset
     OnGoingBattle weird
 
-Crash: 
-    FrontEnd battle not matched, some units survive that shouldnt
-    Disabled printing since weird
-
-Test:  
-    3 Upgrade
-    3 psychic - crashed
-        Remove im a function print
-    Player loses
-    Player disconnects
-        During battle or normally
-    
-
-mainMenu
-    Add more functionality, not important tho
-
-BattleResults in chat
+Chat:
+    BattleResults in chat
+    Separate Chats into categories
+        Battleresults
+        unit upgrades
+            Maybe only temporary? Too strong to have it stored forever...
+        Normal Chat
 
 Add icons for types, to be used for buffs
     Can be inspired from card icons if none are found
         Hard for fighting / ground
-
-KeyInput
-    If chat input is in focus, disable hotkey logic
 
 ActionMessage coloring
     Multiple actionMessages to support taken multiple instance of damage?
@@ -183,32 +165,20 @@ ActionMessage coloring
         Spell top right of unit, fading to the right
 
 Help Messages
-    Color Type messages so easier to read fast
-    Font color / text shadow feels weird overall here
+    (Temp) Color Type messages so easier to read fast
 
 Css:
     Shine the lock a bit, fades into background
-    Attack left animation return too far to the left
     Bonus hp as shield bar (Original hp + bonus)
     Prettier Volume slider
-    WinningAnimation: Check me
     Nidoran display name new line in button
     Eevee evolutions stats screen
     Mark default radio button in bottom right as Chat (Make selected)
     Auto scroll down chat
 
-SellPieceEvent:
-    Allow selling piece not in battle during battle
-
-ActionMessage:
-    Position on top of unit
-
 Animations: 
-    Units turn small
     Death Animations
         Flip 90 degrees and then fade
-    Animation on actionMessage (Damage and effective)
-        Fadeout and move down
     Level up animation -> too full bar and down to zero (or xp over 0)
     Hp bar changes animation
     growAnimation looks bad on firefox, instant instead of in stages
@@ -217,24 +187,8 @@ Code: Event code only in one place
     placepieceevent in 2 spots currently
     Move to separate file and import, requires sending props
 
-Startscreen: 
-    If connection with host is gone, exit game
-        If server is restarted, terminate all active games
-    Features:
-        Allow to start game without all connected sockets ready
-            Countdown and start with all ready players when countdown finishes
-        Add leaveGame button
-            Are you sure you want to leave? Prompt
-
 TopBar:
     Piece Image
-
-Battle
-    Clear actionMessages after all moves are done
-    Show mana bar
-        Requires mana changes to be sent in move, added in backend todo
-        Max 200, 50/200 => 25% mana bar full
-        Change color of manabar when above ability.cost
 
 Infopanel
     Show bars in infopanel screen for stats (Easier comparisons)
@@ -251,6 +205,8 @@ Shop
 
 Scoreboard: 
     Css me, Stick to right like a menu
+    Streak Showing
+    *Later: Name and (preselected)image
     Make players clickable
         Show their board when that is done
 
@@ -263,38 +219,26 @@ Board css:
         Gray tinted background or something
 
 Message:
-    Update position and size of message to be overlayed over the board and use for vital information
-        Css required a lot
-    Use Message more, especially for errors
-        Red text if error
+    Use Message more for errors - Red text if error
     Display winner of battle more clear
+    Positioning better at cursor
+        Alt: Overlayed on the board
 
 Show permenent buffs at left of board  
 
-Timer
-    On top or left, very visible
-    BattleTime effect to setTimeout function
-    After endbattle, start this setTimeout for battleTime function
-
 Sound: 
+    Add hotkey m for toggle mute (for music m, sound n, chat c)
     Disconnect sound
-    Multiple sound effect variables?
-        To play concurrently
     New Music/Sounds:
         Different sounds for own upgrade?
         Music before any game starts, gold theme main menu
         Battle Music same style as idle music?
         More sounds:
-            Battle start sound, horn
             player levelup sound
             Battle end sound 
                 Sad cheer, aww
             Game won (Victory! (Trainer))
-            Not valid press (not enough money etc)
-                Use on invalid attempts, message invalid is made now
             Timer click (close to 0)
-    Set position of mute buttons, moves a lot when selecting and deselecting unit
-    Add hotkey m for toggle mute (for music or both)
 
 Credits somewhere in frontend (P and R.Music)
 
@@ -304,11 +248,6 @@ disconnect make win if alone
     Disconnect detect on frontend
     Disable when reconnect allowed
     disconnect problematic during battle
-
-Auto Ready options
-
-Sessions: 
-    Room join /url
 
 ## Tests
 
@@ -324,7 +263,7 @@ Test lifesteal functionality
 
 ## Code / Javascript Check me
 
-Firefox Check
+Rendering board more efficient, think immutable 
 
 Load / Set time factor better
 
@@ -361,24 +300,32 @@ Potential to use more functional code, map/filter
 
 ## Optional Features
 
+Drag-n-drop for placing units
+
 Https
 
 Spinning wheel animating time between moves for all pokemon
     Easier to see when a unit does move
 
-Reconnect feature
-Login with name system
-    Requires start page
-    Starts game with player.name set for all players
-        Display player.name instead of player.index in own name and enemy name during battle
-        Also scoreboard show name
-    Features for stored logins (same account every game):
-        Login system
-        Stats for player:
-            Wins/Losses
-            Favorite units possibility 
+Startscreen: 
+    Lobbies by Url
+        Easier reconnect that doesn't require login
+            if(name === missingPlayer) allow; otherwise: no;
+    Reconnect feature
+        Either through login or lobbies through url /
+    Auto Ready options
+    Login with name system
+        Starts game with player.name set for all players
+            Display player.name instead of Player + index
+                Scoreboard
+                Battle: own name/ enemy name
+        Features for stored logins (same account every game):
+            Login system
+            Stats for player:
+                Wins/Losses
+                Favorite units possibility 
 
-Crit
+Crit (meh)
     Suggestion: 20% chance crit 1.5x damage
 
 Type buffs - Add typebuffs from sheets directly
