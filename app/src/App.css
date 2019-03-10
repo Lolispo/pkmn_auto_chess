@@ -90,6 +90,15 @@ body {
   padding-top: 70%;
 }
 
+.pieceImg {
+  width: 17px;
+  height: 30px;
+}
+
+.pieceDiv {
+  padding-top: 30px;
+}
+
 .soundImg {
   margin-left: 15px;
   width: 50px;

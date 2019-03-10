@@ -15,7 +15,6 @@ Crash:
 
 Test me ingame:  
     Different opponents varies for 3 players?
-    Messages show level 3 upgrade as well - check order
     3 psychic - crashed
     WinningAnimation: Apply to all winning units? (Notice multiple of same type)
     Player loses
@@ -24,6 +23,10 @@ Test me ingame:
         During battle or normally
 
 ## Backend
+
+Eevee evolution crash
+
+Attack from 2 tiles away?
 
 Target Priorities
     Make more like move priority, in front of you first
@@ -150,6 +153,12 @@ Aoe damage logic
 Finish abilities implementation (teleport)
 
 ## Frontend
+
+
+
+webm pikachuBackground (half size)
+
+boardRow => boardColumn
 
 Select unit
     Save information on deselect in left side but remove sell button

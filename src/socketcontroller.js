@@ -318,6 +318,7 @@ module.exports = (socket, io) => {
             const pid = temp.value;
             const player = stateCheckDead.getIn(['players', pid]);
             if(player.get('dead')){
+              console.log('Dead Player!', pid)
               stateEndedTurn = gameJS.removeDeadPlayer(stateCheckDead, pid);
               newChatMessage(socket, io, socket.id, playerName + ' Eliminated - ', 'Alive players: ' + stateEndedTurn.get('amountOfPlayers'), 'playerEliminated');
               const deadPlayerSocketId = sessionJS.findSocketId(session, pid);

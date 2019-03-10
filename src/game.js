@@ -1820,6 +1820,7 @@ async function removeHp(state, playerIndex, hpToRemove) {
 }
 
 exports.removeDeadPlayer = (stateParam, playerIndex) => {
+  console.log('@removeDeadPlayer')
   let state = stateParam;
   const shopUnits = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
   const board = state.getIn(['players', playerIndex, 'board']);
@@ -1832,6 +1833,7 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
     boardList = boardList.push(unit.get('name'));
     temp = iter.next();
   }
+  console.log('BoardList', boardList);
   const hand = state.getIn(['players', playerIndex, 'hand']);
   let handList = List([]);
   const iter2 = hand.keys();
@@ -1842,6 +1844,7 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
     handList = handList.push(unit.get('name'));
     temp2 = iter2.next();
   }
+  console.log('HandList', handList);
   const playerUnits = shopUnits.concat(boardList).concat(handList);
   state = state.set('discardedPieces', discPieces.concat(playerUnits));
   const newState = stateCheckDead.set('players', stateCheckDead.get('players').delete(playerIndex));

@@ -52,7 +52,7 @@ const reducer = (
     typeStatsString: '',
     typeBonusString: '',
     round: 1,
-    musicEnabled: false,
+    musicEnabled: true,
     soundEnabled: true,
     chatSoundEnabled: true,
     selectedSound: '',

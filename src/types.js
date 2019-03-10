@@ -299,7 +299,7 @@ const typeMap = new Map({
     req: List([1]),
     bonusAmount: List([30]),
     bonusType: 'bonus',
-    bonus: (unit, bonus) => increaseDamage(unit, bonus),
+    bonus: (unit, bonus) => increaseAttack(unit, bonus),
     /*
     TODO: Demon ? Only strong if only ghost on board, +50% dmg
           Evasion ? (Since ghost hard to hit)
@@ -314,7 +314,7 @@ const typeMap = new Map({
     req: List([1]),
     bonusAmount: List([30]),
     bonusType: 'bonus',
-    bonus: (unit, bonus) => increaseDamage(unit, bonus),
+    bonus: (unit, bonus) => increaseAttack(unit, bonus),
     /*
     dratini
     TODO

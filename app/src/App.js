@@ -17,6 +17,7 @@ import soundMuted from './assets/soundMuted.png';
 import sound from './assets/sound.png';
 import music from './assets/note.png';
 import musicMuted from './assets/noteMuted.png';
+import pieceImg from './assets/piece.png';
 import { getAudio, getSoundEffect } from './audio.js';
 
 class PokemonImage extends Component{
@@ -424,6 +425,7 @@ class App extends Component {
   };
 
   startGameEvent = (forceStart=false) => {
+    console.log('@startGameEvent', forceStart)
     if(this.props.allReady || forceStart){
       console.log('Starting')
       startGame(this.props.playersReady);
@@ -892,9 +894,12 @@ class App extends Component {
     const unitsOnBoard = Object.keys(this.props.myBoard).length;
     const level = this.props.level;
     const content = <span className={(unitsOnBoard > level ? 'redFont' : '')}>{unitsOnBoard}</span>
-    return <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
-      Pieces: {content} / {level}
-    </div>
+    return <div className='marginTop5 flex' style={{paddingLeft: '65px'}}>
+        <img style={{marginTop: '-5px'}}className='pieceImg' src={pieceImg}/>
+        <div className='biggerText text_shadow' style={{paddingLeft: '5px'}}>
+          <span className='pieceDiv'> : {content} / {level}</span>
+       </div>
+      </div>;
   }
 
   playMusic = () => {
@@ -1013,7 +1018,7 @@ class App extends Component {
         <div className='flex'> 
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={this.startGameEvent}>
+          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={() => this.startGameEvent()}>
             StartGame{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
           </button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers ? '' : 'hidden')}`} onClick={() => this.startGameEvent(true)}>
