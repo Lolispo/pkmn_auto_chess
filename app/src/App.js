@@ -1137,7 +1137,7 @@ class App extends Component {
                 <div className='flex'>
                   <div className='' style={{paddingTop: '60px', paddingLeft: '24px'}}>
                     <div>
-                      <img className='lockImage' onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
+                      <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
                     </div>
                     <div style={{paddingTop: '10px'}}>
                       <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>

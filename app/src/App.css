@@ -616,6 +616,10 @@ body {
   padding-right: 5px;
 }
 
+.shineLock {
+  /* TODO Make locked lock shine*/
+}
+
 .refreshShopImage {
   height: 65px;
   width: 35px;
@@ -636,6 +640,12 @@ body {
 */
 .costColor1 {
   background-color: rgb(123,123,123);
+  /*
+  TODO: Edit Shop
+  background: url(./assets/pokeball.png) no-repeat;
+  background-position: 10px 10px; 
+  background-size: 10px 10px;
+  */
 }
 
 .costColor2 {
