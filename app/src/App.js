@@ -1105,7 +1105,7 @@ class App extends Component {
         <div className='text_shadow'>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
         {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
       </div>
-    const boardDiv = <div>
+    const boardDiv = <div className='boardDiv'>
         <div>
           <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
         </div>

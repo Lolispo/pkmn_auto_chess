@@ -154,7 +154,7 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
-
+Timer not appearing correctly
 
 webm pikachuBackground (half size)
 
@@ -215,6 +215,7 @@ Css:
     Mark default radio button in bottom right as Chat (Make selected)
     Auto scroll down chat
     more obvious you can't place on enemy part of board
+    Chat input and submit better css
 
 Animations: 
     Better move animation
