@@ -153,7 +153,7 @@ class Pokemon extends Component{
       content = <div>
             <div className={`pokemonImageDiv`}>
               <div className='pokemonInfo'>
-                <img className='infoImg' src={info} onClick={this.infoEvent}></img>
+                <img className='infoImg' src={info} onClick={this.infoEvent} alt={'info' + this.props.shopPokemon.name}/>
                 <div className='infoImgBg'/>
               </div>
               <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass}/>
@@ -964,7 +964,7 @@ class App extends Component {
     const level = this.props.level;
     const content = <span className={(unitsOnBoard > level ? 'redFont' : '')}>{unitsOnBoard}</span>
     return <div className='marginTop5 flex' style={{paddingLeft: '65px'}}>
-        <img style={{marginTop: '-5px'}}className='pieceImg' src={pieceImg}/>
+        <img style={{marginTop: '-5px'}} className='pieceImg' src={pieceImg} alt='Pieces'/>
         <div className='biggerText text_shadow' style={{paddingLeft: '5px'}}>
           <span className='pieceDiv'> : {content} / {level}</span>
        </div>

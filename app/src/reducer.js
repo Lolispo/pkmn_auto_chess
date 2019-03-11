@@ -244,7 +244,7 @@ const reducer = (
       break;
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
-      const newMusic = state.music;
+      let newMusic = state.music;
       if(state.index === action.winningPlayer.index){
         newMusic = getBackgroundAudio('wonGame')
       }
