@@ -84,7 +84,7 @@ const reducer = (
         gold: action.newState.players[state.index].gold,
         round: action.newState.round,
       };
-      // console.log('New State', action.newState)
+      console.log('New State', action.newState)
       // console.log(state);
       break;
     case 'UPDATE_PLAYER':

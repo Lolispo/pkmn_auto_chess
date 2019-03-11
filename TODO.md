@@ -11,7 +11,6 @@ Mana: 15% of damage to mana or 10
 
 Crash: 
     FrontEnd battle not matched, some units survive that shouldnt
-    Should have found big crash, didnt check if getMovePos was undefined
 
 Test me ingame:  
     Different opponents varies for 3 players?
@@ -23,6 +22,8 @@ Test me ingame:
         During battle or normally
 
 ## Backend
+
+Give battle won gold reward
 
 Eevee evolution crash
 
@@ -154,9 +155,10 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
-Timer not appearing correctly
-
-boardRow => boardColumn
+gameEnd
+    Scoreboard last update
+    Show that you won more visibly than message, since message is easily replaced
+    confetti
 
 Select unit
     Save information on deselect in left side but remove sell button
@@ -176,8 +178,10 @@ Error console logs logic in frontend, move to constructor instead of render (bat
 confetti on win
 
 Restart reset more variables
+    Timer not appearing correctly
     SoundEffect unitSound chat reset
     OnGoingBattle weird
+    imageBase weird
 
 Chat:
     BattleResults in chat
@@ -204,17 +208,23 @@ ActionMessage coloring
 Help Messages
     (Temp) Color Type messages so easier to read fast
 
+Eevee evolutions stats screen
+
 Css:
     Info button position better?
     Shine the lock a bit, fades into background
     Bonus hp as shield bar (Original hp + bonus)
     Prettier Volume slider
     Nidoran display name new line in button
-    Eevee evolutions stats screen
     Mark default radio button in bottom right as Chat (Make selected)
     Auto scroll down chat
     more obvious you can't place on enemy part of board
-    Chat input and submit better css
+    Sell button left bar align more centered (length is long)
+    Chat:
+        Chat different background color or something to separate from background?
+        Chat input and submit better css
+        Radio buttons
+    
 
 Animations: 
     Better move animation

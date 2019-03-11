@@ -160,8 +160,9 @@ async function refreshShop(stateParam, playerIndex) {
     }
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
-    console.log('@refreshShop filteredShop', filteredShop, '(', pieceStorage.size, '/', discPieces.size, ')');
-    state = state.set('discardedPieces', discPieces.concat(filteredShop));
+    const shopToList = filteredShop.map((value, key) => value);
+    console.log('@refreshShop filteredShop', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
+    state = state.set('discardedPieces', discPieces.concat(shopToList));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
   state = state.set('pieces', pieceStorage);
@@ -1822,7 +1823,8 @@ async function removeHp(state, playerIndex, hpToRemove) {
 exports.removeDeadPlayer = (stateParam, playerIndex) => {
   console.log('@removeDeadPlayer')
   let state = stateParam;
-  const shopUnits = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
+  const filteredShop = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
+  const shopUnits = filteredShop.map((value, key) => value.get('name'));
   const board = state.getIn(['players', playerIndex, 'board']);
   let boardList = List([]);
   const iter = board.keys();
@@ -1845,8 +1847,9 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
     temp2 = iter2.next();
   }
   console.log('HandList', handList);
+  console.log('@xd', shopUnits, boardList, handList)
   const playerUnits = shopUnits.concat(boardList).concat(handList);
-  state = state.set('discardedPieces', discPieces.concat(playerUnits));
+  state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));
   const newState = state.set('players', state.get('players').delete(playerIndex));
   const amountOfPlayers = newState.get('amountOfPlayers') - 1;
   return newState.set('amountOfPlayers', amountOfPlayers);

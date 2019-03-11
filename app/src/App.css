@@ -57,7 +57,7 @@ body {
   /*
   border: 2px solid black;
   */
-  background-color: rgb(43, 32, 32);
+  background-color: rgb(46, 40, 40);
   border-radius: 50px;
   /*background: url(https://i.pinimg.com/originals/7c/0f/eb/7c0feb742c99ac92d76360a0e0ee3d3b.png) no-repeat;
   background-size: 120px 180px;*/
@@ -211,7 +211,7 @@ body {
   text-align: center;
 }
 
-.boardRow {
+.boardColumn {
   display: block;
 }
 

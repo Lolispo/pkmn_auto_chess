@@ -25,7 +25,7 @@ class PokemonImage extends Component{
 
   constructor(props) {
     super(props);
-    this.state = {dimensions: {}, paddingTop: '0px', sideLength: this.props.sideLength, renderBase: (this.props.renderBase || false)};
+    this.state = {dimensions: {}, paddingTop: '0px', sideLength: this.props.sideLength};
     this.onImgLoad = this.onImgLoad.bind(this);
     this.reduceImageSize = this.reduceImageSize.bind(this);
     this.calculatePadding = this.calculatePadding.bind(this);
@@ -76,14 +76,14 @@ class PokemonImage extends Component{
           transitionEnterTimeout={300}
           transitionLeave={false}>
           <div>
-            <div className={`pokemonImageBase ${(this.state.renderBase ? this.state.renderBase : '')}`} 
+            {(this.props.renderBase ? <div key={this.props.renderBase} className={`pokemonImageBase ${this.props.renderBase}`} 
             style={{
               marginTop: (isNaN(baseMarginTop) ? '' : baseMarginTop), 
               marginLeft: (isNaN(baseMarginLeft) ? '' : baseMarginLeft), 
               width: (!isNaN(width) ? width * 1.5 : '')
-            }}></div>
+            }}></div> : '')}
             <img
-              className={`pokemonImg ${this.props.name}${this.props.classList}`}
+              className={`pokemonImg ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
               key={src}
               style={{paddingTop: paddingTop, width: width, height: height}}
               src={src}
@@ -203,7 +203,7 @@ class Board extends Component {
   renderBoard(data) {
     let counter = 0;
     return data.map((datarow) => {
-      return <div className='boardRow' key={counter++}>{
+      return <div className='boardColumn' key={counter++}>{
         datarow.map((dataitem) => {
           return (
             <div key={dataitem.x * datarow.length + dataitem.y}>
@@ -422,6 +422,7 @@ class Timer extends Component {
       })
     }
     if (sec === 0) {
+      console.log('@Timer.tick Stopping timer since sec === 0', sec, this.secondsRemaining)
       clearInterval(this.intervalHandle);
       battleReady(this.props.storedState);
     }
@@ -429,8 +430,11 @@ class Timer extends Component {
   }
   
   startCountDown() {
-    this.intervalHandle = setInterval(this.tick, 1000);
+    console.log('@Timer.StartCountDown!')
     this.secondsRemaining = this.props.startTime;
+    clearInterval(this.intervalHandle);
+    this.intervalHandle = setInterval(this.tick, 1000);
+    console.log('@Timer.StartCountDown: ', this.secondsRemaining, this.intervalHandle, this.tick)
   }
 
   componentWillUnmount() {
