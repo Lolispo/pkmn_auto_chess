@@ -301,7 +301,9 @@ class Cell extends Component {
     const el = document.elementFromPoint(x, y);
     let id = (el.id === '' ? 
       (el.parentElement.id === '' ? 
-        (el.parentElement.parentElement.id === '' ? '' : el.parentElement.parentElement.id ) 
+        (el.parentElement.parentElement.id === '' ? 
+          (el.parentElement.parentElement.parentElement.id === '' ? '' : el.parentElement.parentElement.parentElement.id) 
+        : el.parentElement.parentElement.id) 
       : el.parentElement.id) : el.id);
     if(self.props.newProps.mouseOverId !== id){
       // console.log('Mousing Over:', id);
@@ -403,7 +405,7 @@ class Timer extends Component {
     this.startCountDown = this.startCountDown.bind(this);
     this.tick = this.tick.bind(this);
     if(this.props.startTimer){
-      console.log('@Timer constructor StartingTimer')
+      console.log('@Timer constructor StartingTimer', this.props.startTime)
       this.startCountDown();
       this.props.dispatch({type: 'DISABLE_START_TIMER'})
     }
@@ -490,7 +492,7 @@ class App extends Component {
       this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       return;
     }
-    if(this.props.gold >= 5 && this.props.gameIsLive){
+    if(this.props.gold >= 5 && this.props.gameIsLive && this.props.level < 10){
       buyExp(this.props.storedState)
     } else{
       updateMessage(this.props, 'Not enough gold!', 'error');
