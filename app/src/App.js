@@ -173,7 +173,7 @@ class Pokemon extends Component{
       content = <div className={`pokemonShopEmpty text_shadow`}>Empty</div>;
     }
     return (
-      <div className={`pokemonShopEntity ${this.props.className}`} onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div className={`pokemonShopEntity ${(this.props.className ? this.props.className : '')}`} onClick={() => this.buyUnitEvent(this.props.index)}>
         {content}
       </div>
     );

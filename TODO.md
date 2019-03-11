@@ -156,8 +156,6 @@ Finish abilities implementation (teleport)
 
 Timer not appearing correctly
 
-webm pikachuBackground (half size)
-
 boardRow => boardColumn
 
 Select unit
@@ -207,6 +205,7 @@ Help Messages
     (Temp) Color Type messages so easier to read fast
 
 Css:
+    Info button position better?
     Shine the lock a bit, fades into background
     Bonus hp as shield bar (Original hp + bonus)
     Prettier Volume slider
@@ -308,6 +307,9 @@ Test dot damage functionality
 Test lifesteal functionality
 
 ## Code / Javascript Check me
+
+Optimize asset sizes
+    webm pikachuBackground (half size)
 
 Rendering board more efficient, think immutable 
 
