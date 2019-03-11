@@ -302,8 +302,8 @@ const map = new Map(array);
 
 // TODO: Load this file dynamically, information stored in sheets
 
-export function getAudio(name) {
-  // console.log('@getAudio', name, map.get(name), cleffa, map);
+export function getUnitAudio(name) {
+  // console.log('@getUnitAudio', name, map.get(name), cleffa, map);
   return map.get(name);
 }
 

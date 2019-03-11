@@ -52,10 +52,12 @@ body {
 .pokemonShopEntity {
   margin: 6px;
   padding-bottom: 5px;
-  background-color: rgb(58, 49, 49);
   width: 140px;
-  height: 220px;
+  height: 180px;
+  /*
   border: 2px solid black;
+  background-color: rgb(58, 49, 49);
+  */
   border-radius: 50px;
   /*background: url(https://i.pinimg.com/originals/7c/0f/eb/7c0feb742c99ac92d76360a0e0ee3d3b.png) no-repeat;
   background-size: 120px 180px;*/
@@ -75,8 +77,56 @@ body {
 
 .pokemonImageDiv{
   height: 90px;
+  /*
   border-radius: 50px;
-  border: 1px black solid;
+  border: 1px black solid; 
+  */
+}
+
+.pokemonImageBase {
+  margin-top: 50px;
+  margin-left: 38px;
+  height: 25px;
+  width: 60px;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.pokemonInfo {
+  position: absolute;
+  margin-top: 70px;
+  margin-left: 5px;
+
+}
+
+.infoImg {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+}
+
+.infoImgBg {
+  margin: auto;
+  margin-top: 1px;
+  margin-left: 1px;
+  width: 23px;
+  height: 23px;
+  background: white;
+  position: absolute;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.infoImgBg:hover {
+  margin: auto;
+  margin-top: 1px;
+  margin-left: 1px;
+  width: 23px;
+  height: 23px;
+  position: absolute;
+  border-radius: 50%;
+  z-index: -1;
+  background: rgb(38, 207, 38);
 }
 
 .pokemonImg {
@@ -87,7 +137,12 @@ body {
 
 .pokemonShopEmpty {
   padding-left: 35%;
-  padding-top: 70%;
+  padding-top: 60%;
+}
+
+.shopInteractDiv {
+  padding-top: 30px;
+  padding-left: 24px;
 }
 
 .pieceImg {
@@ -188,8 +243,17 @@ body {
 }
 
 .boardDiv {
+  background: url(./assets/pokeballOpacity.png) no-repeat;
+  background-position: 10px 10px; 
+}
+
+.boardDivBattle {
   background: url(./assets/pokeball.png) no-repeat;
   background-position: 10px 10px; 
+}
+
+.handDiv {
+  background: url(./assets/handBg.png) no-repeat;
 }
 
 .cell {
@@ -200,9 +264,14 @@ body {
   border-radius: 8px;
   width: 85px; 
   height: 85px;
+  position: relative;
   /*background: url(https://i.gyazo.com/f5c31403dc3840b9b276c3e8d3e178d3.png) no-repeat;*/
   /*background: url(./assets/grass2.gif) no-repeat;*/
   background-size: 85px 85px;
+}
+
+.cell .markedUnit {
+  z-index: 30;
 }
 
 .markedUnit {
@@ -301,6 +370,9 @@ body {
 	top:1px;
 }
 
+.chatTypingDiv {
+  padding-left: 5px;
+}
 
 .growAnimation {
   animation: growText 1s ease-in-out 0s alternate infinite both running;
@@ -521,7 +593,7 @@ body {
   padding-left: 5px;
   margin-top: 5px;
   overflow: auto;
-  height: 250px;
+  height: 330px;
   width: 550px;
 }
 
@@ -638,14 +710,14 @@ body {
   Rarity colors
   rgb(58, 49, 49)
 */
-.costColor1 {
-  background-color: rgb(123,123,123);
-  /*
+/*
   TODO: Edit Shop
   background: url(./assets/pokeball.png) no-repeat;
   background-position: 10px 10px; 
   background-size: 10px 10px;
-  */
+*/
+.costColor1 {
+  background-color: rgb(123,123,123);
 }
 
 .costColor2 {
@@ -662,6 +734,26 @@ body {
 
 .costColor5 {
   background-color: rgb(255, 118, 28);
+}
+
+.costColorText1 {
+  color: white;
+}
+
+.costColorText2 {
+  color: lightblue;
+}
+
+.costColorText3 {
+  color: rgb(18, 90, 159);
+}
+
+.costColorText4 {
+  color: rgb(131, 47, 184);
+}
+
+.costColorText5 {
+  color: rgb(255, 118, 28);
 }
 
 .poison {

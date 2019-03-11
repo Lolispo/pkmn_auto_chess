@@ -52,7 +52,7 @@ const reducer = (
     typeStatsString: '',
     typeBonusString: '',
     round: 1,
-    musicEnabled: true,
+    musicEnabled: false,
     soundEnabled: true,
     chatSoundEnabled: true,
     selectedSound: '',
@@ -61,6 +61,8 @@ const reducer = (
     volume: 0.05,
     startTimer: false,
     isDead: true,
+    selectedShopUnit: '',
+    isSelectModeShop: false,
   },
   action
 ) => {
@@ -164,12 +166,6 @@ const reducer = (
     case 'SET_HELP_MODE':
       state = {...state, chatHelpMode: action.chatHelpMode}    
       break;
-    case 'SET_STATS':
-      console.log('Updating stats', action.name); // action.stats)
-      const statsMap = state.statsMap;
-      statsMap[action.name] = action.stats;
-      state = {...state, name: action.name, stats: action.stats, statsMap: statsMap}
-      break;
     case 'SET_TYPE_BONUSES':
       state = {...state, typeStatsString: action.typeDescs, typeBonusString: action.typeBonuses}
       break;
@@ -201,8 +197,17 @@ const reducer = (
         state = {...state, battleStartBoard: action.board, message: 'Move ' + action.moveNumber, messageMode: ''}
         // console.log('state', state);
         break;
+    case 'SET_STATS':
+      console.log('Updating stats', action.name); // action.stats)
+      const statsMap = state.statsMap;
+      statsMap[action.name] = action.stats;
+      state = {...state, name: action.name, stats: action.stats, statsMap: statsMap}
+      break;
     case 'SELECT_UNIT':
-      state = {...state, selectedUnit: action.selectedUnit}
+      state = {...state, selectedUnit: action.selectedUnit, isSelectModeShop: false}
+      break;
+    case 'SELECT_SHOP_INFO':
+      state = {...state, selectedShopUnit: action.name, isSelectModeShop: true}
       break;
     case 'SET_MOUSEOVER_ID':
       state = {...state, mouseOverId: action.mouseOverId}

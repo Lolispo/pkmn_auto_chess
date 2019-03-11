@@ -1847,9 +1847,9 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
   console.log('HandList', handList);
   const playerUnits = shopUnits.concat(boardList).concat(handList);
   state = state.set('discardedPieces', discPieces.concat(playerUnits));
-  const newState = stateCheckDead.set('players', stateCheckDead.get('players').delete(playerIndex));
+  const newState = state.set('players', state.get('players').delete(playerIndex));
   const amountOfPlayers = newState.get('amountOfPlayers') - 1;
-  newState.set('amountOfPlayers', amountOfPlayers);
+  return newState.set('amountOfPlayers', amountOfPlayers);
 }
 
 

@@ -227,6 +227,7 @@ Animations:
 
 Code: Event code only in one place
     placepieceevent in 2 spots currently
+    getStatsEvent
     Move to separate file and import, requires sending props
 
 TopBar:

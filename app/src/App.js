@@ -18,13 +18,14 @@ import sound from './assets/sound.png';
 import music from './assets/note.png';
 import musicMuted from './assets/noteMuted.png';
 import pieceImg from './assets/piece.png';
-import { getAudio, getSoundEffect } from './audio.js';
+import info from './assets/info.png';
+import { getUnitAudio, getSoundEffect } from './audio.js';
 
 class PokemonImage extends Component{
 
   constructor(props) {
     super(props);
-    this.state = {dimensions: {}, paddingTop: '0px', sideLength: this.props.sideLength};
+    this.state = {dimensions: {}, paddingTop: '0px', sideLength: this.props.sideLength, renderBase: (this.props.renderBase || false)};
     this.onImgLoad = this.onImgLoad.bind(this);
     this.reduceImageSize = this.reduceImageSize.bind(this);
     this.calculatePadding = this.calculatePadding.bind(this);
@@ -67,19 +68,29 @@ class PokemonImage extends Component{
     if(this.props.back){
       src = 'https://img.pokemondb.net/sprites/black-white/anim/back-normal/' + this.props.name + '.gif';
     }
+    const baseMarginTop = paddingTop + height - 15;
+    const baseMarginLeft = 85 - width - 7;
     return (
       <CSSTransitionGroup
           transitionName="example"
           transitionEnterTimeout={300}
           transitionLeave={false}>
-          <img
-            className={`pokemonImg ${this.props.name}${this.props.classList}`}
-            key={src}
-            style={{paddingTop: paddingTop, width: width, height: height}}
-            src={src}
-            alt='Pokemon'
-            onLoad={this.onImgLoad}
-          />
+          <div>
+            <div className={`pokemonImageBase ${(this.state.renderBase ? this.state.renderBase : '')}`} 
+            style={{
+              marginTop: (isNaN(baseMarginTop) ? '' : baseMarginTop), 
+              marginLeft: (isNaN(baseMarginLeft) ? '' : baseMarginLeft), 
+              width: (!isNaN(width) ? width * 1.5 : '')
+            }}></div>
+            <img
+              className={`pokemonImg ${this.props.name}${this.props.classList}`}
+              key={src}
+              style={{paddingTop: paddingTop, width: width, height: height}}
+              src={src}
+              alt='Pokemon'
+              onLoad={this.onImgLoad}
+            />
+          </div>
         </CSSTransitionGroup>
     );
   }
@@ -113,21 +124,43 @@ class Pokemon extends Component{
     }
   }
 
+  getStatsEvent(props, name) {
+    if(props.statsMap[name]){
+      console.log('Cached info')
+      props.dispatch({type: 'SET_STATS', name: name, stats: props.statsMap[name]});
+    } else {
+      getStats(name);
+    }
+  }
+
+  infoEvent = (event) => {
+    event.stopPropagation();
+    const prop = this.props.newProps;
+    console.log('Pressed info shop', this.props.shopPokemon.name)
+    prop.dispatch({ type: 'SELECT_SHOP_INFO', name: this.props.shopPokemon.name});
+    this.getStatsEvent(prop, this.props.shopPokemon.name);
+  }
+
   render(){
     let content;
     if(!isUndefined(this.props.shopPokemon)){
       const costColorClass = (!isUndefined(this.props.shopPokemon) ? 'costColor' + this.props.shopPokemon.cost : '')
+      const costColorTextClass = (!isUndefined(this.props.shopPokemon) ? 'costColorText' + this.props.shopPokemon.cost : '')
       /*
       const backgroundColor = (Array.isArray(this.props.shopPokemon.type) ? 
             this.props.shopPokemon.type[0] : this.props.shopPokemon.type);
       */
       content = <div>
-            <div className={`pokemonImageDiv ${costColorClass}`}>
-              <PokemonImage name={this.props.shopPokemon.name} sideLength={85}/>
+            <div className={`pokemonImageDiv`}>
+              <div className='pokemonInfo'>
+                <img className='infoImg' src={info} onClick={this.infoEvent}></img>
+                <div className='infoImgBg'/>
+              </div>
+              <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass}/>
             </div>
             <div className='pokemonShopText'>
-              {this.props.shopPokemon.display_name + '\n'}
-              {(Array.isArray(this.props.shopPokemon.type) ? 
+              <span className={costColorTextClass}>{this.props.shopPokemon.display_name + '\n'}</span>
+              {(Array.isArray(this.props.shopPokemon.type) ?
                 <div>
                   <span className={`type typeLeft ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
                   <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
@@ -370,6 +403,7 @@ class Timer extends Component {
     this.startCountDown = this.startCountDown.bind(this);
     this.tick = this.tick.bind(this);
     if(this.props.startTimer){
+      console.log('@Timer constructor StartingTimer')
       this.startCountDown();
       this.props.dispatch({type: 'DISABLE_START_TIMER'})
     }
@@ -495,7 +529,7 @@ class App extends Component {
         </span>
       }
       const content = <div className='center'>
-        <div className='textAlignCenter'>
+        <div className='textAlignCenter marginTop5'>
         {(Array.isArray(s.type) ? 
             <div>
               <span className={`type typeLeft ${s.type[0]}`}>{s.type[0]}</span>
@@ -528,30 +562,38 @@ class App extends Component {
     }
   }
 
+  statsRender = (className, name, allowSell=false) => {
+    const pokeEl= <PokemonImage name={name} sideLength={50}/>;
+    return <div className={className}>
+      <div className='textAlignCenter' style={{paddingTop: '30px'}}>
+        <div>{this.props.stats.display_name}</div>
+        {pokeEl}
+      </div>
+      {this.buildStats()}
+      {(allowSell ? <div className='centerWith50 marginTop5'>
+        <button className='normalButton' onClick={() => {
+          const from = this.props.selectedUnit.pos;
+          this.sellPieceEvent(from);
+        }}>Sell {this.props.stats.display_name}</button>
+      </div> : '')}
+    </div>;
+  }
+
   selectedUnitInformation = () => {
     const className = 'center text_shadow infoPanel';
     const noSelected = <div className={className}><div className={`noSelected`}>No unit selected</div></div>
-    if(!isUndefined(this.props.selectedUnit)){
+    if(this.props.stats && !this.props.isSelectModeShop && !isUndefined(this.props.selectedUnit)){
       let pokemon = (this.props.selectedUnit.isBoard ? (this.props.onGoingBattle ? this.props.battleStartBoard[this.props.selectedUnit.pos] 
         : this.props.myBoard[this.props.selectedUnit.pos]) : this.props.myHand[this.props.selectedUnit.pos]);
       if(pokemon){
-        this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getAudio(pokemon.name)});
-        const pokeEl= <PokemonImage name={pokemon.name} sideLength={50}/>;
+        this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getUnitAudio(pokemon.name)});
         // console.log('@selectedUnitInformation', pokemon.display_name, pokemon)
-        return <div className={className}>
-          <div className='textAlignCenter' style={{paddingTop: '30px'}}>
-            <div>{pokemon.display_name}</div>
-            {pokeEl}
-          </div>
-          {this.buildStats()}
-          <div className='centerWith50 marginTop5'>
-            <button className='normalButton' onClick={() => {
-              const from = this.props.selectedUnit.pos;
-              this.sellPieceEvent(from);
-            }}>Sell {pokemon.display_name}</button>
-          </div>
-        </div>
+        return this.statsRender(className, pokemon.name, true);
       }
+    } else if(this.props.stats && this.props.isSelectModeShop && this.props.selectedShopUnit !== ''){
+      const name = this.props.selectedShopUnit;
+      this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getUnitAudio(name)});
+      return this.statsRender(className, name)
     }
     return noSelected;
   }
@@ -999,12 +1041,15 @@ class App extends Component {
     <div style={{ float:"left", clear: "both" }}
       ref={(el) => { this.messagesEnd = el;}}>
     </div></div>}
-    <form onSubmit={this.handleChatSubmit}>
-      <label>
-        <input className='textInput' type="text" value={this.state.chatMessageInput} onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
-      </label>
-      <input className='text_shadow' type="submit" value="Submit" />
-    </form></div> : <div className='helpText text_shadow'><span className='bold'>{'Information:\n'}</span>{s}</div>);
+    <div className='chatTypingDiv'>
+      <form onSubmit={this.handleChatSubmit}>
+        <label>
+          <input className='textInput' type="text" value={this.state.chatMessageInput} onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
+        </label>
+        <input className='text_shadow' type="submit" value="Submit" />
+      </form>
+    </div>
+    </div> : <div className='helpText text_shadow'><span className='bold'>{'Information:\n'}</span>{s}</div>);
   }
 
   render() {
@@ -1105,7 +1150,7 @@ class App extends Component {
         <div className='text_shadow'>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
         {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
       </div>
-    const boardDiv = <div className='boardDiv'>
+    const boardDiv = <div className={(!this.props.onGoingBattle ? 'boardDiv' : 'boardDivBattle')}>
         <div>
           <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
         </div>
@@ -1118,9 +1163,8 @@ class App extends Component {
           <div className='overlap text_shadow marginTop5 paddingLeft5 levelTextExp'>
             {'Exp: ' + this.props.exp + '/' + this.props.expToReach}
           </div>
-          {/*<div className='paddingLeft5 center'>_____________________________________________________________________________</div>*/}
         </div>
-        <div className='flex center'>
+        <div className='flex center handDiv'>
           <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
         </div>
       </div>;
@@ -1135,7 +1179,7 @@ class App extends Component {
                   <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
                 </div>
                 <div className='flex'>
-                  <div className='' style={{paddingTop: '60px', paddingLeft: '24px'}}>
+                  <div className='shopInteractDiv'>
                     <div>
                       <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
                     </div>
@@ -1236,6 +1280,8 @@ const mapStateToProps = state => ({
   volume: state.volume,
   startTimer: state.startTimer,
   isDead: state.isDead,
+  selectedShopUnit: state.selectedShopUnit,
+  isSelectModeShop: state.isSelectModeShop,
 });
 
 export default connect(mapStateToProps)(App);
