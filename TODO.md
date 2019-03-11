@@ -155,7 +155,10 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+hp bar % padding better (100% vs 95%)
+
 move chat into div
+    React component: easier to fix scrollToBottom
 
 gameEnd
     Scoreboard last update

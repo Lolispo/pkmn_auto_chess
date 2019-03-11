@@ -430,11 +430,12 @@ class Timer extends Component {
   }
   
   startCountDown() {
-    console.log('@Timer.StartCountDown!')
+    console.log('@Timer.StartCountDown! intervalHandle', this.intervalHandle)
     this.secondsRemaining = this.props.startTime;
     clearInterval(this.intervalHandle);
+    console.log('intervalHandle2', this.intervalHandle)
     this.intervalHandle = setInterval(this.tick, 1000);
-    console.log('@Timer.StartCountDown: ', this.secondsRemaining, this.intervalHandle, this.tick)
+    console.log('@Timer.StartCountDown: ', this.secondsRemaining, this.intervalHandle);
   }
 
   componentWillUnmount() {

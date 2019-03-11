@@ -244,7 +244,11 @@ const reducer = (
       break;
     case 'END_GAME':
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
-      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer}
+      const newMusic = state.music;
+      if(state.index === action.winningPlayer.index){
+        newMusic = getBackgroundAudio('wonGame')
+      }
+      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic}
       break;
     case 'DEAD_PLAYER':
       state = {...state, message: action.message, messageMode: 'big', isDead: true}

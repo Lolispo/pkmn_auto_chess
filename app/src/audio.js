@@ -7,6 +7,7 @@ import pokemonCenter from './assets/Music/pokemonCenter.mp3';
 import trainerBattle from './assets/Music/trainerBattle.mp3';
 import rivalTheme from './assets/Music/rivalTheme.mp3';
 import goldThemeOriginal from './assets/Music/goldThemeOriginal.mp3';
+import gymVictoryTheme from './assets/Music/gymVictoryTheme.mp3';
 
 // Sound Effects
 
@@ -317,6 +318,8 @@ export function getBackgroundAudio(name) {
       return trainerBattle;
     case 'rival':
       return rivalTheme;
+    case 'wonGame':
+      return gymVictoryTheme;
     case 'shop':
     case 'idle':
     default:  
