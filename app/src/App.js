@@ -928,13 +928,33 @@ class App extends Component {
     const sortedPlayersByHp = Object.keys(players).sort(function(a,b){return players[b].hp - players[a].hp});
     let list = [];
     for(let i = 0; i < sortedPlayersByHp.length; i++){
+      const player = players[sortedPlayersByHp[i]]
+      const hp = player.hp;
       // console.log('inner: ', i, sortedPlayersByHp[i], players[sortedPlayersByHp[i]], players[sortedPlayersByHp[i]].hp)
-      list.push(<div key={i}>{'Player ' + players[sortedPlayersByHp[i]].index + ': ' + players[sortedPlayersByHp[i]].hp + ' hp'}</div>)
+      list.push(<div className='playerScoreboardContainer' key={i}>
+        <div className='playerScoreboardInner'>
+          <span>{'Player ' + player.index + '\n'}</span>
+          <div className='playerHpBarDiv'>
+            <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
+            style={{width: (hp) + '%'}}/>
+            <div className='playerHpBarText biggerText centerWith50 overlap'>
+              <span className='text_shadow paddingLeft5 paddingRight5'>{hp + '%'}</span>
+            </div>
+          </div>
+          {/*
+          <div className=' overlap'>
+            <div className=' overlap friendlyBar' style={{width: (hp)+'%'}}>{hp + ' hp'}</div>
+          </div>
+          */}
+        </div>
+      </div>)
     }
     // console.log('@PlayerStatsDiv', sortedPlayersByHp);
-    return <div className='text_shadow biggerText' style={{paddingTop: '45px'}}>
-      Scoreboard:  
-      {list}
+    return <div className='scoreboard' style={{paddingTop: '45px'}}>
+      <div className='text_shadow biggerText '>
+        Scoreboard:  
+        {list}   
+      </div>
     </div>
   }
 
@@ -1078,11 +1098,13 @@ class App extends Component {
         </div>
       </div>
       <div className='mainMenuSoundDiv marginTop5'>
-        <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
-          <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? music : musicMuted)} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
+        <div>
+          <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? music : musicMuted)} 
+          alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}/>
         </div>
-        <div onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
-          <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? sound : soundMuted)} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
+        <div>
+          <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? sound : soundMuted)} 
+          alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}  onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}/>
         </div>
         {(this.props.musicEnabled ? this.playMusic() : '')} 
       </div>
@@ -1161,7 +1183,8 @@ class App extends Component {
           <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
         </div>
         <div className='levelDiv'>
-          <div className={`levelBar overlap ${(this.props.exp === 0 ? 'hidden' : '')}`} style={{width: (this.props.expToReach !== 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}></div>
+          <div className={`levelBar overlap ${(this.props.exp === 0 ? 'hidden' : '')}`} 
+          style={{width: (this.props.expToReach !== 0 ? String(this.props.exp/this.props.expToReach * 100) : '100') + '%'}}/>
           <div className='biggerText centerWith50 overlap levelText'>
             <span className='text_shadow paddingLeft5 paddingRight5'>{'Level ' + JSON.stringify(this.props.level, null, 2)}</span>
             {/*<span className='text_shadow paddingLeft5 paddingRight5'>{'( ' + (this.props.expToReach === 'max' ? 'max' : this.props.exp + '/' + this.props.expToReach) + ' )'}</span>*/}
@@ -1203,9 +1226,7 @@ class App extends Component {
               </div>
             </div>
           </div>
-          <div>
-            {this.playerStatsDiv()}
-          </div>
+          {this.playerStatsDiv()}
         </div>
         <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
           <div className='flex'>

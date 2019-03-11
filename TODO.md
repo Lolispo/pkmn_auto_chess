@@ -155,6 +155,8 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+move chat into div
+
 gameEnd
     Scoreboard last update
     Show that you won more visibly than message, since message is easily replaced
@@ -169,13 +171,10 @@ Message:
 Timer set to system.time and calculated from that
     If game is canceled, make that timeout clearinterval
 
-
 Leave Game button
     Prompt (pseudo alert): are you sure you want to leave the game?
 
 Error console logs logic in frontend, move to constructor instead of render (battleStartDetection)
-
-confetti on win
 
 Restart reset more variables
     Timer not appearing correctly

@@ -613,10 +613,6 @@ body {
   position: absolute; 
   margin-top: 69px;
   font-size: 12px;
-  /*
-  position: absolute;
-  max-width: 84px;*/
-  /*margin-left: 1px;*/
 }
 
 .friendlyBar {
@@ -625,6 +621,50 @@ body {
 
 .enemyBar {
   background-color: red;
+}
+
+.playerHpBarDiv {
+  border: 1px dotted black;
+  border-radius: 10px;
+  width: 150px;
+  height: 30px;
+  position: relative;
+}
+
+.playerHpBar {
+  text-align: center;
+  position: absolute; 
+  background-color: green;
+  height: 26px;
+  border-radius: 10px;
+  padding-top: 5px;
+}
+
+.playerHpBarText {
+  padding-left: 97px;
+  padding-top: 4px;
+}
+
+.scoreboard {
+  right: 0px;
+  margin-left: auto;
+  margin-right: 0;
+  float: right;
+  display: flex;
+  justify-content: flex-end;
+  clear: both;
+}
+
+.playerScoreboardContainer {
+  border-radius: 5px;
+  width: 150px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.playerScoreboardInner{
+  margin-left: 5px;
+  position: relative;
 }
 
 .manaBar {
