@@ -110,7 +110,7 @@ class Pokemon extends Component{
     }
     if(this.props.shopPokemon && this.props.newProps.gameIsLive){
       if(this.props.newProps.gold >= this.props.shopPokemon.cost){
-        const size = Object.keys(this.props.newProps.myHand).length
+        const size = Object.keys(this.props.newProps.myHand).length;
         if(size < 8){
           buyUnit(this.props.newProps.storedState, index);
         } else{
@@ -302,7 +302,9 @@ class Cell extends Component {
     let id = (el.id === '' ? 
       (el.parentElement.id === '' ? 
         (el.parentElement.parentElement.id === '' ? 
-          (el.parentElement.parentElement.parentElement.id === '' ? '' : el.parentElement.parentElement.parentElement.id) 
+          (el.parentElement.parentElement.parentElement.id === '' ? 
+            (el.parentElement.parentElement.parentElement.parentElementid === '' ? '' : el.parentElement.parentElement.parentElement.parentElement.id) 
+          : el.parentElement.parentElement.parentElement.id) 
         : el.parentElement.parentElement.id) 
       : el.parentElement.id) : el.id);
     if(self.props.newProps.mouseOverId !== id){
@@ -347,9 +349,24 @@ class Cell extends Component {
         }
       } else {
         pokemon = this.props.map[this.state.pos];
+        // if(pokemon && pokemon.buff) console.log(pokemon.buff)
+        let buffs = '';
+        if(this.props.isBoard){
+          let pokemonBuffList = [];
+          if(pokemon && pokemon.buff && pokemon.buff.length > 0){
+            // console.log('@stuff', pokemonBuffList, pokemon.buff.length)
+            for(let i = 0; i < pokemon.buff.length; i++){
+              pokemonBuffList.push(<span>{pokemon.buff[i] + '\n'}</span>);
+            }
+          }
+          buffs = (pokemon && pokemon.buff && pokemon.buff.length > 0 ? <div className='text_shadow textList buffText'>Buffed: {pokemonBuffList}</div> : '');
+        }
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
-          return <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
+          return <div>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
+            {buffs}
+          </div>
         }
       }
     }
@@ -424,7 +441,10 @@ class Timer extends Component {
     if (sec === 0) {
       console.log('@Timer.tick Stopping timer since sec === 0', sec, this.secondsRemaining)
       clearInterval(this.intervalHandle);
-      battleReady(this.props.storedState);
+      if(Object.keys(this.props.storedState).length > 0){
+        console.log('BattleReady!')
+        battleReady(this.props.storedState);
+      }
     }
     this.secondsRemaining--
   }
@@ -535,6 +555,21 @@ class App extends Component {
           <PokemonImage name={s.evolves_to} sideLength={40}/>
         </span>
       }
+      const boardBuffs = this.props.boardBuffs;
+      /*
+      {(Array.isArray(s.type) ? 
+        //boardBuffs.typeBuffMapSolo
+        <div>
+          <span className={`type typeLeft ${s.type[0]}`}>{s.type[0]}</span>
+          <span className={`type ${s.type[1]}`}>{s.type[1] + '\n'}</span>
+        </div>
+      : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
+      Object.keys(boardBuffs.typeBuffMapAll).forEach(e => {
+        
+      });
+      Object.keys(boardBuffs.typeDebuffMapEnemy).forEach(e => {
+        
+      });*/
       const content = <div className='center'>
         <div className='textAlignCenter marginTop5'>
         {(Array.isArray(s.type) ? 
@@ -830,8 +865,10 @@ class App extends Component {
                   break;
                 case 'heal':
                   if(unitPosEffect === target){
+                    console.log('Enemy Heal (SHOULDNT OCCUR)')
                     newHpSpell += valueEffect;
                   } else {
+                    console.log('Normal heal')
                     newBoard[e].hp = newBoard[e].hp + valueEffect;
                     actionMessageAttacker = actionMessageAttacker + '! Heal for ' + valueEffect;
                   }
@@ -924,31 +961,35 @@ class App extends Component {
     }
   }
 
+  createScoreboardPlayerEntry = (player, isDead) => {
+    const hp = player.hp;
+    return <div className='playerScoreboardContainer' key={player.index}>
+      <div className='playerScoreboardInner'>
+        <span>{'Player ' + player.index + '\n'}</span>
+        <div className='playerHpBarDiv'>
+          <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
+          style={{width: (hp) + '%'}}/>
+          <div className='playerHpBarText biggerText centerWith50 overlap'>
+            <span className='text_shadow paddingLeft5 paddingRight5'>{hp + '%'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
   playerStatsDiv = () => {
     const players = this.props.players;
     const sortedPlayersByHp = Object.keys(players).sort(function(a,b){return players[b].hp - players[a].hp});
     let list = [];
     for(let i = 0; i < sortedPlayersByHp.length; i++){
-      const player = players[sortedPlayersByHp[i]]
-      const hp = player.hp;
+      const player = players[sortedPlayersByHp[i]];
       // console.log('inner: ', i, sortedPlayersByHp[i], players[sortedPlayersByHp[i]], players[sortedPlayersByHp[i]].hp)
-      list.push(<div className='playerScoreboardContainer' key={i}>
-        <div className='playerScoreboardInner'>
-          <span>{'Player ' + player.index + '\n'}</span>
-          <div className='playerHpBarDiv'>
-            <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
-            style={{width: (hp) + '%'}}/>
-            <div className='playerHpBarText biggerText centerWith50 overlap'>
-              <span className='text_shadow paddingLeft5 paddingRight5'>{hp + '%'}</span>
-            </div>
-          </div>
-          {/*
-          <div className=' overlap'>
-            <div className=' overlap friendlyBar' style={{width: (hp)+'%'}}>{hp + ' hp'}</div>
-          </div>
-          */}
-        </div>
-      </div>)
+      list.push(this.createScoreboardPlayerEntry(player, false));
+    }
+    const deadPlayers = this.props.deadPlayers;
+    for(let i = 0; i < deadPlayers.size; i++){
+      const player = deadPlayers[i];
+      list.push(this.createScoreboardPlayerEntry(player, true));
     }
     // console.log('@PlayerStatsDiv', sortedPlayersByHp);
     return <div className='scoreboard' style={{paddingTop: '45px'}}>
@@ -964,11 +1005,11 @@ class App extends Component {
     const level = this.props.level;
     const content = <span className={(unitsOnBoard > level ? 'redFont' : '')}>{unitsOnBoard}</span>
     return <div className='marginTop5 flex' style={{paddingLeft: '65px'}}>
-        <img style={{marginTop: '-5px'}} className='pieceImg' src={pieceImg} alt='Pieces'/>
-        <div className='biggerText text_shadow' style={{paddingLeft: '5px'}}>
-          <span className='pieceDiv'> : {content} / {level}</span>
-       </div>
-      </div>;
+      <img style={{marginTop: '-5px'}} className='pieceImg' src={pieceImg} alt='Pieces'/>
+      <div className='biggerText text_shadow' style={{paddingLeft: '5px'}}>
+        <span className='pieceDiv'> : {content} / {level}</span>
+      </div>
+    </div>;
   }
 
   playMusic = () => {
@@ -1142,7 +1183,7 @@ class App extends Component {
             </div>
           </CSSTransitionGroup>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={20} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer> : ''}
         <div className = 'centerWith50'>
           <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
@@ -1156,7 +1197,15 @@ class App extends Component {
           {this.unitSound()}
           {this.soundEffects()}
         </div>
-        <div className='centerWith50 marginTop5'>
+        <div className='boardBuffs text_shadow'>
+          {/*{(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
+            JSON.stringify(this.props.boardBuffs.typeBuffMapSolo, null, 2) : '')}
+          {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapAll && Object.keys(this.props.boardBuffs.typeBuffMapAll).length > 0  ? 
+            JSON.stringify(this.props.boardBuffs.typeBuffMapAll, null, 2) : '')}
+          {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
+          JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}*/}
+        </div>
+        <div className='marginTop5 flex'>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
             <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? music : musicMuted)} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
           </div>
@@ -1311,6 +1360,8 @@ const mapStateToProps = state => ({
   isDead: state.isDead,
   selectedShopUnit: state.selectedShopUnit,
   isSelectModeShop: state.isSelectModeShop,
+  boardBuffs: state.boardBuffs,
+  deadPlayers: state.deadPlayers,
 });
 
 export default connect(mapStateToProps)(App);

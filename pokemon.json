@@ -518,7 +518,7 @@
     "defense": 75,
     "speed": 100,
     "type": "fire",
-    "ability": "flamethrower",
+    "ability": "ember",
     "evolves_from": "vulpix"
   },
   "igglybuff": {
@@ -755,7 +755,7 @@
   "mankey": {
     "name": "mankey",
     "display_name": "Mankey☆",
-    "cost": 2,
+    "cost": 3,
     "hp": 40,
     "attack": 80,
     "defense": 35,
@@ -767,7 +767,7 @@
   "primeape": {
     "name": "primeape",
     "display_name": "Primeape☆☆",
-    "cost": 4,
+    "cost": 5,
     "hp": 65,
     "attack": 105,
     "defense": 60,
@@ -1027,7 +1027,7 @@
     "defense": 70,
     "speed": 105,
     "type": "fire",
-    "ability": "ember",
+    "ability": "flamethrower",
     "evolves_from": "ponyta"
   },
   "slowpoke": {

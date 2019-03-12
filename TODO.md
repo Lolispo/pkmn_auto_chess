@@ -13,7 +13,7 @@ Crash:
     FrontEnd battle not matched, some units survive that shouldnt
 
 Test me ingame:  
-    Different opponents varies for 3 players?
+    Wave 35 Crash
     3 psychic - crashed
     WinningAnimation: Apply to all winning units? (Notice multiple of same type)
     Player loses
@@ -22,9 +22,20 @@ Test me ingame:
         During battle or normally
 
 Known issues:
+    Battle ending with units from both teams alive
+        Dot damage or healing
     Timer Bug, restart for it
 
+
 ## Backend
+
+Bonus effect from same family - mankey and primeape got fighting bonus
+
+arvid img json
+
+Something doing 0.5 damage (brock vs parasect)
+
+Fix unitImages, since pokemonDb has ddos protection
 
 Give battle won gold reward
 
@@ -59,8 +70,9 @@ Is While Iterator problematic if 2 players die same round?
     Can it continue iterating if element was deleted previously
 
 Player eliminated logic
-    Move all pieces back to pieces in session
-        hand + board
+    Handle players being eliminated in same round
+        After own battle is done, send post battle state to user?
+    Gray out eliminated player
     Send information to frontend that you are out
         A message is being sent to everyone in chat
         Disable all board interact functionality for user
@@ -75,6 +87,7 @@ Gold:
         Show streak / next gold
 
 PlacePieceEvent (All piece interactions):
+    .set('buff', List([]))
     Type bonuses calculations, what combos are active
         Current logic in: markBoardBonuses
         Recalculate and update unitbuffs and boardBuffs on piece interactions
@@ -157,6 +170,41 @@ Aoe damage logic
 Finish abilities implementation (teleport)
 
 ## Frontend
+
+Rotate unit in attack direction
+    css mirror, transform: scaleX(-1)
+
+Ability effects from canvas
+
+DotDamage
+    NOT MATCHING UP
+
+Player loses
+    dont crash when new battle starts (check .index)
+
+Redo pokeball
+    pokeball align middle
+    pokeball design as in https://discordapp.com/channels/102097104322711552/102097104322711552/555146735568158763
+    Color as in costColor1 or gray in pokeball
+
+forceStartGame update for not start 
+
+Shrink animation fix during battle
+
+Clickable (:hover) effect
+
+Horn sound lower
+
+Priorities timer sound
+
+Types Increases/Decreases for types are wrong
+
+Types:
+    Print types as images with number on
+        Images: type images
+    Info panel + info
+
+Type fix +20 hp many times
 
 hp bar % padding better (100% vs 95%)
 
@@ -304,6 +352,8 @@ Credits somewhere in frontend (P and R.Music)
 
 ## Communication
 
+Timer reset if ongoing battle server restart (end battle)
+
 disconnect make win if alone
     Disconnect detect on frontend
     Disable when reconnect allowed
@@ -406,12 +456,31 @@ eevee:
 
 ## Balance
 
+TypeBonuses: 
+    Flying -> 2 req
+    Grass and poison are same
+    Lifesteal
+    Poison: increase dot damage
+
+    Early Game types:
+        Bug, Flying, Poison
+    Early - Mid
+        Fire
+    Mid Game
+        Normal electric
+    Late Game
+        Water Dragon psychic Ghost
+
+
+
 Speed might be too strong atm
     Buff tanky units
 
 Remove iggly/cleffa trio ? 
 
 Abra 2 -> 1
+
+Omanyte elekid smoochum magby check
 
 Sheets balance:
     Rhyhorn 4 -> 5?

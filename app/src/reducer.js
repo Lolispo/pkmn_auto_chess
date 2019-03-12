@@ -63,6 +63,8 @@ const reducer = (
     isDead: true,
     selectedShopUnit: '',
     isSelectModeShop: false,
+    boardBuffs: {},
+    deadPlayers: {},
   },
   action
 ) => {
@@ -75,15 +77,20 @@ const reducer = (
         message: 'Received State', 
         messageMode: '',
         players: action.newState.players,
-        myHand: action.newState.players[state.index].hand,
-        myBoard: action.newState.players[state.index].board,
-        myShop: action.newState.players[state.index].shop,
-        level: action.newState.players[state.index].level,
-        exp: action.newState.players[state.index].exp,
-        expToReach: action.newState.players[state.index].expToReach,
-        gold: action.newState.players[state.index].gold,
         round: action.newState.round,
       };
+      if(action.newState.players[state.index]){
+        state = {...state,
+          myHand: action.newState.players[state.index].hand,
+          myBoard: action.newState.players[state.index].board,
+          myShop: action.newState.players[state.index].shop,
+          boardBuffs: action.newState.players[state.index].boardBuffs,
+          level: action.newState.players[state.index].level,
+          exp: action.newState.players[state.index].exp,
+          expToReach: action.newState.players[state.index].expToReach,
+          gold: action.newState.players[state.index].gold,
+        };
+      }
       console.log('New State', action.newState)
       // console.log(state);
       break;
@@ -95,6 +102,7 @@ const reducer = (
         myHand: action.player.hand,
         myBoard: action.player.board,
         myShop: action.player.shop,
+        boardBuffs: action.player.boardBuffs,
         level: action.player.level,
         exp: action.player.exp,
         expToReach: action.player.expToReach,
@@ -136,6 +144,8 @@ const reducer = (
         music: getBackgroundAudio('idle'),
         startTimer: true,
         isDead: false,
+        boardBuffs: {},
+        deadPlayers: {},
       }
       break;
     case 'SET_CONNECTED':
@@ -251,7 +261,13 @@ const reducer = (
       state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic}
       break;
     case 'DEAD_PLAYER':
-      state = {...state, message: action.message, messageMode: 'big', isDead: true}
+      if(action.pid === state.index) {
+        state = {...state, message: 'You Lost! You finished ' + state.position + '!', messageMode: 'big', isDead: true}
+      }
+      const deadPlayer = {index: action.pid, hp: 0, pos: state.position};
+      const deadPlayers = state.deadPlayers;
+      deadPlayers[action.pid] = deadPlayer
+      state = {...state, deadPlayers}
       break;
     case 'NEW_CHAT_MESSAGE':
       // console.log('@NEW_CHAT_MESSAGE', action.chatType);

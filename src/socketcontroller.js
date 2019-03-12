@@ -332,8 +332,13 @@ module.exports = (socket, io) => {
           }
           if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
             console.log('ENDING GAME!')
+            sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
+            sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
+            const stateToSend = getStateToSend(stateEndedTurn);
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
             emitMessage(socket, io, sessionId, (socketId) => {
+              io.to(socketId).emit('END_BATTLE');
+              io.to(socketId).emit('UPDATED_STATE', stateToSend);
               io.to(socketId).emit('END_GAME', winningPlayer);
             });
           } else {

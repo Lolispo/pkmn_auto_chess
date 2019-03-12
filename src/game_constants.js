@@ -175,6 +175,7 @@ exports.getLevelPieceProbability = index => levelPieceProbability.get(String(ind
 
 exports.getPieceProbabilityNum = index => {
   const probs = levelPieceProbability.get(String(index));
+  if(f.isUndefined(probs)) console.log('getPieceProbability', index);
   return [probs.get('1'), probs.get('1') + probs.get('2'), probs.get('1') + probs.get('2') + probs.get('3'),
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4'),
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4') + probs.get('5')];

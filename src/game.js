@@ -62,6 +62,7 @@ async function refillPieces(pieces, discardedPieces) {
   console.log('@refillPieces Refilling', discardedPieces.size, 'units'); // pieceStorage
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
+    console.log('@refillPieces', name);
     const cost = (await pokemonJS.getStats(discardedPieces.get(i))).get('cost');
     pieceStorage = await f.push(pieceStorage, cost - 1, name);
   }
@@ -160,7 +161,7 @@ async function refreshShop(stateParam, playerIndex) {
     }
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
-    const shopToList = filteredShop.map((value, key) => value);
+    const shopToList = Array.from(filteredShop.map((value, key) => value).values());
     console.log('@refreshShop filteredShop', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
     state = state.set('discardedPieces', discPieces.concat(shopToList));
   }
@@ -185,6 +186,7 @@ async function getBoardUnit(name, x, y) {
     name,
     display_name: unitInfo.get('display_name'),
     position: f.pos(x, y),
+    type: unitInfo.get('type'),
   });
 }
 
@@ -385,16 +387,27 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     state = obj.get('state')
     upgradeOccured = obj.get('upgradeOccured');
   }
-  if (shouldSwap && !f.isUndefined(newPiece)) {
-    if (f.checkHandUnit(fromPosition)) {
+  if (shouldSwap && !f.isUndefined(newPiece)) { // Swap allowed
+    if (f.checkHandUnit(fromPosition)) { // Swap newPiece to hand
       state = state.setIn(['players', playerIndex, 'hand', fromPosition], newPiece.set('position', fromPosition));
-    } else {
+    } else { // Swap newPiece to board
       state = state.setIn(['players', playerIndex, 'board', fromPosition], newPiece.set('position', fromPosition));
       const obj = await checkPieceUpgrade(state, playerIndex, newPiece, fromPosition);
       state = obj.get('state')
       upgradeOccured = obj.get('upgradeOccured');
     }
   }
+  console.log(state.getIn(['players', playerIndex, 'board']));
+  const markedResults = await markBoardBonuses(state.getIn(['players', playerIndex, 'board']));
+  const typeBuffMapSolo = markedResults.get('typeBuffMapSolo').get('0');
+  const typeBuffMapAll = markedResults.get('typeBuffMapAll').get('0');
+  const typeDebuffMapEnemy = markedResults.get('typeDebuffMapEnemy').get('0');
+  // Add this information to the state, boardBuffs
+  const boardBuffs = Map({typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy});
+  console.log('@boardBuffs', boardBuffs)
+  state = state.setIn(['players', playerIndex, 'boardBuffs'], boardBuffs);
+  const markedBoard = markedResults.get('newBoard');
+  state = state.setIn(['players', playerIndex, 'board'], markedBoard);
   return Map({state, upgradeOccured});
 }
 
@@ -772,7 +785,8 @@ async function calcDamage(actionType, power, unit, target, typeFactor) { // atta
 async function healUnit(board, unitPos, heal) {
   const maxHp = (await pokemonJS.getStats(board.get(unitPos).get('name'))).get('hp');
   const newHp = (board.getIn([unitPos, 'hp']) + heal >= maxHp ? maxHp : board.getIn([unitPos, 'hp']) + heal);
-  return board.setIn([unitPos, 'hp'], newHp);
+  const hpHealed = newHp - board.getIn([unitPos, 'hp']);
+  return Map({board: board.setIn([unitPos, 'hp'], newHp), hpHealed});
 }
 
 /**
@@ -814,8 +828,9 @@ async function useAbility(board, ability, damage, unitPos, target) {
         return Map({ board: Map({ board: newBoard }) });
       case 'lifesteal':
         const lsFactor = (!f.isUndefined(args) ? args.get(0) : abilitiesJS.getAbilityDefault('lifestealValue'));
-        newBoard = await healUnit(newBoard, unitPos, Math.round(lsFactor * damage));
-        effectMap = effectMap.setIn([unitPos, 'heal'], lsFactor * damage);
+        const healObj = await healUnit(newBoard, unitPos, Math.round(lsFactor * damage));
+        newBoard = healObj.get('board');
+        effectMap = effectMap.setIn([unitPos, 'heal'], healObj.get('hpHealed'));
         break;
       case 'dot':
         const accuracy = (!f.isUndefined(args) ? args.get(0) : abilitiesJS.getAbilityDefault('dotAccuracy'));
@@ -1232,7 +1247,7 @@ async function setRandomFirstMove(board) {
  * Map({0: Map({grass: 3, fire: 2}), 1: Map({normal: 5})})
  * Set(['pikachu']) (no more pikachus or raichus)
  */
-async function countUniqueOccurences(board) {
+async function countUniqueOccurences(board, teamParam='0') {
   const boardKeysIter = board.keys();
   let tempUnit = boardKeysIter.next();
   let buffMap = Map({ 0: Map({}), 1: Map({}) });
@@ -1240,8 +1255,9 @@ async function countUniqueOccurences(board) {
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);
+    console.log('UNIT', unit)
     const name = unit.get('name');
-    const team = unit.get('team');
+    const team = unit.get('team') || teamParam;
     // console.log(unique, team, unit, unitPos)
     // console.log('@countUniqueOccurences', unique.get(String(team)), pokemonJS.getBasePokemon(name))
     const basePokemon = await pokemonJS.getBasePokemon(name);
@@ -1268,13 +1284,13 @@ async function countUniqueOccurences(board) {
  * Give bonuses from types
  * Type bonus is either only for those of that type or all units
  */
-async function markBoardBonuses(board) {
+async function markBoardBonuses(board, teamParam='0') {
   const buffMap = await countUniqueOccurences(board);
 
   // Map({0: Map({grass: 40})})
   let typeBuffMapSolo = Map({ 0: Map({}), 1: Map({}) }); // Solo buffs, only for that type
   let typeBuffMapAll = Map({ 0: Map({}), 1: Map({}) }); // For all buff
-  let typeEnemyDebuffMap = Map({ 0: Map({}), 1: Map({}) }); // For all enemies debuffs
+  let typeDebuffMapEnemy = Map({ 0: Map({}), 1: Map({}) }); // For all enemies debuffs
   // Find if any bonuses need applying
   for (let i = 0; i <= 1; i++) {
     const buffsKeysIter = buffMap.get(String(i)).keys();
@@ -1287,13 +1303,22 @@ async function markBoardBonuses(board) {
           // console.log('@markBoardBonuses', amountBuff, typesJS.getTypeReq(buff, i))
           switch (typesJS.getBonusType(buff)) {
             case 'bonus':
-              typeBuffMapSolo = typeBuffMapSolo.setIn([String(i), buff], (typeBuffMapSolo.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+              typeBuffMapSolo = typeBuffMapSolo
+                .setIn([String(i), buff, 'value'], (typeBuffMapSolo.get(String(i)).get(buff) ? typeBuffMapSolo.get(String(i)).get(buff).get('value') : 0) + typesJS.getBonusAmount(buff, j))
+                .setIn([String(i), buff, 'typeBuff'], typesJS.getBonusStatType(buff))
+                .setIn([String(i), buff, 'tier'], j);
               break;
             case 'allBonus':
-              typeBuffMapAll = typeBuffMapAll.setIn([String(i), buff], (typeBuffMapAll.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+              typeBuffMapAll = typeBuffMapAll
+                .setIn([String(i), buff, 'value'], (typeBuffMapAll.get(String(i)).get(buff) ? typeBuffMapAll.get(String(i)).get(buff).get('value') : 0) + typesJS.getBonusAmount(buff, j))
+                .setIn([String(i), buff, 'typeBuff'], typesJS.getBonusStatType(buff))
+                .setIn([String(i), buff, 'tier'], j);
               break;
             case 'enemyDebuff':
-              typeEnemyDebuffMap = typeEnemyDebuffMap.setIn([String(i), buff], (typeEnemyDebuffMap.get(String(i)).get(buff) || 0) + typesJS.getBonusAmount(buff, j));
+              typeDebuffMapEnemy = typeDebuffMapEnemy
+                .setIn([String(i), buff, 'value'], (typeDebuffMapEnemy.get(String(i)).get(buff) ? typeDebuffMapEnemy.get(String(i)).get(buff).get('value') : 0) + typesJS.getBonusAmount(buff, j))
+                .setIn([String(i), buff, 'typeBuff'], typesJS.getBonusStatType(buff))
+                .setIn([String(i), buff, 'tier'], j);
               break;
             default:
               console.log(`Ability bonus type error ... Error found for ${typesJS.getBonusType(buff)}`);
@@ -1314,7 +1339,8 @@ async function markBoardBonuses(board) {
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);
-    const team = unit.get('team');
+    newBoard = newBoard.setIn([unitPos, 'buff'], List([]));
+    const team = unit.get('team') || teamParam;
     // Solo buffs
     const types = board.get(unitPos).get('type'); // Value or List
     if (!f.isUndefined(types.size)) { // List
@@ -1322,8 +1348,13 @@ async function markBoardBonuses(board) {
       for (let i = 0; i < types.size; i++) {
         if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types.get(i)))) {
           console.log('@markBoardBonuses Marking unit', newUnit.get('name'));
-          newUnit = typesJS.getBuffFuncSolo(types.get(i))(newUnit, typeBuffMapSolo.get(String(team)).get(types.get(i)))
-            .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types.get(i)).get('name'))); // Add buff to unit
+          const buff = typesJS.getType(types.get(i));
+          const buffName = buff.get('name');
+          const bonusValue = typeBuffMapSolo.get(String(team)).get(types.get(i)).get('value');
+          const bonusType = buff.get('bonusStatType');
+          const buffText = `${buffName}: ${bonusType} +${bonusValue}`;
+          newUnit = typesJS.getBuffFuncSolo(types.get(i))(newUnit, bonusValue)
+            .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText)); // Add buff to unit
           newBoard = await newBoard.set(unitPos, newUnit);
         }
       }
@@ -1331,8 +1362,13 @@ async function markBoardBonuses(board) {
       // console.log(typeBuffMapSolo.get(String(team)), typeBuffMapSolo.get(String(team)).get(types), types, team)
       if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types))) {
         console.log('@markBoardBonuses Marking unit', unit.get('name'));
-        const newUnit = typesJS.getBuffFuncSolo(types)(unit, typeBuffMapSolo.get(String(team)).get(types))
-          .set('buff', (unit.get('buff') || List([])).push(typesJS.getType(types).get('name'))); // Add buff to unit
+        const buff = typesJS.getType(types);
+        const buffName = buff.get('name');
+        const bonusValue = typeBuffMapSolo.get(String(team)).get(types).get('value');
+        const bonusType = buff.get('bonusStatType');
+        const buffText = `${buffName}: ${bonusType} +${bonusValue}`;
+        const newUnit = typesJS.getBuffFuncSolo(types)(unit, bonusValue)
+          .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText)); // Add buff to unit
         newBoard = await newBoard.set(unitPos, newUnit);
       }
     }
@@ -1342,8 +1378,9 @@ async function markBoardBonuses(board) {
     let tempBuffAll = allBuffIter.next();
     while (!tempBuffAll.done) {
       const buff = tempBuffAll.value;
-      const bonusValue = typeBuffMapAll.get(String(team)).get(buff);
-      const buffText = `${buff} +${bonusValue}`;
+      const bonusValue = typeBuffMapAll.get(String(team)).get(buff).get('value');
+      const bonusType = typesJS.getBonusStatType(buff);
+      const buffText = `${buff}: ${bonusType} +${bonusValue}`;
       const newUnit = typesJS.getBuffFuncAll(buff)(newBoard.get(unitPos), bonusValue)
         .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
       newBoard = await newBoard.set(unitPos, newUnit);
@@ -1352,12 +1389,13 @@ async function markBoardBonuses(board) {
 
     // Enemy buffs
     const enemyTeam = 1 - team;
-    const enemyDebuffIter = typeEnemyDebuffMap.get(String(enemyTeam)).keys();
+    const enemyDebuffIter = typeDebuffMapEnemy.get(String(enemyTeam)).keys();
     let tempEnemy = enemyDebuffIter.next();
     while (!tempEnemy.done) {
       const buff = tempEnemy.value;
-      const bonusValue = typeEnemyDebuffMap.get(String(enemyTeam)).get(buff);
-      const buffText = `${buff} -${bonusValue}`;
+      const bonusValue = typeDebuffMapEnemy.get(String(enemyTeam)).get(buff).get('value');
+      const bonusType = typesJS.getBonusStatType(buff);
+      const buffText = `${buff}: ${bonusType} +${bonusValue}`;
       const newUnit = typesJS.getEnemyDebuff(buff)(newBoard.get(unitPos), bonusValue) // Crash here
         .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
       newBoard = await newBoard.set(unitPos, newUnit);
@@ -1368,7 +1406,8 @@ async function markBoardBonuses(board) {
   if(f.isUndefined(newBoard) || Object.keys(newBoard).length === 0){
     console.log('@markBoardBonuses CHECK ME', newBoard);
   }
-  return newBoard;
+  // console.log('NEWBOARD: ', newBoard);
+  return Map({newBoard, typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy});
 }
 
 /**
@@ -1439,7 +1478,7 @@ async function prepareBattle(board1, board2) {
 
   // f.print(board, '@prepareBattle')
   // Both players have units, battle required
-  const boardWithBonuses = await markBoardBonuses(board);
+  const boardWithBonuses = (await markBoardBonuses(board)).get('newBoard');
   // f.print(boardWithBonuses);
   const boardWithMovement = await setRandomFirstMove(boardWithBonuses);
   if(f.isUndefined(boardWithMovement)){
@@ -1750,6 +1789,8 @@ async function calcDamageTaken(boardUnits) {
  */
 const endBattle = async(stateParam, playerIndex, winner, finishedBoard, roundType, enemyPlayerIndex) =>  {
   let state = stateParam;
+  console.log('@Endbattle :', playerIndex, winner);
+  if(f.isUndefined(finishedBoard)) console.log(finishedBoard);
   // console.log('@endBattle', state, playerIndex, winner, enemyPlayerIndex);
   const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
   if (winner) { // Winner
@@ -1759,9 +1800,11 @@ const endBattle = async(stateParam, playerIndex, winner, finishedBoard, roundTyp
         state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
         const newStreak = (streak < 0 ? 0 : +streak + 1);
         state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+        console.log('@endBattle Won Player', playerIndex, state.getIn(['players', playerIndex, 'gold']) + 1, newStreak);
         break;
       case 'npc':
       case 'gym':
+        /* TODO: Add item drops / special money drop */
       case 'shop':
       default:
     }
@@ -1773,6 +1816,7 @@ const endBattle = async(stateParam, playerIndex, winner, finishedBoard, roundTyp
         state = await removeHp(state, playerIndex, hpToRemove);
         const newStreak = (streak > 0 ? 0 : +streak - 1);
         state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+        console.log('@endBattle Lost Player', playerIndex, hpToRemove, newStreak);
         break;
       case 'gym':
       case 'shop':
@@ -1824,7 +1868,7 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
   console.log('@removeDeadPlayer')
   let state = stateParam;
   const filteredShop = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
-  const shopUnits = filteredShop.map((value, key) => value.get('name'));
+  const shopUnits = Array.from(filteredShop.map((value, key) => value.get('name')).values());
   const board = state.getIn(['players', playerIndex, 'board']);
   let boardList = List([]);
   const iter = board.keys();

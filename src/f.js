@@ -73,7 +73,7 @@ exports.printBoard = async (boardParam, moveParam) => {
   if(isUndefined(board) || isUndefined(move)){
     console.log('@printBoard', board, move)
   }
-  console.log(` -- Move @${move.get('time')}: ${move.get('action')} ${(move.get('action') === 'attack' ? move.get('direction') : '')}`);
+  // console.log(` -- Move @${move.get('time')}: ${move.get('action')} ${(move.get('action') === 'attack' ? move.get('direction') : '')}`);
   while (!tempUnit.done) {
     // console.log('@printBoard', tempUnit.value, board, moveParam)
     const xPos = x(tempUnit.value);
@@ -96,10 +96,10 @@ exports.printBoard = async (boardParam, moveParam) => {
         isUndefined(move.get('value')) ? '' : `dmg: ${move.get('value')}`
       }${action === 'move' ? `from: {${x(unitPos)},${y(unitPos)}}` : ''})`;
     }
-    console.log(resultString);
+    // console.log(resultString);
     tempUnit = keysIter.next();
   }
-  console.log();
+  // console.log();
 };
 
 exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());
