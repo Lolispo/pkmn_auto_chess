@@ -1071,9 +1071,10 @@ class App extends Component {
     <div className='chatTypingDiv'>
       <form onSubmit={this.handleChatSubmit}>
         <label>
-          <input className='textInput' type="text" value={this.state.chatMessageInput} onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
+          <input placeholder='Type a message ...' className='textInput' type="text" value={this.state.chatMessageInput} 
+          onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
         </label>
-        <input className='text_shadow' type="submit" value="Submit" />
+        <input className='text_shadow normalButton' style={{height: '25px'}} type="submit" value="Submit" />
       </form>
     </div>
     </div> : <div className='helpText text_shadow'><span className='bold'>{'Information:\n'}</span>{s}</div>);
@@ -1232,7 +1233,7 @@ class App extends Component {
         <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
           <div className='flex'>
             <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>
-              {(this.props.help ? 'Hide Help' : 'Show Help')}
+              {(this.props.chatHelpMode === 'chat' ? (this.props.help ? 'Hide Chat' : 'Show Chat') : (this.props.help ? 'Hide Help' : 'Show Help'))}
             </button>
             <button style={{marginLeft: '5px'}} className={`normalButton`} onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})}>
               {(this.props.chatSoundEnabled ? 'Mute Chat': 'Unmute Chat')}

@@ -21,6 +21,9 @@ Test me ingame:
     Player disconnects (Not prio)
         During battle or normally
 
+Known issues:
+    Timer Bug, restart for it
+
 ## Backend
 
 Give battle won gold reward
@@ -224,8 +227,7 @@ Css:
     Sell button left bar align more centered (length is long)
     Chat:
         Chat different background color or something to separate from background?
-        Chat input and submit better css
-        Radio buttons
+        Radio buttons css
     
 
 Animations: 
@@ -245,6 +247,7 @@ TopBar:
     Piece Image
 
 Infopanel
+    Add getting information from the types in infoPanel
     Show bars in infopanel screen for stats (Easier comparisons)
     Show all evolutions, highlight selected unit
     Click on evolution, expand that unit

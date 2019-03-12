@@ -594,6 +594,7 @@ body {
 .textInput {
   width: 300px;
   max-width: 300px;
+  border-radius: 4px;
 }
 
 .barDiv {
