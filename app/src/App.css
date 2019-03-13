@@ -13,7 +13,7 @@ body {
   width: 100vw;
   height: 100vh;
   /*background-image: url(./assets/backgroundMainMenu.jpg) no-repeat;*/
-  background: url(./assets/pikachuBackground.gif) no-repeat;
+  background: url(./assets/images/pikachuBackground.gif) no-repeat;
 }
 
 .mainMenuSoundDiv {
@@ -242,17 +242,17 @@ body {
 }
 
 .boardDiv {
-  background: url(./assets/pokeballOpacity.png) no-repeat;
+  background: url(./assets/images/pokeballOpacity.png) no-repeat;
   background-position: 8px 10px; 
 }
 
 .boardDivBattle {
-  background: url(./assets/pokeball.png) no-repeat;
+  background: url(./assets/images/pokeball.png) no-repeat;
   background-position: 8px 10px; 
 }
 
 .handDiv {
-  background: url(./assets/handBg.png) no-repeat;
+  background: url(./assets/images/handBg.png) no-repeat;
 }
 
 .cell {
@@ -265,7 +265,7 @@ body {
   height: 85px;
   position: relative;
   /*background: url(https://i.gyazo.com/f5c31403dc3840b9b276c3e8d3e178d3.png) no-repeat;*/
-  /*background: url(./assets/grass2.gif) no-repeat;*/
+  /*background: url(./assets/images/grass2.gif) no-repeat;*/
   background-size: 85px 85px;
 }
 
@@ -804,7 +804,7 @@ body {
 */
 /*
   TODO: Edit Shop
-  background: url(./assets/pokeball.png) no-repeat;
+  background: url(./assets/images/pokeball.png) no-repeat;
   background-position: 10px 10px; 
   background-size: 10px 10px;
 */

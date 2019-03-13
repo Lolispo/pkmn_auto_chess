@@ -7,20 +7,8 @@ import { isUndefined, updateMessage } from './f';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import './App.css';
 
-import lockedLock from './assets/lockedLock.png';
-import openLock from './assets/openLock.png';
-import goldCoin from './assets/goldCoin.png';
-import refreshShopImage from './assets/refreshShop.png';
-import pokemonLogo from './assets/pokemonLogo.png';
-import autoChess from './assets/AutoChess.png';
-import soundMuted from './assets/soundMuted.png';
-import sound from './assets/sound.png';
-import music from './assets/note.png';
-import musicMuted from './assets/noteMuted.png';
-import pieceImg from './assets/piece.png';
-import info from './assets/info.png';
 import { getUnitAudio, getSoundEffect } from './audio.js';
-import { getTypeImg } from './images.js';
+import { getImage, getTypeImg } from './images.js';
 
 class PokemonImage extends Component{
 
@@ -154,7 +142,7 @@ class Pokemon extends Component{
       content = <div>
             <div className={`pokemonImageDiv`}>
               <div className='pokemonInfo'>
-                <img className='infoImg' src={info} onClick={this.infoEvent} alt={'info' + this.props.shopPokemon.name}/>
+                <img className='infoImg' src={getImage('info')} onClick={this.infoEvent} alt={'info' + this.props.shopPokemon.name}/>
                 <div className='infoImgBg'/>
               </div>
               <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass}/>
@@ -1051,7 +1039,7 @@ class App extends Component {
     const level = this.props.level;
     const content = <span className={(unitsOnBoard > level ? 'redFont' : '')}>{unitsOnBoard}</span>
     return <div className='marginTop5 flex' style={{paddingLeft: '65px'}}>
-      <img style={{marginTop: '-5px'}} className='pieceImg' src={pieceImg} alt='Pieces'/>
+      <img style={{marginTop: '-5px'}} className='pieceImg' src={getImage('pieceImg')} alt='Pieces'/>
       <div className='biggerText text_shadow' style={{paddingLeft: '5px'}}>
         <span className='pieceDiv'> : {content} / {level}</span>
       </div>
@@ -1170,8 +1158,8 @@ class App extends Component {
   render() {
     const mainMenu = <div>
       <div className='logos'>
-        <img src={pokemonLogo} alt='pokemonLogo'/>
-        <img src={autoChess} alt='autoChessLogo'/>
+        <img src={getImage('pokemonLogo')} alt='pokemonLogo'/>
+        <img src={getImage('autoChess')} alt='autoChessLogo'/>
       </div>
       {/*<div className='titleCard text_shadow'>Pokemon Auto Chess</div>*/}
       <div className='startButtons'>
@@ -1188,11 +1176,11 @@ class App extends Component {
       </div>
       <div className='mainMenuSoundDiv marginTop5'>
         <div>
-          <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? music : musicMuted)} 
+          <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
           alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}/>
         </div>
         <div>
-          <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? sound : soundMuted)} 
+          <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} 
           alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}  onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}/>
         </div>
         {(this.props.musicEnabled ? this.playMusic() : '')} 
@@ -1207,7 +1195,7 @@ class App extends Component {
           <div className='marginTop5 biggerText'>
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
-          <img className='goldImage' src={goldCoin} alt='goldCoin'/>
+          <img className='goldImage' src={getImage('goldCoin')} alt='goldCoin'/>
         </div>
         {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
           {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
@@ -1242,10 +1230,10 @@ class App extends Component {
         </div>
         <div className='marginTop5 flex'>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
-            <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? music : musicMuted)} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
+            <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
           </div>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
-            <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? sound : soundMuted)} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
+            <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
           </div>
           {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')} 
         </div>
@@ -1296,14 +1284,15 @@ class App extends Component {
                 <div className='flex'>
                   <div className='shopInteractDiv'>
                     <div>
-                      <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={() => toggleLock(this.props.storedState)} src={this.props.lock ? lockedLock : openLock} alt='lock'/>   
+                      <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={() => toggleLock(this.props.storedState)} 
+                      src={this.props.lock ? getImage('lockedLock') : getImage('openLock')} alt='lock'/>   
                     </div>
                     <div style={{paddingTop: '10px'}}>
-                      <img className='refreshShopImage' onClick={this.refreshShopEvent} src={refreshShopImage} alt='refreshShop'/>
+                      <img className='refreshShopImage' onClick={this.refreshShopEvent} src={getImage('refreshShopImage')} alt='refreshShop'/>
                     </div>
                     <div className='flex'>
                       <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
-                      <img className='goldImageSmall' src={goldCoin} alt='goldCoin'/>
+                      <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
                     </div>
                   </div>
                   <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
@@ -1326,7 +1315,7 @@ class App extends Component {
               <button style={{marginLeft: '5px'}} className='normalButton' onClick={this.buyExpEvent}>Buy Exp</button>
               <div className='flex marginTop5'>
                 <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
-                <img className='goldImageSmall' src={goldCoin} alt='goldCoin'/>
+                <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
               </div>
             </div>
             {/*<div style={{marginLeft: '5px'}}>
