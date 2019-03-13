@@ -399,11 +399,12 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   }
   console.log(state.getIn(['players', playerIndex, 'board']));
   const markedResults = await markBoardBonuses(state.getIn(['players', playerIndex, 'board']));
+  const buffMap = markedResults.get('buffMap').get('0');
   const typeBuffMapSolo = markedResults.get('typeBuffMapSolo').get('0');
   const typeBuffMapAll = markedResults.get('typeBuffMapAll').get('0');
   const typeDebuffMapEnemy = markedResults.get('typeDebuffMapEnemy').get('0');
   // Add this information to the state, boardBuffs
-  const boardBuffs = Map({typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy});
+  const boardBuffs = Map({buffMap, typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy});
   console.log('@boardBuffs', boardBuffs)
   state = state.setIn(['players', playerIndex, 'boardBuffs'], boardBuffs);
   const markedBoard = markedResults.get('newBoard');
@@ -1407,7 +1408,7 @@ async function markBoardBonuses(board, teamParam='0') {
     console.log('@markBoardBonuses CHECK ME', newBoard);
   }
   // console.log('NEWBOARD: ', newBoard);
-  return Map({newBoard, typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy});
+  return Map({newBoard, buffMap, typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy});
 }
 
 /**

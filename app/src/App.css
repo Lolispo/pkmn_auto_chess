@@ -204,6 +204,10 @@ body {
   white-space: pre-line;
 }
 
+.infoPanelBuff {
+  color: rgb(10, 248, 10);
+}
+
 .noSelected{
   padding-top: 100px;
   padding-left: 18px;

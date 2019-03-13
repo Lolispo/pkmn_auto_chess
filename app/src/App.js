@@ -536,7 +536,12 @@ class App extends Component {
     return pos.split(',');
   }
 
-  statsMap = {};
+  setBuffsFromSolo = (buffs, solo, type) => {
+    const buff = solo[type];
+    if(buff) {
+      buffs[buff['typeBuff']] = (buffs[buff['typeBuff']] || 0) + buff['value'];
+    }
+  }
 
   buildStats = () => {
     if(this.props.stats){
@@ -556,20 +561,21 @@ class App extends Component {
         </span>
       }
       const boardBuffs = this.props.boardBuffs;
-      /*
-      {(Array.isArray(s.type) ? 
-        //boardBuffs.typeBuffMapSolo
-        <div>
-          <span className={`type typeLeft ${s.type[0]}`}>{s.type[0]}</span>
-          <span className={`type ${s.type[1]}`}>{s.type[1] + '\n'}</span>
-        </div>
-      : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
+      const buffs = {};
+      const solo = boardBuffs.typeBuffMapSolo
+      if(Array.isArray(s.type)){
+        this.setBuffsFromSolo(buffs, solo, s.type[0]);
+        this.setBuffsFromSolo(buffs, solo, s.type[1]);
+      } else {
+        this.setBuffsFromSolo(buffs, solo, s.type);
+      }
       Object.keys(boardBuffs.typeBuffMapAll).forEach(e => {
         
       });
       Object.keys(boardBuffs.typeDebuffMapEnemy).forEach(e => {
         
-      });*/
+      });
+      console.log('@buffs', buffs);
       const content = <div className='center'>
         <div className='textAlignCenter marginTop5'>
         {(Array.isArray(s.type) ? 
@@ -589,10 +595,10 @@ class App extends Component {
               </div>
             </span>
           </div>*/}
-          <span className='center'>{`Hp: ${s.hp}\n`}</span>
-          <span>{`Attack: ${s.attack}\n`}</span>
-          <span>{`Defense: ${s.defense}\n`}</span>
-          <span>{`Speed: ${s.speed}\n`}</span>
+          <span className='center'><span>{`Hp: ${s.hp}`}</span>{(buffs['hp'] ? <span className='infoPanelBuff'>{` + ${buffs['hp']}\n`}</span> : '\n')}</span>
+          <span><span>{`Attack: ${s.attack}`}</span>{(buffs['attack'] ? <span className='infoPanelBuff'>{` + ${buffs['attack']}\n`}</span> : '\n')}</span>
+          <span><span>{`Defense: ${s.defense}`}</span>{(buffs['defense'] ? <span className='infoPanelBuff'>{` + ${buffs['defense']}\n`}</span> : '\n')}</span>
+          <span><span>{`Speed: ${s.speed}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['speed']}\n`}</span> : '\n')}</span>
           <span className={`type ${s.abilityType}`}>{`Ability: ${s.abilityDisplayName}\n`}</span>
         </div>
         <div>
@@ -1199,12 +1205,14 @@ class App extends Component {
           {this.soundEffects()}
         </div>
         <div className='boardBuffs text_shadow'>
-          {/*{(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
+          {(this.props.boardBuffs && this.props.boardBuffs.buffMap && Object.keys(this.props.boardBuffs.buffMap).length > 0 ?
+            JSON.stringify(this.props.boardBuffs.buffMap, null, 2) : '')}
+          {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
             JSON.stringify(this.props.boardBuffs.typeBuffMapSolo, null, 2) : '')}
           {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapAll && Object.keys(this.props.boardBuffs.typeBuffMapAll).length > 0  ? 
             JSON.stringify(this.props.boardBuffs.typeBuffMapAll, null, 2) : '')}
           {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
-          JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}*/}
+          JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}
         </div>
         <div className='marginTop5 flex'>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
