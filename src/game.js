@@ -1707,6 +1707,7 @@ async function endTurn(stateParam) {
   let state = stateParam;
   const income_basic = state.get('income_basic') + 1;
   const round = state.get('round');
+  const roundType = gameConstantsJS.getRoundType(round);
   state = state.set('round', round + 1);
   if (round <= 5) {
     state = state.set('income_basic', income_basic);
@@ -1724,9 +1725,9 @@ async function endTurn(stateParam) {
     // Min 0 gold interest -> max 5
     const bonusGold = Math.min(Math.floor(gold / 10), 5);
     const streak = state.getIn(['players', index, 'streak']) || 0;
-    const streakGold = Math.min(Math.floor(
+    const streakGold = (roundType === 'pvp' ? Math.min(Math.floor(
       (streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1),
-    ), 3);
+    ), 3) : 0);
     const newGold = gold + income_basic + bonusGold + streakGold;
     console.log(`@playerEndTurn Gold: p[${i + 1}]: `,
      `${gold}, ${income_basic}, ${bonusGold}, ${streakGold} (${streak}) = ${newGold}`);
