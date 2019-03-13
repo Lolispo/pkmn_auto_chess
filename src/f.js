@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
-const { Map, List } = require('immutable');
 const shuffle = require('immutable-shuffle');
+const gameConstantsJS = require('./game_constants');
 
 const isUndefined = obj => (typeof obj === 'undefined');
 exports.isUndefined = obj => isUndefined(obj);
@@ -17,15 +17,9 @@ exports.getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
  */
 const pos = (x, y) => {
   // console.log('@pos', List([x]), List([x,y]));
-  // Convert 'List [ 0 ]' to 0
-  // Convert 'List [ 0 , 1 ] to 1 TODO check comma placement
   if (y === undefined) {
-    // return Map({ x });
-    // return List([x])
     return String(x);
   }
-  // return Map({ x, y });
-  // return List([x,y])
   return `${x},${y}`;
 };
 
@@ -64,6 +58,11 @@ exports.reverseUnitPos = posInput => pos(7 - x(posInput), 7 - y(posInput));
 // exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal version
 exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
 
+const p = msg => {
+  if(gameConstantsJS.debugMode) console.log(msg);
+}
+
+exports.p = msg => p(msg);
 
 exports.printBoard = async (boardParam, moveParam) => {
   const board = await boardParam;
@@ -73,7 +72,7 @@ exports.printBoard = async (boardParam, moveParam) => {
   if(isUndefined(board) || isUndefined(move)){
     console.log('@printBoard', board, move)
   }
-  // console.log(` -- Move @${move.get('time')}: ${move.get('action')} ${(move.get('action') === 'attack' ? move.get('direction') : '')}`);
+  p(` -- Move @${move.get('time')}: ${move.get('action')} ${(move.get('action') === 'attack' ? move.get('direction') : '')}`);
   while (!tempUnit.done) {
     // console.log('@printBoard', tempUnit.value, board, moveParam)
     const xPos = x(tempUnit.value);
@@ -96,10 +95,10 @@ exports.printBoard = async (boardParam, moveParam) => {
         isUndefined(move.get('value')) ? '' : `dmg: ${move.get('value')}`
       }${action === 'move' ? `from: {${x(unitPos)},${y(unitPos)}}` : ''})`;
     }
-    // console.log(resultString);
+    p(resultString);
     tempUnit = keysIter.next();
   }
-  // console.log();
+  p();
 };
 
 exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());

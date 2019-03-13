@@ -10,6 +10,8 @@ Pieces in board -> default @ game_constants
 
 hp -> 100 @ player
 
+debugMode -> false @ game_constants
+
 ## Check in Auto Chess
 
 Mana: 15% of damage to mana or 10
@@ -23,6 +25,13 @@ Crash:
     Refill pieces
     Eevee
     Player death
+
+Fixed Check:
+    Types Increases/Decreases for types are wrong
+
+    Bonus effect from same family - mankey and primeape got fighting bonus
+
+    refillPieces seems to work, changing back to og size
 
 Test me ingame:  
     Wave 35 Crash
@@ -42,11 +51,11 @@ Known issues:
 
 # Fix me - Prio
     
+    update lock from state (so it is not desynched)
+
     Streak Css
 
-    Types Increases/Decreases for types are wrong
-
-    Bonus effect from same family - mankey and primeape got fighting bonus
+    streak ended by gymbattle
 
     Give battle won gold reward
 

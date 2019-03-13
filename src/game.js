@@ -162,7 +162,7 @@ async function refreshShop(stateParam, playerIndex) {
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
     const shopToList = Array.from(filteredShop.map((value, key) => value).values());
-    console.log('@refreshShop filteredShop', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
+    // console.log('@refreshShop filteredShop', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
     state = state.set('discardedPieces', discPieces.concat(shopToList));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
@@ -636,7 +636,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
           } else {
             index = stepsToTake;
           }
-          console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
+          // console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
           return path.get(index);
         }
       }
@@ -718,7 +718,7 @@ async function removeHpBattle(board, unitPos, hpToRemove, percent = false) {
     newHp = await Math.round(currentHp - (maxHp * hpToRemove)); // HptoRemove is percentage to remove
   }
   if (newHp <= 0) {
-    console.log('@removeHpBattle UNIT DIED!', currentHp, '->', (percent ? `${newHp}(%)` : `${newHp}(-)`));
+    f.p('@removeHpBattle UNIT DIED!', currentHp, '->', (percent ? `${newHp}(%)` : `${newHp}(-)`));
     return Map({ board: board.delete(unitPos), unitDied: true });
   }
   // Caused a crash0
@@ -775,7 +775,7 @@ async function manaChangeBoard(boardParam, manaChanges){
 async function calcDamage(actionType, power, unit, target, typeFactor) { // attack, defense, typesAttacker, typesDefender
   // console.log('@calcDamage', unit, target)
   const factor = gameConstantsJS.getDamageFactorType(actionType) * power * (unit.get('attack') / target.get('defense'));
-  console.log('@calcDamage returning: ', typeFactor, '*', Math.round(factor), '+ 1 =', Math.round(factor * typeFactor + 1));
+  f.p('@calcDamage returning: ', typeFactor, '*', Math.round(factor), '+ 1 =', Math.round(factor * typeFactor + 1));
   return Math.round(factor * typeFactor + 1);
 }
 
@@ -1029,7 +1029,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
   } // Move action
   const closestEnemyPos = enemyPos.get('closestEnemy');
   const movePos = await getStepMovePos(board, unitPos, closestEnemyPos);
-  console.log('Move: ', unitPos, 'to', movePos);
+  f.p('Move: ', unitPos, 'to', movePos);
   let newBoard;
   let action;
   if(unitPos === movePos){
@@ -1201,7 +1201,7 @@ async function startBattle(boardParam) {
   // Return the winner
   // f.print(newBoard, '@startBattle newBoard after');
   // f.print(actionStack, '@startBattle actionStack after');
-  console.log('@Last - A Survivor', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value).get('name'));
+  f.p('@Last - A Survivor', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value).get('name'));
   const team = newBoard.get(newBoard.keys().next().value).get('team');
   const winningTeam = team;
   return Map({ actionStack, board: newBoard, winner: winningTeam });
@@ -1256,13 +1256,13 @@ async function countUniqueOccurences(board, teamParam='0') {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);
     const name = unit.get('name');
-    console.log('@countUnique UNIT', name)
+    // console.log('@countUnique UNIT', name)
     const team = unit.get('team') || teamParam;
     // console.log(unique, team, unit, unitPos)
     // console.log('@countUniqueOccurences', unique.get(String(team)), pokemonJS.getBasePokemon(name))
     const basePokemon = await pokemonJS.getBasePokemon(name);
     if (!unique.get(String(team)).has(basePokemon)) { // TODO: Check
-      console.log('@CountUniqueOccurences Unique', basePokemon, team, unique);
+      f.p('@CountUniqueOccurences Unique', basePokemon, team, unique);
       const newSet = await unique.get(String(team)).add(basePokemon);
       unique = await unique.set(String(team), newSet); // Store unique version, only count each once
       const types = unit.get('type'); // Value or List
@@ -1347,7 +1347,7 @@ async function markBoardBonuses(board, teamParam='0') {
       let newUnit = unit;
       for (let i = 0; i < types.size; i++) {
         if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types.get(i)))) {
-          console.log('@markBoardBonuses Marking unit', newUnit.get('name'));
+          // console.log('@markBoardBonuses Marking unit', newUnit.get('name'));
           const buff = typesJS.getType(types.get(i));
           const buffName = buff.get('name');
           const bonusValue = typeBuffMapSolo.get(String(team)).get(types.get(i)).get('value');
@@ -1361,7 +1361,7 @@ async function markBoardBonuses(board, teamParam='0') {
     } else { // Value
       // console.log(typeBuffMapSolo.get(String(team)), typeBuffMapSolo.get(String(team)).get(types), types, team)
       if (!f.isUndefined(typeBuffMapSolo.get(String(team)).get(types))) {
-        console.log('@markBoardBonuses Marking unit', unit.get('name'));
+        // console.log('@markBoardBonuses Marking unit', unit.get('name'));
         const buff = typesJS.getType(types);
         const buffName = buff.get('name');
         const bonusValue = typeBuffMapSolo.get(String(team)).get(types).get('value');
@@ -1570,7 +1570,6 @@ async function battleTime(stateParam) {
   return Map({
     state: newState,
     battleObject,
-    roundType: 'pvp',
     preBattleState: stateParam,
   });
 }
@@ -1606,7 +1605,6 @@ async function npcRound(stateParam, npcBoard) {
   return Map({
     state: newState,
     battleObject,
-    roundType: 'npc',
     preBattleState: stateParam,
   });
 }
@@ -1682,15 +1680,16 @@ exports.battleSetup = async (stateParam) => {
     temp = iter.next();
   }
   const round = state.get('round');
-  switch (gameConstantsJS.getRoundType(round)) {
+  const roundType = gameConstantsJS.getRoundType(round);
+  switch (roundType) {
     case 'gym':
     case 'npc':
       const boardNpc = await gameConstantsJS.getSetRound(round);
-      return npcRound(state, boardNpc);
+      return (await npcRound(state, boardNpc)).set('roundType', roundType);
     case 'shop':
     case 'pvp':
     default:
-      return battleTime(state);
+      return (await battleTime(state)).set('roundType', roundType);
   }
 };
 
@@ -1789,7 +1788,7 @@ async function calcDamageTaken(boardUnits) {
  */
 const endBattle = async(stateParam, playerIndex, winner, finishedBoard, roundType, enemyPlayerIndex) =>  {
   let state = stateParam;
-  console.log('@Endbattle :', playerIndex, winner);
+  // console.log('@Endbattle :', playerIndex, winner);
   if(f.isUndefined(finishedBoard)) console.log(finishedBoard);
   // console.log('@endBattle', state, playerIndex, winner, enemyPlayerIndex);
   const streak = state.getIn(['players', playerIndex, 'streak']) || 0;
@@ -1797,30 +1796,35 @@ const endBattle = async(stateParam, playerIndex, winner, finishedBoard, roundTyp
     // TODO: Npc rewards and gym rewards
     switch(roundType){
       case 'pvp':
-        state = state.setIn(['players', playerIndex, 'gold'], state.getIn(['players', playerIndex, 'gold']) + 1);
+        const prevGold = state.getIn(['players', playerIndex, 'gold']);
+        state = state.setIn(['players', playerIndex, 'gold'], prevGold + 1);
         const newStreak = (streak < 0 ? 0 : +streak + 1);
         state = state.setIn(['players', playerIndex, 'streak'], newStreak);
-        console.log('@endBattle Won Player', playerIndex, state.getIn(['players', playerIndex, 'gold']) + 1, newStreak);
+        f.p('@endBattle Won Player', playerIndex, prevGold, state.getIn(['players', playerIndex, 'gold']), newStreak);
         break;
       case 'npc':
       case 'gym':
         /* TODO: Add item drops / special money drop */
       case 'shop':
       default:
+        f.p('default case winner')
     }
   } else { // Loser
     switch(roundType){
       case 'pvp':
+        const newStreak = (streak > 0 ? 0 : +streak - 1);
+        state = state.setIn(['players', playerIndex, 'streak'], newStreak);
+        f.p('@Endbattle pvp', newStreak)
       case 'npc':
         const hpToRemove = await calcDamageTaken(finishedBoard);
         state = await removeHp(state, playerIndex, hpToRemove);
-        const newStreak = (streak > 0 ? 0 : +streak - 1);
-        state = state.setIn(['players', playerIndex, 'streak'], newStreak);
-        console.log('@endBattle Lost Player', playerIndex, hpToRemove, newStreak);
+        f.p('@endBattle Lost Player', playerIndex, hpToRemove);
         break;
       case 'gym':
+        f.p('@endBattle Gymbattle');
       case 'shop':
       default:
+        f.p('default case loser')
     }
   }
   // console.log('@endBattle prep', stateParam.get('players'));

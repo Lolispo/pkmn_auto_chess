@@ -966,7 +966,7 @@ class App extends Component {
     return <div className='playerScoreboardContainer' key={player.index}>
       <div className='playerScoreboardInner'>
         <span>{'Player ' + player.index + '\n'}</span>
-        {(this.props.streak ? <span className='streak'>{'Streak:' + this.props.streak}</span> : '')}
+        {(this.props.players[player.index].streak ? <span className='streak'>{'Streak:' + this.props.players[player.index].streak}</span> : '')}
         <div className='playerHpBarDiv'>
           <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
           style={{width: (hp) + '%'}}/>

@@ -117,7 +117,7 @@ module.exports = (socket, io) => {
     console.log('Starting game!');
     // Send to all connected sockets
     const stateToSend = getStateToSend(state); // .setIn(['players', '0', 'gold'], 1000);
-    console.log('@startGame', socket.id, sessionConnectedPlayers, stateToSend);
+    console.log('@startGame', socket.id, sessionConnectedPlayers); // stateToSend);
     const iter = sessionConnectedPlayers.keys();
     let temp = iter.next();
     while (!temp.done) {
@@ -306,7 +306,7 @@ module.exports = (socket, io) => {
         }
         setTimeout(async () => {
           // After all battles are over
-          console.log('Time to End Battle')
+          f.p('sc.Time to End Battle')
           const stateAfterBattle = sessionJS.buildStateAfterBattle(socket.id, connectedPlayers, sessions, newState);
           // Endbattle and get endTurned state
           
@@ -373,7 +373,7 @@ module.exports = (socket, io) => {
     if (ability.get('displayName')) {
       newStats = newStats.set('abilityDisplayName', ability.get('displayName'));
     }
-    console.log('Retrieving stats for', name); // , newStats);
+    f.p('Retrieving stats for', name); // , newStats);
     socket.emit('SET_STATS', name, newStats);
   });
 };
