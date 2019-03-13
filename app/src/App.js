@@ -20,6 +20,7 @@ import musicMuted from './assets/noteMuted.png';
 import pieceImg from './assets/piece.png';
 import info from './assets/info.png';
 import { getUnitAudio, getSoundEffect } from './audio.js';
+import { getTypeImg } from './images.js';
 
 class PokemonImage extends Component{
 
@@ -615,7 +616,7 @@ class App extends Component {
   statsRender = (className, name, allowSell=false) => {
     const pokeEl= <PokemonImage name={name} sideLength={50}/>;
     return <div className={className}>
-      <div className='textAlignCenter' style={{paddingTop: '30px'}}>
+      <div className='textAlignCenter'>
         <div>{this.props.stats.display_name}</div>
         {pokeEl}
       </div>
@@ -659,24 +660,29 @@ class App extends Component {
       {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
       JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}
     */
+   let counter = 0;
     Object.keys(boardBuffs.buffMap).forEach(type => {
       const amount = boardBuffs.buffMap[type];
       const marked = boardBuffs.typeBuffMapSolo[type] || boardBuffs.typeBuffMapAll[type] || boardBuffs.typeDebuffMapEnemy[type];
       let bonus;
       if(!isUndefined(marked)){
         bonus = <div>
-          <span className='typeTier'>{'Tier: ' + marked['tier']}</span>
-          <span>{' Bonus: ' + marked['typeBuff'] + ': ' + marked['value']}</span>
+          <span className='typeTier'>{marked['tier']}</span>
+          {/*<span>{' Bonus: ' + marked['typeBuff'] + ': ' + marked['value']}</span>*/}
         </div>
       }
-      //<img />
-      list.push(<span key={type} className=''>
-        <span>{type + ': ' + amount}</span>
+      const left = counter * 40 % 160;
+      const top = Math.floor(counter / 4) * 60;
+      list.push(<span key={type} className='typeElement' style={{left: left, top: top}}>
+        <img className='typeImg' src={getTypeImg(type)} alt={type}/>
+        <span className='typeBonusText'>{amount}</span>
+        <span className='typeBonusTextBelow'>{type}</span>
         {bonus}
       </span>
       );
+      counter += 1;
     });
-    return list;
+    return <div className='typeDiv'>{list}</div>;
   }
 
   placePieceEvent = (fromParam, to) => {
@@ -1225,13 +1231,6 @@ class App extends Component {
         </div>
         {this.props.gameIsLive ? <Timer startTime={5} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
-        <div className = 'centerWith50'>
-          <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
-          <div className='flex marginTop5'>
-            <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
-            <img className='goldImageSmall' src={goldCoin} alt='goldCoin'/>
-          </div>
-        </div>
         <div>
           {this.selectedUnitInformation()}
           {this.unitSound()}
@@ -1323,6 +1322,13 @@ class App extends Component {
             <button style={{marginLeft: '5px'}} className={`normalButton`} onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})}>
               {(this.props.chatSoundEnabled ? 'Mute Chat': 'Unmute Chat')}
             </button>
+            <div>
+              <button style={{marginLeft: '5px'}} className='normalButton' onClick={this.buyExpEvent}>Buy Exp</button>
+              <div className='flex marginTop5'>
+                <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
+                <img className='goldImageSmall' src={goldCoin} alt='goldCoin'/>
+              </div>
+            </div>
             {/*<div style={{marginLeft: '5px'}}>
               <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
             </div>*/}
