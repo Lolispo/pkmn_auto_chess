@@ -27,15 +27,11 @@ Crash:
     Player death
 
 Fixed Check:
-    Types Increases/Decreases for types are wrong
-
     Bonus effect from same family - mankey and primeape got fighting bonus
 
     refillPieces seems to work, changing back to og size
 
-Test me ingame:  
-    Wave 35 Crash
-    3 psychic - crashed
+Test me ingame:
     Player loses
         Shouldn't be able to interact with anything board related
     Move

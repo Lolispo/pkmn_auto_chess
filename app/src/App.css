@@ -688,7 +688,13 @@ body {
 }
 
 .streak {
-  margin-left: 0px;
+  margin-left: 5px;
+}
+
+.trophy {
+  padding-top: 1px;
+  width: 18px;
+  height: 18px;
 }
 
 .manaBar {

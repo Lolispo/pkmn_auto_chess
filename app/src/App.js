@@ -999,7 +999,10 @@ class App extends Component {
     return <div className='playerScoreboardContainer' key={player.index}>
       <div className='playerScoreboardInner'>
         <span>{'Player ' + player.index + '\n'}</span>
-        {(this.props.players[player.index].streak ? <span className='streak'>{'Streak:' + this.props.players[player.index].streak}</span> : '')}
+        {(this.props.players[player.index].streak ? <span>
+          <img className='trophy' src={getImage('trophy')} alt='trophy'/>
+          <span className='streak'>{this.props.players[player.index].streak}</span>
+        </span> : '')}
         <div className='playerHpBarDiv'>
           <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
           style={{width: (hp) + '%'}}/>
