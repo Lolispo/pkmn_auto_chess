@@ -1,5 +1,15 @@
 # TODO
 
+## Fix for play
+
+Enable sounds @ reducer 'enabledSound'
+
+Timer -> 30 @ App '5'
+
+Pieces in board -> default @ game_constants
+
+hp -> 100 @ player
+
 ## Check in Auto Chess
 
 Mana: 15% of damage to mana or 10
@@ -10,14 +20,18 @@ Mana: 15% of damage to mana or 10
 ## Crash and Tests for ingame
 
 Crash: 
-    FrontEnd battle not matched, some units survive that shouldnt
+    Refill pieces
+    Eevee
+    Player death
 
 Test me ingame:  
     Wave 35 Crash
     3 psychic - crashed
-    WinningAnimation: Apply to all winning units? (Notice multiple of same type)
     Player loses
         Shouldn't be able to interact with anything board related
+    Move
+        Does it allow jumping over if close enough?
+            Better when priorities are set for target better
     Player disconnects (Not prio)
         During battle or normally
 
@@ -26,32 +40,57 @@ Known issues:
         Dot damage or healing
     Timer Bug, restart for it
 
+# Fix me - Prio
+    
+    Streak Css
+
+    Types Increases/Decreases for types are wrong
+
+    Bonus effect from same family - mankey and primeape got fighting bonus
+
+    Give battle won gold reward
+
+    Eevee evolution crash
+    
+    DotDamage - NOT MATCHING UP
+
+    Player loses
+        scoreboard last update
+        scoreboard dead players
+        dont crash when new battle starts (check .index)
+
+## Add me - Prio
+
+    Timer sound
 
 ## Backend
 
-Bonus effect from same family - mankey and primeape got fighting bonus
+Players die same round
+    Need to record time of death, when removePlayerHp is called, check last actionStack time
+    Handle in socketController and eliminate in order if multiple
+        Check after each elimination if only one player left
 
-arvid img json
+Sp.attack Sp.defense for ability calculations
+
+all images in json, base64
+    would fix ddos problem
+    would fix transferring all images problems, since all are loaded in beginning
 
 Something doing 0.5 damage (brock vs parasect)
 
 Fix unitImages, since pokemonDb has ddos protection
 
-Give battle won gold reward
-
-Eevee evolution crash
-
-Attack from 2 tiles away?
+Attack from 2 tiles away bug?
 
 Target Priorities
     Make more like move priority, in front of you first
-    Never stick on a target where attacks are < x1
-        (meh)
+    Dont stick mechanic
+        Never stick on a target where attacks are x0
+        < x1 dont stick also?
 
 Type Bonuses are wrongly typed
     Instead of giving first 15, then 15, it gives first 15 then 30: 
         Combos go insane very fast
-    Update description of types to be generated automatically from fields instead of manually typed
 
 Rivals:
     When playing against the person you played the most
@@ -61,10 +100,6 @@ Rivals:
         People might not have each other as rivals
 
 StepsToTake dependent on pokemon stats
-
-MoveRemake
-    Does it allow jumping over if close enough?
-        Better when priorities are set for target better
 
 Is While Iterator problematic if 2 players die same round?
     Can it continue iterating if element was deleted previously
@@ -80,23 +115,11 @@ Player eliminated logic
 
 Gold:
     Reward for winning battle?
-    Streak for losing?
     Gold information calculation
         Move outside of function, calculate at gold changes and update frontend
-        Maybe streak is received on frontend and everything can then be calculated there already?
         Show streak / next gold
 
 PlacePieceEvent (All piece interactions):
-    .set('buff', List([]))
-    Type bonuses calculations, what combos are active
-        Current logic in: markBoardBonuses
-        Recalculate and update unitbuffs and boardBuffs on piece interactions
-        Set on board units (not battle, already had)
-            Every unit has buff or empty
-        Render on left side of board, buffs
-            boardBuffs, [players, 0, boardBuffs]
-        Use this information, typeBuffs in the stats panel
-            If type is buffed, show green + 25 for example at the hp for the unit
     Which units to be sent back
         Current logic in: fixTooManyUnits
         Move logic so units to be called back is already marked in the state
@@ -176,11 +199,7 @@ Rotate unit in attack direction
 
 Ability effects from canvas
 
-DotDamage
-    NOT MATCHING UP
-
-Player loses
-    dont crash when new battle starts (check .index)
+pokeDollar instead of goldcoin
 
 Redo pokeball
     pokeball align middle
@@ -195,16 +214,12 @@ Clickable (:hover) effect
 
 Horn sound lower
 
-Priorities timer sound
-
-Types Increases/Decreases for types are wrong
-
 Types:
+    Render on left side of board, buffs
     Print types as images with number on
         Images: type images
-    Info panel + info
-
-Type fix +20 hp many times
+    Use this information, typeBuffs in the stats panel
+        If type is buffed, show green + 25 for example at the hp for the unit
 
 hp bar % padding better (100% vs 95%)
 

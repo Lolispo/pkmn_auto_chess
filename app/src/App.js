@@ -966,6 +966,7 @@ class App extends Component {
     return <div className='playerScoreboardContainer' key={player.index}>
       <div className='playerScoreboardInner'>
         <span>{'Player ' + player.index + '\n'}</span>
+        {(this.props.streak ? <span className='streak'>{'Streak:' + this.props.streak}</span> : '')}
         <div className='playerHpBarDiv'>
           <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
           style={{width: (hp) + '%'}}/>
@@ -1183,7 +1184,7 @@ class App extends Component {
             </div>
           </CSSTransitionGroup>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={5} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer> : ''}
         <div className = 'centerWith50'>
           <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
@@ -1336,6 +1337,7 @@ const mapStateToProps = state => ({
   exp: state.exp,
   expToReach: state.expToReach,
   gold: state.gold,
+  streak: state.streak,
   onGoingBattle: state.onGoingBattle,
   enemyIndex: state.enemyIndex,
   startBattle: state.startBattle,

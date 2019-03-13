@@ -40,6 +40,7 @@ const reducer = (
     exp: -1,
     expToReach: -1,
     gold: -1,
+    streak: 0,
     onGoingBattle: false,
     enemyIndex: -1,
     startBattle: false,
@@ -53,7 +54,7 @@ const reducer = (
     typeBonusString: '',
     round: 1,
     musicEnabled: false,
-    soundEnabled: true,
+    soundEnabled: false,
     chatSoundEnabled: true,
     selectedSound: '',
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
@@ -89,6 +90,7 @@ const reducer = (
           exp: action.newState.players[state.index].exp,
           expToReach: action.newState.players[state.index].expToReach,
           gold: action.newState.players[state.index].gold,
+          streak: action.newState.players[state.index].streak,
         };
       }
       console.log('New State', action.newState)
@@ -107,6 +109,7 @@ const reducer = (
         exp: action.player.exp,
         expToReach: action.player.expToReach,
         gold: action.player.gold,
+        streak: action.player.streak,
       };
       state.players[state.index] = action.player
       state.storedState.players[state.index] = action.player;

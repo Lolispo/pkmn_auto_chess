@@ -46,12 +46,14 @@ exports.getStats = async (name) => {
 const getBasePokemonLocal = async (name) => {
   const pokeMap = await pokemonMap;
   const unitStats = pokeMap.get(name.toLowerCase());
-  if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
+  console.log('@getBasePokemonLocal', unitStats, name, unitStats.get('evolves_from'));
+  if (f.isUndefined(unitStats.get('evolves_from'))) { // Base level
+    console.log('@getBase This pokemon is a base unit: ', unitStats.get('name'), unitStats.get('evolves_from'), f.isUndefined(unitStats.get('evolves_from')));
     return unitStats.get('name');
   }
   // Go down a level
-  console.log('@pokemonJs.getBasePokemon', unitStats.get('evolution_from'), unitStats.get('evolution_from').get('name'))
-  return getBasePokemonLocal(unitStats.get('evolution_from').get('name'));
+  console.log('@pokemonJs.getBasePokemon', unitStats.get('evolves_from'), unitStats.get('evolves_from').get('name'))
+  return getBasePokemonLocal(unitStats.get('evolves_from').get('name'));
 };
 
 exports.getBasePokemon = name => getBasePokemonLocal(name);

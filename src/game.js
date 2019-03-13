@@ -449,8 +449,8 @@ exports._withdrawPiece = async (state, playerIndex, piecePosition) => withdrawPi
  */
 async function discardBaseUnits(state, name, depth = '1') {
   const unitStats = await pokemonJS.getStats(name);
-  const evolutionFrom = unitStats.get('evolution_from');
-  if (f.isUndefined(unitStats.get('evolution_from'))) { // Base level
+  const evolutionFrom = unitStats.get('evolves_from');
+  if (f.isUndefined(unitStats.get('evolves_from'))) { // Base level
     let discPieces = state.get('discardedPieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
     for (let i = 0; i < amountOfPieces; i++) {
@@ -1255,8 +1255,8 @@ async function countUniqueOccurences(board, teamParam='0') {
   while (!tempUnit.done) {
     const unitPos = tempUnit.value;
     const unit = board.get(unitPos);
-    console.log('UNIT', unit)
     const name = unit.get('name');
+    console.log('@countUnique UNIT', name)
     const team = unit.get('team') || teamParam;
     // console.log(unique, team, unit, unitPos)
     // console.log('@countUniqueOccurences', unique.get(String(team)), pokemonJS.getBasePokemon(name))
@@ -1865,7 +1865,7 @@ async function removeHp(state, playerIndex, hpToRemove) {
 }
 
 exports.removeDeadPlayer = (stateParam, playerIndex) => {
-  console.log('@removeDeadPlayer')
+  //console.log('@removeDeadPlayer')
   let state = stateParam;
   const filteredShop = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
   const shopUnits = Array.from(filteredShop.map((value, key) => value.get('name')).values());
@@ -1879,7 +1879,7 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
     boardList = boardList.push(unit.get('name'));
     temp = iter.next();
   }
-  console.log('BoardList', boardList);
+  //console.log('BoardList', boardList);
   const hand = state.getIn(['players', playerIndex, 'hand']);
   let handList = List([]);
   const iter2 = hand.keys();
@@ -1890,8 +1890,8 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
     handList = handList.push(unit.get('name'));
     temp2 = iter2.next();
   }
-  console.log('HandList', handList);
-  console.log('@xd', shopUnits, boardList, handList)
+  // console.log('HandList', handList);
+  console.log('@removeDeadPlayer', shopUnits, boardList, handList)
   const playerUnits = shopUnits.concat(boardList).concat(handList);
   state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));
   const newState = state.set('players', state.get('players').delete(playerIndex));

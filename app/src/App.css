@@ -684,6 +684,10 @@ body {
   position: relative;
 }
 
+.streak {
+  margin-left: 0px;
+}
+
 .manaBar {
   background-color: blue;
   text-align: center;
