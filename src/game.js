@@ -1263,7 +1263,7 @@ async function countUniqueOccurences(board, teamParam='0') {
     const basePokemon = await pokemonJS.getBasePokemon(name);
     if (!unique.get(String(team)).has(basePokemon)) { // TODO: Check
       console.log('@CountUniqueOccurences Unique', basePokemon, team, unique);
-      const newSet = await unique.get(String(team)).add(name);
+      const newSet = await unique.get(String(team)).add(basePokemon);
       unique = await unique.set(String(team), newSet); // Store unique version, only count each once
       const types = unit.get('type'); // Value or List
       if (!f.isUndefined(types.size)) { // List

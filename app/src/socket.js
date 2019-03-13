@@ -20,6 +20,7 @@ const configureSocket = dispatch => {
 
   socket.on('disconnect', () => {
     dispatch({type: 'SET_CONNECTED', connected: false})
+    window.location.reload();
     console.log('disconnected');
   });
 

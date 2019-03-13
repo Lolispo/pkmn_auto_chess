@@ -52,8 +52,8 @@ const getBasePokemonLocal = async (name) => {
     return unitStats.get('name');
   }
   // Go down a level
-  console.log('@pokemonJs.getBasePokemon', unitStats.get('evolves_from'), unitStats.get('evolves_from').get('name'))
-  return getBasePokemonLocal(unitStats.get('evolves_from').get('name'));
+  console.log('@pokemonJs.getBasePokemon', unitStats.get('evolves_from'), unitStats.get('evolves_from'))
+  return getBasePokemonLocal(unitStats.get('evolves_from'));
 };
 
 exports.getBasePokemon = name => getBasePokemonLocal(name);

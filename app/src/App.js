@@ -421,7 +421,7 @@ class Timer extends Component {
     }
     this.startCountDown = this.startCountDown.bind(this);
     this.tick = this.tick.bind(this);
-    if(this.props.startTimer){
+    if(this.props.startTimer && !this.props.gameEnded){
       console.log('@Timer constructor StartingTimer', this.props.startTime)
       this.startCountDown();
       this.props.dispatch({type: 'DISABLE_START_TIMER'})
@@ -816,7 +816,7 @@ class App extends Component {
         console.log('Move from', unitPos, 'to', target);
         delete newBoard[unitPos];        // Remove unit from previous pos
         newBoard[target] = unit;         // Add unit to new pos on board
-        // newBoard[unitPos].actionMessage = '';
+        newBoard[target].actionMessage = '';
         return newBoard;
       case 'attack':
         // TODO: Animate attack on unitPos
@@ -1185,7 +1185,7 @@ class App extends Component {
           </CSSTransitionGroup>
         </div>
         {this.props.gameIsLive ? <Timer startTime={5} key={this.props.round} startTimer={this.props.startTimer} 
-        storedState={this.props.storedState} dispatch={this.props.dispatch}></Timer> : ''}
+        storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div className = 'centerWith50'>
           <button className='normalButton marginTop5' onClick={this.buyExpEvent}>Buy Exp</button>
           <div className='flex marginTop5'>
@@ -1364,6 +1364,7 @@ const mapStateToProps = state => ({
   isSelectModeShop: state.isSelectModeShop,
   boardBuffs: state.boardBuffs,
   deadPlayers: state.deadPlayers,
+  gameEnded: state.gameEnded,
 });
 
 export default connect(mapStateToProps)(App);

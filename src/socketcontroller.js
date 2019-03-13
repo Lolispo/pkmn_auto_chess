@@ -289,6 +289,7 @@ module.exports = (socket, io) => {
 
         sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, newState);
         sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
+        if(f.isUndefined(actionStacks)) console.log('@actionStacks undefiend', battleObject)
         const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
         
         const iter = connectedSessionPlayers.keys();
@@ -337,9 +338,9 @@ module.exports = (socket, io) => {
             const stateToSend = getStateToSend(stateEndedTurn);
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
             emitMessage(socket, io, sessionId, (socketId) => {
-              io.to(socketId).emit('END_BATTLE');
-              io.to(socketId).emit('UPDATED_STATE', stateToSend);
               io.to(socketId).emit('END_GAME', winningPlayer);
+              //io.to(socketId).emit('END_BATTLE');
+              //io.to(socketId).emit('UPDATED_STATE', stateToSend);
             });
           } else {
             // Send to users, not all

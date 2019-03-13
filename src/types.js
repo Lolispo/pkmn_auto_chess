@@ -489,8 +489,7 @@ const getTypeDesc = name => {
   const typeName = type.get('name');
   const req = type.get('req').toJS();
   const bonusType = type.get('bonusType');
-  const inc = (bonusType === 'enemyDebuff' ? 'Increases': 'Decreases'); 
-  console.log('@types.bonusType:', inc)
+  const inc = (bonusType !== 'enemyDebuff' ? 'Increases': 'Decreases'); 
   const units = (bonusType === 'bonus' ? 'all ' + typeName + ' typed units' : (bonusType === 'allBonus' ? 'all units' : 'all enemy units'));
   const bonusAmount = type.get('bonusAmount').toJS();
   const bonusStatType = type.get('bonusStatType');
