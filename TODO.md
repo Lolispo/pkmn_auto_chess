@@ -231,10 +231,10 @@ Horn sound lower
 
 Types:
     Render on left side of board, buffs
-    Print types as images with number on
+    Print types as images with numbers connected
+        Number showing amount of units of that type
+        Number showing which level of buff is applied (bigger)
         Images: type images
-    Use this information, typeBuffs in the stats panel
-        If type is buffed, show green + 25 for example at the hp for the unit
 
 hp bar % padding better (100% vs 95%)
 

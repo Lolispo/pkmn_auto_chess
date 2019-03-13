@@ -1176,7 +1176,7 @@ class App extends Component {
           {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
         </div> : '')}
       </div>;
-    const leftSideBar = <div style={{width: '165px'}}>
+    const leftBar = <div style={{width: '165px'}}>
         <div className='flex'>
           <div className='marginTop5 biggerText text_shadow paddingLeft5' style={{marginTop: '15px'}}>
             {'Player ' + this.props.index}
@@ -1209,12 +1209,12 @@ class App extends Component {
         <div className='boardBuffs text_shadow'>
           {(this.props.boardBuffs && this.props.boardBuffs.buffMap && Object.keys(this.props.boardBuffs.buffMap).length > 0 ?
             JSON.stringify(this.props.boardBuffs.buffMap, null, 2) : '')}
-          {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
+          {/*{(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
             JSON.stringify(this.props.boardBuffs.typeBuffMapSolo, null, 2) : '')}
           {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapAll && Object.keys(this.props.boardBuffs.typeBuffMapAll).length > 0  ? 
             JSON.stringify(this.props.boardBuffs.typeBuffMapAll, null, 2) : '')}
           {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
-          JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}
+          JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}*/}
         </div>
         <div className='marginTop5 flex'>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
@@ -1313,7 +1313,7 @@ class App extends Component {
     return (this.props.gameIsLive ? <div className='gameDiv'>
       {topBar}
       <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
-        {leftSideBar}
+        {leftBar}
         {boardDiv}
         {rightSide}
       </div>
