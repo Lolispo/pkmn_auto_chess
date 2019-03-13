@@ -562,19 +562,21 @@ class App extends Component {
       }
       const boardBuffs = this.props.boardBuffs;
       const buffs = {};
-      const solo = boardBuffs.typeBuffMapSolo
-      if(Array.isArray(s.type)){
-        this.setBuffsFromSolo(buffs, solo, s.type[0]);
-        this.setBuffsFromSolo(buffs, solo, s.type[1]);
-      } else {
-        this.setBuffsFromSolo(buffs, solo, s.type);
+      if(boardBuffs){
+        const solo = boardBuffs.typeBuffMapSolo
+        if(Array.isArray(s.type)){
+          this.setBuffsFromSolo(buffs, solo, s.type[0]);
+          this.setBuffsFromSolo(buffs, solo, s.type[1]);
+        } else {
+          this.setBuffsFromSolo(buffs, solo, s.type);
+        }
+        Object.keys(boardBuffs.typeBuffMapAll).forEach(type => {
+          const value = boardBuffs.typeBuffMapAll[type];
+          buffs[value['typeBuff']] = (buffs[value['typeBuff']] || 0) + value['value'];
+        });
+        // Object.keys(boardBuffs.typeDebuffMapEnemy).forEach(e => {
+        // });
       }
-      Object.keys(boardBuffs.typeBuffMapAll).forEach(e => {
-        
-      });
-      Object.keys(boardBuffs.typeDebuffMapEnemy).forEach(e => {
-        
-      });
       console.log('@buffs', buffs);
       const content = <div className='center'>
         <div className='textAlignCenter marginTop5'>

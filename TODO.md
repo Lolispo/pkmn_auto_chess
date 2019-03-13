@@ -203,6 +203,12 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+EnemyDebuff: 
+    Select unit
+        Notice if marking friendly or enemy unit during battle
+    Mark debuffs for enemies when selecting enemy units .team === 1
+        For this to be relevant: Needs to load enemy buffs aswell
+
 Rotate unit in attack direction
     css mirror, transform: scaleX(-1)
 
