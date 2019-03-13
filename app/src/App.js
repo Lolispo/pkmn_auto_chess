@@ -648,6 +648,37 @@ class App extends Component {
     return noSelected;
   }
   
+  displayBuffs = () => {
+    const list = [];
+    const boardBuffs = this.props.boardBuffs;
+    /*
+      {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
+        JSON.stringify(this.props.boardBuffs.typeBuffMapSolo, null, 2) : '')}
+      {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapAll && Object.keys(this.props.boardBuffs.typeBuffMapAll).length > 0  ? 
+        JSON.stringify(this.props.boardBuffs.typeBuffMapAll, null, 2) : '')}
+      {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
+      JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}
+    */
+    Object.keys(boardBuffs.buffMap).forEach(type => {
+      const amount = boardBuffs.buffMap[type];
+      const marked = boardBuffs.typeBuffMapSolo[type] || boardBuffs.typeBuffMapAll[type] || boardBuffs.typeDebuffMapEnemy[type];
+      let bonus;
+      if(!isUndefined(marked)){
+        bonus = <div>
+          <span className='typeTier'>{'Tier: ' + marked['tier']}</span>
+          <span>{' Bonus: ' + marked['typeBuff'] + ': ' + marked['value']}</span>
+        </div>
+      }
+      //<img />
+      list.push(<span key={type} className=''>
+        <span>{type + ': ' + amount}</span>
+        {bonus}
+      </span>
+      );
+    });
+    return list;
+  }
+
   placePieceEvent = (fromParam, to) => {
     // to is on valid part of the board
     const prop = this.props;
@@ -1208,13 +1239,7 @@ class App extends Component {
         </div>
         <div className='boardBuffs text_shadow'>
           {(this.props.boardBuffs && this.props.boardBuffs.buffMap && Object.keys(this.props.boardBuffs.buffMap).length > 0 ?
-            JSON.stringify(this.props.boardBuffs.buffMap, null, 2) : '')}
-          {/*{(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
-            JSON.stringify(this.props.boardBuffs.typeBuffMapSolo, null, 2) : '')}
-          {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapAll && Object.keys(this.props.boardBuffs.typeBuffMapAll).length > 0  ? 
-            JSON.stringify(this.props.boardBuffs.typeBuffMapAll, null, 2) : '')}
-          {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
-          JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}*/}
+            this.displayBuffs() : '')}
         </div>
         <div className='marginTop5 flex'>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
