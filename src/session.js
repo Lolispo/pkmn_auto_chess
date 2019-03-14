@@ -101,7 +101,7 @@ exports.updateSessionPieces = (socketId, connectedPlayers, sessions, state) => {
 exports.buildStateAfterBattle = (socketId, connectedPlayers, sessions, state) => {
   const session = getSession(socketId, connectedPlayers, sessions);
   return state.set('players', session.get('players'));
-}
+};
 
 exports.updateSessionPlayers = (socketId, connectedPlayers, sessions, state) => {
   const sessionId = connectedPlayers.get(socketId).get('sessionId');
@@ -136,13 +136,13 @@ exports.findSocketId = (session, pid) => {
   let temp = iter.next();
   while (!temp.done) {
     const socketId = temp.value;
-    if(sessionPlayers.get(socketId) === pid){
+    if (sessionPlayers.get(socketId) === pid) {
       return socketId;
     }
     temp = iter.next();
   }
   return -1;
-}
+};
 
 exports.getLongestBattleTime = (actionStacks) => {
   let longestTime = -1;

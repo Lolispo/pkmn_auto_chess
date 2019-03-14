@@ -98,12 +98,12 @@ const roundSetConfiguration = Map({
   10: async () => gameJS.createBattleBoard(List([
     Map({ name: 'geodude', x: 3, y: 1 }),
     Map({ name: 'onix', x: 4, y: 1 }),
-    Map({ name: 'sandshrew', x: 5, y: 2}),
+    Map({ name: 'sandshrew', x: 5, y: 2 }),
   ])),
   15: async () => gameJS.createBattleBoard(List([
     Map({ name: 'staryu', x: 3, y: 1 }),
     Map({ name: 'starmie', x: 4, y: 1 }),
-    Map({ name: 'psyduck', x: 5, y: 2}),
+    Map({ name: 'psyduck', x: 5, y: 2 }),
   ])),
   20: async () => gameJS.createBattleBoard(List([
     Map({ name: 'voltorb', x: 3, y: 1 }),
@@ -174,26 +174,27 @@ exports.getRarityAmount = index => rarityAmount.get(index - 1);
 
 exports.getLevelPieceProbability = index => levelPieceProbability.get(String(index));
 
-exports.getPieceProbabilityNum = index => {
+exports.getPieceProbabilityNum = (index) => {
   const probs = levelPieceProbability.get(String(index));
-  if(f.isUndefined(probs)) console.log('getPieceProbability', index);
+  if (f.isUndefined(probs)) console.log('getPieceProbability', index);
   return [probs.get('1'), probs.get('1') + probs.get('2'), probs.get('1') + probs.get('2') + probs.get('3'),
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4'),
     probs.get('1') + probs.get('2') + probs.get('3') + probs.get('4') + probs.get('5')];
 };
 
-exports.getTypeEffectString = typeFactor => {
-  if(typeFactor <= 0.0) {
+exports.getTypeEffectString = (typeFactor) => {
+  if (typeFactor <= 0.0) {
     return 'No effect';
-  } else if(typeFactor <= 0.25){
-    return 'Not effective'
-  } else if(typeFactor <= 0.5){
-    return 'Not very effective'
-  } else if(typeFactor > 0.5 && typeFactor < 2){
+  } if (typeFactor <= 0.25) {
+    return 'Not effective';
+  } if (typeFactor <= 0.5) {
+    return 'Not very effective';
+  } if (typeFactor > 0.5 && typeFactor < 2) {
     return '';
-  } else if(typeFactor <= 2){
-    return 'Super effective!'
-  } else if(typeFactor <= 4){
-    return 'Extremely effective!'
+  } if (typeFactor <= 2) {
+    return 'Super effective!';
+  } if (typeFactor <= 4) {
+    return 'Extremely effective!';
   }
-}
+  return '';
+};

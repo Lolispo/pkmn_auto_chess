@@ -49,6 +49,8 @@ Known issues:
 
 # Fix me - Prio
     
+    Dead_player on scoreboard, different css
+
     update lock from state (so it is not desynched)
 
     Eevee evolution crash
@@ -72,6 +74,8 @@ Players die same round
         Check after each elimination if only one player left
 
 Sp.attack Sp.defense for ability calculations
+    Required in stats panel
+    Dragon +sp.attack
 
 Something doing 0.5 damage (brock vs parasect)
 
@@ -190,6 +194,13 @@ Aoe damage logic
 Finish abilities implementation (teleport)
 
 ## Frontend
+
+Types leftbar:
+    Show goals for types in leftbar
+        bottom right corner having number of next tier to unlock
+    Show bonus information
+        Clickable? Hoverable? somehow show it if wanted
+        marked['typeBuff'] + ': ' + marked['value']
 
 GrowText better
     Firefox looks bad
@@ -400,6 +411,8 @@ Test dot damage functionality
 Test lifesteal functionality
 
 ## Code / Javascript Check me
+
+Put all switch cases in blocks
 
 Optimize asset sizes
     webm pikachuBackground (half size)

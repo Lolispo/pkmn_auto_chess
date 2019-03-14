@@ -365,7 +365,7 @@ const typeMap = new Map({
       'Electric',
       'Steel',
     ]),
-    //desc: 'Steel: [1, 2] Increases defense for all steel typed units [15, 30]',
+    // desc: 'Steel: [1, 2] Increases defense for all steel typed units [15, 30]',
     req: List([1, 2]),
     bonusAmount: List([15, 30]),
     bonusType: 'bonus',
@@ -400,13 +400,12 @@ const typeMap = new Map({
 const isStrongAgainst = async (attackType, defenseType) => {
   const strongAgainst = typeMap.get(attackType).get('strongAgainst');
   if (!f.isUndefined(strongAgainst)) {
-    if(strongAgainst.size > 0){
+    if (strongAgainst.size > 0) {
       const lowerCase = strongAgainst.map(v => v.toLowerCase());
       return (lowerCase.includes(defenseType) ? 2.0 : 1.0);
-    } else {
-      const lowerCase = strongAgainst.toLowerCase();
-      return (lowerCase.includes(defenseType) ? 2.0 : 1.0);
     }
+    const lowerCase = strongAgainst.toLowerCase();
+    return (lowerCase.includes(defenseType) ? 2.0 : 1.0);
   }
   return 1.0;
 };
@@ -420,10 +419,10 @@ const isIneffectiveAgainst = async (attackType, defenseType) => {
   if (ineffectiveAgainst.size > 0) {
     const lowerCase = ineffectiveAgainst.map(v => v.toLowerCase());
     return (lowerCase.includes(defenseType) ? 0.5 : 1.0);
-  } else {
-    const lowerCase = ineffectiveAgainst.toLowerCase();
-    return (lowerCase.includes(defenseType) ? 0.5 : 1.0);
   }
+  const lowerCase = ineffectiveAgainst.toLowerCase();
+  return (lowerCase.includes(defenseType) ? 0.5 : 1.0);
+
   // console.log('@inefective', ineffectiveAgainst.includes(defenseType), ineffectiveAgainst);
 };
 
@@ -467,35 +466,35 @@ exports.getTypeFactor = async (attackType, typesDefender) => {
   return calcTypeFactor(attackType, typesDefender);
 };
 
-const getStringFromList = list => {
+const getStringFromList = (list) => {
   // console.log('@getStringFromList', list)
-  if(!list.size){
+  if (!list.size) {
     return list;
   }
   let s = list.get(0);
-  for(let i = 1; i < list.size; i++){
-    s += ', ' + list.get(i);
+  for (let i = 1; i < list.size; i++) {
+    s += `, ${list.get(i)}`;
   }
   return s;
-}
+};
 
 const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
 
-const getTypeDesc = name => {
+const getTypeDesc = (name) => {
   const type = typeMap.get(name);
-  if(f.isUndefined(type.get('req'))){
+  if (f.isUndefined(type.get('req'))) {
     return '';
   }
   const typeName = type.get('name');
   const req = type.get('req').toJS();
   const bonusType = type.get('bonusType');
-  const inc = (bonusType !== 'enemyDebuff' ? 'Increases': 'Decreases'); 
-  const units = (bonusType === 'bonus' ? 'all ' + typeName + ' typed units' : (bonusType === 'allBonus' ? 'all units' : 'all enemy units'));
+  const inc = (bonusType !== 'enemyDebuff' ? 'Increases' : 'Decreases');
+  const units = (bonusType === 'bonus' ? `all ${typeName} typed units` : (bonusType === 'allBonus' ? 'all units' : 'all enemy units'));
   const bonusAmount = type.get('bonusAmount').toJS();
   const bonusStatType = type.get('bonusStatType');
   return `${capitalize(typeName)}: [${req}] ${inc} ${bonusStatType} for ${units} [${bonusAmount}]`;
   // 'Steel: [1, 2] Increases defense for all steel typed units [15, 30]',
-}
+};
 
 exports.buildTypeString = () => {
   const iter = typeMap.keys();
@@ -504,24 +503,24 @@ exports.buildTypeString = () => {
   let typeDesc = 'Type bonuses:\n';
   while (!temp.done) {
     const type = typeMap.get(temp.value);
-    let name = type.get('name');
-    let tempString = name.charAt(0).toUpperCase() + name.slice(1) + ': ';
-    if(type.get('strongAgainst')) tempString += '\n-   Strong against: ' + getStringFromList(type.get('strongAgainst'));
-    if(type.get('ineffectiveAgainst')) tempString += '\n-   Ineffective against: ' + getStringFromList(type.get('ineffectiveAgainst'));
-    if(type.get('noDamageAgainst')) tempString += '\n-   No effect against: ' + getStringFromList(type.get('noDamageAgainst'));
-    s += tempString + '\n';
+    const name = type.get('name');
+    let tempString = `${name.charAt(0).toUpperCase() + name.slice(1)}: `;
+    if (type.get('strongAgainst')) tempString += `\n-   Strong against: ${getStringFromList(type.get('strongAgainst'))}`;
+    if (type.get('ineffectiveAgainst')) tempString += `\n-   Ineffective against: ${getStringFromList(type.get('ineffectiveAgainst'))}`;
+    if (type.get('noDamageAgainst')) tempString += `\n-   No effect against: ${getStringFromList(type.get('noDamageAgainst'))}`;
+    s += `${tempString}\n`;
     const typeDescription = getTypeDesc(name);
-    if(typeDescription !== ''){
-      typeDesc += typeDescription + '\n';
+    if (typeDescription !== '') {
+      typeDesc += `${typeDescription}\n`;
     }
     /*
     if(!f.isUndefined(type.get('desc'))){
       typeDesc += type.get('desc') + '\n';
-    }*/
+    } */
     temp = iter.next();
   }
   return [s, typeDesc];
-}
+};
 
 exports.getType = name => typeMap.get(name);
 

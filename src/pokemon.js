@@ -45,7 +45,7 @@ const pokemonSprites = loadGifsJSON();
 exports.getStats = async (name) => {
   const pokeMap = await pokemonMap;
   // console.log('getStats', name);//, pokeMap.get(name.toLowerCase()));
-  if(f.isUndefined(name)) console.log('@getStats undefined', name);
+  if (f.isUndefined(name)) console.log('@getStats undefined', name);
   return pokeMap.get(name.toLowerCase());
 };
 

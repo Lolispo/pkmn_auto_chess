@@ -24,26 +24,25 @@ const pos = (x, y) => {
 };
 
 
-const x = (pos) => {
-  if(!isUndefined(pos)){
-    const splitted = pos.split(',');
+const x = (position) => {
+  if (!isUndefined(position)) {
+    const splitted = position.split(',');
     const curr = splitted[0];
-    return (isUndefined(curr) ? curr : parseInt(curr));
-  } else {
-    console.log('pos is undefined WE ARE FUCKED');
-    return 0;
+    return (isUndefined(curr) ? curr : parseInt(curr, 10));
   }
+  console.log('pos is undefined WE ARE FUCKED');
+  return 0;
 };
 
-const y = (pos) => {
-  const splitted = pos.split(',');
+const y = (position) => {
+  const splitted = position.split(',');
   const curr = splitted[1];
-  return (isUndefined(curr) ? curr : parseInt(curr));
+  return (isUndefined(curr) ? curr : parseInt(curr, 10));
 };
 
-exports.pos = (x, y) => pos(x, y);
-exports.x = pos => x(pos);
-exports.y = pos => y(pos);
+exports.pos = (px, py) => pos(px, py);
+exports.x = position => x(position);
+exports.y = position => y(position);
 
 /**
  * Given a position, returns if it is on hand or board
@@ -58,9 +57,9 @@ exports.reverseUnitPos = posInput => pos(7 - x(posInput), 7 - y(posInput));
 // exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal version
 exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
 
-const p = msg => {
-  if(gameConstantsJS.debugMode) console.log(msg);
-}
+const p = (msg) => {
+  if (gameConstantsJS.debugMode) console.log(msg);
+};
 
 exports.p = msg => p(msg);
 
@@ -69,8 +68,8 @@ exports.printBoard = async (boardParam, moveParam) => {
   const move = await moveParam;
   const keysIter = board.keys();
   let tempUnit = keysIter.next();
-  if(isUndefined(board) || isUndefined(move)){
-    console.log('@printBoard', board, move)
+  if (isUndefined(board) || isUndefined(move)) {
+    console.log('@printBoard', board, move);
   }
   p(` -- Move @${move.get('time')}: ${move.get('action')} ${(move.get('action') === 'attack' ? move.get('direction') : '')}`);
   while (!tempUnit.done) {
