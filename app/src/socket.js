@@ -24,6 +24,10 @@ const configureSocket = dispatch => {
     console.log('disconnected');
   });
 
+  socket.on('LOAD_SPRITES_JSON', pokemonSprites => {
+    dispatch({ type: 'LOAD_SPRITES_JSON', pokemonSprites});
+  });
+
   socket.on('UPDATED_STATE', state => {
     dispatch({ type: 'NEW_STATE', newState: state});
   });
@@ -73,8 +77,8 @@ const configureSocket = dispatch => {
     dispatch({type: 'NEW_CHAT_MESSAGE', senderMessage, newMessage: message, chatType: type});
   });
 
-  socket.on('DEAD_PLAYER', (message) => {
-    dispatch({type: 'DEAD_PLAYER', message});
+  socket.on('DEAD_PLAYER', (pid, position) => {
+    dispatch({type: 'DEAD_PLAYER', pid, position});
   });
   
   return socket;

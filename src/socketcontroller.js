@@ -13,6 +13,8 @@ let sessions = Map({}); // Maps sessionIds to sessions
 
 const TIME_FACTOR = 15;
 
+let pokemonSpritesJSON;
+
 const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId');
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
 const sessionExist = socketId => !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId')));
@@ -90,6 +92,11 @@ module.exports = (socket, io) => {
     connectedPlayers = connectedPlayers.set(socket.id, newUser);
     countReadyPlayers(false, socket, io);
     // TODO: Handle many connected players
+    if(f.isUndefined(pokemonSpritesJSON)){
+      pokemonSpritesJSON = await pokemonJS.getPokemonSprites();
+    }
+    // console.log('SEND ME', pokemonSpritesJSON);
+    io.to(socket.id).emit('LOAD_SPRITES_JSON', pokemonSpritesJSON);
   });
 
   socket.on('READY', async () => {
@@ -289,7 +296,7 @@ module.exports = (socket, io) => {
 
         sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, newState);
         sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
-        if(f.isUndefined(actionStacks)) console.log('@actionStacks undefiend', battleObject)
+        if(f.isUndefined(actionStacks)) console.log('@socketController undefined actionStacks', battleObject);
         const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
         
         const iter = connectedSessionPlayers.keys();
@@ -299,14 +306,14 @@ module.exports = (socket, io) => {
           const tempIndex = connectedSessionPlayers.get(socketId);
           const enemy = (matchups ? matchups.get(tempIndex) : undefined);
           // const index = getPlayerIndex(socketId);
-          // console.log('Player update', index, preBattleState.getIn(['players', index]));
+          // console.log('Player update', index, preBattleState.getIn(['players', index])); 
           io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, enemy);
           temp = iter.next();
         }
         setTimeout(async () => {
           // After all battles are over
-          f.p('sc.Time to End Battle')
+          f.p('Time to End Battle')
           const stateAfterBattle = sessionJS.buildStateAfterBattle(socket.id, connectedPlayers, sessions, newState);
           // Endbattle and get endTurned state
           
@@ -323,10 +330,14 @@ module.exports = (socket, io) => {
               stateEndedTurn = gameJS.removeDeadPlayer(stateCheckDead, pid);
               const playerName = 'Player ' + pid;
               newChatMessage(socket, io, socket.id, playerName + ' Eliminated - ', 'Alive players: ' + stateEndedTurn.get('amountOfPlayers'), 'playerEliminated');
+              emitMessage(socket, io, sessionId, (socketId) => {
+                io.to(socketId).emit('DEAD_PLAYER', pid, stateEndedTurn.get('amountOfPlayers') + 1);
+              });
+              /*
               const deadPlayerSocketId = sessionJS.findSocketId(session, pid);
               if(deadPlayerSocketId !== -1){
                 io.to(`${deadPlayerSocketId}`).emit('DEAD_PLAYER', 'You Lost! You finished ' + (stateEndedTurn.get('amountOfPlayers') + 1) + '!');
-              }
+              }*/
               // Send information to that player, so they know they are out
             }
             temp = iter.next();
@@ -338,9 +349,9 @@ module.exports = (socket, io) => {
             const stateToSend = getStateToSend(stateEndedTurn);
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
             emitMessage(socket, io, sessionId, (socketId) => {
+              // io.to(socketId).emit('END_BATTLE');
+              // io.to(socketId).emit('UPDATED_STATE', stateToSend);
               io.to(socketId).emit('END_GAME', winningPlayer);
-              //io.to(socketId).emit('END_BATTLE');
-              //io.to(socketId).emit('UPDATED_STATE', stateToSend);
             });
           } else {
             // Send to users, not all

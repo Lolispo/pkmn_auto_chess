@@ -34,7 +34,13 @@ async function loadImmutablePokemonJSON() {
   return fromJS(pokemonJSON);
 }
 
+async function loadGifsJSON() {
+  const pokemonJSON = JSON.parse(fs.readFileSync('pokemonSprites.json', 'utf8'));
+  return fromJS(pokemonJSON);
+}
+
 const pokemonMap = loadImmutablePokemonJSON();
+const pokemonSprites = loadGifsJSON();
 
 exports.getStats = async (name) => {
   const pokeMap = await pokemonMap;
@@ -59,5 +65,7 @@ const getBasePokemonLocal = async (name) => {
 exports.getBasePokemon = name => getBasePokemonLocal(name);
 
 exports.getMap = async () => pokemonMap;
+
+exports.getPokemonSprites = async () => pokemonSprites;
 
 exports.getStatsDefault = stat => defaultStat.get(stat);

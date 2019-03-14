@@ -199,6 +199,11 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Only get gifs if not cached
+
+Animate movement after this idea: https://gyazo.com/a93563fc0700cd764da9120fd0b49a38
+    Requires keyFrames to depend on variables
+
 EnemyDebuff: 
     Select unit
         Notice if marking friendly or enemy unit during battle

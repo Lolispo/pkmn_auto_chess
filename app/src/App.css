@@ -59,6 +59,7 @@ body {
   */
   background-color: rgb(46, 40, 40);
   border-radius: 50px;
+  z-index: 1;
   /*background: url(https://i.pinimg.com/originals/7c/0f/eb/7c0feb742c99ac92d76360a0e0ee3d3b.png) no-repeat;
   background-size: 120px 180px;*/
 }
@@ -90,6 +91,7 @@ body {
   width: 60px;
   border-radius: 50%;
   position: absolute;
+  z-index: 2;
 }
 
 .pokemonInfo {
@@ -124,9 +126,14 @@ body {
 }
 
 .pokemonImg {
-  animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
   display: block;
   margin: auto;
+  position: relative;
+  z-index: 3;
+}
+
+.pokemonSpawn {
+  animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
 }
 
 .pokemonShopEmpty {
@@ -198,7 +205,7 @@ body {
 }
 
 .infoPanel {
-  height: 300px;
+  height: 320px;
   padding-top: 5px;
   white-space: pre-line;
 }
@@ -491,43 +498,51 @@ body {
 }
 
 @keyframes attackN {
-  from  {transform: translate(0px, -40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(0px, -40px);}
+  100% {transform: translate(0px);}
 }
-
+  
 @keyframes attackNE {
-  from  {transform: translate(40px, -40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(40px, -40px);}
+  100% {transform: translate(0px);}
 }
-
+  
 @keyframes attackNW {
-  from  {transform: translate(-40px, -40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(-40px, -40px);}
+  100% {transform: translate(0px);}
 }
-
+  
 @keyframes attackW {
-  from  {transform: translate(-40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(-40px);}
+  100% {transform: translate(0px);}
 }
-
+  
 @keyframes attackE {
-  from  {transform: translate(40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(40px);}
+  100% {transform: translate(0px);}
 }
-
+  
 @keyframes attackS {
-  from  {transform: translate(0px, 40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(0px, 40px);}
+  100% {transform: translate(0px);}
 }
-
+  
 @keyframes attackSE {
-  from  {transform: translate(40px, 40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(40px, 40px);}
+  100% {transform: translate(0px);}
 }
-
+  
 @keyframes attackSW {
-  from  {transform: translate(-40px, 40px);}
-  to    {transform: translate(0px);}
+  0% {transform: translate(0px);}
+  33% {transform: translate(-40px, 40px);}
+  100% {transform: translate(0px);}
 }
 
 .animateN {

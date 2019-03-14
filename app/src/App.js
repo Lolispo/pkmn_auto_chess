@@ -53,9 +53,14 @@ class PokemonImage extends Component{
     const {width, height} = this.state.dimensions;
     this.reduceImageSize(width, height);
     const paddingTop = this.state.paddingTop;
-    let src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
-    if(this.props.back){
-      src = 'https://img.pokemondb.net/sprites/black-white/anim/back-normal/' + this.props.name + '.gif';
+    // let src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
+    let src;
+    if(this.props.pokemonSprites){
+      src = 'data:image/gif;base64,' + this.props.pokemonSprites.pokemon[this.props.name].front;
+      if(this.props.back){
+        // src = 'https://img.pokemondb.net/sprites/black-white/anim/back-normal/' + this.props.name + '.gif';
+        src = 'data:image/gif;base64,' + this.props.pokemonSprites.pokemon[this.props.name].back;
+      }
     }
     const baseMarginTop = paddingTop + height - 15;
     const baseMarginLeft = 85 - width - 7;
@@ -72,7 +77,7 @@ class PokemonImage extends Component{
               width: (!isNaN(width) ? width * 1.5 : '')
             }}></div> : '')}
             <img
-              className={`pokemonImg ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
+              className={`pokemonImg pokemonSpawn ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
               key={src}
               style={{paddingTop: paddingTop, width: width, height: height}}
               src={src}
@@ -145,7 +150,7 @@ class Pokemon extends Component{
                 <img className='infoImg' src={getImage('info')} onClick={this.infoEvent} alt={'info' + this.props.shopPokemon.name}/>
                 <div className='infoImgBg'/>
               </div>
-              <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass}/>
+              <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass} pokemonSprites={this.props.newProps.pokemonSprites}/>
             </div>
             <div className='pokemonShopText'>
               <span className={costColorTextClass}>{this.props.shopPokemon.display_name + '\n'}</span>
@@ -330,7 +335,7 @@ class Cell extends Component {
           const classList = (pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '')) + ' absolute';
           // console.log('@rendereding pokemonImage classList', classList)
           return <div style={{position: 'relative'}}>
-            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList}/>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList} pokemonSprites={this.props.newProps.pokemonSprites}/>
             {hpBar}
             {manaBar}
             {actionMessage}
@@ -353,7 +358,7 @@ class Cell extends Component {
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           return <div>
-            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength}/>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} pokemonSprites={this.props.newProps.pokemonSprites}/>
             {buffs}
           </div>
         }
@@ -540,13 +545,13 @@ class App extends Component {
       if(s.evolves_from) {
         evolves_from = <span className='flex'>
           <span className='paddingRight5 marginTop15'>Evolves from: </span>
-          <PokemonImage name={s.evolves_from} sideLength={40}/>
+          <PokemonImage name={s.evolves_from} sideLength={40} pokemonSprites={this.props.pokemonSprites}/>
         </span>;
       }
       if(s.evolves_to) {
         evolves_to = <span className='flex'>
           <span className='paddingRight5 marginTop15'>Evolves to: </span>
-          <PokemonImage name={s.evolves_to} sideLength={40}/>
+          <PokemonImage name={s.evolves_to} sideLength={40} pokemonSprites={this.props.pokemonSprites}/>
         </span>
       }
       const boardBuffs = this.props.boardBuffs;
@@ -602,7 +607,7 @@ class App extends Component {
   }
 
   statsRender = (className, name, allowSell=false) => {
-    const pokeEl= <PokemonImage name={name} sideLength={50}/>;
+    const pokeEl= <PokemonImage name={name} sideLength={50} pokemonSprites={this.props.pokemonSprites}/>;
     return <div className={className}>
       <div className='textAlignCenter'>
         <div>{this.props.stats.display_name}</div>
@@ -1206,7 +1211,7 @@ class App extends Component {
       </div>;
     const leftBar = <div style={{width: '165px'}}>
         <div className='flex'>
-          <div className='marginTop5 biggerText text_shadow paddingLeft5' style={{marginTop: '15px'}}>
+          <div className='marginTop5 biggerText text_shadow paddingLeft5'>
             {'Player ' + this.props.index}
           </div>
         </div>
@@ -1252,7 +1257,6 @@ class App extends Component {
             onChange={this.handleVolumeChange}
             />
         </div>
-        <div className='text_shadow'>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
         {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
       </div>
     const boardDiv = <div className={(!this.props.onGoingBattle ? 'boardDiv' : 'boardDivBattle')}>
@@ -1321,6 +1325,7 @@ class App extends Component {
                 <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
               </div>
             </div>
+            <div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
             {/*<div style={{marginLeft: '5px'}}>
               <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
             </div>*/}
@@ -1398,6 +1403,7 @@ const mapStateToProps = state => ({
   boardBuffs: state.boardBuffs,
   deadPlayers: state.deadPlayers,
   gameEnded: state.gameEnded,
+  pokemonSprites: state.pokemonSprites,
 });
 
 export default connect(mapStateToProps)(App);

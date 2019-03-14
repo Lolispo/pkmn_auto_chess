@@ -66,11 +66,17 @@ const reducer = (
     isSelectModeShop: false,
     boardBuffs: {},
     deadPlayers: {},
+    pokemonSprites: {},
   },
   action
 ) => {
   let tempSoundEffects;
   switch (action.type) { // Listens to events dispatched from from socket.js
+    case 'LOAD_SPRITES_JSON': 
+      console.log('Loading sprites ...');
+      state = {...state, pokemonSprites: action.pokemonSprites}
+      console.log('SPRITES:', state.pokemonSprites)
+      break;
     case 'NEW_STATE':
       // Update state with incoming data from server
       state = { ...state,  
