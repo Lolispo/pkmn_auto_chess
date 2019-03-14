@@ -847,8 +847,10 @@ class App extends Component {
     }
     const newHp = newBoard[target].hp - value;
     if(newHp <= 0){
-      // TODO: Animation then remove
-      newBoard[target].attackAnimation = 'animateDead'; 
+      // TODO: Death Animation then remove
+      newBoard[target].animateMove = {
+        animation: 'animateDead' + ' 0.5s',
+      }; 
       delete newBoard[target]; 
 /*      await setTimeout(() => {
       }, 1)

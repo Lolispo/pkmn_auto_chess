@@ -641,7 +641,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
   if (stepsToTake > rangeToTarget) { // Within range, move to closest available space
     const goal = getMovePos(board, closestEnemyPos, 1, team);
     const direction = await getDirection(unitPos, goal);
-    console.log('Move direction: ', direction);
+    // console.log('Move direction: ', direction);
     return Map({movePos: goal, direction});
   } // More TOWARDS unit with stepsToTake amount of steps
   let pathFind = Map({
@@ -673,7 +673,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
         }
         // console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
         const direction = await getDirection(unitPos, path.get(index));
-        console.log('Move direction: ', direction);
+        // console.log('Move direction: ', direction);
         return Map({movePos: path.get(index), direction});
       }
     }
