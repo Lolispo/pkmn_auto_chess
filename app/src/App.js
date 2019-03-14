@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece, getStats, sendMessage} from './socket';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
-import CSSTransitionGroup from 'react-addons-css-transition-group';
 import './App.css';
 
 import { getUnitAudio, getSoundEffect } from './audio.js';
@@ -53,44 +52,41 @@ class PokemonImage extends Component{
     const {width, height} = this.state.dimensions;
     this.reduceImageSize(width, height);
     const paddingTop = this.state.paddingTop;
-    // let src = 'https://img.pokemondb.net/sprites/black-white/anim/normal/' + this.props.name + '.gif';
     let src;
-    if(this.props.pokemonSprites){
-      src = 'data:image/gif;base64,' + this.props.pokemonSprites.pokemon[this.props.name].front;
+    if(this.props.newProps.pokemonSprites){
+      src = 'data:image/gif;base64,' + this.props.newProps.pokemonSprites.pokemon[this.props.name].front;
       if(this.props.back){
-        // src = 'https://img.pokemondb.net/sprites/black-white/anim/back-normal/' + this.props.name + '.gif';
-        src = 'data:image/gif;base64,' + this.props.pokemonSprites.pokemon[this.props.name].back;
+        src = 'data:image/gif;base64,' + this.props.newProps.pokemonSprites.pokemon[this.props.name].back;
       }
     }
     const baseMarginTop = paddingTop + height - 15;
     const baseMarginLeft = 85 - width - 7;
+    // TODO: PokemonSpawn -> movement
+    const imgEl = <img
+      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? 'pokemonSpawn temp' : 'pokemonSpawn')} ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
+      key={src}
+      style={{paddingTop: paddingTop, width: width, height: height}}
+      src={src}
+      alt='Pokemon'
+      onLoad={this.onImgLoad}
+    />
+    // imgEl.style.setProperty('rotation', 0);
+    // imgEl.style.setProperty('rotationGoal', 180);
     return (
-      <CSSTransitionGroup
-          transitionName="example"
-          transitionEnterTimeout={300}
-          transitionLeave={false}>
-          <div>
-            {(this.props.renderBase ? <div key={this.props.renderBase} className={`pokemonImageBase ${this.props.renderBase}`} 
-            style={{
-              marginTop: (isNaN(baseMarginTop) ? '' : baseMarginTop), 
-              marginLeft: (isNaN(baseMarginLeft) ? '' : baseMarginLeft), 
-              width: (!isNaN(width) ? width * 1.5 : '')
-            }}></div> : '')}
-            <img
-              className={`pokemonImg pokemonSpawn ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
-              key={src}
-              style={{paddingTop: paddingTop, width: width, height: height}}
-              src={src}
-              alt='Pokemon'
-              onLoad={this.onImgLoad}
-            />
-          </div>
-        </CSSTransitionGroup>
+      <div>
+        {(this.props.renderBase ? <div key={this.props.renderBase} className={`pokemonImageBase ${this.props.renderBase}`} 
+        style={{
+          marginTop: (isNaN(baseMarginTop) ? '' : baseMarginTop), 
+          marginLeft: (isNaN(baseMarginLeft) ? '' : baseMarginLeft), 
+          width: (!isNaN(width) ? width * 1.5 : '')
+        }}></div> : '')}
+        {imgEl}
+      </div>
     );
   }
 }
 
-class Pokemon extends Component{
+class ShopPokemon extends Component{
 
   buyUnitEvent = (index) => {
     // You have enough money to buy this unit
@@ -145,24 +141,24 @@ class Pokemon extends Component{
             this.props.shopPokemon.type[0] : this.props.shopPokemon.type);
       */
       content = <div>
-            <div className={`pokemonImageDiv`}>
-              <div className='pokemonInfo'>
-                <img className='infoImg' src={getImage('info')} onClick={this.infoEvent} alt={'info' + this.props.shopPokemon.name}/>
-                <div className='infoImgBg'/>
-              </div>
-              <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass} pokemonSprites={this.props.newProps.pokemonSprites}/>
-            </div>
-            <div className='pokemonShopText'>
-              <span className={costColorTextClass}>{this.props.shopPokemon.display_name + '\n'}</span>
-              {(Array.isArray(this.props.shopPokemon.type) ?
-                <div>
-                  <span className={`type typeLeft ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
-                  <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
-                </div>
-                : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
-              {<span className={(this.props.newProps.gold < this.props.shopPokemon.cost ? 'redFont' : '')}>{'$' + this.props.shopPokemon.cost}</span>}
-            </div>
+        <div className={`pokemonImageDiv`}>
+          <div className='pokemonInfo'>
+            <img className='infoImg' src={getImage('info')} onClick={this.infoEvent} alt={'info' + this.props.shopPokemon.name}/>
+            <div className='infoImgBg'/>
           </div>
+          <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass} newProps={this.props.newProps}/>
+        </div>
+        <div className='pokemonShopText'>
+          <span className={costColorTextClass}>{this.props.shopPokemon.display_name + '\n'}</span>
+          {(Array.isArray(this.props.shopPokemon.type) ?
+            <div>
+              <span className={`type typeLeft ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
+              <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
+            </div>
+            : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
+          {<span className={(this.props.newProps.gold < this.props.shopPokemon.cost ? 'redFont' : '')}>{'$' + this.props.shopPokemon.cost}</span>}
+        </div>
+      </div>
     } else {
       content = <div className={`pokemonShopEmpty text_shadow`}>Empty</div>;
     }
@@ -335,7 +331,7 @@ class Cell extends Component {
           const classList = (pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '')) + ' absolute';
           // console.log('@rendereding pokemonImage classList', classList)
           return <div style={{position: 'relative'}}>
-            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList} pokemonSprites={this.props.newProps.pokemonSprites}/>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList} newProps={this.props.newProps}/>
             {hpBar}
             {manaBar}
             {actionMessage}
@@ -358,7 +354,7 @@ class Cell extends Component {
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           return <div>
-            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} pokemonSprites={this.props.newProps.pokemonSprites}/>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} newProps={this.props.newProps}/>
             {buffs}
           </div>
         }
@@ -545,13 +541,13 @@ class App extends Component {
       if(s.evolves_from) {
         evolves_from = <span className='flex'>
           <span className='paddingRight5 marginTop15'>Evolves from: </span>
-          <PokemonImage name={s.evolves_from} sideLength={40} pokemonSprites={this.props.pokemonSprites}/>
+          <PokemonImage name={s.evolves_from} sideLength={40} newProps={this.props}/>
         </span>;
       }
       if(s.evolves_to) {
         evolves_to = <span className='flex'>
           <span className='paddingRight5 marginTop15'>Evolves to: </span>
-          <PokemonImage name={s.evolves_to} sideLength={40} pokemonSprites={this.props.pokemonSprites}/>
+          <PokemonImage name={s.evolves_to} sideLength={40} newProps={this.props}/>
         </span>
       }
       const boardBuffs = this.props.boardBuffs;
@@ -607,7 +603,7 @@ class App extends Component {
   }
 
   statsRender = (className, name, allowSell=false) => {
-    const pokeEl= <PokemonImage name={name} sideLength={50} pokemonSprites={this.props.pokemonSprites}/>;
+    const pokeEl= <PokemonImage name={name} sideLength={50} newProps={this.props}/>;
     return <div className={className}>
       <div className='textAlignCenter'>
         <div>{this.props.stats.display_name}</div>
@@ -1175,7 +1171,7 @@ class App extends Component {
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={() => this.startGameEvent()}>
-            StartGame{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
+            StartGame{(this.props.connected ? (this.props.playersReady === -1 ? ' Connected!' : ` (${this.props.playersReady}/${this.props.connectedPlayers})`) : ' Connecting ...')}
           </button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers ? '' : 'hidden')}`} onClick={() => this.startGameEvent(true)}>
             Force Start Game{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
@@ -1216,16 +1212,11 @@ class App extends Component {
           </div>
         </div>
         <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
-          <CSSTransitionGroup
-            transitionName="messageUpdate"
-            transitionEnterTimeout={500}
-            transitionLeave={false}>
-            <div className={`updateMessage ${(this.props.messageMode === 'big' ? 'goldFont' : (this.props.messageMode === 'error' ? 'redFont' : ''))}`}>
-              {'Message: ' + this.props.message}
-            </div>
-          </CSSTransitionGroup>
+          <div className={`updateMessage ${(this.props.messageMode === 'big' ? 'goldFont' : (this.props.messageMode === 'error' ? 'redFont' : ''))}`}>
+            {'Message: ' + this.props.message}
+          </div>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={5} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={10} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
           {this.selectedUnitInformation()}
@@ -1284,9 +1275,9 @@ class App extends Component {
             <div>
               <div>
                 <div className='flex'>
-                  <Pokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
-                  <Pokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
-                  <Pokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
+                  <ShopPokemon shopPokemon={this.props.myShop[this.pos(0)]} index={0} newProps={this.props}/>
+                  <ShopPokemon shopPokemon={this.props.myShop[this.pos(1)]} index={1} newProps={this.props}/>
+                  <ShopPokemon shopPokemon={this.props.myShop[this.pos(2)]} index={2} newProps={this.props}/>
                 </div>
                 <div className='flex'>
                   <div className='shopInteractDiv'>
@@ -1302,8 +1293,8 @@ class App extends Component {
                       <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
                     </div>
                   </div>
-                  <Pokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
-                  <Pokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
+                  <ShopPokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
+                  <ShopPokemon shopPokemon={this.props.myShop[this.pos(4)]} index={4} newProps={this.props} className='paddingLeft30'/>                
                 </div>
               </div>
             </div>

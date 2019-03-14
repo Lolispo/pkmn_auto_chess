@@ -16,6 +16,13 @@ const configureSocket = dispatch => {
     console.log('connected');
     dispatch({type: 'SET_CONNECTED', connected: true})
     giveId();
+    getSprites();
+    /*const sprites = localStorage.getItem('sprites');
+    if(sprites){
+      dispatch({ type: 'LOAD_SPRITES_JSON', sprites});
+    } else {
+      getSprites();
+    }*/
   });
 
   socket.on('disconnect', () => {
@@ -25,6 +32,7 @@ const configureSocket = dispatch => {
   });
 
   socket.on('LOAD_SPRITES_JSON', pokemonSprites => {
+    // localStorage.setItem('sprites', JSON.stringify(pokemonSprites));
     dispatch({ type: 'LOAD_SPRITES_JSON', pokemonSprites});
   });
 
@@ -129,5 +137,8 @@ export const getStats = (name) =>
 
 export const sendMessage = message => 
   socket.emit('SEND_MESSAGE', message);
+
+export const getSprites = () => 
+  socket.emit('GET_SPRITES');
 
 export default configureSocket;

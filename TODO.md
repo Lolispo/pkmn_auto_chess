@@ -22,14 +22,16 @@ Mana: 15% of damage to mana or 10
 ## Crash and Tests for ingame
 
 Crash: 
-    Refill pieces
     Eevee
     Player death
 
 Fixed Check:
     Bonus effect from same family - mankey and primeape got fighting bonus
 
+    Refill pieces
     refillPieces seems to work, changing back to og size
+
+    Give battle won gold reward
 
 Test me ingame:
     Player loses
@@ -48,12 +50,6 @@ Known issues:
 # Fix me - Prio
     
     update lock from state (so it is not desynched)
-
-    Streak Css
-
-    streak ended by gymbattle
-
-    Give battle won gold reward
 
     Eevee evolution crash
     
@@ -76,10 +72,6 @@ Players die same round
         Check after each elimination if only one player left
 
 Sp.attack Sp.defense for ability calculations
-
-all images in json, base64
-    would fix ddos problem
-    would fix transferring all images problems, since all are loaded in beginning
 
 Something doing 0.5 damage (brock vs parasect)
 
@@ -199,7 +191,12 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
-Only get gifs if not cached
+GrowText better
+    Firefox looks bad
+
+Cache / Store gifs somehow in browser?
+    Only get sprites if not stored
+    Localstorage was not big enough, might not be possible
 
 Animate movement after this idea: https://gyazo.com/a93563fc0700cd764da9120fd0b49a38
     Requires keyFrames to depend on variables

@@ -267,6 +267,7 @@ const reducer = (
       if(state.index === action.winningPlayer.index){
         newMusic = getBackgroundAudio('wonGame')
       }
+      state.players[action.winningPlayer.index].hp = 0;
       state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic}
       break;
     case 'DEAD_PLAYER':

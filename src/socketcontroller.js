@@ -92,6 +92,9 @@ module.exports = (socket, io) => {
     connectedPlayers = connectedPlayers.set(socket.id, newUser);
     countReadyPlayers(false, socket, io);
     // TODO: Handle many connected players
+  });
+  
+  socket.on('GET_SPRITES', async () => {    
     if(f.isUndefined(pokemonSpritesJSON)){
       pokemonSpritesJSON = await pokemonJS.getPokemonSprites();
     }

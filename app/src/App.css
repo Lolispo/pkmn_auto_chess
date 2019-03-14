@@ -546,61 +546,49 @@ body {
 }
 
 .animateN {
-  animation: attackN 0.3s ease-in 0s alternate 1 both running;
+  animation: attackN 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateNW {
-  animation: attackNW 0.3s ease-in 0s alternate 1 both running;
+  animation: attackNW 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateNE {
-  animation: attackNE 0.3s ease-in 0s alternate 1 both running;
+  animation: attackNE 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateW {
-  animation: attackW 0.3s ease-in 0s alternate 1 both running;
+  animation: attackW 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateE {
-  animation: attackE 0.3s ease-in 0s alternate 1 both running;
+  animation: attackE 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateS {
-  animation: attackS 0.3s ease-in 0s alternate 1 both running;
+  animation: attackS 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateSW {
-  animation: attackSW 0.3s ease-in 0s alternate 1 both running;
+  animation: attackSW 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateSE {
-  animation: attackSE 0.3s ease-in 0s alternate 1 both running;
+  animation: attackSE 0.3s ease-in 0s normal 1 both running;
 }
 
 .animateDead {
-  animation: shrinkDown 1s ease-in 0s alternate 1 both running;
+  animation: shrinkDown 1s ease-in 0s normal 1 both running;
 }
 
-
-.example-enter {
-  transform: scale(0.3);
+.rotate {
+  animation: rotate 0.3s ease-in 0s normal 1 both running;
 }
 
-.example-enter.example-enter-active {
-  transform: scale(1);
-  transition: all 300ms ease-in;
+@keyframes rotate {
+  0% {transform: rotate(0deg);} /*var(--rotation)*/
+  100% {transform: rotate(180deg);} /*var(--rotationGoal)*/
 }
-
-/*
-.example-leave {
-  transform: opacity(0);
-}
-
-.example-leave.example-leave-active {
-  transform: scale(0.01);
-  transition: all 500ms ease-in;
-}
-*/
 
 .boardBuffs{
   height: 240px;
@@ -802,6 +790,7 @@ body {
   position: absolute;
   width: 35px;
   height: 35px;
+  animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
 }
 
 .typeElement {
