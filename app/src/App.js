@@ -62,7 +62,6 @@ class PokemonImage extends Component{
     }
     const baseMarginTop = paddingTop + height - 15;
     const baseMarginLeft = 85 - width - 7;
-    // TODO: PokemonSpawn -> movement
     const imgEl = <img
       className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : 'pokemonSpawn')} ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
       key={src}
@@ -71,8 +70,6 @@ class PokemonImage extends Component{
       alt='Pokemon'
       onLoad={this.onImgLoad}
     />
-    // imgEl.style.setProperty('rotation', 0);
-    // imgEl.style.setProperty('rotationGoal', 180);
     return (
       <div>
         {(this.props.renderBase ? <div key={this.props.renderBase} className={`pokemonImageBase ${this.props.renderBase}`} 
@@ -754,7 +751,7 @@ class App extends Component {
     console.log('@sellPiece', validUnit, from, prop.selectedUnit.isBoard)
     // From contains unit, hand unit is ok during battle
     // TODO: Remove false && and fix allowing sellPiece during battle, currently weird
-    if(validUnit && prop.gameIsLive && (!prop.onGoingBattle || (false && !prop.selectedUnit.isBoard))){ 
+    if(validUnit && prop.gameIsLive && (!prop.onGoingBattle || (!prop.selectedUnit.isBoard))){ // false &&
       sellPiece(prop.storedState, String(from));
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
@@ -848,13 +845,12 @@ class App extends Component {
     const newHp = newBoard[target].hp - value;
     if(newHp <= 0){
       // TODO: Death Animation then remove
+      newBoard[target].hp = newHp;
       newBoard[target].animateMove = {
-        animation: 'animateDead' + ' 0.5s',
+        animation: 'deathAnimation 1.0s', // TODO: Test on normal div if animation work
+        animationFillMode: 'forwards', 
       }; 
-      delete newBoard[target]; 
-/*      await setTimeout(() => {
-      }, 1)
-*/
+      //delete newBoard[target]; 
     } else {
       newBoard[target].hp = newHp;
     }
@@ -964,13 +960,18 @@ class App extends Component {
     }
   }
 
-  endOfBattleClean = (battleBoard) => {
+  endOfBattleClean = (battleBoard, winner) => {
     const unitsAlive = Object.keys(battleBoard);
     for(let i = 0; i < unitsAlive.length; i++){
       // Jumping animation
-      battleBoard[unitsAlive[i]].winningAnimation = true;
-      console.log('Setting winningAnimation', unitsAlive[i], battleBoard[unitsAlive[i]]);
-      battleBoard[unitsAlive[i]].actionMessage = '';
+      if(battleBoard[unitsAlive[i]].hp > 0 && battleBoard[unitsAlive[i]].team === (winner ? 0 : 1)){
+        battleBoard[unitsAlive[i]].winningAnimation = true;
+        console.log('Setting winningAnimation', unitsAlive[i], battleBoard[unitsAlive[i]]);
+        battleBoard[unitsAlive[i]].actionMessage = '';
+      } else {
+        // console.log('HEY', battleBoard[unitsAlive[i]].hp > 0, battleBoard[unitsAlive[i]].team === (winner ? 0 : 1), battleBoard[unitsAlive[i]].hp > 0 && battleBoard[unitsAlive[i]].team === (winner ? 0 : 1));
+        // delete battleBoard[unitsAlive[i]]; 
+      }
     }
     return battleBoard;
   }
@@ -984,7 +985,7 @@ class App extends Component {
   }
 
   startBattleEvent = async () => {
-    const { dispatch, actionStack, battleStartBoard } = this.props;
+    const { dispatch, actionStack, battleStartBoard, winner } = this.props;
     if(this.props.isDead){
       return;
     }
@@ -1013,7 +1014,8 @@ class App extends Component {
       counter += 1;
     }
     if(actionStack.length === 0){
-      board = await this.endOfBattleClean(battleStartBoard);
+      await this.wait(1000);
+      board = await this.endOfBattleClean(battleStartBoard, winner);
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
       const winningTeam = (Object.values(battleStartBoard)[0] ? Object.values(battleStartBoard)[0].team : 1);
       // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
@@ -1404,6 +1406,7 @@ const mapStateToProps = state => ({
   startBattle: state.startBattle,
   actionStack: state.actionStack,
   battleStartBoard: state.battleStartBoard,
+  winner: state.winner,
   selectedUnit: state.selectedUnit,
   mouseOverId: state.mouseOverId,
   stats: state.stats,

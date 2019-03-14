@@ -520,7 +520,7 @@ body {
   0%    {transform: translate(0px);}
   15%   {transform: translate(0px, -10px);}
   30%   {transform: translate(0px);}
-  65%   {transform: translate(0px, -20px);}
+  65%   {transform: translate(0px, -25px);}
   100%  {transform: translate(0px);}
 }
 
@@ -609,9 +609,10 @@ body {
 }
 
 @keyframes deathAnimation {
-  0%    {transform: rotate(0deg)};
-  50%   {transform: rotate(90deg), scale(1)}
-  100%  {transform: scale(0.01)}
+  0%    {transform: translate(0)};
+  20%   {transform: translateY(0, 300px)}
+  50%   {transform: scale(0.01)}
+  100%   {transform: scale(0.01)}
 }
 
 .rotate {
@@ -968,8 +969,8 @@ body {
 }
 
 @keyframes move1E {
-    0% {transform: translate(85px, 0)}
-      100% {transform: translate(0px)}
+  0% {transform: translate(85px, 0)}
+  100% {transform: translate(0px)}
 }
 
 @keyframes move1W {

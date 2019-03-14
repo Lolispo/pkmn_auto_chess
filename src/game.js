@@ -638,7 +638,7 @@ async function getDirection(unitPos, path){
 async function getStepMovePos(board, unitPos, closestEnemyPos) {
   const stepsToTake = Math.floor(Math.random() * 2 + 1); // 1 currently //  1 - 2, * 2
   const rangeToTarget = getHeuristicScore(unitPos, closestEnemyPos);
-  if (stepsToTake > rangeToTarget) { // Within range, move to closest available space
+  if (stepsToTake > rangeToTarget && rangeToTarget === 1) { // Within range, move to closest available space
     const goal = getMovePos(board, closestEnemyPos, 1, team);
     const direction = await getDirection(unitPos, goal);
     // console.log('Move direction: ', direction);

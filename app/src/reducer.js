@@ -46,6 +46,7 @@ const reducer = (
     startBattle: false,
     actionStack: {},
     battleStartBoard: {},
+    winner: false,
     selectedUnit: -1,
     mouseOverId: -1,
     stats: {},
@@ -153,6 +154,7 @@ const reducer = (
         startBattle: false,
         actionStack: {},
         battleStartBoard: {},
+        winner: false,
         selectedUnit: -1,
         soundEffects: ['', '', '', '', '','', '', '', '', ''],
         music: getBackgroundAudio('idle'),
@@ -196,6 +198,7 @@ const reducer = (
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];
       const battleStartBoard = action.battleStartBoards[state.index];
+      const winner = action.winners[state.index];
       // console.log('@battle_time', state.soundEffects)
       tempSoundEffects = getNewSoundEffects(state.soundEffects, getSoundEffect('horn'));
       state = {
@@ -206,9 +209,10 @@ const reducer = (
         enemyIndex: action.enemy,
         actionStack,
         battleStartBoard,
+        winner,
         startBattle: true,
       }
-      // console.log('@battleTime actionStack', state.actionStack);
+      console.log('@battleTime actionStack', state.actionStack);
       // console.log('@battleTime battleStartBoard', state.battleStartBoard)
       // TODO: BattleStartBoard contain unneccessary amount of information
       break;

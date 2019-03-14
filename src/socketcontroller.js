@@ -300,7 +300,7 @@ module.exports = (socket, io) => {
         sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, newState);
         sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
         if (f.isUndefined(actionStacks)) console.log('@socketController undefined actionStacks', battleObject);
-        const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 2000;
+        const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 3000;
 
         const iter = connectedSessionPlayers.keys();
         let temp = iter.next();
@@ -311,7 +311,7 @@ module.exports = (socket, io) => {
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
           io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
-          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, enemy);
+          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, enemy);
           temp = iter.next();
         }
         setTimeout(async () => {

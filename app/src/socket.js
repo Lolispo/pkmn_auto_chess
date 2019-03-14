@@ -17,12 +17,14 @@ const configureSocket = dispatch => {
     dispatch({type: 'SET_CONNECTED', connected: true})
     giveId();
     getSprites();
-    /*const sprites = localStorage.getItem('sprites');
+    /*
+    const sprites = localStorage.getItem('sprites');
     if(sprites){
       dispatch({ type: 'LOAD_SPRITES_JSON', sprites});
     } else {
       getSprites();
-    }*/
+    }
+    */
   });
 
   socket.on('disconnect', () => {
@@ -61,8 +63,8 @@ const configureSocket = dispatch => {
     dispatch({ type: 'READY', playersReady: playersReady, connectedPlayers: connectedPlayers});
   });
   
-  socket.on('BATTLE_TIME', (actionStacks, battleStartBoards, enemy) => {
-    dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards, enemy});
+  socket.on('BATTLE_TIME', (actionStacks, battleStartBoards, winners, enemy) => {
+    dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards, winners, enemy});
   });
 
   socket.on('END_BATTLE', () => {

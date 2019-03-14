@@ -197,7 +197,7 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
-Reverse flame
+Last attack isn't displayed
 
 Types leftbar:
     Sort by Bonus
