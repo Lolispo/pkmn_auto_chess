@@ -335,7 +335,7 @@ class Cell extends Component {
         let styleVar = {position: 'relative'};
         if(pokemon && pokemon.animateMove){
           styleVar = pokemon.animateMove;
-          console.log('StyleVar', pokemon.name, styleVar)
+          // console.log('StyleVar', pokemon.name, styleVar)
         }
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
@@ -859,28 +859,6 @@ class App extends Component {
     return newBoard;
   }
 
-  getStyleMargins = async (unitPos, target) => {
-    const u = unitPos.split(',');
-    const t = target.split(',');
-    const ux = u[0];
-    const uy = u[1];
-    const tx = t[0];
-    const ty = t[1];
-    const top = -(uy - ty);
-    const left = (ux - tx);
-    console.log('@getStyleMargins', top, left)
-    let alternateAnimation = this.props.alternateAnimation;
-    alternateAnimation = !alternateAnimation;
-    this.props.dispatch({type: 'TOGGLE_ALTERNATE_ANIMATION'}); 
-    const animationKeyframe = alternateAnimation ? 'movement-animation1' : 'movement-animation2';
-    // styleVar['animation'] = animationKeyframe + ' 2s';
-    return {
-      marginTop: top * 85 + 'px',
-      marginLeft: left * 85 + 'px',
-      animation: animationKeyframe + ' 1s',
-    }
-  }
-
   renderMove = async (nextMove, board) => {
     let newBoard = board;
     // console.log('@Time: ', timeToWait, board);
@@ -898,7 +876,6 @@ class App extends Component {
         delete newBoard[unitPos];        // Remove unit from previous pos
         newBoard[target] = unit;         // Add unit to new pos on board
         newBoard[target].actionMessage = '';
-        // newBoard[target].animateMove = await this.getStyleMargins(unitPos, target);
         newBoard[target].animateMove = {
           animation: 'move' + direction + ' 0.5s',
         };
@@ -1054,8 +1031,8 @@ class App extends Component {
       <div className='playerScoreboardInner'>
         <span>{'Player ' + player.index + '\n'}</span>
         {(this.props.players[player.index].streak ? <span>
-          <img className='trophy' src={getImage('trophy')} alt='trophy'/>
-          <span className='streak'>{this.props.players[player.index].streak}</span>
+          <img className='trophy' src={(this.props.players[player.index].streak > 0 ? getImage('flame') : getImage('icecube'))} alt='trophy'/>
+          <span className='streak'>{Math.abs(this.props.players[player.index].streak)}</span>
         </span> : '')}
         <div className='playerHpBarDiv'>
           <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 

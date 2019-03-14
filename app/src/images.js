@@ -15,6 +15,7 @@ import pieceImg from './assets/images/piece.png';
 import info from './assets/images/info.png';
 import trophy from './assets/images/trophy.png';
 import flame from './assets/images/flame.png';
+import icecube from './assets/images/icecube.png';
 import pokedollar from './assets/images/pokedollarWhite.png';
 
 // Type images
@@ -68,6 +69,8 @@ export function getImage(name) {
     case 'trophy':
     case 'flame':
       return flame;
+    case 'icecube':
+      return icecube;
     default:  
       return info;
   }
