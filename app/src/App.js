@@ -1017,9 +1017,8 @@ class App extends Component {
       await this.wait(1000);
       board = await this.endOfBattleClean(battleStartBoard, winner);
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
-      const winningTeam = (Object.values(battleStartBoard)[0] ? Object.values(battleStartBoard)[0].team : 1);
       // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
-      if(winningTeam === 0) {
+      if(winner) {
         updateMessage(this.props, 'Battle won!', 'big');
         dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
       } else {
@@ -1250,7 +1249,7 @@ class App extends Component {
             {'Message: ' + this.props.message}
           </div>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={5} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
           {this.selectedUnitInformation()}

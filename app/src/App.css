@@ -518,9 +518,9 @@ body {
 
 @keyframes jump {
   0%    {transform: translate(0px);}
-  15%   {transform: translate(0px, -10px);}
+  15%   {transform: translate(0px, -8px);}
   30%   {transform: translate(0px);}
-  65%   {transform: translate(0px, -25px);}
+  65%   {transform: translate(0px, -20px);}
   100%  {transform: translate(0px);}
 }
 
@@ -610,7 +610,7 @@ body {
 
 @keyframes deathAnimation {
   0%    {transform: translate(0)};
-  20%   {transform: translateY(0, 300px)}
+  20%   {transform: translate(0, 300px)}
   50%   {transform: scale(0.01)}
   100%   {transform: scale(0.01)}
 }
@@ -670,6 +670,7 @@ body {
   position: absolute; 
   margin-top: 69px;
   font-size: 12px;
+  z-index: 4;
 }
 
 .friendlyBar {

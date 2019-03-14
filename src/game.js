@@ -65,7 +65,7 @@ async function refillPieces(pieces, discardedPieces) {
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     console.log('@refillPieces', name);
-    const cost = (await pokemonJS.getStats(discardedPieces.get(i))).get('cost');
+    const cost = (await pokemonJS.getStats(name)).get('cost');
     pieceStorage = await f.push(pieceStorage, cost - 1, name);
   }
   return pieceStorage;
@@ -337,15 +337,15 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
       board = board.delete(positions.get(i));
     }
     state = state.setIn(['players', playerIndex, 'board'], board);
-    const evolvesTo = stats.get('evolves_to');
-    // Check if multiple evolutions exist, random between
-    let newPiece;
+    const evolvesUnit = stats.get('evolves_to');
+    let evolvesTo = evolvesUnit;
     if (!f.isUndefined(evolvesTo.size)) { // List
-      newPiece = await getBoardUnit(evolvesTo.get(f.getRandomInt(evolvesTo.size)), f.x(position), f.y(position));
-    } else { // Value
-      newPiece = await getBoardUnit(evolvesTo, f.x(position), f.y(position));
+      evolvesTo = evolvesUnit.get(f.getRandomInt(evolvesTo.size))
     }
+    // Check if multiple evolutions exist, random between
+    const newPiece = await getBoardUnit(evolvesTo, f.x(position), f.y(position));
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
+    // TODO: List -> handle differently
     const evolutionDisplayName = (await pokemonJS.getStats(evolvesTo)).get('display_name');
     console.log('evolutionDisplayName', evolutionDisplayName);
     const nextPieceUpgrade = await checkPieceUpgrade(state, playerIndex, newPiece, position);
@@ -464,6 +464,7 @@ async function discardBaseUnits(state, name, depth = '1') {
     }
     return state.set('discardedPieces', discPieces);
   }
+  console.log('CHECK ME IF CRASH', evolutionFrom);
   const newName = evolutionFrom.get('name');
   return discardBaseUnits(state, newName, depth + 1);
 }
@@ -490,11 +491,12 @@ async function sellPiece(state, playerIndex, piecePosition) {
     const unitToSell = newState.getIn(['players', playerIndex, 'hand', piecePosition]);
     const newHand = newState.getIn(['players', playerIndex, 'hand']).delete(piecePosition);
     const newDiscardedPieces = newState.set('discardedPieces', newState.get('discardedPieces').push(unitToSell.get('name')));
-    newState = newState.setIn(['players', playerIndex, 'hand'], newHand);
+    newState = newDiscardedPieces.setIn(['players', playerIndex, 'hand'], newHand);
   } else {
     const unitToSell = newState.getIn(['players', playerIndex, 'board', piecePosition]);
     const newBoard = newState.getIn(['players', playerIndex, 'board']).delete(piecePosition);
-    newState = newState.setIn(['players', playerIndex, 'board'], newBoard);
+    const newDiscardedPieces = newState.set('discardedPieces', newState.get('discardedPieces').push(unitToSell.get('name')));
+    newState = newDiscardedPieces.setIn(['players', playerIndex, 'board'], newBoard);
   }
   // Add units to discarded Cards, add base level of card
   return discardBaseUnits(newState, piece.get('name'));
@@ -694,7 +696,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
     pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy + 1)); // SE
   }
   console.log('DIDNT FIND PATH. RETURNING ', unitPos);
-  return unitPos;
+  return Map({movePos: unitPos, direction: ''});
 }
 
 /**

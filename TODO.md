@@ -22,7 +22,6 @@ Mana: 15% of damage to mana or 10
 ## Crash and Tests for ingame
 
 Crash: 
-    Eevee
     Player death
 
 Fixed Check:
@@ -49,13 +48,13 @@ Known issues:
 
 # Fix me - Prio
     
+    Ready not reacting?
+
     Lose hp on gym waves? Wanted or not? does it happen?
 
     Dead_player on scoreboard, different css
 
     update lock from state (so it is not desynched)
-
-    Eevee evolution crash
     
     DotDamage - NOT MATCHING UP
 
@@ -197,7 +196,17 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Eevee stats panel (takes big size)
+
+clear chat after a while?
+
+Display cost / level
+
 Last attack isn't displayed
+
+better death animation
+
+cube padding top increase
 
 Types leftbar:
     Sort by Bonus
