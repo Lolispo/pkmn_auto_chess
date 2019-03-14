@@ -197,6 +197,8 @@ Finish abilities implementation (teleport)
 
 ## Frontend
 
+Reverse flame
+
 Types leftbar:
     Sort by Bonus
     Show goals for types in leftbar

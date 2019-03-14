@@ -147,6 +147,7 @@ async function refreshShop(stateParam, playerIndex) {
   let pieceStorage = state.get('pieces');
   let discPieces = state.get('discardedPieces');
   for (let i = 0; i < 5; i++) { // Loop over pieces
+    if(!level) console.log('@refreshShop adding piece', level, playerIndex)
     const obj = await addPieceToShop(newShop, f.pos(i), pieceStorage, level, discPieces);
     newShop = obj.newShop;
     pieceStorage = obj.pieceStorage;
@@ -399,7 +400,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
       upgradeOccured = obj.get('upgradeOccured');
     }
   }
-  console.log(state.getIn(['players', playerIndex, 'board']));
+  // console.log(state.getIn(['players', playerIndex, 'board']));
   const markedResults = await markBoardBonuses(state.getIn(['players', playerIndex, 'board']));
   const buffMap = markedResults.get('buffMap').get('0');
   const typeBuffMapSolo = markedResults.get('typeBuffMapSolo').get('0');
@@ -608,11 +609,40 @@ function handleNeighbor(pathFind, board, current, enemyPos, pos) {
   return pathFind.setIn(['cameFrom', pos], current).setIn(['fromStartScore', pos], distanceTraveled).setIn(['heuristicScore', pos], heuristicScore);
 }
 
+async function getDirection(unitPos, path){
+  const ux = f.x(unitPos);
+  const uy = f.y(unitPos);
+  const tx = f.x(path);
+  const ty = f.y(path);
+  const y = (ty - uy);
+  const x = (tx - ux);
+  let sx = '';
+  let sy = '';
+  if(x !== 0) {
+    let type = 'W';
+    if(x > 0){
+      type = 'E';
+    }
+    sx = Math.abs(x) + type;
+  }
+  if(y !== 0) {
+    let type = 'S';
+    if(y > 0){
+      type = 'N';
+    }
+    sy = Math.abs(y) + type;
+  }
+  return sy + sx;
+}
+
 async function getStepMovePos(board, unitPos, closestEnemyPos) {
-  const stepsToTake = Math.floor(Math.random() * 2 + 1); // 1 - 2
+  const stepsToTake = Math.floor(Math.random() * 2 + 1); // 1 currently //  1 - 2, * 2
   const rangeToTarget = getHeuristicScore(unitPos, closestEnemyPos);
   if (stepsToTake > rangeToTarget) { // Within range, move to closest available space
-    return getMovePos(board, closestEnemyPos, 1, team);
+    const goal = getMovePos(board, closestEnemyPos, 1, team);
+    const direction = await getDirection(unitPos, goal);
+    console.log('Move direction: ', direction);
+    return Map({movePos: goal, direction});
   } // More TOWARDS unit with stepsToTake amount of steps
   let pathFind = Map({
     fromStartScore: Map({}).set(unitPos, 0), // gScore
@@ -642,7 +672,9 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
           index = stepsToTake;
         }
         // console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
-        return path.get(index);
+        const direction = await getDirection(unitPos, path.get(index));
+        console.log('Move direction: ', direction);
+        return Map({movePos: path.get(index), direction});
       }
     }
     // console.log('@Path Current', current);
@@ -1044,7 +1076,9 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     });
   } // Move action
   const closestEnemyPos = enemyPos.get('closestEnemy');
-  const movePos = await getStepMovePos(board, unitPos, closestEnemyPos);
+  const movePosObj = await getStepMovePos(board, unitPos, closestEnemyPos);
+  const movePos = movePosObj.get('movePos');
+  const direction = movePosObj.get('direction');
   f.p('Move: ', unitPos, 'to', movePos);
   let newBoard;
   let action;
@@ -1055,7 +1089,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     newBoard = board.set(movePos, unit.set('position', movePos)).delete(unitPos);
     action = 'move';
   }
-  const move = Map({ unitPos, action, target: movePos });
+  const move = Map({ unitPos, action, target: movePos, direction });
   return Map({ nextMove: move, newBoard });
 }
 
@@ -1735,8 +1769,11 @@ async function endTurn(stateParam) {
     state = state.set('income_basic', income_basic);
   }
 
-  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
-    const index = String(i);
+  // While temp
+  const iter = state.get('players').keys();
+  let temp = iter.next();
+  while (!temp.done) {
+    const index = temp.value;
     const locked = state.getIn(['players', index, 'locked']);
     if (!locked) {
       state = await refreshShop(state, index);
@@ -1751,12 +1788,17 @@ async function endTurn(stateParam) {
       (streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1),
     ), 3) : 0);
     const newGold = gold + income_basic + bonusGold + streakGold;
-    console.log(`@playerEndTurn Gold: p[${i + 1}]: `,
+    console.log(`@playerEndTurn Gold: p[${index + 1}]: `,
       `${gold}, ${income_basic}, ${bonusGold}, ${streakGold} (${streak}) = ${newGold}`);
     state = state.setIn(['players', index, 'gold'], newGold);
     // console.log(i, '\n', state.get('pieces').get(0));
     // state = state.set(i, state.getIn(['players', i]));
+    temp = iter.next();
   }
+  /*
+  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
+    const index = String(i);
+  }*/
   const newState = await state;
   return newState;
 }

@@ -54,6 +54,7 @@ class PokemonImage extends Component{
     const paddingTop = this.state.paddingTop;
     let src;
     if(this.props.newProps.pokemonSprites){
+      if(!this.props.newProps.pokemonSprites.pokemon[this.props.name]) console.log('Undefined image', this.props.name, this.props.newProps.pokemonSprites.pokemon[this.props.name]);
       src = 'data:image/gif;base64,' + this.props.newProps.pokemonSprites.pokemon[this.props.name].front;
       if(this.props.back){
         src = 'data:image/gif;base64,' + this.props.newProps.pokemonSprites.pokemon[this.props.name].back;
@@ -63,7 +64,7 @@ class PokemonImage extends Component{
     const baseMarginLeft = 85 - width - 7;
     // TODO: PokemonSpawn -> movement
     const imgEl = <img
-      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? 'pokemonSpawn temp' : 'pokemonSpawn')} ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
+      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : 'pokemonSpawn')} ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
       key={src}
       style={{paddingTop: paddingTop, width: width, height: height}}
       src={src}
@@ -156,7 +157,12 @@ class ShopPokemon extends Component{
               <span className={`type ${this.props.shopPokemon.type[1]}`}>{this.props.shopPokemon.type[1] + '\n'}</span>
             </div>
             : <span className={`type ${this.props.shopPokemon.type}`}>{this.props.shopPokemon.type + '\n'}</span>)}
-          {<span className={(this.props.newProps.gold < this.props.shopPokemon.cost ? 'redFont' : '')}>{'$' + this.props.shopPokemon.cost}</span>}
+          {<span className={(this.props.newProps.gold < this.props.shopPokemon.cost ? 'redFont' : '')}>
+            {<span>
+              <img className='goldImageShop' style={{paddingLeft: '0px', marginLeft: '0px'}} src={getImage('goldCoin')} alt='goldCoin'/>
+            </span>}
+            <span className='shopCostText'>{/*'$' + */this.props.shopPokemon.cost}</span>
+          </span>}
         </div>
       </div>
     } else {
@@ -326,11 +332,16 @@ class Cell extends Component {
             {pokemon.actionMessage}
           </div>
           : '');
+        let styleVar = {position: 'relative'};
+        if(pokemon && pokemon.animateMove){
+          styleVar = pokemon.animateMove;
+          console.log('StyleVar', pokemon.name, styleVar)
+        }
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           const classList = (pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '')) + ' absolute';
           // console.log('@rendereding pokemonImage classList', classList)
-          return <div style={{position: 'relative'}}>
+          return <div className={`relative`} style={styleVar}>
             <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList} newProps={this.props.newProps}/>
             {hpBar}
             {manaBar}
@@ -545,10 +556,21 @@ class App extends Component {
         </span>;
       }
       if(s.evolves_to) {
-        evolves_to = <span className='flex'>
-          <span className='paddingRight5 marginTop15'>Evolves to: </span>
-          <PokemonImage name={s.evolves_to} sideLength={40} newProps={this.props}/>
-        </span>
+        if(Array.isArray(s.evolves_to)){
+          const evoList = [];
+          for(let i = 0; i < s.evolves_to.length; i++){
+            evoList.push(<span className='flex' key={'evo'+s.evolves_to[i]}>
+              <span className='paddingRight5 marginTop15'>Evolves to: </span>
+              <PokemonImage name={s.evolves_to[i]} sideLength={40} newProps={this.props}/>
+            </span>)
+          }
+          evolves_to = evoList;
+        } else {
+          evolves_to = <span className='flex'>
+            <span className='paddingRight5 marginTop15'>Evolves to: </span>
+            <PokemonImage name={s.evolves_to} sideLength={40} newProps={this.props}/>
+          </span>
+        }
       }
       const boardBuffs = this.props.boardBuffs;
       const buffs = {};
@@ -567,7 +589,7 @@ class App extends Component {
         // Object.keys(boardBuffs.typeDebuffMapEnemy).forEach(e => {
         // });
       }
-      console.log('@buffs', buffs);
+      // console.log('@buffs', buffs);
       const content = <div className='center'>
         <div className='textAlignCenter marginTop5'>
         {(Array.isArray(s.type) ? 
@@ -813,6 +835,9 @@ class App extends Component {
     if(direction !== '') {
       newBoard[unitPos].attackAnimation = 'animate' + direction; 
     }
+    if(newBoard[unitPos].animateMove !== ''){
+      newBoard[unitPos].animateMove = '';
+    }
     if(manaChanges && Object.keys(manaChanges).length){
       Object.keys(manaChanges).forEach(e => {
         const unitPosManaChange = newBoard[e];
@@ -834,6 +859,28 @@ class App extends Component {
     return newBoard;
   }
 
+  getStyleMargins = async (unitPos, target) => {
+    const u = unitPos.split(',');
+    const t = target.split(',');
+    const ux = u[0];
+    const uy = u[1];
+    const tx = t[0];
+    const ty = t[1];
+    const top = -(uy - ty);
+    const left = (ux - tx);
+    console.log('@getStyleMargins', top, left)
+    let alternateAnimation = this.props.alternateAnimation;
+    alternateAnimation = !alternateAnimation;
+    this.props.dispatch({type: 'TOGGLE_ALTERNATE_ANIMATION'}); 
+    const animationKeyframe = alternateAnimation ? 'movement-animation1' : 'movement-animation2';
+    // styleVar['animation'] = animationKeyframe + ' 2s';
+    return {
+      marginTop: top * 85 + 'px',
+      marginLeft: left * 85 + 'px',
+      animation: animationKeyframe + ' 1s',
+    }
+  }
+
   renderMove = async (nextMove, board) => {
     let newBoard = board;
     // console.log('@Time: ', timeToWait, board);
@@ -851,9 +898,12 @@ class App extends Component {
         delete newBoard[unitPos];        // Remove unit from previous pos
         newBoard[target] = unit;         // Add unit to new pos on board
         newBoard[target].actionMessage = '';
+        // newBoard[target].animateMove = await this.getStyleMargins(unitPos, target);
+        newBoard[target].animateMove = {
+          animation: 'move' + direction + ' 0.5s',
+        };
         return newBoard;
       case 'attack':
-        // TODO: Animate attack on unitPos
         console.log('Attack from', unitPos, 'to', target, 'with', value, 'damage');
         let actionMessage = '';
         if(typeEffective !== '') { // Either '' or Message
@@ -876,6 +926,9 @@ class App extends Component {
         }
         if(direction !== '') {
           newBoard[unitPos].attackAnimation = 'animate' + direction; 
+        }
+        if(newBoard[unitPos].animateMove !== ''){
+          newBoard[unitPos].animateMove = '';
         }
         let newHpSpell = newBoard[target].hp - value;
         console.log('Spell (' + abilityName + ') from', unitPos, 'to', target, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
@@ -1196,10 +1249,10 @@ class App extends Component {
         </div>
         {this.getAmountOfUnitsOnBoard()}
         <div className='flex' style={{paddingLeft: '65px'}}>
+          <img className='goldImage' src={getImage('goldCoin')} alt='goldCoin'/>
           <div className='marginTop5 biggerText'>
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
-          <img className='goldImage' src={getImage('goldCoin')} alt='goldCoin'/>
         </div>
         {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
           {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
@@ -1216,7 +1269,7 @@ class App extends Component {
             {'Message: ' + this.props.message}
           </div>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={10} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={5} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
           {this.selectedUnitInformation()}
@@ -1289,8 +1342,8 @@ class App extends Component {
                       <img className='refreshShopImage' onClick={this.refreshShopEvent} src={getImage('refreshShopImage')} alt='refreshShop'/>
                     </div>
                     <div className='flex'>
-                      <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
                       <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
+                      <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
                     </div>
                   </div>
                   <ShopPokemon shopPokemon={this.props.myShop[this.pos(3)]} index={3} newProps={this.props} className='pokemonShopHalf'/>
@@ -1312,8 +1365,8 @@ class App extends Component {
             <div>
               <button style={{marginLeft: '5px'}} className='normalButton' onClick={this.buyExpEvent}>Buy Exp</button>
               <div className='flex marginTop5'>
-                <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`} style={{marginLeft: '22px'}}>5</div>
-                <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
+                <img className='goldImageSmall' src={getImage('goldCoin')} style={{marginLeft: '28px'}} alt='goldCoin'/>
+                <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`}>5</div>
               </div>
             </div>
             <div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
@@ -1395,6 +1448,7 @@ const mapStateToProps = state => ({
   deadPlayers: state.deadPlayers,
   gameEnded: state.gameEnded,
   pokemonSprites: state.pokemonSprites,
+  alternateAnimation: state.alternateAnimation,
 });
 
 export default connect(mapStateToProps)(App);

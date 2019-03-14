@@ -67,6 +67,7 @@ const reducer = (
     boardBuffs: {},
     deadPlayers: {},
     pokemonSprites: {},
+    alternateAnimation: true,
   },
   action
 ) => {
@@ -107,18 +108,22 @@ const reducer = (
       state = { ...state,
         message: 'Updated player', 
         messageMode: '',
-        myHand: action.player.hand,
-        myBoard: action.player.board,
-        myShop: action.player.shop,
-        boardBuffs: action.player.boardBuffs,
-        level: action.player.level,
-        exp: action.player.exp,
-        expToReach: action.player.expToReach,
-        gold: action.player.gold,
-        streak: action.player.streak,
-      };
-      state.players[state.index] = action.player
-      state.storedState.players[state.index] = action.player;
+      }
+      if(!state.deadPlayers[state.index]){
+        state = {...state,
+          myHand: action.player.hand,
+          myBoard: action.player.board,
+          myShop: action.player.shop,
+          boardBuffs: action.player.boardBuffs,
+          level: action.player.level,
+          exp: action.player.exp,
+          expToReach: action.player.expToReach,
+          gold: action.player.gold,
+          streak: action.player.streak,
+        };
+        state.players[state.index] = action.player
+        state.storedState.players[state.index] = action.player;
+      }
       // console.log('@Updated player', state.storedState)
       break;
     case 'LOCK_TOGGLED':
@@ -279,8 +284,9 @@ const reducer = (
       }
       const deadPlayer = {index: action.pid, hp: 0, pos: state.position};
       const deadPlayers = state.deadPlayers;
-      deadPlayers[action.pid] = deadPlayer
+      deadPlayers[action.pid] = deadPlayer;
       state = {...state, deadPlayers}
+      console.log('reducer.Dead_player', state.deadPlayers, deadPlayers);
       break;
     case 'NEW_CHAT_MESSAGE':
       // console.log('@NEW_CHAT_MESSAGE', action.chatType);
@@ -301,6 +307,9 @@ const reducer = (
       }
       tempSoundEffects = getNewSoundEffects(state.soundEffects, soundEffect);
       state = {...state, soundEffects: [...tempSoundEffects]};
+      break;
+    case 'TOGGLE_ALTERNATE_ANIMATION':
+      state = {...state, alternateAnimation: !state.alternateAnimation}
       break;
     default:
       break;

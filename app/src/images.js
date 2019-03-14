@@ -14,6 +14,7 @@ import musicMuted from './assets/images/noteMuted.png';
 import pieceImg from './assets/images/piece.png';
 import info from './assets/images/info.png';
 import trophy from './assets/images/trophy.png';
+import flame from './assets/images/flame.png';
 import pokedollar from './assets/images/pokedollarWhite.png';
 
 // Type images
@@ -65,7 +66,8 @@ export function getImage(name) {
     case 'info':
       return info;
     case 'trophy':
-      return trophy;
+    case 'flame':
+      return flame;
     default:  
       return info;
   }

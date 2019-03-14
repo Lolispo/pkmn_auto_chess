@@ -127,6 +127,10 @@ body {
 
 .pokemonImg {
   display: block;
+  /*
+  margin-top: 0px;
+  margin-left: 0px;
+  */
   margin: auto;
   position: relative;
   z-index: 3;
@@ -401,12 +405,26 @@ body {
   width: 10px;
   /*padding-top: 1px;*/
   padding-top: 4px;
-  padding-left: 2px;
+  margin-left: 12px;
+}
+
+.goldImageShop {
+  height: 15px;
+  /*width: 18px;*/
+  width: 11px;
+  /*padding-top: 1px;*/
+  padding-top: 5px;
+  margin-left: 12px;
 }
 
 .goldImageTextSmall {
+  padding-left: 3px;
   margin-top: 3px; 
-  margin-left: 7px;
+}
+
+.shopCostText {
+
+  padding-left: 2px;
 }
 
 .biggerText{
@@ -806,6 +824,10 @@ body {
   position: relative;
 }
 
+.relative {
+  position: relative;
+}
+
 .typeTier {
   position: absolute;
   font-size: 20px;
@@ -938,3 +960,151 @@ body {
 .fairy {
   background-color: rgb(224, 58, 131);
 }
+
+@keyframes movement-animation1 {
+	0%{
+
+	}
+	100%{
+		margin-left: 0px;
+    margin-top: 0px;
+    /*
+    margin: auto;
+    */
+	}
+}
+
+/*Copy of animation1*/
+@keyframes movement-animation2 {
+	0%{
+
+	}
+	100%{
+		margin-left: 0px;
+    margin-top: 0px;
+    /*
+    margin: auto;
+    */
+	}
+}
+
+@keyframes move1E {
+    0% {transform: translate(85px, 0)}
+      100% {transform: translate(0px)}
+}
+
+@keyframes move1W {
+  0% {transform: translate(85px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S1E {
+  0% {transform: translate(-85px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S {
+  0% {transform: translate(0, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S1W {
+  0% {transform: translate(85px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N1E {
+  0% {transform: translate(-85px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N {
+  0% {transform: translate(0, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N1W {
+  0% {transform: translate(85px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2N {
+  0%	{transform: translate(0, 170px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes move2N1E {
+  0%	{transform: translate(-85px, 170px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes move2N2E {
+  0%	{transform: translate(-170px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N2E {
+  0%	{transform: translate(-170px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2E {
+  0%	{transform: translate(-170px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S2E {
+  0%	{transform: translate(-170px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S2E{
+  0%	{transform: translate(-170px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S1E {
+  0%	{transform: translate(-85px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S {
+  0%	{transform: translate(0, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S1W {
+  0%	{transform: translate(85px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S2W {
+  0%	{transform: translate(170px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S2W {
+  0%	{transform: translate(85px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2W {
+  0%	{transform: translate(170px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N2W {
+  0%	{transform: translate(170px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2N2W {
+  0%	{transform: translate(170px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2N1W {
+  0%	{transform: translate(85px, 170px)}
+  100% {transform: translate(0px)}
+}
+
