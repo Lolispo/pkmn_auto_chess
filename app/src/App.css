@@ -385,17 +385,23 @@ body {
 }
 
 .goldImage {
-  height: 30px;
-  width: 30px;
-  padding-top: 1px;
+  /*width: 30px;*/
+  height: 20px;
+  width: 16px;
   padding-left: 5px;
+  /*
+  padding-top: 1px;
+  */
+  padding-top: 7px;
 }
 
 .goldImageSmall {
-  height: 18px;
-  width: 18px;
-  padding-top: 1px;
-  padding-left: 5px;
+  height: 14px;
+  /*width: 18px;*/
+  width: 10px;
+  /*padding-top: 1px;*/
+  padding-top: 4px;
+  padding-left: 2px;
 }
 
 .goldImageTextSmall {
@@ -489,12 +495,15 @@ body {
 }
 
 .winningAnimation {
-  animation: jump 0.5s ease-in-out 0s alternate infinite both running;
+  animation: jump 1s ease-in-out 0s normal infinite both running;
 }
 
 @keyframes jump {
-  from  {transform: translate(0px, -20px);}
-  to    {transform: translate(0px);}
+  0%    {transform: translate(0px);}
+  15%   {transform: translate(0px, -10px);}
+  30%   {transform: translate(0px);}
+  65%   {transform: translate(0px, -20px);}
+  100%  {transform: translate(0px);}
 }
 
 @keyframes attackN {

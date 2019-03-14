@@ -49,6 +49,8 @@ Known issues:
 
 # Fix me - Prio
     
+    Lose hp on gym waves? Wanted or not? does it happen?
+
     Dead_player on scoreboard, different css
 
     update lock from state (so it is not desynched)
@@ -196,6 +198,7 @@ Finish abilities implementation (teleport)
 ## Frontend
 
 Types leftbar:
+    Sort by Bonus
     Show goals for types in leftbar
         bottom right corner having number of next tier to unlock
     Show bonus information

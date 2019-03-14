@@ -14,6 +14,7 @@ import musicMuted from './assets/images/noteMuted.png';
 import pieceImg from './assets/images/piece.png';
 import info from './assets/images/info.png';
 import trophy from './assets/images/trophy.png';
+import pokedollar from './assets/images/pokedollarWhite.png';
 
 // Type images
 import normal from './assets/images/types/typeNormal.png';
@@ -42,7 +43,9 @@ export function getImage(name) {
     case 'openLock':
       return openLock;
     case 'goldCoin':
-      return goldCoin;
+      //return goldCoin;
+    case 'pokedollar':
+      return pokedollar;
     case 'refreshShopImage':
       return refreshShopImage;
     case 'pokemonLogo':
