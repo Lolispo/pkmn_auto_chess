@@ -927,6 +927,7 @@ class App extends Component {
                 case 'noTarget':
                 case 'dot': {
                   // TODO Visualize 'dot' is appled to unit
+
                   actionMessageTarget = actionMessageTarget + '! Dot applied'
                   break;
                 }
@@ -1256,7 +1257,7 @@ class App extends Component {
             {'Message: ' + this.props.message}
           </div>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={10} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
           {this.selectedUnitInformation()}

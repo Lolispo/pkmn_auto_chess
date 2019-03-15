@@ -8,9 +8,9 @@ Timer -> 30 @ App '5'
 
 Pieces in board -> default @ game_constants
 
-hp -> 100 @ player
-
 debugMode -> false @ game_constants
+
+hp -> 100 @ player
 
 ## Check in Auto Chess
 
@@ -443,6 +443,7 @@ http -> Https
 
 Spinning wheel animating time between moves for all pokemon
     Easier to see when a unit does move
+    https://css-tricks.com/css-pie-timer/
 
 Startscreen: 
     Lobbies by Url
@@ -491,11 +492,6 @@ Automatic JSON download from google sheet
 Fix working npm script to start both react and node server
     Currently requires two terminals, concurrent script not working
 
-#### Rival: Rival battle when playing against a certain opponent
-    > 3 battles
-    Alt1: Either when playing against the person you played the most
-        Temp implementation makes this irrelevant
-
 #### Items
 
 More inspiration can be found [here](https://www.reddit.com/r/AutoChess/comments/ar4cjh/pokemon_autochess_concept/)
@@ -513,7 +509,6 @@ leftovers/lifesteal functionality
 
 Gym leader rounds:
     gives special item money,
-    max 3 hp round loss
     can give item (low chance)
 
 Shop rounds: 
