@@ -803,7 +803,7 @@
   "poliwag": {
     "name": "poliwag",
     "display_name": "Poliwag☆",
-    "cost": 3,
+    "cost": 2,
     "hp": 40,
     "attack": 50,
     "defense": 40,
@@ -815,7 +815,7 @@
   "poliwhirl": {
     "name": "poliwhirl",
     "display_name": "Poliwhirl☆☆",
-    "cost": 5,
+    "cost": 4,
     "hp": 65,
     "attack": 65,
     "defense": 65,
@@ -828,7 +828,7 @@
   "poliwrath": {
     "name": "poliwrath",
     "display_name": "Poliwrath☆☆☆",
-    "cost": 7,
+    "cost": 6,
     "hp": 90,
     "attack": 85,
     "defense": 95,
@@ -843,7 +843,7 @@
   "abra": {
     "name": "abra",
     "display_name": "Abra☆",
-    "cost": 2,
+    "cost": 1,
     "hp": 25,
     "attack": 20,
     "defense": 15,
@@ -855,7 +855,7 @@
   "kadabra": {
     "name": "kadabra",
     "display_name": "Kadabra☆☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 40,
     "attack": 35,
     "defense": 30,
@@ -868,7 +868,7 @@
   "alakazam": {
     "name": "alakazam",
     "display_name": "Alakazam☆☆☆",
-    "cost": 6,
+    "cost": 5,
     "hp": 55,
     "attack": 50,
     "defense": 45,
@@ -917,7 +917,7 @@
   "bellsprout": {
     "name": "bellsprout",
     "display_name": "Bellsprout☆",
-    "cost": 3,
+    "cost": 2,
     "hp": 50,
     "attack": 75,
     "defense": 35,
@@ -932,7 +932,7 @@
   "weepinbell": {
     "name": "weepinbell",
     "display_name": "Weepinbell☆☆",
-    "cost": 5,
+    "cost": 4,
     "hp": 65,
     "attack": 90,
     "defense": 50,
@@ -948,7 +948,7 @@
   "victreebel": {
     "name": "victreebel",
     "display_name": "Victreebel☆☆☆",
-    "cost": 7,
+    "cost": 6,
     "hp": 80,
     "attack": 105,
     "defense": 65,
@@ -1104,7 +1104,8 @@
       "steel"
     ],
     "ability": "thunderbolt",
-    "evolves_from": "magnemite"
+    "evolves_from": "magnemite",
+    "evolves_to": "magnezone"
   },
   "magnezone": {
     "name": "magnezone",
@@ -1208,7 +1209,7 @@
   "gastly": {
     "name": "gastly",
     "display_name": "Gastly☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 30,
     "attack": 35,
     "defense": 30,
@@ -1223,7 +1224,7 @@
   "haunter": {
     "name": "haunter",
     "display_name": "Haunter☆☆",
-    "cost": 6,
+    "cost": 5,
     "hp": 45,
     "attack": 50,
     "defense": 45,
@@ -1239,7 +1240,7 @@
   "gengar": {
     "name": "gengar",
     "display_name": "Gengar☆☆☆",
-    "cost": 8,
+    "cost": 7,
     "hp": 60,
     "attack": 65,
     "defense": 60,
@@ -1392,7 +1393,7 @@
   "horsea": {
     "name": "horsea",
     "display_name": "Horsea☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 30,
     "attack": 40,
     "defense": 70,
@@ -1404,7 +1405,7 @@
   "seadra": {
     "name": "seadra",
     "display_name": "Seadra☆☆",
-    "cost": 6,
+    "cost": 5,
     "hp": 55,
     "attack": 65,
     "defense": 95,
@@ -1417,7 +1418,7 @@
   "kingdra": {
     "name": "kingdra",
     "display_name": "Kingdra☆☆☆",
-    "cost": 8,
+    "cost": 7,
     "hp": 75,
     "attack": 95,
     "defense": 95,
@@ -1538,7 +1539,8 @@
     "speed": 105,
     "type": "electric",
     "ability": "thunderbolt",
-    "evolves_from": "elekid"
+    "evolves_from": "elekid",
+    "evolves_to": "electivire"
   },
   "electivire": {
     "name": "electivire",
@@ -1574,7 +1576,8 @@
     "speed": 93,
     "type": "fire",
     "ability": "flamethrower",
-    "evolves_from": "magby"
+    "evolves_from": "magby",
+    "evolves_to": "magmortar"
   },
   "magmortar": {
     "name": "magmortar",
@@ -1670,7 +1673,7 @@
   "omanyte": {
     "name": "omanyte",
     "display_name": "Omanyte☆",
-    "cost": 4,
+    "cost": 3,
     "hp": 35,
     "attack": 40,
     "defense": 100,
@@ -1685,7 +1688,7 @@
   "omastar": {
     "name": "omastar",
     "display_name": "Omastar☆☆",
-    "cost": 6,
+    "cost": 5,
     "hp": 70,
     "attack": 60,
     "defense": 125,

@@ -4,9 +4,9 @@ const { Map, List } = require('immutable');
 const gameJS = require('./game');
 const f = require('./f');
 
-const rarityAmount = List([45, 30, 25, 15, 10]); // Real version
+// const rarityAmount = List([45, 30, 25, 15, 10]); // Real version
 // const rarityAmount = List([3, 3, 3, 3, 3]); // Test version
-// const rarityAmount = List([9, 9, 9, 9, 9]); // Test version
+const rarityAmount = List([9, 9, 9, 9, 9]); // Test version
 
 exports.debugMode = false;
 
@@ -99,38 +99,59 @@ const roundSetConfiguration = Map({
     Map({ name: 'geodude', x: 3, y: 1 }),
     Map({ name: 'onix', x: 4, y: 1 }),
     Map({ name: 'sandshrew', x: 5, y: 2 }),
+    Map({ name: 'graveler', x: 6, y: 2 }),
   ])),
   15: async () => gameJS.createBattleBoard(List([
     Map({ name: 'staryu', x: 3, y: 1 }),
     Map({ name: 'starmie', x: 4, y: 1 }),
     Map({ name: 'psyduck', x: 5, y: 2 }),
+    Map({ name: 'golduck', x: 6, y: 2 }),
+    Map({ name: 'magikarp', x: 7, y: 2 }),
+    Map({ name: 'gyarados', x: 7, y: 1 }),
   ])),
   20: async () => gameJS.createBattleBoard(List([
     Map({ name: 'voltorb', x: 3, y: 1 }),
     Map({ name: 'pikachu', x: 4, y: 1 }),
     Map({ name: 'raichu', x: 5, y: 1 }),
+    Map({ name: 'electrode', x: 7, y: 2 }),
+    Map({ name: 'magnemite', x: 6, y: 2 }),
+    Map({ name: 'magneton', x: 2, y: 2 }),
   ])),
   25: async () => gameJS.createBattleBoard(List([
     Map({ name: 'victreebel', x: 3, y: 1 }),
     Map({ name: 'parasect', x: 4, y: 1 }),
     Map({ name: 'vileplume', x: 5, y: 1 }),
+    Map({ name: 'gloom', x: 6, y: 1 }),
+    Map({ name: 'venusaur', x: 7, y: 1 }),
+    Map({ name: 'ivysaur', x: 2, y: 1 }),
+    Map({ name: 'bulbasaur', x: 1, y: 1 }),
   ])),
   30: async () => gameJS.createBattleBoard(List([
     Map({ name: 'beedrill', x: 3, y: 1 }),
     Map({ name: 'butterfree', x: 4, y: 1 }),
     Map({ name: 'crobat', x: 5, y: 1 }),
+    Map({ name: 'crobat', x: 6, y: 1 }),
+    Map({ name: 'crobat', x: 7, y: 1 }),
+    Map({ name: 'metapod', x: 7, y: 2 }),
+    Map({ name: 'kakuna', x: 2, y: 2 }),
   ])),
   35: async () => gameJS.createBattleBoard(List([
     Map({ name: 'kadabra', x: 3, y: 1 }),
     Map({ name: 'haunter', x: 4, y: 1 }),
     Map({ name: 'alakazam', x: 5, y: 1 }),
     Map({ name: 'drowzee', x: 6, y: 1 }),
+    Map({ name: 'hypno', x: 7, y: 1 }),
+    Map({ name: 'gengar', x: 2, y: 1 }),
+    Map({ name: 'jynx', x: 1, y: 1 }),
   ])),
   40: async () => gameJS.createBattleBoard(List([
     Map({ name: 'growlithe', x: 3, y: 1 }),
     Map({ name: 'ponyta', x: 4, y: 1 }),
     Map({ name: 'rapidash', x: 5, y: 1 }),
     Map({ name: 'arcanine', x: 6, y: 1 }),
+    Map({ name: 'ninetales', x: 7, y: 1 }),
+    Map({ name: 'charizard', x: 2, y: 1 }),
+    Map({ name: 'magmar', x: 2, y: 2 }),
   ])),
   45: async () => gameJS.createBattleBoard(List([
     Map({ name: 'rhyhorn', x: 3, y: 1 }),
@@ -138,6 +159,9 @@ const roundSetConfiguration = Map({
     Map({ name: 'nidoqueen', x: 5, y: 1 }),
     Map({ name: 'nidoking', x: 6, y: 1 }),
     Map({ name: 'rhydon', x: 2, y: 1 }),
+    Map({ name: 'nidorino', x: 2, y: 2 }),
+    Map({ name: 'nidorina', x: 5, y: 2 }),
+    Map({ name: 'rhydon', x: 3, y: 1 }),
   ])),
 });
 

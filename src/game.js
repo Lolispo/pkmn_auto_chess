@@ -65,8 +65,16 @@ async function refillPieces(pieces, discardedPieces) {
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     console.log('@refillPieces', name);
-    const cost = (await pokemonJS.getStats(name)).get('cost');
-    pieceStorage = await f.push(pieceStorage, cost - 1, name);
+    if(Array.isArray(name)){
+      for (let j = 0; j < name.size; j++) {
+        const tempName = name.get(j);
+        const cost = (await pokemonJS.getStats(tempName)).get('cost');
+        pieceStorage = await f.push(pieceStorage, cost - 1, tempName);
+      }
+    } else {
+      const cost = (await pokemonJS.getStats(name)).get('cost');
+      pieceStorage = await f.push(pieceStorage, cost - 1, name);
+    }
   }
   return pieceStorage;
 }
@@ -331,7 +339,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     tempUnit = keysIter.next();
   }
   if (pieceCounter >= 3) { // Upgrade unit @ position
-    console.log('UPGRADING UNIT', name);
+    // console.log('UPGRADING UNIT', name);
     let board = state.getIn(['players', playerIndex, 'board']);
     for (let i = 0; i < positions.size; i++) {
       board = board.delete(positions.get(i));
@@ -347,7 +355,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
     // TODO: List -> handle differently
     const evolutionDisplayName = (await pokemonJS.getStats(evolvesTo)).get('display_name');
-    console.log('evolutionDisplayName', evolutionDisplayName);
+    // console.log('evolutionDisplayName', evolutionDisplayName);
     const nextPieceUpgrade = await checkPieceUpgrade(state, playerIndex, newPiece, position);
     // Get both upgrades
     return nextPieceUpgrade.set('upgradeOccured', List([evolutionDisplayName]).concat(nextPieceUpgrade.get('upgradeOccured') || List([])));
@@ -410,7 +418,7 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
   const boardBuffs = Map({
     buffMap, typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy,
   });
-  console.log('@boardBuffs', boardBuffs);
+  // console.log('@boardBuffs', boardBuffs);
   state = state.setIn(['players', playerIndex, 'boardBuffs'], boardBuffs);
   const markedBoard = markedResults.get('newBoard');
   state = state.setIn(['players', playerIndex, 'board'], markedBoard);
@@ -456,7 +464,7 @@ exports._withdrawPiece = async (state, playerIndex, piecePosition) => withdrawPi
 async function discardBaseUnits(state, name, depth = '1') {
   const unitStats = await pokemonJS.getStats(name);
   const evolutionFrom = unitStats.get('evolves_from');
-  if (f.isUndefined(unitStats.get('evolves_from'))) { // Base level
+  if (f.isUndefined(evolutionFrom)) { // Base level
     let discPieces = state.get('discardedPieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
     for (let i = 0; i < amountOfPieces; i++) {
@@ -465,7 +473,7 @@ async function discardBaseUnits(state, name, depth = '1') {
     return state.set('discardedPieces', discPieces);
   }
   console.log('CHECK ME IF CRASH', evolutionFrom);
-  const newName = evolutionFrom.get('name');
+  const newName = evolutionFrom;
   return discardBaseUnits(state, newName, depth + 1);
 }
 
@@ -1193,7 +1201,7 @@ async function startBattle(boardParam) {
     // Calc nextMove value
     let nextMoveValue;
     if (moveAction === 'move') { // Faster recharge on moves
-      nextMoveValue = +unit.get('next_move') + (+unit.get('speed') / 2);
+      nextMoveValue = +unit.get('next_move') + (+unit.get('speed') / 3);
       pos = result.get('nextMove').get('target');
     } else {
       nextMoveValue = +unit.get('next_move') + +unit.get('speed');
@@ -1790,8 +1798,10 @@ async function endTurn(stateParam) {
       (streak === 0 || Math.abs(streak) === 1 ? 0 : (Math.abs(streak) / 5) + 1),
     ), 3) : 0);
     const newGold = gold + income_basic + bonusGold + streakGold;
+    /*
     console.log(`@playerEndTurn Gold: p[${index + 1}]: `,
       `${gold}, ${income_basic}, ${bonusGold}, ${streakGold} (${streak}) = ${newGold}`);
+    */
     state = state.setIn(['players', index, 'gold'], newGold);
     // console.log(i, '\n', state.get('pieces').get(0));
     // state = state.set(i, state.getIn(['players', i]));

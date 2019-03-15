@@ -22,46 +22,55 @@ Mana: 15% of damage to mana or 10
 ## Crash and Tests for ingame
 
 Crash: 
-    Player death
-
-Fixed Check:
-    Bonus effect from same family - mankey and primeape got fighting bonus
+    Dead player
 
     Refill pieces
-    refillPieces seems to work, changing back to og size
-
-    Give battle won gold reward
+    
+Fixed Check:
 
 Test me ingame:
     Player loses
         Shouldn't be able to interact with anything board related
+            Fix select event
     Move
         Does it allow jumping over if close enough?
             Better when priorities are set for target better
-    Player disconnects (Not prio)
-        During battle or normally
+    Low Prios Tests:
+        Player disconnects
+            During battle or normally
 
 Known issues:
     Battle ending with units from both teams alive
-        Dot damage or healing
-    Timer Bug, restart for it
+        Effects Probably: Dot damage, healing, multistrike
+    Battle ending before finish
+        longest battle duration check
+
+Odd behaviour:
+
+    Something doing 0.5 damage (brock vs parasect)
+
+    Attack from 2 tiles away bug?
+
+    No target move (splash) shouldnt deal damage (curr 1 it seems)
 
 # Fix me - Prio
-    
+
     Ready not reacting?
+        Figure out why ready is slow
+            Dont allow ready for spriteLoaded?
 
-    Lose hp on gym waves? Wanted or not? does it happen?
+    Dead_player
+        Appear on scoreboard
+        scoreboard, different css
 
-    Dead_player on scoreboard, different css
-
-    update lock from state (so it is not desynched)
-    
     DotDamage - NOT MATCHING UP
+    Multistrike
 
     Player loses
-        scoreboard last update
-        scoreboard dead players
         dont crash when new battle starts (check .index)
+        dont allow press board during battle
+            no battle start board -> undefined error
+            check for select event player is alive
 
 ## Add me - Prio
 
@@ -69,30 +78,56 @@ Known issues:
 
 ## Backend
 
+Target Priorities
+    Make more like move priority, in front of you first
+    Never stick on a target where attacks are x0 (No effect)
+    If multiple within range: 
+        Type effective priority
+        Get all units at same length from target as List
+        Get Unit with highest effectivness against
+        If multiple, random
+
+PlacePieceEvent (All piece interactions):
+    Which units to be sent back
+        Current logic in: fixTooManyUnits
+        Move logic so units to be called back is already marked in the state
+            'expendableUnit': true
+        In frontend: if (unit.expendableUnit) Color me
+
+Pieces from shop refactor:
+    Max 9 units for each player
+        Good limit for units that doesn't have level 3?
+        Max 6 units if 2 levels, Max 3 for level 1 units
+
+Speed rework how it is applied
+    Instead of upperlimit - speed = cd between actions
+
+Lock
+    update lock from state (so it is not desynched)
+    ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
+        During battle: Interact with server, otherwise no
+
+Dps stats after round
+
+Add next round opponent
+    pvp: name
+    gym battle: image
+        Add/Find images for gym leaders
+            https://pokemon.fandom.com/wiki/File:Brock_(game)(FrLg)Sprite.png
+    npc: Image of matchup
+
 Players die same round
     Need to record time of death, when removePlayerHp is called, check last actionStack time
     Handle in socketController and eliminate in order if multiple
         Check after each elimination if only one player left
+    Is While Iterator problematic if 2 players die same round?
+        Can it continue iterating if element was deleted previously
+    Handle players being eliminated in same round
+        After own battle is done, send post battle state to user?
 
 Sp.attack Sp.defense for ability calculations
     Required in stats panel
     Dragon +sp.attack
-
-Something doing 0.5 damage (brock vs parasect)
-
-Fix unitImages, since pokemonDb has ddos protection
-
-Attack from 2 tiles away bug?
-
-Target Priorities
-    Make more like move priority, in front of you first
-    Dont stick mechanic
-        Never stick on a target where attacks are x0
-        < x1 dont stick also?
-
-Type Bonuses are wrongly typed
-    Instead of giving first 15, then 15, it gives first 15 then 30: 
-        Combos go insane very fast
 
 Rivals:
     When playing against the person you played the most
@@ -103,53 +138,22 @@ Rivals:
 
 StepsToTake dependent on pokemon stats
 
-Is While Iterator problematic if 2 players die same round?
-    Can it continue iterating if element was deleted previously
-
-Player eliminated logic
-    Handle players being eliminated in same round
-        After own battle is done, send post battle state to user?
-    Gray out eliminated player
-    Send information to frontend that you are out
-        A message is being sent to everyone in chat
-        Disable all board interact functionality for user
-            Same functionality that should be used when spectating a player
-
-Gold:
-    Reward for winning battle?
-    Gold information calculation
-        Move outside of function, calculate at gold changes and update frontend
-        Show streak / next gold
-
-PlacePieceEvent (All piece interactions):
-    Which units to be sent back
-        Current logic in: fixTooManyUnits
-        Move logic so units to be called back is already marked in the state
-            'expendableUnit': true
-        In frontend: if (unit.expendableUnit) Color me
-
-Pieces:
-    Max 9 units for each player
-        Fixes: Stop spawning units of certain type for player if === 9
-
-SellPieceEvent:
-    Allow selling piece from hand during battle
-
 Add longestTimeAllowed for battle, where a tie occurs
 
-Dps stats after round
-
-Weak against type list (Currently only strong against, ineffective and no effect)
-
-No target move (splash) shouldnt deal damage (curr 1 it seems)
-
-ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
+Type effectivness List
+    Weak against type list
+        Currently only strong against, ineffective and no effect
+        Make this list available as well
+    Make searchable to find quickly
+        Simple input field that clears when changing radio button
 
 first move implement
     Current Logic in: setRandomFirstMove
+    Not required atm
     
 Longer range than 1
-    Requires animation calculate vector instead of fixed amount of pixels
+    Requires more attack animations
+        Better way to do these animations
     2:
         Caterpie, weedle, pidgey, spearow
         Butterfree
@@ -174,57 +178,53 @@ Longer range than 1
 
 Ability ranges implementation requries check for if ability.withinRange
 
-Level 5 unit upgrades?
-
 More advanced Matchup system
-
-Attack priority
-    Type effective?
-
-Add next round opponent
-    pvp, gym battle, npc
-    Add/Find images for gym leaders
-
-Flying longer movement
-
-max mana? Instead of letting it go over
-    Cap at abilityCost? Could work good
 
 Aoe damage logic
 
-Finish abilities implementation (teleport)
-
 ## Frontend
+
+RefillPieces - shouldnt get a list from playerlost (board units)
+    Test me
+
+move chat into div
+    React component: easier to fix scrollToBottom
 
 Eevee stats panel (takes big size)
 
-clear chat after a while?
+Battle Css:
+    Last attack isn't displayed
+    better death animation
+    buffMessage not clickable
+        Click on unit beneath it
 
-Display cost / level
+Gold information calculation
+    Show all players amount of gold
+    Calculate and show potential next goal
+        win: +5, loss: +2
 
-Last attack isn't displayed
+Cost / Level of unit
+    Display in infopanel
+    Sell piece button also showing cost
 
-better death animation
-
-cube padding top increase
+Allow hand moving during battle if hand -> hand
+    Needs placePiece to update session
+    Check unitPos & target has undefined 'y'
 
 Types leftbar:
-    Sort by Bonus
+    Sort by Bonus Tier - Decreasing
     Show goals for types in leftbar
         bottom right corner having number of next tier to unlock
     Show bonus information
-        Clickable? Hoverable? somehow show it if wanted
+        Hoverable: show information typeBonus
         marked['typeBuff'] + ': ' + marked['value']
 
-GrowText better
-    Firefox looks bad
+Dynamic css animations for movement and attacks
+    Currently hardcoded, hard to expand to longer walk and attack range
 
 Cache / Store gifs somehow in browser?
     Only get sprites if not stored
     Localstorage was not big enough, might not be possible
-
-Animate movement after this idea: https://gyazo.com/a93563fc0700cd764da9120fd0b49a38
-    Requires keyFrames to depend on variables
 
 EnemyDebuff: 
     Select unit
@@ -233,11 +233,11 @@ EnemyDebuff:
         For this to be relevant: Needs to load enemy buffs aswell
 
 Rotate unit in attack direction
+    Up and down normal front and back
+    Left mirrored back?
     css mirror, transform: scaleX(-1)
 
 Ability effects from canvas
-
-pokeDollar instead of goldcoin
 
 Redo pokeball
     pokeball align middle
@@ -252,25 +252,13 @@ Clickable (:hover) effect
 
 Horn sound lower
 
-Types:
-    Render on left side of board, buffs
-    Print types as images with numbers connected
-        Number showing amount of units of that type
-        Number showing which level of buff is applied (bigger)
-        Images: type images
-
-hp bar % padding better (100% vs 95%)
-
-move chat into div
-    React component: easier to fix scrollToBottom
-
 gameEnd
-    Scoreboard last update
     Show that you won more visibly than message, since message is easily replaced
-    confetti
+    Confetti!
 
 Select unit
     Save information on deselect in left side but remove sell button
+        Use logic from shopInfoSelect possibly
 
 Message:
     Update player -> information about what was updated from server
@@ -281,13 +269,12 @@ Timer set to system.time and calculated from that
 Leave Game button
     Prompt (pseudo alert): are you sure you want to leave the game?
 
-Error console logs logic in frontend, move to constructor instead of render (battleStartDetection)
+Error console logs logic in frontend:
+    onChange to start battle error fix
+        Had issue starting event in other way from this element
 
-Restart reset more variables
-    Timer not appearing correctly
-    SoundEffect unitSound chat reset
-    OnGoingBattle weird
-    imageBase weird
+Restart -> reset everything except sprites
+    To be used in leave Game (end Game leaving), otherwise refresh is fine
 
 Chat:
     BattleResults in chat
@@ -296,10 +283,6 @@ Chat:
         unit upgrades
             Maybe only temporary? Too strong to have it stored forever...
         Normal Chat
-
-Add icons for types, to be used for buffs
-    Can be inspired from card icons if none are found
-        Hard for fighting / ground
 
 ActionMessage coloring
     Multiple actionMessages to support taken multiple instance of damage?
@@ -314,35 +297,28 @@ ActionMessage coloring
 Help Messages
     (Temp) Color Type messages so easier to read fast
 
-Eevee evolutions stats screen
+Contain information about all pokemon in the game somewhere
+    Wiki? (Could link to sheet in beginning)
 
 Css:
+    hp bar % padding better (100% vs 95%)
+    icecube/flame padding top increase
+    GrowText better - Firefox looks bad
     Info button position better?
     Shine the lock a bit, fades into background
     Bonus hp as shield bar (Original hp + bonus)
     Prettier Volume slider
     Nidoran display name new line in button
     Mark default radio button in bottom right as Chat (Make selected)
-    Auto scroll down chat
-    more obvious you can't place on enemy part of board
+    Make more obvious you can't place on enemy part of board
     Sell button left bar align more centered (length is long)
     Chat:
         Chat different background color or something to separate from background?
         Radio buttons css
     
-
 Animations: 
-    Better move animation
-    Death Animations
-        Flip 90 degrees and then fade
     Level up animation -> too full bar and down to zero (or xp over 0)
     Hp bar changes animation
-    growAnimation looks bad on firefox, instant instead of in stages
-
-Code: Event code only in one place
-    placepieceevent in 2 spots currently
-    getStatsEvent
-    Move to separate file and import, requires sending props
 
 TopBar:
     Piece Image
@@ -354,58 +330,45 @@ Infopanel
     Click on evolution, expand that unit
         evoName: evoImage
         ^Click -> stats for evolution in indexed tree follows
-    Level of unit displayed (Cost, worth to sell)
-    Pokedex look?
-
-Shop
-    Buy unit button, third of shop div size
-    Rest is infopanel selectable, information from unit before buying
+    Pokedex give inspiration for some part of infopanel?
 
 Scoreboard: 
     Css me, Stick to right like a menu
-    Store permantently players with 0 hp
-        When showing scoreboard, append greyed out eliminated players in order of eliminiation
-    Streak Showing
-    *Later: Name and (preselected)image
-    Make players clickable
-        Show their board when that is done
-
-Board css:
-    pseduoElements :select 
-    Fix z-index (or something) to place selected on top
-        outline ugly, not on right side
-    Display Which unit will be called back/selected when too many units on board
-        Noted todo in backend
-        Gray tinted background or something
+    *Later: 
+        Name and (preselected)image
+        Make players clickable
+            Show their board when that is done
 
 Message:
-    Use Message more for errors - Red text if error
+    Use Message more for errors
     Display winner of battle more clear
     Positioning better at cursor
         Alt: Overlayed on the board
 
-Show permenent buffs at left of board  
-
 Sound: 
     Scale music so start middle of bar instead -> not as loud possible
-    Chat Mute/unmute icons
     Add hotkey m for toggle mute (for music m, sound n, chat c)
-    Disconnect sound
+    Edit he gone sound, shorter / remove unnecessary meta data
     New Music/Sounds:
         Music before any game starts, gold theme main menu
+            Own version?
         Battle Music same style as idle music?
         More sounds:
             Start New Round sound
             Game won (Victory! (Trainer))
-            Timer click (close to 0)
+                Own version?
             player levelup sound
-            Different sounds for own upgrade?
+                pokemon level up sound from games
 
 Credits somewhere in frontend (P and R.Music)
+    The bois: Arvid, Anton, Robin, Lowe
+
+React Native port
 
 ## Communication
 
 Timer reset if ongoing battle server restart (end battle)
+    For leaveGame functionality (where refresh isn't wanted)
 
 disconnect make win if alone
     Disconnect detect on frontend
@@ -428,6 +391,11 @@ Test lifesteal functionality
 
 Put all switch cases in blocks
 
+Code: Event code only in one place
+    placepieceevent in 2 spots currently
+    getStatsEvent
+    Move to separate file and import, requires sending props
+
 Optimize asset sizes
     webm pikachuBackground (half size)
 
@@ -447,6 +415,7 @@ Give information that playarea isn't in focus when it isn't
 check Promise.all alternative for loops
 
 .has instead of !f.isUndefined
+    For Sets?
 
 cleanup async usage, using Promise.all in places where multíple calculations are needed
  makes it bottleneck on the slowest one
@@ -470,7 +439,7 @@ Potential to use more functional code, map/filter
 
 Drag-n-drop for placing units
 
-Https
+http -> Https
 
 Spinning wheel animating time between moves for all pokemon
     Easier to see when a unit does move
@@ -508,49 +477,6 @@ eevee:
     Placement of eevees decides evolution!
     Evolution based on amount of unit types on board
     Temp: Random
-
-## Balance
-
-TypeBonuses: 
-    Flying -> 2 req
-    Grass and poison are same
-    Lifesteal
-    Poison: increase dot damage
-
-    Early Game types:
-        Bug, Flying, Poison
-    Early - Mid
-        Fire
-    Mid Game
-        Normal electric
-    Late Game
-        Water Dragon psychic Ghost
-
-
-
-Speed might be too strong atm
-    Buff tanky units
-
-Remove iggly/cleffa trio ? 
-
-Abra 2 -> 1
-
-Omanyte elekid smoochum magby check
-
-Sheets balance:
-    Rhyhorn 4 -> 5?
-    Horsea 4 -> 3? Is dragon tho on kingdra
-    elekid 4 -> 3?
-    Check slowpoke - really slow
-    Check dps, damage
-
-New abilities:
-    Raticate hyper fang
-    jigglypuff sing, something better (really bad)
-
-gym balance
-    Seems really weak, try deeper
-    gym 3 -> needs more units
 
 ## New features to add (Not as core)
 

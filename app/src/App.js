@@ -905,8 +905,8 @@ class App extends Component {
         if(newBoard[unitPos].animateMove !== ''){
           newBoard[unitPos].animateMove = '';
         }
-        let newHpSpell = newBoard[target].hp - value;
-        console.log('Spell (' + abilityName + ') from', unitPos, 'to', target, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
+        let newHpSpell = newBoard[target].hp;
+        let damage = value;
         if(effect && Object.keys(effect).length){
           console.log('SPELL EFFECT: ', effect);
           Object.keys(effect).forEach(e => {
@@ -917,30 +917,37 @@ class App extends Component {
               const valueEffect = effectToApplyOnUnit[buff];
               console.log('Found', typeEffect, 'effect with value', valueEffect, 'for unit', unitPosEffect);
               switch(typeEffect){
-                case 'multistrike':
+                case 'multistrike': {
                   // TODO Visualize multistrike ability
+                  damage *= valueEffect;
+                  actionMessageTarget = actionMessageTarget + '! Hit ' + valueEffect + ' times!';
+                  break;
+                }
                 case 'teleport':
                 case 'noTarget':
-                case 'dot':
+                case 'dot': {
                   // TODO Visualize 'dot' is appled to unit
                   actionMessageTarget = actionMessageTarget + '! Dot applied'
                   break;
+                }
                 case 'heal':
-                  if(unitPosEffect === target){
-                    console.log('Enemy Heal (SHOULDNT OCCUR)')
-                    newHpSpell += valueEffect;
-                  } else {
-                    console.log('Normal heal')
-                    newBoard[e].hp = newBoard[e].hp + valueEffect;
-                    actionMessageAttacker = actionMessageAttacker + '! Heal for ' + valueEffect;
-                  }
-                  break;
+                if(unitPosEffect === target){
+                  console.log('Enemy Heal (SHOULDNT OCCUR)')
+                  newHpSpell += valueEffect;
+                } else {
+                  console.log('Normal heal')
+                  newBoard[e].hp = newBoard[e].hp + valueEffect;
+                  actionMessageAttacker = actionMessageAttacker + '! Heal for ' + valueEffect;
+                }
+                break;
                 // case buffs, not required in theory for attack or defence, since not visible
                 default:
               }
             });
           });
         }
+        newHpSpell -= damage;
+        console.log('Spell (' + abilityName + ') from', unitPos, 'to', target, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         if(newHpSpell <= 0){
           delete newBoard[target]; 
         } else {

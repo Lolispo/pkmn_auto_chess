@@ -96,9 +96,11 @@ module.exports = (socket, io) => {
 
   socket.on('GET_SPRITES', async () => {
     if (f.isUndefined(pokemonSpritesJSON)) {
+      console.log('Undefined sprites! Loading ...');
       pokemonSpritesJSON = await pokemonJS.getPokemonSprites();
+      console.log('Finished getting sprites!', socket.id);
     }
-    // console.log('SEND ME', pokemonSpritesJSON);
+    console.log('@Get Sprites', socket.id);
     io.to(socket.id).emit('LOAD_SPRITES_JSON', pokemonSpritesJSON);
   });
 
@@ -300,8 +302,7 @@ module.exports = (socket, io) => {
         sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, newState);
         sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
         if (f.isUndefined(actionStacks)) console.log('@socketController undefined actionStacks', battleObject);
-        const longestTime = TIME_FACTOR * sessionJS.getLongestBattleTime(actionStacks) + 3000;
-
+        
         const iter = connectedSessionPlayers.keys();
         let temp = iter.next();
         while (!temp.done) {
@@ -314,6 +315,9 @@ module.exports = (socket, io) => {
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, enemy);
           temp = iter.next();
         }
+        const longestBattleTime = await sessionJS.getLongestBattleTime(actionStacks)
+        const longestTime =  TIME_FACTOR * longestBattleTime + 3000;
+        console.log('sc.LongestTime:', longestTime, longestBattleTime, TIME_FACTOR);
         setTimeout(async () => {
           // After all battles are over
           f.p('Time to End Battle');

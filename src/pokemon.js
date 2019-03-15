@@ -16,7 +16,7 @@ const defaultStat = Map({
   mana_multiplier: 1,
   mana: 0,
   speed: 100, // Temp test, lower = faster (Time between attacks)
-  upperLimitSpeed: 200,
+  upperLimitSpeed: 250,
   defense: 50,
   range: 1, // Range for unit to reach (diagonals allowed)
   next_move: 0, // Next move: time for next move

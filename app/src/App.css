@@ -970,7 +970,7 @@ body {
 }
 
 @keyframes move1E {
-  0% {transform: translate(85px, 0)}
+  0% {transform: translate(-85px, 0)}
   100% {transform: translate(0px)}
 }
 
