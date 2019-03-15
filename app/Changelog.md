@@ -14,15 +14,13 @@ Here: 12 13 16 12 5
 
 ## Current Notes
 
-max mana? Instead of letting it go over
-  Cap at abilityCost? Could work good
-  Render frontend max as abilityCost (ez)
-  Backend: if(mana + manaInc > abilityCost) newMana = abilityCost  
+Buffs between types?
+  Themes of pokemon trainers in anime?
+    Ash bonus (many different types)
+    Brock = vulpix + ground/rock (dont know if good)
 
 DecreaseHp from grass buff, what happens if it kills diglett? (10hp)
-
-Lose hp on gym waves? Wanted or not?
-  max 3 hp round loss
+  Should be handled
 
 Level 5 unit upgrades?
   3 zapdos for example => uber zapdos
@@ -36,7 +34,7 @@ Speed might be too strong atm
 clear chat after a while?
 
 Show bonus information
-        Clickable? Hoverable? somehow show it if wanted
+  Clickable? Hoverable? somehow show it if wanted
 
 DotDamage effect - Arvid had idea for effect
 
@@ -128,3 +126,9 @@ All type numbers balanced - Were too big
   dragon increaseAttack -> decreaseAttack
 
 Upper speed limit changed from 200 -> 250. Might buff speed units or nerf (probably make speed even more important)
+
+## Balance Patch 0.2.1
+
+Fixed dragon bug with type
+
+Added max mana at ability manaCost

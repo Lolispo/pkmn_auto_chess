@@ -63,7 +63,7 @@ class PokemonImage extends Component{
     const baseMarginTop = paddingTop + height - 15;
     const baseMarginLeft = 85 - width - 7;
     const imgEl = <img
-      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : 'pokemonSpawn')} ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
+      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : this.props.renderBase ? 'pokemonSpawn' : 'pokemonEnter')} ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
       key={src}
       style={{paddingTop: paddingTop, width: width, height: height}}
       src={src}
@@ -274,9 +274,9 @@ class Cell extends Component {
     // console.log(' -', el.props.isBoard, el.props.newProps.onGoingBattle, this.state.pos, unit, prevSelectedUnit)
     // If unit selected -> presses empty -> place piece 
     if(this.state.pos !== prevSelectedUnit.pos){ // Shouldn't do anything if same tile as SELECT_UNIT Tile
-      el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit}});
+      el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit, displaySell: true}});
     } else { // Deselect by doubleclick same unit
-      el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {isBoard: el.props.isBoard, pos: ''}});
+      el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: ''}); // {isBoard: el.props.isBoard, pos: ''}
     }
     if(unit){ // Pressed unit
       console.log('Get Stats for', unit.name)
@@ -322,7 +322,7 @@ class Cell extends Component {
           </div> : '');
         const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
-          ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / 150 * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+          ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / pokemon.manaCost * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
           </div> : '');
         const actionMessage = (pokemon && pokemon.actionMessage && pokemon.actionMessage !== '' ? 
           <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
@@ -515,8 +515,13 @@ class App extends Component {
       this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       return;
     }
-    if(this.props.gold >= 5 && this.props.gameIsLive && this.props.level < 10){
-      buyExp(this.props.storedState)
+    if(this.props.gold >= 5 && this.props.gameIsLive){
+      if(this.props.level < 10){
+        buyExp(this.props.storedState)
+      } else {
+        updateMessage(this.props, 'Already at max level!', 'error');
+        this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      }
     } else{
       updateMessage(this.props, 'Not enough gold!', 'error');
       this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
@@ -556,12 +561,12 @@ class App extends Component {
         if(Array.isArray(s.evolves_to)){
           const evoList = [];
           for(let i = 0; i < s.evolves_to.length; i++){
-            evoList.push(<span className='flex' key={'evo'+s.evolves_to[i]}>
-              <span className='paddingRight5 marginTop15'>Evolves to: </span>
-              <PokemonImage name={s.evolves_to[i]} sideLength={40} newProps={this.props}/>
-            </span>)
+            evoList.push(<span key={'evo'+s.evolves_to[i]}><PokemonImage name={s.evolves_to[i]} sideLength={40} newProps={this.props}/></span>)
           }
-          evolves_to = evoList;
+          evolves_to = <span className='flex'>
+            <span className='paddingRight5 marginTop15'>Evols: </span>
+            {evoList}
+          </span>
         } else {
           evolves_to = <span className='flex'>
             <span className='paddingRight5 marginTop15'>Evolves to: </span>
@@ -596,7 +601,7 @@ class App extends Component {
             </div>
           : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
         </div>
-        <div style={{paddingTop: '15px'}}>
+        <div className='infoPanelStats'>
           {/*<div>
             <span>Hp: </span>
             <span style={{position: 'relative'}}>
@@ -606,6 +611,7 @@ class App extends Component {
               </div>
             </span>
           </div>*/}
+          <span>{`Level: ${s.cost}\n`}</span>
           <span className='center'><span>{`Hp: ${s.hp}`}</span>{(buffs['hp'] ? <span className='infoPanelBuff'>{` + ${buffs['hp']}\n`}</span> : '\n')}</span>
           <span><span>{`Attack: ${s.attack}`}</span>{(buffs['attack'] ? <span className='infoPanelBuff'>{` + ${buffs['attack']}\n`}</span> : '\n')}</span>
           <span><span>{`Defense: ${s.defense}`}</span>{(buffs['defense'] ? <span className='infoPanelBuff'>{` + ${buffs['defense']}\n`}</span> : '\n')}</span>
@@ -629,11 +635,19 @@ class App extends Component {
         {pokeEl}
       </div>
       {this.buildStats()}
-      {(allowSell ? <div className='centerWith50 marginTop5'>
-        <button className='normalButton' onClick={() => {
+      {(allowSell ? <div className='marginTop5'>
+        <button className='normalButton textList marginLeft5' onClick={() => {
           const from = this.props.selectedUnit.pos;
           this.sellPieceEvent(from);
-        }}>Sell {this.props.stats.display_name}</button>
+        }}>
+          <span>
+            {'Sell ' + this.props.stats.display_name + '\n'}
+          </span>
+          <span className='flex centerWith50'>
+            <img className='goldImageSmallest' src={getImage('pokedollar')} alt='pokedollar'/>
+            <span className='goldImageTextSmall'>{this.props.stats.cost}</span>
+          </span>
+        </button>
       </div> : '')}
     </div>;
   }
@@ -642,12 +656,12 @@ class App extends Component {
     const className = 'center text_shadow infoPanel';
     const noSelected = <div className={className}><div className={`noSelected`}>No unit selected</div></div>
     if(this.props.stats && !this.props.isSelectModeShop && !isUndefined(this.props.selectedUnit)){
-      let pokemon = (this.props.selectedUnit.isBoard ? (this.props.onGoingBattle ? this.props.battleStartBoard[this.props.selectedUnit.pos] 
+      let pokemon = (this.props.selectedUnit.isBoard ? (this.props.onGoingBattle && this.props.battleStartBoard ? this.props.battleStartBoard[this.props.selectedUnit.pos] 
         : this.props.myBoard[this.props.selectedUnit.pos]) : this.props.myHand[this.props.selectedUnit.pos]);
       if(pokemon){
         this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getUnitAudio(pokemon.name)});
         // console.log('@selectedUnitInformation', pokemon.display_name, pokemon)
-        return this.statsRender(className, pokemon.name, true);
+        return this.statsRender(className, pokemon.name, this.props.selectedUnit.displaySell);
       }
     } else if(this.props.stats && this.props.isSelectModeShop && this.props.selectedShopUnit !== ''){
       const name = this.props.selectedShopUnit;
@@ -681,7 +695,7 @@ class App extends Component {
       }
       const left = counter * 40 % 160;
       const top = Math.floor(counter / 4) * 60;
-      list.push(<span key={type} className='typeElement' style={{left: left, top: top}}>
+      list.push(<span key={type} className='typeElement' style={{marginLeft: left, marginTop: top}}>
         <img className='typeImg' src={getTypeImg(type)} alt={type}/>
         <span className='typeBonusText'>{amount}</span>
         <span className='typeBonusTextBelow'>{type}</span>
@@ -845,6 +859,7 @@ class App extends Component {
     const newHp = newBoard[target].hp - value;
     if(newHp <= 0){
       // TODO: Death Animation then remove
+      // console.log('Attack / Dot DA');
       newBoard[target].hp = newHp;
       newBoard[target].animateMove = {
         animation: 'deathAnimation 1.0s', // TODO: Test on normal div if animation work
@@ -925,6 +940,8 @@ class App extends Component {
                 }
                 case 'teleport':
                 case 'noTarget':
+                  damage = 0;
+                  break;
                 case 'dot': {
                   // TODO Visualize 'dot' is appled to unit
 
@@ -950,7 +967,12 @@ class App extends Component {
         newHpSpell -= damage;
         console.log('Spell (' + abilityName + ') from', unitPos, 'to', target, 'with', value, 'damage, newHp', newHpSpell, (effect ? effect : ''));
         if(newHpSpell <= 0){
-          delete newBoard[target]; 
+          // console.log('Spell DA');
+          newBoard[target].hp = newHpSpell;
+          newBoard[target].animateMove = {
+            animation: 'deathAnimation 1.0s', // TODO: Test on normal div if animation work
+            animationFillMode: 'forwards', 
+          }; 
         } else {
           newBoard[target].hp = newHpSpell;
           newBoard[target].actionMessage = actionMessageTarget;
@@ -1036,14 +1058,30 @@ class App extends Component {
     }
   }
 
+  visitPlayer = (playerIndex) => {
+    console.log('Visiting Player', playerIndex, '...')
+    this.props.dispatch({type: 'SPEC_PLAYER', playerIndex})
+  }
+
   createScoreboardPlayerEntry = (player, isDead) => {
     const hp = player.hp;
     return <div className='playerScoreboardContainer' key={player.index}>
       <div className='playerScoreboardInner'>
-        <span>{'Player ' + player.index + '\n'}</span>
-        {(this.props.players[player.index].streak ? <span>
-          <img className='trophy' src={(this.props.players[player.index].streak > 0 ? getImage('flame') : getImage('icecube'))} alt='trophy'/>
-          <span className='streak'>{Math.abs(this.props.players[player.index].streak)}</span>
+        <span className='flex'>
+          <span className='playerScoreboardName'>{'Player ' + player.index}</span>{(isDead ? <span className='redFont'>{' Eliminated' + '\n'}</span> : 
+          <span>{(this.props.visiting !== player.index ? <button className='normalButton visitButton' onClick={() => this.visitPlayer(player.index)}>
+          {(player.index === this.props.index ? 'Home' : 'Visit')}
+        </button> : '')}<span>{'\n'}</span></span>)}</span>
+        {(this.props.players[player.index] && this.props.players[player.index].gold ? <span className='flex'>
+          <span className='flex'>
+            <img className='goldImageScoreboard' src={getImage('pokedollar')} alt='pokedollar'/>
+            <span className='goldImageTextSmall'>{this.props.players[player.index].gold}</span>
+          </span>
+          {(this.props.players[player.index].streak ? <span className='flex'>
+            <img className={`streakImage ${(this.props.players[player.index].streak > 0 ? 'flameImage' : 'icecubeImage')}`} 
+            src={(this.props.players[player.index].streak > 0 ? getImage('flame') : getImage('icecube'))} alt='trophy'/>
+            <span className='streak'>{Math.abs(this.props.players[player.index].streak)}</span>
+          </span> : '')}
         </span> : '')}
         <div className='playerHpBarDiv'>
           <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
@@ -1066,14 +1104,14 @@ class App extends Component {
       list.push(this.createScoreboardPlayerEntry(player, false));
     }
     const deadPlayers = this.props.deadPlayers;
-    for(let i = 0; i < deadPlayers.size; i++){
-      const player = deadPlayers[i];
+    Object.keys(deadPlayers).forEach((deadPlayer) => {
+      const player = deadPlayers[deadPlayer];
       list.push(this.createScoreboardPlayerEntry(player, true));
-    }
+    })
     // console.log('@PlayerStatsDiv', sortedPlayersByHp);
     return <div className='scoreboard' style={{paddingTop: '45px'}}>
       <div className='text_shadow biggerText '>
-        Scoreboard:  
+        <span className='playerScoreboardName'>Scoreboard:</span>  
         {list}   
       </div>
     </div>
@@ -1212,7 +1250,11 @@ class App extends Component {
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={() => this.startGameEvent()}>
-            StartGame{(this.props.connected ? (this.props.playersReady === -1 ? ' Connected!' : ` (${this.props.playersReady}/${this.props.connectedPlayers})`) : ' Connecting ...')}
+            StartGame{(this.props.connected ? 
+              (!this.props.loaded ? ' Loading ...' :
+                (this.props.playersReady === -1 ? ' Connected!' : ` (${this.props.playersReady}/${this.props.connectedPlayers})`)
+              ) 
+            : ' Connecting ...')}
           </button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers ? '' : 'hidden')}`} onClick={() => this.startGameEvent(true)}>
             Force Start Game{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
@@ -1242,14 +1284,15 @@ class App extends Component {
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
         </div>
-        {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+        {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow redFont' style={{paddingLeft: '65px'}}>
           {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
         </div> : '')}
       </div>;
     const leftBar = <div style={{width: '165px'}}>
         <div className='flex'>
           <div className='marginTop5 biggerText text_shadow paddingLeft5'>
-            {'Player ' + this.props.index}
+            {(this.props.visiting === this.props.index ? 'Player ' + this.props.index : 
+            <span><span className='goldFont'>{'Visit: '}</span><span>{'Player ' + this.props.visiting}</span></span>)}
           </div>
         </div>
         <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
@@ -1329,7 +1372,7 @@ class App extends Component {
                     <div style={{paddingTop: '10px'}}>
                       <img className='refreshShopImage' onClick={this.refreshShopEvent} src={getImage('refreshShopImage')} alt='refreshShop'/>
                     </div>
-                    <div className='flex'>
+                    <div className='flex goldImageSmallDiv'>
                       <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
                       <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
                     </div>
@@ -1352,7 +1395,7 @@ class App extends Component {
             </button>
             <div>
               <button style={{marginLeft: '5px'}} className='normalButton' onClick={this.buyExpEvent}>Buy Exp</button>
-              <div className='flex marginTop5'>
+              <div className='flex marginTop5 goldImageSmallDiv'>
                 <img className='goldImageSmall' src={getImage('goldCoin')} style={{marginLeft: '28px'}} alt='goldCoin'/>
                 <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`}>5</div>
               </div>
@@ -1438,6 +1481,8 @@ const mapStateToProps = state => ({
   gameEnded: state.gameEnded,
   pokemonSprites: state.pokemonSprites,
   alternateAnimation: state.alternateAnimation,
+  loaded: state.loaded,
+  visiting: state.visiting,
 });
 
 export default connect(mapStateToProps)(App);

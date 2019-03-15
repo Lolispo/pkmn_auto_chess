@@ -106,4 +106,18 @@ exports.push = (state, id, value) => state.set(id, state.get(id).push(value));
 
 exports.shuffle = (state, id) => state.set(id, shuffle(state.get(id)));
 
-exports.shuffleImmutable = list => shuffle(list);
+const shuffleFisher = (listParam) => {
+  let list = listParam;
+  for(let i = list.size - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    // console.log('@shuffleFisher', i, randomIndex, 'Swapping', list.get(randomIndex), list.get(i), list)
+    let last = list.get(i);
+    list = list.set(i, list.get(randomIndex));
+    list = list.set(randomIndex, last);
+  }
+  // console.log('shuffleFisher', list);
+  return list;
+}
+
+exports.shuffleImmutable = list => shuffleFisher(list);
+

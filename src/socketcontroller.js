@@ -13,7 +13,11 @@ let sessions = Map({}); // Maps sessionIds to sessions
 
 const TIME_FACTOR = 15;
 
-let pokemonSpritesJSON;
+let pokemonSpritesJSON = pokemonJS.getPokemonSprites();
+
+const getSprites = async () => {
+  return pokemonSpritesJSON;
+}
 
 const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId');
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
@@ -25,6 +29,7 @@ const emitMessage = (socket, io, sessionId, func) => {
   while (!temp.done) {
     const socketId = temp.value;
     const connectedUser = connectedPlayers.get(socketId);
+    if(!connectedUser) continue; // Connection was terminated with this user
     if (connectedUser.get('sessionId') === sessionId || (sessionId === true && (connectedUser.get('sessionId') === true || connectedUser.get('sessionId') === false))) {
       func(socketId);
     }
@@ -95,13 +100,10 @@ module.exports = (socket, io) => {
   });
 
   socket.on('GET_SPRITES', async () => {
-    if (f.isUndefined(pokemonSpritesJSON)) {
-      console.log('Undefined sprites! Loading ...');
-      pokemonSpritesJSON = await pokemonJS.getPokemonSprites();
-      console.log('Finished getting sprites!', socket.id);
-    }
+    console.log('Connected ...', socket.id)
+    const sprites = await getSprites();
     console.log('@Get Sprites', socket.id);
-    io.to(socket.id).emit('LOAD_SPRITES_JSON', pokemonSpritesJSON);
+    io.to(socket.id).emit('LOAD_SPRITES_JSON', sprites);
   });
 
   socket.on('READY', async () => {
@@ -190,7 +192,9 @@ module.exports = (socket, io) => {
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     // socket.emit('UPDATED_STATE', getStateToSend(state)); // Was updateplayer
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    });
   });
 
   socket.on('BUY_EXP', async (stateParam) => {
@@ -200,7 +204,9 @@ module.exports = (socket, io) => {
     // Gold, shop, hand
     console.log('Bought exp');
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    });
   });
 
   socket.on('REFRESH_SHOP', async (stateParam) => {
@@ -212,7 +218,9 @@ module.exports = (socket, io) => {
     // socket.emit('UPDATED_PIECES', state);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    emitMessage(socket, io, sessionId, (socketId) => {       
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    });
   });
 
   socket.on('PLACE_PIECE', async (stateParam, from, to) => {
@@ -230,7 +238,9 @@ module.exports = (socket, io) => {
     }
     console.log('Place piece from', from, 'at', to, '(evolution =', `${evolutionDisplayName})`);
     // Hand and board
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    });
   });
 
   socket.on('WITHDRAW_PIECE', async (stateParam, from) => {
@@ -239,7 +249,9 @@ module.exports = (socket, io) => {
     const state = await gameJS._withdrawPiece(stateWithPieces, index, from);
     console.log('Withdraw piece at ', from);
     // Hand and board
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    });
   });
 
   socket.on('SELL_PIECE', async (stateParam, from) => {
@@ -250,7 +262,9 @@ module.exports = (socket, io) => {
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     // Hand and board
-    socket.emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    });
   });
 
   socket.on('BATTLE_READY', async (stateParam) => {
@@ -311,13 +325,16 @@ module.exports = (socket, io) => {
           const enemy = (matchups ? matchups.get(tempIndex) : undefined);
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
-          io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
+          emitMessage(socket, io, sessionId, (socketId) => {
+            io.to(socketId).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
+          });
+          // io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, enemy);
           temp = iter.next();
         }
         const longestBattleTime = await sessionJS.getLongestBattleTime(actionStacks)
         const longestTime =  TIME_FACTOR * longestBattleTime + 3000;
-        console.log('sc.LongestTime:', longestTime, longestBattleTime, TIME_FACTOR);
+        if(longestTime !== 3000) console.log('sc.LongestTime:', longestTime, longestBattleTime, TIME_FACTOR);
         setTimeout(async () => {
           // After all battles are over
           f.p('Time to End Battle');
@@ -329,6 +346,9 @@ module.exports = (socket, io) => {
           let stateEndedTurn = stateCheckDead;
           const iter2 = stateCheckDead.get('players').keys();
           temp = iter2.next();
+          // TODO: player.get(dead) gets time of death (last actionStack move)
+          // Add all dead players to temp list, remove in order
+          // Handle if only one player left (amount===1 below) within this directly
           while (!temp.done) {
             const pid = temp.value;
             const player = stateCheckDead.getIn(['players', pid]);
@@ -349,6 +369,8 @@ module.exports = (socket, io) => {
             }
             temp = iter2.next();
           }
+
+
           if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
             console.log('ENDING GAME!');
             sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);

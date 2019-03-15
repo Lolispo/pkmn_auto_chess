@@ -138,6 +138,8 @@ body {
 
 .pokemonSpawn {
   animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
+  /*animation-name: enter;
+	animation-duration: 0.9s;*/
 }
 
 .pokemonShopEmpty {
@@ -209,13 +211,18 @@ body {
 }
 
 .infoPanel {
-  height: 320px;
+  height: 345px;
   padding-top: 5px;
   white-space: pre-line;
 }
 
 .infoPanelBuff {
   color: rgb(10, 248, 10);
+}
+
+.infoPanelStats {
+  padding-top: 15px;
+  font-size: 15px;
 }
 
 .noSelected{
@@ -399,22 +406,41 @@ body {
   padding-top: 7px;
 }
 
+.goldImageSmallDiv {
+  margin-left: 12px;
+}
+
 .goldImageSmall {
   height: 14px;
-  /*width: 18px;*/
   width: 10px;
-  /*padding-top: 1px;*/
   padding-top: 4px;
-  margin-left: 12px;
+  /*width: 18px;*/
+  /*padding-top: 1px;*/
+}
+
+.goldImageSmallest {
+  padding-left: 10px;
+  height: 13px;
+  width: 9px;
+  padding-top: 4px;
+  /*width: 18px;*/
+  /*padding-top: 1px;*/
 }
 
 .goldImageShop {
   height: 15px;
-  /*width: 18px;*/
   width: 11px;
-  /*padding-top: 1px;*/
   padding-top: 5px;
   margin-left: 12px;
+  /*width: 18px;*/
+  /*padding-top: 1px;*/
+}
+
+.goldImageScoreboard {
+  height: 17px;
+  width: 12px;
+  padding-top: 7px;
+  margin-left: 11px;
 }
 
 .goldImageTextSmall {
@@ -608,6 +634,7 @@ body {
   animation: deathAnimation 1s ease-in 0s normal 1 both running;
 }
 
+/* TODO: Make not bad */
 @keyframes deathAnimation {
   0%    {transform: translate(0)};
   20%   {transform: translate(0, 300px)}
@@ -625,7 +652,7 @@ body {
 }
 
 .boardBuffs{
-  height: 240px;
+  height: 225px;
 }
 
 .textList {
@@ -715,7 +742,7 @@ body {
 
 .playerScoreboardContainer {
   border-radius: 5px;
-  width: 150px;
+  width: 200px;
   margin-bottom: 5px;
   margin-top: 5px;
 }
@@ -725,15 +752,36 @@ body {
   position: relative;
 }
 
-.streak {
-  margin-left: 5px;
+.playerScoreboardName{
+  font-size: 28px;
 }
 
-.trophy {
-  padding-top: 1px;
+.visitButton {
+  margin-left: 5px;
+  height: 24px !important;
+  font-size: 13px !important;
+}
+
+.streak {
+  margin-left: 3px;
+  margin-top: 3px;
+}
+
+.streakImage {
   width: 18px;
   height: 18px;
 }
+
+.icecubeImage {
+  padding-left: 2px;
+  padding-top: 8px;
+}
+
+.flameImage {
+  padding-left: 2px;
+  padding-top: 5px;
+}
+
 
 .manaBar {
   background-color: blue;
@@ -818,7 +866,7 @@ body {
 .typeBonusTextBelow {
   font-size: 11px;
   position: absolute;
-  top: 40px;
+  margin-top: 36px;
 }
 
 .typeImg {
@@ -829,7 +877,7 @@ body {
 }
 
 .typeElement {
-  position: relative;
+  position: absolute;
 }
 
 .relative {
@@ -1089,3 +1137,114 @@ body {
   100% {transform: translate(0px)}
 }
 
+.pokemonEnter {
+	animation-name: enter;
+	animation-duration: 0.9s; /* 1.2s */
+}
+
+@keyframes enter {
+	0% {
+
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.01);
+	}
+	
+	33% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 5px white);
+		transform: scale(1.3);
+	}
+	
+	66% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1);
+	}
+	
+	100% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+	}
+}
+
+.leave {
+	animation-name: leave;
+	animation-duration: 0.9s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes leave {
+	0% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+	}
+	
+	33%{
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1);
+	}
+	
+	66% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 5px white);
+		transform: scale(1.4);
+	}
+	
+
+	100% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.01);
+	}
+}
+
+.evolve-enter {
+	animation-name: evolve-enter;
+	animation-duration: 2.2s;
+}
+
+@keyframes evolve-enter {
+	0% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.5);
+		opacity: 0;
+	}
+	15% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.5);
+		opacity: 1;
+	}
+	75% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1.4);
+	}
+	100% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+	}
+}
+
+.evolve-leave {
+	animation-name: evolve-leave;
+	animation-duration: 2.2s;
+	animation-fill-mode: forwards;
+}
+@keyframes evolve-leave {
+	0% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+		transform: scale(1);
+	}
+	15% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1.4);
+		opacity: 1;
+	}
+	75% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1.4);
+		opacity: 1;
+	}
+	99% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 30px white);
+		transform: scale(6);
+		opacity: 0;
+	}
+	100%{
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 30px white);
+		transform: scale(0.01);
+		opacity: 0;
+	}
+}

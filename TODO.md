@@ -23,10 +23,10 @@ Mana: 15% of damage to mana or 10
 
 Crash: 
     Dead player
-
-    Refill pieces
     
 Fixed Check:
+
+    Eevee stats screen
 
 Test me ingame:
     Player loses
@@ -54,17 +54,20 @@ Odd behaviour:
     No target move (splash) shouldnt deal damage (curr 1 it seems)
 
 # Fix me - Prio
+    
+    Players die same round
+        Handle order as time eliminated
 
-    Ready not reacting?
-        Figure out why ready is slow
-            Dont allow ready for spriteLoaded?
+    Dont allow ready before loaded
+
+    Start screen better sign of loading
 
     Dead_player
         Appear on scoreboard
         scoreboard, different css
 
     DotDamage - NOT MATCHING UP
-    Multistrike
+    Multistrike - Fixed
 
     Player loses
         dont crash when new battle starts (check .index)
@@ -77,6 +80,13 @@ Odd behaviour:
     Timer sound
 
 ## Backend
+
+battleStartBoard -> battleBoard
+
+Redo frontend battle rendering to make possible to jump between battles
+
+Send information if unit evolved for animation
+    Positions of units that got evolved
 
 Target Priorities
     Make more like move priority, in front of you first
@@ -103,7 +113,6 @@ Speed rework how it is applied
     Instead of upperlimit - speed = cd between actions
 
 Lock
-    update lock from state (so it is not desynched)
     ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
         During battle: Interact with server, otherwise no
 
@@ -184,13 +193,13 @@ Aoe damage logic
 
 ## Frontend
 
-RefillPieces - shouldnt get a list from playerlost (board units)
-    Test me
+Test me
+    RefillPieces - shouldnt get a list from playerlost (board units)
+    Eevee stats panel (takes big size)
+    Sell piece button cost css alignment
 
 move chat into div
     React component: easier to fix scrollToBottom
-
-Eevee stats panel (takes big size)
 
 Battle Css:
     Last attack isn't displayed
@@ -202,10 +211,6 @@ Gold information calculation
     Show all players amount of gold
     Calculate and show potential next goal
         win: +5, loss: +2
-
-Cost / Level of unit
-    Display in infopanel
-    Sell piece button also showing cost
 
 Allow hand moving during battle if hand -> hand
     Needs placePiece to update session
@@ -221,6 +226,8 @@ Types leftbar:
 
 Dynamic css animations for movement and attacks
     Currently hardcoded, hard to expand to longer walk and attack range
+
+Pressing 1-8 when not hovering board selects the unit in that position
 
 Cache / Store gifs somehow in browser?
     Only get sprites if not stored
@@ -482,10 +489,8 @@ eevee:
 ## New features to add (Not as core)
 
 Find a way of choosing pokemon in play
-    (Filtered list makes this less important)
-    shouldn't play all 151 at once
-    1: Ban base types in beginning
-    2: Choose (20-40) units to start with
+    Ban base types in beginning, before game start
+    Oak theme
 
 Automatic JSON download from google sheet
 

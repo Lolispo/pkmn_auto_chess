@@ -64,17 +64,9 @@ async function refillPieces(pieces, discardedPieces) {
   console.log('@refillPieces Refilling', discardedPieces.size, 'units'); // pieceStorage
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
-    console.log('@refillPieces', name);
-    if(Array.isArray(name)){
-      for (let j = 0; j < name.size; j++) {
-        const tempName = name.get(j);
-        const cost = (await pokemonJS.getStats(tempName)).get('cost');
-        pieceStorage = await f.push(pieceStorage, cost - 1, tempName);
-      }
-    } else {
-      const cost = (await pokemonJS.getStats(name)).get('cost');
-      pieceStorage = await f.push(pieceStorage, cost - 1, name);
-    }
+    const cost = (await pokemonJS.getStats(name)).get('cost');
+    pieceStorage = await f.push(pieceStorage, cost - 1, name);
+    // console.log('@refillPieces', name);
   }
   return pieceStorage;
 }
@@ -172,7 +164,7 @@ async function refreshShop(stateParam, playerIndex) {
     }
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
-    const shopToList = Array.from(filteredShop.map((value, key) => value).values());
+    const shopToList = fromJS(Array.from(filteredShop.map((value, key) => value).values()));
     // console.log('@refreshShop filteredShop', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
     state = state.set('discardedPieces', discPieces.concat(shopToList));
   }
@@ -787,12 +779,16 @@ async function manaIncrease(board, damage, unitPos, enemyPos) {
   const unitMana = board.get(unitPos).get('mana');
   const unitManaMult = board.get(unitPos).get('mana_multiplier');
   const unitManaInc = Math.round(Math.min(unitManaMult * damage, 15));
-  manaChanges = manaChanges.set(unitPos, +unitMana + +unitManaInc);
+  const manaCost = board.get(unitPos).get('manaCost');
+  const newMana = Math.min(+unitMana + +unitManaInc, manaCost);
+  manaChanges = manaChanges.set(unitPos, newMana);
   if (!f.isUndefined(enemyPos)) {
     const enemyMana = board.get(enemyPos).get('mana');
     const enemyManaMult = board.get(enemyPos).get('mana_multiplier');
     const enemyManaInc = Math.round(Math.min(enemyManaMult * damage, 15));
-    return manaChanges.set(enemyPos, +enemyMana + +enemyManaInc);
+    const enemyManaCost = board.get(unitPos).get('manaCost');
+    const enemyNewMana = Math.min(+enemyMana + +enemyManaInc, enemyManaCost);
+    return manaChanges.set(enemyPos, enemyNewMana);
   }
   return manaChanges;
 }
@@ -1159,6 +1155,10 @@ async function startBattle(boardParam) {
     const unitPos = temp.value;
     const action = 'move';
     const unit = board.get(unitPos);
+    if(unit.get('hp') <= 0) {
+      board = board.delete(unitPos);
+      battleOver = battleOver || isBattleOver(board, 1 - team);
+    }
     const target = unit.get('first_move');
     const time = 0;
     const move = Map({
@@ -1585,7 +1585,7 @@ async function buildMatchups(players) {
       }
     }
   }
-  // console.log('@buildMatchups', matchups);
+  console.log('@buildMatchups', matchups);
   return matchups;
 }
 
@@ -1803,14 +1803,8 @@ async function endTurn(stateParam) {
       `${gold}, ${income_basic}, ${bonusGold}, ${streakGold} (${streak}) = ${newGold}`);
     */
     state = state.setIn(['players', index, 'gold'], newGold);
-    // console.log(i, '\n', state.get('pieces').get(0));
-    // state = state.set(i, state.getIn(['players', i]));
     temp = iter.next();
   }
-  /*
-  for (let i = 0; i < state.get('amountOfPlayers'); i++) {
-    const index = String(i);
-  }*/
   const newState = await state;
   return newState;
 }
@@ -1872,13 +1866,14 @@ const endBattle = async (stateParam, playerIndex, winner, finishedBoard, roundTy
   if (winner) { // Winner
     // TODO: Npc rewards and gym rewards
     switch (roundType) {
-      case 'pvp':
+      case 'pvp': {
         const prevGold = state.getIn(['players', playerIndex, 'gold']);
         state = state.setIn(['players', playerIndex, 'gold'], prevGold + 1);
         const newStreak = (streak < 0 ? 0 : +streak + 1);
         state = state.setIn(['players', playerIndex, 'streak'], newStreak);
         f.p('@endBattle Won Player', playerIndex, prevGold, state.getIn(['players', playerIndex, 'gold']), newStreak);
         break;
+      }
       case 'npc':
       case 'gym':
         /* TODO: Add item drops / special money drop */
@@ -1892,13 +1887,18 @@ const endBattle = async (stateParam, playerIndex, winner, finishedBoard, roundTy
         const newStreak = (streak > 0 ? 0 : +streak - 1);
         state = state.setIn(['players', playerIndex, 'streak'], newStreak);
         f.p('@Endbattle pvp', newStreak);
-      case 'npc':
+      case 'npc': {
         const hpToRemove = await calcDamageTaken(finishedBoard);
         state = await removeHp(state, playerIndex, hpToRemove);
         f.p('@endBattle Lost Player', playerIndex, hpToRemove);
         break;
-      case 'gym':
+      }
+      case 'gym': {
+        const hpToRemove = await calcDamageTaken(finishedBoard);
+        const gymDamage = Math.min(hpToRemove, 3);
+        state = await removeHp(state, playerIndex, gymDamage);
         f.p('@endBattle Gymbattle');
+      }
       case 'shop':
       default:
         f.p('default case loser');
@@ -1949,7 +1949,7 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
   // console.log('@removeDeadPlayer')
   let state = stateParam;
   const filteredShop = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
-  const shopUnits = Array.from(filteredShop.map((value, key) => value.get('name')).values());
+  const shopUnits = fromJS(Array.from(filteredShop.map((value, key) => value.get('name')).values()));
   const board = state.getIn(['players', playerIndex, 'board']);
   let boardList = List([]);
   const iter = board.keys();
@@ -1972,8 +1972,8 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
     temp2 = iter2.next();
   }
   // console.log('HandList', handList);
-  console.log('@removeDeadPlayer', shopUnits, boardList, handList);
   const playerUnits = shopUnits.concat(boardList).concat(handList);
+  console.log('@removeDeadPlayer', shopUnits, boardList, handList, '=', playerUnits);
   state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));
   const newState = state.set('players', state.get('players').delete(playerIndex));
   const amountOfPlayers = newState.get('amountOfPlayers') - 1;

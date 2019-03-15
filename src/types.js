@@ -312,9 +312,9 @@ const typeMap = new Map({
     noDamageAgainst: 'Fairy',
     req: List([1]),
     bonusAmount: List([30]),
-    bonusType: 'bonus',
+    bonusType: 'enemyDebuff',
     bonusStatType: 'attack',
-    bonus: (unit, bonus) => decreaseAttack(unit, bonus),
+    enemyDebuff: (unit, bonus) => decreaseAttack(unit, bonus),
     /*
     dratini
     Better spell power

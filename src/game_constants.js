@@ -107,7 +107,6 @@ const roundSetConfiguration = Map({
     Map({ name: 'psyduck', x: 5, y: 2 }),
     Map({ name: 'golduck', x: 6, y: 2 }),
     Map({ name: 'magikarp', x: 7, y: 2 }),
-    Map({ name: 'gyarados', x: 7, y: 1 }),
   ])),
   20: async () => gameJS.createBattleBoard(List([
     Map({ name: 'voltorb', x: 3, y: 1 }),

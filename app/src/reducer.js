@@ -69,6 +69,11 @@ const reducer = (
     deadPlayers: {},
     pokemonSprites: {},
     alternateAnimation: true,
+    loaded: false,
+    visiting: -1,
+    actionStacks: {},
+    battleStartBoard: {},
+    winners: {},
   },
   action
 ) => {
@@ -76,7 +81,7 @@ const reducer = (
   switch (action.type) { // Listens to events dispatched from from socket.js
     case 'LOAD_SPRITES_JSON': 
       console.log('Loading sprites ...');
-      state = {...state, pokemonSprites: action.pokemonSprites}
+      state = {...state, pokemonSprites: action.pokemonSprites, loaded: true}
       console.log('SPRITES:', state.pokemonSprites)
       break;
     case 'NEW_STATE':
@@ -99,6 +104,7 @@ const reducer = (
           expToReach: action.newState.players[state.index].expToReach,
           gold: action.newState.players[state.index].gold,
           streak: action.newState.players[state.index].streak,
+          lock: action.newState.players[state.index].lock,
         };
       }
       console.log('New State', action.newState)
@@ -110,7 +116,8 @@ const reducer = (
         message: 'Updated player', 
         messageMode: '',
       }
-      if(!state.deadPlayers[state.index]){
+      if(action.index === state.index && !state.isDead){
+        // TODO: Model upgrades on myBoard here
         state = {...state,
           myHand: action.player.hand,
           myBoard: action.player.board,
@@ -122,9 +129,11 @@ const reducer = (
           gold: action.player.gold,
           streak: action.player.streak,
         };
-        state.players[state.index] = action.player
-        state.storedState.players[state.index] = action.player;
       }
+      const players = state.players;
+      players[action.index] = action.player
+      state = {...state, players: {...players}}
+      state.storedState.players[action.index] = action.player;
       // console.log('@Updated player', state.storedState)
       break;
     case 'LOCK_TOGGLED':
@@ -136,6 +145,7 @@ const reducer = (
       console.log('Received player index', action.index);
       state = { ...state, 
         index: action.index, 
+        visiting: action.index,
         gameIsLive: true,
         ready: false,
         playersReady: -1,
@@ -207,10 +217,18 @@ const reducer = (
         soundEffects: [...tempSoundEffects],
         onGoingBattle: true,
         enemyIndex: action.enemy,
-        actionStack,
-        battleStartBoard,
-        winner,
         startBattle: true,
+        actionStacks: action.actionStacks,
+        battleStartBoard: action.battleStartBoards,
+        winners: action.winners,
+      }
+      if(!state.isDead) {
+        state = {
+          ...state,
+          actionStack,
+          battleStartBoard,
+          winner,
+        }        
       }
       console.log('@battleTime actionStack', state.actionStack);
       // console.log('@battleTime battleStartBoard', state.battleStartBoard)
@@ -232,7 +250,13 @@ const reducer = (
       state = {...state, name: action.name, stats: action.stats, statsMap: statsMap}
       break;
     case 'SELECT_UNIT':
-      state = {...state, selectedUnit: action.selectedUnit, isSelectModeShop: false}
+      if(action.selectedUnit === ''){
+        const selectedUnit = state.selectedUnit;
+        selectedUnit['displaySell'] = false;
+        state = {...state, selectedUnit: {...selectedUnit}}
+      } else {
+        state = {...state, selectedUnit: action.selectedUnit, isSelectModeShop: false}
+      }
       break;
     case 'SELECT_SHOP_INFO':
       state = {...state, selectedShopUnit: action.name, isSelectModeShop: true}
@@ -278,7 +302,7 @@ const reducer = (
       }
       Object.keys(state.players).forEach((key) => {
         if(key !== action.winningPlayer.index)
-          state.players[key].hp = 0;
+          delete state.players[key]
       });
       state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic}
       break;
@@ -312,9 +336,25 @@ const reducer = (
       tempSoundEffects = getNewSoundEffects(state.soundEffects, soundEffect);
       state = {...state, soundEffects: [...tempSoundEffects]};
       break;
-    case 'TOGGLE_ALTERNATE_ANIMATION':
+    case 'TOGGLE_ALTERNATE_ANIMATION': {
       state = {...state, alternateAnimation: !state.alternateAnimation}
       break;
+    }
+    case 'SPEC_PLAYER': {
+      const index = action.playerIndex;
+      state = {...state,
+        visiting: index,
+        myHand: state.players[index].hand,
+        myBoard: state.players[index].board,
+        /*
+          Requires redo logic of battle / how actionStacks are stored to jump between battles
+          battleStartBoard: state.battleStartBoards[index],
+          actionMove: state.actionMoves[index],
+          winners: state.winner[index],
+        */
+      }
+      break;
+    }
     default:
       break;
   }
