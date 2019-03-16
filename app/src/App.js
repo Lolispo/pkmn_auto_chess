@@ -1286,16 +1286,17 @@ class App extends Component {
       {/*<div className='titleCard text_shadow'>Pokemon Auto Chess</div>*/}
       <div className='startButtons'>
         <div className='flex'> 
-          <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')}`} 
+          <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')} ${(this.props.loaded ? '' : 'hidden')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={() => this.startGameEvent()}>
-            StartGame{(this.props.connected ? 
+            Start Game{(this.props.connected ? 
               (!this.props.loaded ? ' Loading ...' :
                 (this.props.playersReady === -1 ? ' Connected!' : ` (${this.props.playersReady}/${this.props.connectedPlayers})`)
               ) 
             : ' Connecting ...')}
           </button>
-          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers ? '' : 'hidden')}`} onClick={() => this.startGameEvent(true)}>
+          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers ? '' : 'hidden')}`} 
+            onClick={() => this.startGameEvent(true)}>
             Force Start Game{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
           </button>
         </div>
