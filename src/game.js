@@ -1976,6 +1976,7 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
   console.log('@removeDeadPlayer', shopUnits, boardList, handList, '=', playerUnits);
   state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));
   const newState = state.set('players', state.get('players').delete(playerIndex));
+  // console.log('@removeDeadPlayer', newState.get('players'));
   const amountOfPlayers = newState.get('amountOfPlayers') - 1;
   return newState.set('amountOfPlayers', amountOfPlayers);
 };

@@ -4,9 +4,9 @@ const { Map, List } = require('immutable');
 const gameJS = require('./game');
 const f = require('./f');
 
-// const rarityAmount = List([45, 30, 25, 15, 10]); // Real version
+const rarityAmount = List([45, 30, 25, 15, 10]); // Real version
 // const rarityAmount = List([3, 3, 3, 3, 3]); // Test version
-const rarityAmount = List([9, 9, 9, 9, 9]); // Test version
+// const rarityAmount = List([9, 9, 9, 9, 9]); // Test version
 
 exports.debugMode = false;
 
@@ -96,10 +96,10 @@ const roundSetConfiguration = Map({
     Map({ name: 'pidgeotto', x: 5, y: 1 }),
   ])),
   10: async () => gameJS.createBattleBoard(List([
-    Map({ name: 'geodude', x: 3, y: 1 }),
+    // Map({ name: 'geodude', x: 3, y: 1 }),
     Map({ name: 'onix', x: 4, y: 1 }),
     Map({ name: 'sandshrew', x: 5, y: 2 }),
-    Map({ name: 'graveler', x: 6, y: 2 }),
+    Map({ name: 'graveler', x: 3, y: 2 }),
   ])),
   15: async () => gameJS.createBattleBoard(List([
     Map({ name: 'staryu', x: 3, y: 1 }),

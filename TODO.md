@@ -10,7 +10,7 @@ Pieces in board -> default @ game_constants
 
 debugMode -> false @ game_constants
 
-hp -> 100 @ player
+hp/Money -> 100/1 @ player
 
 ## Check in Auto Chess
 
@@ -25,8 +25,9 @@ Crash:
     Dead player
     
 Fixed Check:
-
-    Eevee stats screen
+    RefillPieces - shouldnt get a list from playerlost (board units)
+    Eevee stats panel (takes big size)
+    Sell piece button cost css alignment
 
 Test me ingame:
     Player loses
@@ -55,16 +56,22 @@ Odd behaviour:
 
 # Fix me - Prio
     
+    Die same round gets weird
+        Multiple of same id
+
+    Max size of shop base (mewtwo moltres wide)
+
+    Crash - players[key] = null, somewhere players get null back from server
+        Shouldnt crash on this atleast for now
+
+    Lock check
+
     Players die same round
         Handle order as time eliminated
 
     Dont allow ready before loaded
 
     Start screen better sign of loading
-
-    Dead_player
-        Appear on scoreboard
-        scoreboard, different css
 
     DotDamage - NOT MATCHING UP
     Multistrike - Fixed
@@ -80,6 +87,26 @@ Odd behaviour:
     Timer sound
 
 ## Backend
+
+http get request (ajax) sprites
+    Move transfer of sprites 
+    Connect socket first when file is transferred
+
+Move: Get closest enemy
+    If undefined, try again for second closest
+
+pieces: 
+    Trying refill for 414000 units
+    Buy upgrades xd
+
+discarded Pieces
+    Nidoran in masses
+
+if alive, reset visited after battle
+
+Dead players
+    Get battleStartBoard and actionStack from visited index
+    Allow dead players to render battle (currently returns if dead)
 
 battleStartBoard -> battleBoard
 
@@ -193,13 +220,31 @@ Aoe damage logic
 
 ## Frontend
 
-Test me
-    RefillPieces - shouldnt get a list from playerlost (board units)
-    Eevee stats panel (takes big size)
-    Sell piece button cost css alignment
+Deselect
+    Allow deselect but save Stats in infopanel if stats isn't empty
 
-move chat into div
-    React component: easier to fix scrollToBottom
+Enemy type bonuses during battle
+
+Level scoreboard
+
+Lock as deadplayer
+
+sync more stuff for visit, 
+
+Firefox make chat scrollable
+
+Chat sound overlap normal sounds
+
+696x696
+Enable sound on connect
+
+Enemy -> Npc / Gym
+    Images
+
+2 volume sliders instead of 1
+
+More obvious 'lock' when your actions wont be stored anymore
+    When battleready is sent set onGoingBattle to true
 
 Battle Css:
     Last attack isn't displayed
@@ -208,7 +253,6 @@ Battle Css:
         Click on unit beneath it
 
 Gold information calculation
-    Show all players amount of gold
     Calculate and show potential next goal
         win: +5, loss: +2
 

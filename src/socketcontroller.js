@@ -218,7 +218,7 @@ module.exports = (socket, io) => {
     // socket.emit('UPDATED_PIECES', state);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
-    emitMessage(socket, io, sessionId, (socketId) => {       
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
       io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
     });
   });

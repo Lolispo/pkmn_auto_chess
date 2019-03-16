@@ -248,6 +248,10 @@ class Cell extends Component {
       updateMessage(prop, 'You are dead!', 'error');
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       return;
+    } else if(prop.visiting !== prop.index){
+      updateMessage(prop, 'Visiting!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
     }
     if(from && to && prop.gameIsLive){
       console.log('@placePieceEvent',from, to);
@@ -354,7 +358,7 @@ class Cell extends Component {
           if(pokemon && pokemon.buff && pokemon.buff.length > 0){
             // console.log('@stuff', pokemonBuffList, pokemon.buff.length)
             for(let i = 0; i < pokemon.buff.length; i++){
-              pokemonBuffList.push(<span>{pokemon.buff[i] + '\n'}</span>);
+              pokemonBuffList.push(<span key={'buff' + pokemon.buff[i]}>{pokemon.buff[i] + '\n'}</span>);
             }
           }
           buffs = (pokemon && pokemon.buff && pokemon.buff.length > 0 ? <div className='text_shadow textList buffText'>Buffed: {pokemonBuffList}</div> : '');
@@ -611,11 +615,11 @@ class App extends Component {
               </div>
             </span>
           </div>*/}
-          <span>{`Level: ${s.cost}\n`}</span>
           <span className='center'><span>{`Hp: ${s.hp}`}</span>{(buffs['hp'] ? <span className='infoPanelBuff'>{` + ${buffs['hp']}\n`}</span> : '\n')}</span>
           <span><span>{`Attack: ${s.attack}`}</span>{(buffs['attack'] ? <span className='infoPanelBuff'>{` + ${buffs['attack']}\n`}</span> : '\n')}</span>
           <span><span>{`Defense: ${s.defense}`}</span>{(buffs['defense'] ? <span className='infoPanelBuff'>{` + ${buffs['defense']}\n`}</span> : '\n')}</span>
           <span><span>{`Speed: ${s.speed}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['speed']}\n`}</span> : '\n')}</span>
+          <span>{`Level: ${s.cost}\n`}</span>
           <span className={`type ${s.abilityType}`}>{`Ability: ${s.abilityDisplayName}\n`}</span>
         </div>
         <div>
@@ -632,7 +636,7 @@ class App extends Component {
     return <div className={className}>
       <div className='textAlignCenter'>
         <div>{this.props.stats.display_name}</div>
-        {pokeEl}
+        <div className='infoPanelPokemonLogo'>{pokeEl}</div>
       </div>
       {this.buildStats()}
       {(allowSell ? <div className='marginTop5'>
@@ -715,6 +719,10 @@ class App extends Component {
       updateMessage(prop, 'You are dead!', 'error');
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       return;
+    } else if(prop.visiting !== prop.index) {
+      updateMessage(prop, 'Visiting!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
     }
     if(from && to && prop.gameIsLive){
       console.log('@placePieceEvent', from, to);
@@ -741,6 +749,10 @@ class App extends Component {
       updateMessage(prop, 'You are dead!', 'error');
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       return;
+    } else if(prop.visiting !== prop.index) {
+      updateMessage(prop, 'Visiting!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
     }
     const size = Object.keys(prop.myHand).length;
     if(prop.myBoard[from] && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
@@ -758,6 +770,10 @@ class App extends Component {
     const prop = this.props;
     if(prop.isDead){
       updateMessage(prop, 'You are dead!', 'error');
+      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    } else if(prop.visiting !== prop.index) {
+      updateMessage(prop, 'Visiting!', 'error');
       prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       return;
     }
@@ -1016,7 +1032,7 @@ class App extends Component {
 
   startBattleEvent = async () => {
     const { dispatch, actionStack, battleStartBoard, winner } = this.props;
-    if(this.props.isDead){
+    if(this.props.isDead && this.props.visiting === this.props.index){
       return;
     }
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
@@ -1068,10 +1084,15 @@ class App extends Component {
     return <div className='playerScoreboardContainer' key={player.index}>
       <div className='playerScoreboardInner'>
         <span className='flex'>
-          <span className='playerScoreboardName'>{'Player ' + player.index}</span>{(isDead ? <span className='redFont'>{' Eliminated' + '\n'}</span> : 
-          <span>{(this.props.visiting !== player.index ? <button className='normalButton visitButton' onClick={() => this.visitPlayer(player.index)}>
-          {(player.index === this.props.index ? 'Home' : 'Visit')}
-        </button> : '')}<span>{'\n'}</span></span>)}</span>
+          <span className='biggerText'><span className='playerScoreboardName'>{'Player ' + player.index}</span>{(isDead ? <span className='redFont playerScoreboardDead'>{' Dead' + '\n'}</span> : 
+            <span className='playerScoreBoardVisitButtonDiv'>
+              {(this.props.visiting !== player.index ? <button className='normalButton visitButton' onClick={() => this.visitPlayer(player.index)}>
+                  {(player.index === this.props.index ? 'Home' : 'Visit')}
+                </button> : '')}
+              <span>{'\n'}</span>
+            </span>)}
+          </span>
+        </span>
         {(this.props.players[player.index] && this.props.players[player.index].gold ? <span className='flex'>
           <span className='flex'>
             <img className='goldImageScoreboard' src={getImage('pokedollar')} alt='pokedollar'/>
@@ -1096,7 +1117,10 @@ class App extends Component {
 
   playerStatsDiv = () => {
     const players = this.props.players;
-    const sortedPlayersByHp = Object.keys(players).sort(function(a,b){return players[b].hp - players[a].hp});
+    // console.log('@playerStatsDiv, Players: ', players);
+    // TODO: Prevent keys of players being null
+    const playerKeys = Object.keys(players).filter(key => key !== null && players[key] !== null);
+    const sortedPlayersByHp = playerKeys.sort(function(a,b){return players[b].hp - players[a].hp});
     let list = [];
     for(let i = 0; i < sortedPlayersByHp.length; i++){
       const player = players[sortedPlayersByHp[i]];
@@ -1104,12 +1128,18 @@ class App extends Component {
       list.push(this.createScoreboardPlayerEntry(player, false));
     }
     const deadPlayers = this.props.deadPlayers;
+    for(let i = 0; i < deadPlayers.length; i++){
+      const player = deadPlayers[i];
+      list.push(this.createScoreboardPlayerEntry(player, true));
+    }
+    /*
     Object.keys(deadPlayers).forEach((deadPlayer) => {
       const player = deadPlayers[deadPlayer];
       list.push(this.createScoreboardPlayerEntry(player, true));
     })
+    */
     // console.log('@PlayerStatsDiv', sortedPlayersByHp);
-    return <div className='scoreboard' style={{paddingTop: '45px'}}>
+    return <div className='scoreboard'>
       <div className='text_shadow biggerText '>
         <span className='playerScoreboardName'>Scoreboard:</span>  
         {list}   
@@ -1222,10 +1252,16 @@ class App extends Component {
           chat = true;
         break;
     }
-    return (chat ? <div>{<div className='helpText text_shadow'><span className='bold'>Chat:</span><div>{messageCollection}</div>
-    <div style={{ float:"left", clear: "both" }}
-      ref={(el) => { this.messagesEnd = el;}}>
-    </div></div>}
+    return (chat ? <div>{
+    <div className='helpText text_shadow'>
+      <span className='bold'>Chat:</span>
+      <div className='messageContainerDiv'>
+        <div className='messagesContainer'>{messageCollection}</div>
+      </div>
+      <div style={{ float:"left", clear: "both" }}
+        ref={(el) => { this.messagesEnd = el;}}>
+      </div>
+    </div>}
     <div className='chatTypingDiv'>
       <form onSubmit={this.handleChatSubmit}>
         <label>
@@ -1235,7 +1271,10 @@ class App extends Component {
         <input className='text_shadow normalButton' style={{height: '25px'}} type="submit" value="Submit" />
       </form>
     </div>
-    </div> : <div className='helpText text_shadow'><span className='bold'>{'Information:\n'}</span>{s}</div>);
+    </div> : <div className='helpText text_shadow'>
+        <span className='bold'>{'Information:\n'}</span>
+        <div className='messageContainerSimple'>{s}</div>
+    </div>);
   }
 
   render() {
@@ -1300,7 +1339,7 @@ class App extends Component {
             {'Message: ' + this.props.message}
           </div>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={10} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
           {this.selectedUnitInformation()}
@@ -1353,8 +1392,9 @@ class App extends Component {
           <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
         </div>
       </div>;
-    const rightSide = <div>
-        <div className='flex'>
+    const rightSide = <div className='flex'>
+      <div>
+        <div>
           <div className='paddingLeft5'>
             <div>
               <div>
@@ -1383,7 +1423,6 @@ class App extends Component {
               </div>
             </div>
           </div>
-          {this.playerStatsDiv()}
         </div>
         <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
           <div className='flex'>
@@ -1396,7 +1435,7 @@ class App extends Component {
             <div>
               <button style={{marginLeft: '5px'}} className='normalButton' onClick={this.buyExpEvent}>Buy Exp</button>
               <div className='flex marginTop5 goldImageSmallDiv'>
-                <img className='goldImageSmall' src={getImage('goldCoin')} style={{marginLeft: '28px'}} alt='goldCoin'/>
+                <img className='goldImageSmall' src={getImage('goldCoin')} style={{marginLeft: '18px'}} alt='goldCoin'/>
                 <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`}>5</div>
               </div>
             </div>
@@ -1412,7 +1451,9 @@ class App extends Component {
           <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
         </div>
         {(this.props.help ? this.buildHelp() : '')}
-      </div>;
+      </div>
+      {this.playerStatsDiv()}
+    </div>;
     return (this.props.gameIsLive ? <div className='gameDiv'>
       {topBar}
       <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>

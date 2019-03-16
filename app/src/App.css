@@ -221,8 +221,12 @@ body {
 }
 
 .infoPanelStats {
-  padding-top: 15px;
+  padding-top: 5px;
   font-size: 15px;
+}
+
+.infoPanelPokemonLogo {
+  height: 50px;
 }
 
 .noSelected{
@@ -669,9 +673,23 @@ body {
   white-space: pre-line;
   padding-left: 5px;
   margin-top: 5px;
+}
+
+.messageContainerDiv{
+  display: flex;
+  flex-direction: column-reverse;
+  height: 290px;
   overflow: auto;
-  height: 310px;
-  width: 550px;
+}
+
+.messagesContainer{
+  width: 456px;
+}
+
+.messageContainerSimple {
+  height: 290px;
+  width: 456px;
+  overflow: auto;
 }
 
 .textInput {
@@ -754,6 +772,13 @@ body {
 
 .playerScoreboardName{
   font-size: 28px;
+}
+
+.playerScoreboardDead {
+}
+
+.playerScoreBoardVisitButtonDiv {
+  position: absolute;
 }
 
 .visitButton {
@@ -889,6 +914,7 @@ body {
   font-size: 20px;
   left: 11px;
   top: 7px;
+  animation: enter 1.2s;
 }
 
 .typeDiv {

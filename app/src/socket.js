@@ -16,6 +16,7 @@ const configureSocket = dispatch => {
     console.log('connected');
     dispatch({type: 'SET_CONNECTED', connected: true})
     giveId();
+    console.log('Requesting Sprites ...');
     getSprites();
     /*
     const sprites = localStorage.getItem('sprites');

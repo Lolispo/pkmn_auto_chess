@@ -54,8 +54,8 @@ const reducer = (
     typeStatsString: '',
     typeBonusString: '',
     round: 1,
-    musicEnabled: false,
-    soundEnabled: false,
+    musicEnabled: true,
+    soundEnabled: true,
     chatSoundEnabled: true,
     selectedSound: '',
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
@@ -66,7 +66,7 @@ const reducer = (
     selectedShopUnit: '',
     isSelectModeShop: false,
     boardBuffs: {},
-    deadPlayers: {},
+    deadPlayers: [],
     pokemonSprites: {},
     alternateAnimation: true,
     loaded: false,
@@ -86,6 +86,7 @@ const reducer = (
       break;
     case 'NEW_STATE':
       // Update state with incoming data from server
+      console.log('@NewState Players: ', action.newState.players);
       state = { ...state,  
         storedState: action.newState,
         message: 'Received State', 
@@ -104,7 +105,7 @@ const reducer = (
           expToReach: action.newState.players[state.index].expToReach,
           gold: action.newState.players[state.index].gold,
           streak: action.newState.players[state.index].streak,
-          lock: action.newState.players[state.index].lock,
+          // lock: action.newState.players[state.index].lock,
         };
       }
       console.log('New State', action.newState)
@@ -171,7 +172,7 @@ const reducer = (
         startTimer: true,
         isDead: false,
         boardBuffs: {},
-        deadPlayers: {},
+        deadPlayers: [],
       }
       break;
     case 'SET_CONNECTED':
@@ -229,6 +230,16 @@ const reducer = (
           battleStartBoard,
           winner,
         }        
+      } else if(state.visiting !== state.index && action.battleStartBoards[state.visiting]) {
+        const actionStackVisit = action.actionStacks[state.visiting];
+        const battleStartBoardVisit = action.battleStartBoards[state.visiting];
+        const winnerVisit = action.winners[state.visiting];
+        state = {
+          ...state,
+          actionStack: actionStackVisit,
+          battleStartBoard: battleStartBoardVisit,
+          winner: winnerVisit,
+        }
       }
       console.log('@battleTime actionStack', state.actionStack);
       // console.log('@battleTime battleStartBoard', state.battleStartBoard)
@@ -294,28 +305,37 @@ const reducer = (
       tempSoundEffects = getNewSoundEffects(state.soundEffects, action.newSoundEffect);
       state = {...state, soundEffects: [...tempSoundEffects]};
       break;
-    case 'END_GAME':
+    case 'END_GAME': {
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
       let newMusic = state.music;
       if(state.index === action.winningPlayer.index){
         newMusic = getBackgroundAudio('wonGame')
       }
+      console.log('Remaining keys in players ...', Object.keys(state.players));
       Object.keys(state.players).forEach((key) => {
-        if(key !== action.winningPlayer.index)
-          delete state.players[key]
+        if(key !== action.winningPlayer.index) {
+          console.log('Deleting key ...', key, state.players)
+          delete state.players[key];
+        }
       });
       state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic}
       break;
-    case 'DEAD_PLAYER':
+    }
+    case 'DEAD_PLAYER': {
       if(action.pid === state.index) {
         state = {...state, message: 'You Lost! You finished ' + state.position + '!', messageMode: 'big', isDead: true}
       }
+      console.log('Before: Removing player ' + action.pid, state.players);
+      const players = state.players;
+      delete players[action.pid];
+      console.log('Removing player ' + action.pid, players, state.players);
       const deadPlayer = {index: action.pid, hp: 0, pos: state.position};
       const deadPlayers = state.deadPlayers;
-      deadPlayers[action.pid] = deadPlayer;
-      state = {...state, deadPlayers}
+      deadPlayers.push(deadPlayer);
+      state = {...state, deadPlayers, players}
       console.log('reducer.Dead_player', state.deadPlayers, deadPlayers);
       break;
+    }
     case 'NEW_CHAT_MESSAGE':
       // console.log('@NEW_CHAT_MESSAGE', action.chatType);
       const { senderMessages, chatMessages } = state;
