@@ -206,7 +206,7 @@ const reducer = (
       state = {...state, help: !state.help}
       break;
     case 'SET_HELP_MODE':
-      state = {...state, chatHelpMode: action.chatHelpMode}    
+      state = {...state, chatHelpMode: action.chatHelpMode, showDmgBoard: false}    
       break;
     case 'SET_TYPE_BONUSES':
       state = {...state, typeStatsString: action.typeDescs, typeBonusString: action.typeBonuses}

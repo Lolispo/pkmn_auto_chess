@@ -698,8 +698,18 @@ class App extends Component {
       {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
       JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}
     */
-   let counter = 0;
-    Object.keys(boardBuffs.buffMap).forEach(type => {
+    let counter = 0;
+    const buffKeys = Object.keys(boardBuffs.buffMap);
+    const sortedBuffKeys = buffKeys.sort((a,b) => {
+      const markedA = boardBuffs.typeBuffMapSolo[a] || boardBuffs.typeBuffMapAll[a] || boardBuffs.typeDebuffMapEnemy[a];
+      const markedB = boardBuffs.typeBuffMapSolo[b] || boardBuffs.typeBuffMapAll[b] || boardBuffs.typeDebuffMapEnemy[b];
+      const ma = (markedA ? markedA['tier'] : 0);
+      const mb = (markedB ? markedB['tier'] : 0);
+      return mb - ma;
+    });
+    // Object.keys(boardBuffs.buffMap).forEach(type => {
+    for(let i = 0; i < sortedBuffKeys.length; i++){
+      const type = sortedBuffKeys[i];
       const amount = boardBuffs.buffMap[type];
       const marked = boardBuffs.typeBuffMapSolo[type] || boardBuffs.typeBuffMapAll[type] || boardBuffs.typeDebuffMapEnemy[type];
       let bonus;
@@ -719,7 +729,7 @@ class App extends Component {
       </span>
       );
       counter += 1;
-    });
+    };
     return <div className='typeDiv'>{list}</div>;
   }
 

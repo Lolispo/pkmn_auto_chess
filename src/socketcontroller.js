@@ -16,7 +16,11 @@ const TIME_FACTOR = 15;
 
 const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId');
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
-const sessionExist = socketId => !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId')));
+
+const sessionExist = socketId => {
+  if(f.isUndefined(connectedPlayers)) return false;
+  return !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId')));
+}
 
 const emitMessage = (socket, io, sessionId, func) => {
   const iter = connectedPlayers.keys();

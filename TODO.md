@@ -216,9 +216,6 @@ Aoe damage logic
 
 ## Frontend
 
-Damage Dealt when nothing -> something
-    Change damageBoard when battle is done
-
 Redo battle rendering
     Init: startBattleTime = new Date(),  
     moves.forEach((move) => {
