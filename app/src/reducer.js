@@ -47,6 +47,7 @@ const reducer = (
     actionStack: {},
     battleStartBoard: {},
     winner: false,
+    dmgBoard: {},
     selectedUnit: -1,
     mouseOverId: -1,
     stats: {},
@@ -55,7 +56,8 @@ const reducer = (
     typeBonusString: '',
     round: 1,
     musicEnabled: false,
-    soundEnabled: true,
+    soundEnabled: false,
+    timerDuration: 15,
     chatSoundEnabled: true,
     selectedSound: '',
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
@@ -74,6 +76,8 @@ const reducer = (
     actionStacks: {},
     battleStartBoards: {},
     winners: {},
+    dmgBoards: {},
+    showDmgBoard: false,
   },
   action
 ) => {
@@ -166,6 +170,7 @@ const reducer = (
         actionStack: {},
         battleStartBoard: {},
         winner: false,
+        dmgBoard: {},
         selectedUnit: -1,
         soundEffects: ['', '', '', '', '','', '', '', '', ''],
         music: getBackgroundAudio('idle'),
@@ -210,6 +215,8 @@ const reducer = (
       const actionStack = action.actionStacks[state.index];
       const battleStartBoard = action.battleStartBoards[state.index];
       const winner = action.winners[state.index];
+      const dmgBoard = action.dmgBoards[state.index];
+      console.log('New dmg board in reducer', dmgBoard);
       // console.log('@battle_time', state.soundEffects)
       tempSoundEffects = getNewSoundEffects(state.soundEffects, getSoundEffect('horn'));
       state = {
@@ -222,6 +229,7 @@ const reducer = (
         actionStacks: action.actionStacks,
         battleStartBoard: action.battleStartBoards,
         winners: action.winners,
+        dmgBoards: action.dmgBoards,
       }
       if(!state.isDead) {
         state = {
@@ -229,16 +237,19 @@ const reducer = (
           actionStack,
           battleStartBoard,
           winner,
+          dmgBoard,
         }        
       } else if(state.visiting !== state.index && action.battleStartBoards[state.visiting]) {
         const actionStackVisit = action.actionStacks[state.visiting];
         const battleStartBoardVisit = action.battleStartBoards[state.visiting];
         const winnerVisit = action.winners[state.visiting];
+        const dmgBoardVisit = action.dmgBoards[state.visiting];
         state = {
           ...state,
           actionStack: actionStackVisit,
           battleStartBoard: battleStartBoardVisit,
           winner: winnerVisit,
+          dmgBoard: dmgBoardVisit,
         }
       }
       console.log('@battleTime actionStack', state.actionStack);
@@ -277,8 +288,12 @@ const reducer = (
       break;
     case 'END_BATTLE':  
       console.log('Battle ended', state.startTimer)
-      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), startTimer: true}
+      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), startTimer: true, showDmgBoard: true}
       break;
+    case 'TOGGLE_SHOW_DMGBOARD': {
+      state = {...state, showDmgBoard: !state.showDmgBoard}
+      break;
+    }
     case 'DISABLE_START_TIMER':
       state = {...state, startTimer: false}
       // console.log('Disabled start timer')

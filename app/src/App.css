@@ -444,7 +444,7 @@ body {
   height: 17px;
   width: 12px;
   padding-top: 7px;
-  margin-left: 11px;
+  margin-left: 6px;
 }
 
 .goldImageTextSmall {
@@ -770,6 +770,11 @@ body {
   position: relative;
 }
 
+.playerScoreboardLevel {
+  margin-top: 3px;
+  margin-left: 11px;
+}
+
 .playerScoreboardName{
   font-size: 28px;
 }
@@ -807,6 +812,23 @@ body {
   padding-top: 5px;
 }
 
+.dmgBoardDiv {
+  margin-left: 20px;
+  animation-name: enter;
+	animation-duration: 0.9s; /* 1.2s */
+}
+
+.dmgBoardUnit {
+  margin-bottom: 2px;
+}
+
+.dmgBoardUnitName {
+  font-weight: bold;
+}
+
+.dmgBoardUnitValue {
+
+}
 
 .manaBar {
   background-color: blue;

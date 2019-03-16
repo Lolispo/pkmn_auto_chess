@@ -296,6 +296,8 @@ module.exports = (socket, io) => {
         // console.log('@sc.battleReady Pre battle state', preBattleState.getIn(['players']));
         const actionStacks = battleObject.get('actionStacks');
         const startingBoards = battleObject.get('startingBoards');
+        const dmgBoards = battleObject.get('dmgBoards');
+        console.log('dmgBoards', dmgBoards);
 
         const winners = battleObject.get('winners');
         const finalBoards = battleObject.get('finalBoards');
@@ -317,7 +319,7 @@ module.exports = (socket, io) => {
             io.to(socketId).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           });
           // io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
-          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, enemy);
+          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, enemy, dmgBoards);
           temp = iter.next();
         }
         const longestBattleTime = await sessionJS.getLongestBattleTime(actionStacks)

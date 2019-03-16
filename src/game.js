@@ -1141,6 +1141,7 @@ async function getUnitWithNextMove(board) {
 async function startBattle(boardParam) {
   let actionStack = List([]);
   let unitMoveMap = Map({});
+  let dmgBoard = Map({});
   let board = boardParam;
   // f.print(board, '@startBattle')
   let battleOver = false;
@@ -1205,6 +1206,10 @@ async function startBattle(boardParam) {
       pos = result.get('nextMove').get('target');
     } else {
       nextMoveValue = +unit.get('next_move') + +unit.get('speed');
+      // Add to dpsBoard
+      if(unit.get('team') === 0){
+        dmgBoard = dmgBoard.set(unit.get('display_name'), (dmgBoard.get(unit.get('name')) || 0) + result.get('nextMove').get('value'));
+      }
     }
     board = board.setIn([pos, 'next_move'], nextMoveValue);
     // console.log('Updating next_move', nextMoveValue, board.get(pos));
@@ -1217,7 +1222,7 @@ async function startBattle(boardParam) {
       actionStack = actionStack.push(madeMove);
       if (result.get('allowSameMove')) { // Store target to be used as next Target
         unitMoveMap = unitMoveMap.set(nextUnitToMove, result);
-      } else { // Delete every key mapping to nextMoveResult
+      } else { // Unit died, Delete every key mapping to nextMoveResult
         const nextMoveAction = moveAction;
         if (nextMoveAction === 'attack' || nextMoveAction === 'spell') { // Unit attacked died
           // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
@@ -1244,6 +1249,9 @@ async function startBattle(boardParam) {
       const move = await Map({
         unitPos: nextUnitToMove, action, value: dotDamage, target: nextUnitToMove,
       });
+      if(unit.get('team') === 1){
+        dmgBoard = dmgBoard.set('dot', (dmgBoard.get('dot') || 0) + dotDamage);
+      }
       // console.log('dot damage dealt!', board);
       if (dotObj.get('unitDied')) { // Check if battle ends
         console.log('@dot - unitdied');
@@ -1264,7 +1272,7 @@ async function startBattle(boardParam) {
   f.p('@Last - A Survivor', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value).get('name'));
   const team = newBoard.get(newBoard.keys().next().value).get('team');
   const winningTeam = team;
-  return Map({ actionStack, board: newBoard, winner: winningTeam });
+  return Map({ actionStack, board: newBoard, winner: winningTeam, dmgBoard });
 }
 
 
@@ -1615,8 +1623,10 @@ async function battleTime(stateParam) {
     // For visualization of battle
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
+    const dmgBoard = resultBattle.get('dmgBoard');
     battleObject = battleObject.setIn(['actionStacks', index], actionStack);
     battleObject = battleObject.setIn(['startingBoards', index], startBoard);
+    battleObject = battleObject.setIn(['dmgBoards', index], dmgBoard);
 
     // For endbattle calculations
     const winner = (resultBattle.get('winner') === 0);
@@ -1655,8 +1665,10 @@ async function npcRound(stateParam, npcBoard) {
 
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
+    const dmgBoard = resultBattle.get('dmgBoard');    
     battleObject = battleObject.setIn(['actionStacks', currentPlayer], actionStack);
     battleObject = battleObject.setIn(['startingBoards', currentPlayer], startBoard);
+    battleObject = battleObject.setIn(['dmgBoards', currentPlayer], dmgBoard);
 
     // For endbattle calculations
     const winner = (resultBattle.get('winner') === 0);

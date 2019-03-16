@@ -4,7 +4,7 @@
 
 Enable sounds @ reducer 'enabledSound'
 
-Timer -> 30 @ App '5'
+Timer -> 30 @ reducer 'timerDuration' 
 
 Pieces in board -> default @ game_constants
 
@@ -88,9 +88,8 @@ Odd behaviour:
 
 ## Backend
 
-http get request (ajax) sprites
-    Move transfer of sprites 
-    Connect socket first when file is transferred
+dmgBoard give actual damage given and not damage set out to do
+    if unit has 5 hp and i do 10 dmg, put in board as 5 dmg
 
 Move: Get closest enemy
     If undefined, try again for second closest
@@ -220,14 +219,31 @@ Aoe damage logic
 
 ## Frontend
 
+Sort DmgBoard
+
+Redo battle rendering
+    Init: startBattleTime = new Date(),  
+    moves.forEach((move) => {
+        timeouts.push(setTimeout((dispatch) => {
+            check bordindex is correct
+                Do move calculations on board
+        }))
+    })
+    onBoardChange: timeouts.forEach((timeout) => {
+        clearTimeout(timeouts)
+        battleStartBoard = battleStartBoards[i]
+        currentTime = newDate = startBattleTime
+        Calc all moves up until currentTime
+        Render moves from here on out with same method as above
+            Array[i - last] where i is where time is at
+    })
+
 Deselect
     Allow deselect but save Stats in infopanel if stats isn't empty
 
 Enemy type bonuses during battle
 
 Level scoreboard
-
-Lock as deadplayer
 
 sync more stuff for visit
     Type bonuses

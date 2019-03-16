@@ -512,6 +512,15 @@ class App extends Component {
     }
   }
 
+  toggleLockEvent = () => {
+    if(this.props.isDead){
+      updateMessage(this.props, 'You are dead! No shop interaction when dead', 'error');
+      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+      return;
+    }
+    toggleLock(this.props.storedState);
+  }
+
   buyExpEvent = () => {
     // You have enough money to buy exp
     if(this.props.isDead){
@@ -1093,7 +1102,10 @@ class App extends Component {
             </span>)}
           </span>
         </span>
-        {(this.props.players[player.index] && this.props.players[player.index].gold ? <span className='flex'>
+        {(this.props.players[player.index] ? <span className='flex'>
+          <span className='playerScoreboardLevel'>
+            <span>{'Lvl: ' + this.props.players[player.index].level}</span>
+          </span>
           <span className='flex'>
             <img className='goldImageScoreboard' src={getImage('pokedollar')} alt='pokedollar'/>
             <span className='goldImageTextSmall'>{this.props.players[player.index].gold}</span>
@@ -1277,6 +1289,18 @@ class App extends Component {
     </div>);
   }
 
+  getDmgBoard = () => {
+    const list = [];
+    Object.keys(this.props.dmgBoard).forEach(unitName => {
+      const value = this.props.dmgBoard[unitName];
+      list.push(<div className='dmgBoardUnitDiv' key={unitName}>
+        <span className='dmgBoardUnitName'>{unitName + ': '}</span>
+        <span className='dmgBoardUnitValue'>{value}</span>
+      </div>)
+    });
+    return list;
+  }
+
   render() {
     const mainMenu = <div>
       <div className='logos'>
@@ -1340,7 +1364,7 @@ class App extends Component {
             {'Message: ' + this.props.message}
           </div>
         </div>
-        {this.props.gameIsLive ? <Timer startTime={30} key={this.props.round} startTimer={this.props.startTimer} 
+        {this.props.gameIsLive ? <Timer startTime={this.props.timerDuration} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
           {this.selectedUnitInformation()}
@@ -1407,7 +1431,7 @@ class App extends Component {
                 <div className='flex'>
                   <div className='shopInteractDiv'>
                     <div>
-                      <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={() => toggleLock(this.props.storedState)} 
+                      <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={this.toggleLockEvent} 
                       src={this.props.lock ? getImage('lockedLock') : getImage('openLock')} alt='lock'/>   
                     </div>
                     <div style={{paddingTop: '10px'}}>
@@ -1445,13 +1469,18 @@ class App extends Component {
               <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
             </div>*/}
           </div>
-          {(this.props.help ? <div className='text_shadow marginTop15'>
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>Chat 
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'hotkeys'})}/>Hotkeys 
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'types'})}/>Types
-          <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
         </div>
-        {(this.props.help ? this.buildHelp() : '')}
+          {(this.props.showDmgBoard && !this.props.onGoingBattle && this.props.dmgBoard ? <div className='dmgBoardDiv text_shadow'>
+              <span className='bold'>Damage Dealt:</span>{this.getDmgBoard()}
+            </div> : 
+            <div>
+            {(this.props.help ? <div className='text_shadow marginTop15'>
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>Chat 
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'hotkeys'})}/>Hotkeys 
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'types'})}/>Types
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
+            {(this.props.help ? this.buildHelp() : '')} </div>
+          )}
       </div>
       {this.playerStatsDiv()}
     </div>;
@@ -1499,6 +1528,7 @@ const mapStateToProps = state => ({
   actionStack: state.actionStack,
   battleStartBoard: state.battleStartBoard,
   winner: state.winner,
+  dmgBoard: state.dmgBoard,
   selectedUnit: state.selectedUnit,
   mouseOverId: state.mouseOverId,
   stats: state.stats,
@@ -1525,6 +1555,8 @@ const mapStateToProps = state => ({
   alternateAnimation: state.alternateAnimation,
   loaded: state.loaded,
   visiting: state.visiting,
+  showDmgBoard: state.showDmgBoard,
+  timerDuration: state.timerDuration,
 });
 
 export default connect(mapStateToProps)(App);
