@@ -74,7 +74,7 @@ Odd behaviour:
     Start screen better sign of loading
 
     DotDamage - NOT MATCHING UP
-    Multistrike - Fixed
+    Multistrike - Check
 
     Player loses
         dont crash when new battle starts (check .index)
@@ -87,6 +87,9 @@ Odd behaviour:
     Timer sound
 
 ## Backend
+
+Select during battle
+    Sell enemy units xd
 
 Move: Get closest enemy
     If undefined, try again for second closest

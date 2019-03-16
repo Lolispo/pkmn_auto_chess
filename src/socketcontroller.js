@@ -19,7 +19,7 @@ const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connect
 
 const sessionExist = socketId => {
   if(f.isUndefined(connectedPlayers)) return false;
-  return !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId')));
+  return !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId'))); // Crashed here somehow, early
 }
 
 const emitMessage = (socket, io, sessionId, func) => {

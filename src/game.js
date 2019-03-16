@@ -61,7 +61,7 @@ async function refillPieces(pieces, discardedPieces) {
   if (discardedPieces.size === 0) {
     return pieces;
   }
-  console.log('@refillPieces Refilling', discardedPieces.size, 'units'); // pieceStorage
+  console.log('@refillPieces Refilling', discardedPieces.size, 'units (Pieces size =', pieces.size + ')'); // pieceStorage
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     const cost = (await pokemonJS.getStats(name)).get('cost');
@@ -165,7 +165,7 @@ async function refreshShop(stateParam, playerIndex) {
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
     const shopToList = fromJS(Array.from(filteredShop.map((value, key) => value).values()));
-    // console.log('@refreshShop filteredShop', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
+    console.log('@refreshShop:', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
     state = state.set('discardedPieces', discPieces.concat(shopToList));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
@@ -333,9 +333,13 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   if (pieceCounter >= 3) { // Upgrade unit @ position
     // console.log('UPGRADING UNIT', name);
     let board = state.getIn(['players', playerIndex, 'board']);
+    let discPieces = state.get('discardedPieces');
     for (let i = 0; i < positions.size; i++) {
+      const unit = board.get(positions.get(i));
+      discPieces = discPieces.push(unit.get('name'));
       board = board.delete(positions.get(i));
     }
+    state = state.set('discardedPieces', discPieces);
     state = state.setIn(['players', playerIndex, 'board'], board);
     const evolvesUnit = stats.get('evolves_to');
     let evolvesTo = evolvesUnit;
@@ -459,10 +463,11 @@ async function discardBaseUnits(state, name, depth = '1') {
   if (f.isUndefined(evolutionFrom)) { // Base level
     let discPieces = state.get('discardedPieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
+    console.log('@discardBaseUnits', amountOfPieces, depth, name);
     for (let i = 0; i < amountOfPieces; i++) {
-      discPieces = await discPieces.push(name);
+      discPieces = discPieces.push(name);
     }
-    return state.set('discardedPieces', discPieces);
+    return state.set('discardedPieces', (await discPieces));
   }
   console.log('CHECK ME IF CRASH', evolutionFrom);
   const newName = evolutionFrom;
