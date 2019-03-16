@@ -279,6 +279,8 @@ class Cell extends Component {
     // If unit selected -> presses empty -> place piece 
     if(this.state.pos !== prevSelectedUnit.pos){ // Shouldn't do anything if same tile as SELECT_UNIT Tile
       el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit, displaySell: true}});
+    } else if (!prevSelectedUnit.displaySell) { 
+      el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: {...el.props.value, isBoard: el.props.isBoard, pos: this.state.pos, unit: unit, displaySell: true}});
     } else { // Deselect by doubleclick same unit
       el.props.newProps.dispatch({ type: 'SELECT_UNIT', selectedUnit: ''}); // {isBoard: el.props.isBoard, pos: ''}
     }
@@ -286,7 +288,8 @@ class Cell extends Component {
       console.log('Get Stats for', unit.name)
       el.props.newProps.dispatch({ type: 'NEW_UNIT_SOUND', newAudio: ''});
       this.getStatsEvent(el.props.newProps, unit.name);
-    } else if(prevSelectedUnit.pos && this.state.pos !== prevSelectedUnit.pos && prevSelectedUnit.unit){ // Pressed empty cell
+    } else if(prevSelectedUnit.pos && this.state.pos !== prevSelectedUnit.pos && 
+              prevSelectedUnit.unit && prevSelectedUnit.displaySell){ // Pressed empty cell
       this.placePieceEvent(prevSelectedUnit.pos, this.state.pos);
     }
   }
@@ -380,7 +383,7 @@ class Cell extends Component {
     const selPos = this.props.newProps.selectedUnit;
     //console.log('@Cell.render', selPos, this.props.newProps.selectedUnit)
     let className = 'cell' +
-    (!isUndefined(selPos) && this.props.isBoard === selPos.isBoard && 
+    (!isUndefined(selPos) && this.props.isBoard === selPos.isBoard && selPos.displaySell &&
     selPos.x === this.props.value.x && selPos.y === this.props.value.y ? ' markedUnit' : '');
     return (
       <div id={this.state.pos} className={className} onClick={() => this.handleCellClick(this)} 
@@ -819,7 +822,7 @@ class App extends Component {
       case '8':
         from = String(parseInt(event.key) - 1);
       case 'q':
-        from = (isUndefined(from) ? prop.selectedUnit.pos : from);
+        from = (isUndefined(from) ? (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '') : from);
         const to = prop.mouseOverId;
         console.log('@placePiece q pressed', from, to)
         this.placePieceEvent(from, to);
@@ -831,13 +834,13 @@ class App extends Component {
         if(!isUndefined(from) && prop.myBoard[from]){
           this.withdrawPieceEvent(from);
         } else {
-          from = prop.selectedUnit.pos;
+          from = (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '');
           this.withdrawPieceEvent(from);
         }
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
       case 'e':
-        from = prop.selectedUnit.pos;
+        from = (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '');
         if(!isUndefined(from)){
           this.sellPieceEvent(from);
         } else {
@@ -1292,6 +1295,7 @@ class App extends Component {
   getDmgBoard = () => {
     const list = [];
     const dmgBoard = this.props.dmgBoard;
+    if(!this.props.dmgBoard) return '';
     const keys = Object.keys(this.props.dmgBoard);
     const sortedDmgBoard = keys.sort((a,b) => dmgBoard[b] - dmgBoard[a]);
     // keys.forEach(unitName => {
@@ -1475,17 +1479,19 @@ class App extends Component {
             </div>*/}
           </div>
         </div>
-          {(this.props.showDmgBoard && !this.props.onGoingBattle && this.props.dmgBoard ? <div className='dmgBoardDiv text_shadow'>
-              <span className='bold'>Damage Dealt:</span>{this.getDmgBoard()}
-            </div> : 
-            <div>
-            {(this.props.help ? <div className='text_shadow marginTop15'>
+        <div>
+          {(this.props.help ? <div className='text_shadow marginTop15'>
             <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>Chat 
             <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'hotkeys'})}/>Hotkeys 
             <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'types'})}/>Types
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>TypeBonuses</div>: '')}
-            {(this.props.help ? this.buildHelp() : '')} </div>
-          )}
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>Buffs
+            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'damageBoard'})}/>Damage
+          </div>: '')}
+            {(!this.props.onGoingBattle && ((this.props.showDmgBoard && this.props.dmgBoard) 
+              || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>
+              <span className='bold'>Damage Dealt:</span>{this.getDmgBoard()}
+            </div> : (this.props.help ? this.buildHelp() : ''))}
+        </div>
       </div>
       {this.playerStatsDiv()}
     </div>;

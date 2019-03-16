@@ -328,6 +328,7 @@ module.exports = (socket, io) => {
         setTimeout(async () => {
           // After all battles are over
           f.p('Time to End Battle');
+          if (!sessionExist(socket.id)) return;
           const stateAfterBattle = sessionJS.buildStateAfterBattle(socket.id, connectedPlayers, sessions, newState);
           // Endbattle and get endTurned state
 

@@ -275,6 +275,7 @@ const reducer = (
       if(action.selectedUnit === ''){
         const selectedUnit = state.selectedUnit;
         selectedUnit['displaySell'] = false;
+        // selectedUnit['pos'] = '';
         state = {...state, selectedUnit: {...selectedUnit}}
       } else {
         state = {...state, selectedUnit: action.selectedUnit, isSelectModeShop: false}

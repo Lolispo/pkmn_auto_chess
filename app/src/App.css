@@ -391,10 +391,6 @@ body {
 	top:1px;
 }
 
-.chatTypingDiv {
-  padding-left: 5px;
-}
-
 .growAnimation {
   animation: growText 1s ease-in-out 0s alternate infinite both running;
 }
@@ -453,7 +449,6 @@ body {
 }
 
 .shopCostText {
-
   padding-left: 2px;
 }
 
@@ -669,10 +664,18 @@ body {
   z-index: 10;
 }
 
+.chatTypingDiv {
+  padding-left: 5px;
+  animation-name: enter;
+	animation-duration: 0.9s;
+}
+
 .helpText {
   white-space: pre-line;
   padding-left: 5px;
   margin-top: 5px;
+  animation-name: enter;
+	animation-duration: 0.9s;
 }
 
 .messageContainerDiv{
@@ -690,6 +693,8 @@ body {
   height: 290px;
   width: 456px;
   overflow: auto;
+  animation-name: enter;
+	animation-duration: 0.9s;
 }
 
 .textInput {
@@ -813,7 +818,7 @@ body {
 }
 
 .dmgBoardDiv {
-  margin-left: 20px;
+  margin-left: 10px;
   animation-name: enter;
 	animation-duration: 0.9s; /* 1.2s */
 }
