@@ -1312,7 +1312,12 @@ class App extends Component {
     for(let i = 0; i < sortedDmgBoard.length; i++){
       const unitName = sortedDmgBoard[i];
       const value = this.props.dmgBoard[unitName];
+      console.log('@getDmgBoard', value, this.props.dmgBoardTotalDmg)
+      const width = value / this.props.dmgBoardTotalDmg * 100 + '%';
       list.push(<div className='dmgBoardUnitDiv' key={unitName}>
+        <div className='damageBarDiv'>
+          <span className='damageBar friendlyBar' style={{width: width}}></span>
+        </div>
         <span className='dmgBoardUnitName'>{unitName + ': '}</span>
         <span className='dmgBoardUnitValue'>{value}</span>
       </div>)
@@ -1578,6 +1583,7 @@ const mapStateToProps = state => ({
   visiting: state.visiting,
   showDmgBoard: state.showDmgBoard,
   timerDuration: state.timerDuration,
+  dmgBoardTotalDmg: state.dmgBoardTotalDmg,
 });
 
 export default connect(mapStateToProps)(App);

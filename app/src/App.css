@@ -723,6 +723,23 @@ body {
   z-index: 4;
 }
 
+.damageBarDiv {
+  width: 100px;
+  position: absolute;
+}
+
+.damageBar {
+  min-width: 0px;
+  max-width: 100px;
+  margin-top: 2px;
+  height: 16px;
+  text-align: center;
+  border: 1px solid black;
+  position: absolute; 
+  font-size: 12px;
+  z-index: 4;
+}
+
 .friendlyBar {
   background-color: green;
 }
@@ -828,6 +845,7 @@ body {
 }
 
 .dmgBoardUnitName {
+  margin-left: 103px;
   font-weight: bold;
 }
 

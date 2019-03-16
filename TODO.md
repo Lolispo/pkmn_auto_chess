@@ -219,6 +219,10 @@ Aoe damage logic
 
 ## Frontend
 
+Make chat text more easily readable
+
+Dont show damage Dealth if empty
+
 Redo battle rendering
     Init: startBattleTime = new Date(),  
     moves.forEach((move) => {

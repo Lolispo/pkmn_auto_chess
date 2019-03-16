@@ -15,6 +15,16 @@ const getNewSoundEffects = (soundEffects, newSoundEffect) => {
   return newSoundEffects;
 }
 
+const sumObj = (obj) => {
+  let sum = 0;
+  for(let el in obj) {
+    if(obj.hasOwnProperty(el)) {
+      sum += parseInt(obj[el], 10);
+    }
+  }
+  return sum;
+}
+
 const reducer = (
   state = {
     gameIsLive: false,
@@ -78,6 +88,7 @@ const reducer = (
     winners: {},
     dmgBoards: {},
     showDmgBoard: false,
+    dmgBoardTotalDmg: -1,
   },
   action
 ) => {
@@ -238,6 +249,7 @@ const reducer = (
           battleStartBoard,
           winner,
           dmgBoard,
+          dmgBoardTotalDmg: sumObj(dmgBoard),
         }        
       } else if(state.visiting !== state.index && action.battleStartBoards[state.visiting]) {
         const actionStackVisit = action.actionStacks[state.visiting];
@@ -250,6 +262,7 @@ const reducer = (
           battleStartBoard: battleStartBoardVisit,
           winner: winnerVisit,
           dmgBoard: dmgBoardVisit,
+          dmgBoardTotalDmg: sumObj(dmgBoardVisit),
         }
       }
       console.log('@battleTime actionStack', state.actionStack);
