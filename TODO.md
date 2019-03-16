@@ -216,8 +216,6 @@ Aoe damage logic
 
 ## Frontend
 
-Sort DmgBoard
-
 Redo battle rendering
     Init: startBattleTime = new Date(),  
     moves.forEach((move) => {

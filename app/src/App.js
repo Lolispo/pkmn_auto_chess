@@ -1291,13 +1291,18 @@ class App extends Component {
 
   getDmgBoard = () => {
     const list = [];
-    Object.keys(this.props.dmgBoard).forEach(unitName => {
+    const dmgBoard = this.props.dmgBoard;
+    const keys = Object.keys(this.props.dmgBoard);
+    const sortedDmgBoard = keys.sort((a,b) => dmgBoard[b] - dmgBoard[a]);
+    // keys.forEach(unitName => {
+    for(let i = 0; i < sortedDmgBoard.length; i++){
+      const unitName = sortedDmgBoard[i];
       const value = this.props.dmgBoard[unitName];
       list.push(<div className='dmgBoardUnitDiv' key={unitName}>
         <span className='dmgBoardUnitName'>{unitName + ': '}</span>
         <span className='dmgBoardUnitValue'>{value}</span>
       </div>)
-    });
+    }
     return list;
   }
 
