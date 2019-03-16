@@ -229,6 +229,8 @@ module.exports = (socket, io) => {
       }
     }
     console.log('Place piece from', from, 'at', to, '(evolution =', `${evolutionDisplayName})`);
+    sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
+    sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     // Hand and board
     emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
       io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     

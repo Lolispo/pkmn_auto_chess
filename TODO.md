@@ -88,9 +88,6 @@ Odd behaviour:
 
 ## Backend
 
-Select during battle
-    Sell enemy units xd
-
 Move: Get closest enemy
     If undefined, try again for second closest
 
@@ -219,9 +216,13 @@ Aoe damage logic
 
 ## Frontend
 
-Make chat text more easily readable
+Select during battle
+    dont show displaySell if selectedUnit.isBoard during battle
 
-Dont show damage Dealth if empty
+No animation if moving hand -> hand during battle
+
+Make chat text more easily readable
+    Dont show damage Dealt if empty
 
 Redo battle rendering
     Init: startBattleTime = new Date(),  
@@ -242,14 +243,12 @@ Redo battle rendering
 
 Deselect
     Allow deselect but save Stats in infopanel if stats isn't empty
+    Fixed?
 
 Enemy type bonuses during battle
 
-Level scoreboard
-
 sync more stuff for visit
     Type bonuses
-    Level, gold, 
 
 Firefox make chat scrollable
 
@@ -276,16 +275,11 @@ Gold information calculation
     Calculate and show potential next goal
         win: +5, loss: +2
 
-Allow hand moving during battle if hand -> hand
-    Needs placePiece to update session
-    Check unitPos & target has undefined 'y'
-
 Types leftbar:
-    Sort by Bonus Tier - Decreasing
     Show goals for types in leftbar
         bottom right corner having number of next tier to unlock
     Show bonus information
-        Hoverable: show information typeBonus
+        Clickable (Hoverable): show information typeBonus
         marked['typeBuff'] + ': ' + marked['value']
 
 Dynamic css animations for movement and attacks
@@ -462,11 +456,6 @@ Test lifesteal functionality
 ## Code / Javascript Check me
 
 Put all switch cases in blocks
-
-Code: Event code only in one place
-    placepieceevent in 2 spots currently
-    getStatsEvent
-    Move to separate file and import, requires sending props
 
 Optimize asset sizes
     webm pikachuBackground (half size)

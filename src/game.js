@@ -457,9 +457,10 @@ exports._withdrawPiece = async (state, playerIndex, piecePosition) => withdrawPi
  * When units are sold, when level 1, a level 1 unit should be added to discardedPieces
  * Level 2 => 3 level 1 units, Level 3 => 9 level 1 units
  */
-async function discardBaseUnits(state, name, depth = '1') {
+async function discardBaseUnits(state, name, depth = 1) {
   const unitStats = await pokemonJS.getStats(name);
   const evolutionFrom = unitStats.get('evolves_from');
+  // console.log('@discardBaseUnits start', name, depth);
   if (f.isUndefined(evolutionFrom)) { // Base level
     let discPieces = state.get('discardedPieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
@@ -469,8 +470,8 @@ async function discardBaseUnits(state, name, depth = '1') {
     }
     return state.set('discardedPieces', (await discPieces));
   }
-  console.log('CHECK ME IF CRASH', evolutionFrom);
   const newName = evolutionFrom;
+  console.log('CHECK ME IF CRASH', newName, depth);
   return discardBaseUnits(state, newName, depth + 1);
 }
 

@@ -395,6 +395,7 @@ const reducer = (
         visiting: index,
         myHand: state.players[index].hand,
         myBoard: state.players[index].board,
+        boardBuffs: state.players[index].boardBuffs,
         /*
           Requires redo logic of battle / how actionStacks are stored to jump between battles
           battleStartBoard: state.battleStartBoards[index],

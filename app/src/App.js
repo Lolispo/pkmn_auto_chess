@@ -1,7 +1,8 @@
 // Author: Petter Andersson
 
 import React, { Component } from 'react';
-import { ready, unready, startGame, toggleLock, buyUnit, refreshShop, buyExp, placePiece, withdrawPiece, battleReady, sellPiece, getStats, sendMessage} from './socket';
+import { ready, unready, startGame, battleReady,sendMessage} from './socket';
+import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePieceEvent, withdrawPieceEvent, sellPieceEvent, getStatsEvent } from './events';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import './App.css';
@@ -86,47 +87,12 @@ class PokemonImage extends Component{
 
 class ShopPokemon extends Component{
 
-  buyUnitEvent = (index) => {
-    // You have enough money to buy this unit
-    // Unit != null
-    // Hand is not full
-    // console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
-    if(this.props.newProps.isDead){
-      updateMessage(this.props.newProps, 'You are dead! No buying when dead', 'error');
-      this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    if(this.props.shopPokemon && this.props.newProps.gameIsLive){
-      if(this.props.newProps.gold >= this.props.shopPokemon.cost){
-        const size = Object.keys(this.props.newProps.myHand).length;
-        if(size < 8){
-          buyUnit(this.props.newProps.storedState, index);
-        } else{
-          updateMessage(this.props.newProps, 'Hand is full!', 'error');
-          this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-        }
-      } else{
-        updateMessage(this.props.newProps, 'Not enough gold!', 'error');
-        this.props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      }
-    }
-  }
-
-  getStatsEvent(props, name) {
-    if(props.statsMap[name]){
-      console.log('Cached info')
-      props.dispatch({type: 'SET_STATS', name: name, stats: props.statsMap[name]});
-    } else {
-      getStats(name);
-    }
-  }
-
-  infoEvent = (event) => {
+  handleInfoPress = (event) => {
     event.stopPropagation();
     const prop = this.props.newProps;
     console.log('Pressed info shop', this.props.shopPokemon.name)
     prop.dispatch({ type: 'SELECT_SHOP_INFO', name: this.props.shopPokemon.name});
-    this.getStatsEvent(prop, this.props.shopPokemon.name);
+    getStatsEvent(prop, this.props.shopPokemon.name);
   }
 
   render(){
@@ -141,7 +107,7 @@ class ShopPokemon extends Component{
       content = <div>
         <div className={`pokemonImageDiv`}>
           <div className='pokemonInfo'>
-            <img className='infoImg' src={getImage('info')} onClick={this.infoEvent} alt={'info' + this.props.shopPokemon.name}/>
+            <img className='infoImg' src={getImage('info')} onClick={this.handleInfoPress} alt={'info' + this.props.shopPokemon.name}/>
             <div className='infoImgBg'/>
           </div>
           <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass} newProps={this.props.newProps}/>
@@ -166,7 +132,7 @@ class ShopPokemon extends Component{
       content = <div className={`pokemonShopEmpty text_shadow`}>Empty</div>;
     }
     return (
-      <div className={`pokemonShopEntity ${(this.props.className ? this.props.className : '')}`} onClick={() => this.buyUnitEvent(this.props.index)}>
+      <div className={`pokemonShopEntity ${(this.props.className ? this.props.className : '')}`} onClick={() => buyUnitEvent(this.props, this.props.index)}>
         {content}
       </div>
     );
@@ -231,46 +197,6 @@ class Cell extends Component {
     }
   }
 
-  getStatsEvent(props, name) {
-    if(props.statsMap[name]){
-      console.log('Cached info')
-      props.dispatch({type: 'SET_STATS', name: name, stats: props.statsMap[name]});
-    } else {
-      getStats(name);
-    }
-  }
-  
-  placePieceEvent = (fromParam, to) => {
-    // to is on valid part of the board
-    const prop = this.props.newProps;
-    const from = String(fromParam);
-    if(prop.isDead){
-      updateMessage(prop, 'You are dead!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    } else if(prop.visiting !== prop.index){
-      updateMessage(prop, 'Visiting!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    if(from && to && prop.gameIsLive){
-      console.log('@placePieceEvent',from, to);
-      const splitted = to.split(',');
-      const fromSplitted = from.split(',');
-      const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
-      const unitExists = (fromSplitted.length === 2 ? prop.myBoard[fromParam] : prop.myHand[from])
-      // console.log('@placePieceEvent', fromSplitted, validPos, unitExists, prop.myHand);
-      if(validPos && unitExists && !prop.onGoingBattle){
-        // console.log('Sending place piece!')
-        placePiece(prop.storedState, from, to);
-        prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
-      } else {
-        updateMessage(prop, 'Invalid target placing!', 'error');
-        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      }
-    }
-  }
-
   handleCellClick(el){
     const unit = (el.props.isBoard ? (el.props.newProps.onGoingBattle ? el.props.newProps.battleStartBoard[this.state.pos] : el.props.newProps.myBoard[this.state.pos]) : el.props.newProps.myHand[this.state.pos]);
     const prevSelectedUnit = el.props.newProps.selectedUnit;
@@ -287,10 +213,10 @@ class Cell extends Component {
     if(unit){ // Pressed unit
       console.log('Get Stats for', unit.name)
       el.props.newProps.dispatch({ type: 'NEW_UNIT_SOUND', newAudio: ''});
-      this.getStatsEvent(el.props.newProps, unit.name);
+      getStatsEvent(el.props.newProps, unit.name);
     } else if(prevSelectedUnit.pos && this.state.pos !== prevSelectedUnit.pos && 
               prevSelectedUnit.unit && prevSelectedUnit.displaySell){ // Pressed empty cell
-      this.placePieceEvent(prevSelectedUnit.pos, this.state.pos);
+      placePieceEvent(this.props.newProps, prevSelectedUnit.pos, this.state.pos);
     }
   }
 
@@ -500,50 +426,6 @@ class App extends Component {
     }
   }
 
-  refreshShopEvent = () => {
-    // You have enough money to refresh
-    if(this.props.isDead){
-      updateMessage(this.props, 'You are dead! No shop interaction when dead', 'error');
-      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    if(this.props.gold >= 2 && this.props.gameIsLive){
-      refreshShop(this.props.storedState)
-    } else{
-      updateMessage(this.props, 'Not enough gold!', 'error');
-      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-    }
-  }
-
-  toggleLockEvent = () => {
-    if(this.props.isDead){
-      updateMessage(this.props, 'You are dead! No shop interaction when dead', 'error');
-      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    toggleLock(this.props.storedState);
-  }
-
-  buyExpEvent = () => {
-    // You have enough money to buy exp
-    if(this.props.isDead){
-      updateMessage(this.props, 'You are dead! No exp buying when dead', 'error');
-      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    if(this.props.gold >= 5 && this.props.gameIsLive){
-      if(this.props.level < 10){
-        buyExp(this.props.storedState)
-      } else {
-        updateMessage(this.props, 'Already at max level!', 'error');
-        this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      }
-    } else{
-      updateMessage(this.props, 'Not enough gold!', 'error');
-      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-    }
-  }
-
   pos = (x,y) => {
     if(isUndefined(y)){
       return String(x);
@@ -654,7 +536,7 @@ class App extends Component {
       {(allowSell ? <div className='marginTop5'>
         <button className='normalButton textList marginLeft5' onClick={() => {
           const from = this.props.selectedUnit.pos;
-          this.sellPieceEvent(from);
+          sellPieceEvent(this.props, from);
         }}>
           <span>
             {'Sell ' + this.props.stats.display_name + '\n'}
@@ -733,86 +615,6 @@ class App extends Component {
     return <div className='typeDiv'>{list}</div>;
   }
 
-  placePieceEvent = (fromParam, to) => {
-    // to is on valid part of the board
-    const prop = this.props;
-    const from = String(fromParam);
-    if(prop.isDead){
-      updateMessage(prop, 'You are dead!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    } else if(prop.visiting !== prop.index) {
-      updateMessage(prop, 'Visiting!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    if(from && to && prop.gameIsLive){
-      console.log('@placePieceEvent', from, to);
-      const splitted = to.split(',');
-      const fromSplitted = from.split(',');
-      const validPos = (splitted.length === 2 ? splitted[1] < 4 && splitted[1] >= 0: true) && splitted[0] < 8 && splitted[0] >= 0;
-      const unitExists = (fromSplitted.length === 2 ? prop.myBoard[fromParam] : prop.myHand[from])
-      // console.log('@placePieceEvent', fromSplitted, validPos, unitExists, prop.myHand);
-      if(validPos && unitExists && !prop.onGoingBattle){
-        // console.log('Sending place piece!')
-        placePiece(prop.storedState, from, to);
-        prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
-      } else {
-        updateMessage(prop, 'Invalid target placing!', 'error');
-        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      }
-    }
-  }
-  
-  withdrawPieceEvent = (from) => {
-    // Hand is not full
-    const prop = this.props;
-    if(prop.isDead){
-      updateMessage(prop, 'You are dead!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    } else if(prop.visiting !== prop.index) {
-      updateMessage(prop, 'Visiting!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    const size = Object.keys(prop.myHand).length;
-    if(prop.myBoard[from] && !prop.onGoingBattle && prop.gameIsLive){ // From contains unit
-      if(size < 8){
-        withdrawPiece(prop.storedState, String(from));
-        prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
-      } else{
-        updateMessage(prop, 'Hand is full!', 'error');
-        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      }
-    }
-  }
-
-  sellPieceEvent = (from) => {
-    const prop = this.props;
-    if(prop.isDead){
-      updateMessage(prop, 'You are dead!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    } else if(prop.visiting !== prop.index) {
-      updateMessage(prop, 'Visiting!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-      return;
-    }
-    const validUnit = (prop.selectedUnit.isBoard ? prop.myBoard[from] : prop.myHand[from])
-    console.log('@sellPiece', validUnit, from, prop.selectedUnit.isBoard)
-    // From contains unit, hand unit is ok during battle
-    // TODO: Remove false && and fix allowing sellPiece during battle, currently weird
-    if(validUnit && prop.gameIsLive && (!prop.onGoingBattle || (!prop.selectedUnit.isBoard))){ // false &&
-      sellPiece(prop.storedState, String(from));
-      prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});
-    } else{
-      updateMessage(prop, 'Invalid target to sell! ' + from, 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
-    }
-  }
-
   handleKeyPress(event){
     // console.log(event)
     // console.log(event.key, event.currentTarget)
@@ -835,34 +637,34 @@ class App extends Component {
         from = (isUndefined(from) ? (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '') : from);
         const to = prop.mouseOverId;
         console.log('@placePiece q pressed', from, to)
-        this.placePieceEvent(from, to);
+        placePieceEvent(this.props, from, to);
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
       case 'w':
         from = prop.mouseOverId;
         console.log(prop.myBoard, from, prop.mouseOverId)
         if(!isUndefined(from) && prop.myBoard[from]){
-          this.withdrawPieceEvent(from);
+          withdrawPieceEvent(this.props, from);
         } else {
           from = (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '');
-          this.withdrawPieceEvent(from);
+          withdrawPieceEvent(this.props, from);
         }
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
       case 'e':
         from = (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '');
         if(!isUndefined(from)){
-          this.sellPieceEvent(from);
+          sellPieceEvent(this.props, from);
         } else {
           console.log('Use Select to sell units!')
         }
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
       case 'd':
-        this.refreshShopEvent();
+        refreshShopEvent(this.props);
         break;
       case 'f':
-        this.buyExpEvent();
+        buyExpEvent(this.props);
         break;
       default:
     }
@@ -1455,11 +1257,11 @@ class App extends Component {
                 <div className='flex'>
                   <div className='shopInteractDiv'>
                     <div>
-                      <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={this.toggleLockEvent} 
+                      <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={() => toggleLockEvent(this.props)} 
                       src={this.props.lock ? getImage('lockedLock') : getImage('openLock')} alt='lock'/>   
                     </div>
                     <div style={{paddingTop: '10px'}}>
-                      <img className='refreshShopImage' onClick={this.refreshShopEvent} src={getImage('refreshShopImage')} alt='refreshShop'/>
+                      <img className='refreshShopImage' onClick={() => refreshShopEvent(this.props)} src={getImage('refreshShopImage')} alt='refreshShop'/>
                     </div>
                     <div className='flex goldImageSmallDiv'>
                       <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
@@ -1482,7 +1284,7 @@ class App extends Component {
               {(this.props.chatSoundEnabled ? 'Mute Chat': 'Unmute Chat')}
             </button>
             <div>
-              <button style={{marginLeft: '5px'}} className='normalButton' onClick={this.buyExpEvent}>Buy Exp</button>
+              <button style={{marginLeft: '5px'}} className='normalButton' onClick={() => buyExpEvent(this.props)}>Buy Exp</button>
               <div className='flex marginTop5 goldImageSmallDiv'>
                 <img className='goldImageSmall' src={getImage('goldCoin')} style={{marginLeft: '18px'}} alt='goldCoin'/>
                 <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`}>5</div>
