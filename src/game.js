@@ -757,7 +757,8 @@ async function removeHpBattle(board, unitPos, hpToRemove, percent = false) {
   }
   if (newHp <= 0) {
     f.p('@removeHpBattle UNIT DIED!', currentHp, '->', (percent ? `${newHp}(%)` : `${newHp}(-)`));
-    return Map({ board: board.delete(unitPos), unitDied: true });
+
+    return Map({ board: board.delete(unitPos), unitDied: currentHp });
   }
   // Caused a crash0
   if (isNaN(currentHp - hpToRemove)) {
@@ -905,7 +906,7 @@ async function useAbility(board, ability, damage, unitPos, target) {
         console.log('@useAbility - default, mode =', mode);
     }
   }
-  return Map({ board: (await removeHpBattle(newBoard, target, damage)), effect: effectMap, manaChanges });
+  return Map({ removeHpBoard: (await removeHpBattle(newBoard, target, damage)), effect: effectMap, manaChanges });
 }
 
 /**
@@ -1006,20 +1007,22 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const abilityName = ability.get('displayName');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
     // console.log('@abilityResult', abilityResult)
-    const removedHPBoard = abilityResult.get('board');
+    const removedHPBoard = abilityResult.get('removeHpBoard');
     const effect = abilityResult.get('effect');
     const manaChanges = abilityResult.get('manaChanges');
     // Do game over check
     const newBoard = removedHPBoard.get('board');
     // console.log('@spell', newBoard)
     let battleOver = false;
+    let damageDealt = abilityDamage;
     if (removedHPBoard.get('unitDied')) {
       battleOver = await isBattleOver(newBoard, team);
+      damageDealt = removedHPBoard.get('unitDied');
     }
     const move = Map({
       unitPos,
       action,
-      value: abilityDamage,
+      value: damageDealt,
       abilityName,
       target,
       effect,
@@ -1056,10 +1059,12 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     let allowSameMove = false;
     let newBoardMana;
     let manaChanges;
+    let damageDealt = value;
     if (removedHPBoard.get('unitDied')) { // Check if battle ends
       battleOver = await isBattleOver(newBoard, team);
       manaChanges = await manaIncrease(newBoard, value, unitPos); // target = dead
       newBoardMana = await manaChangeBoard(newBoard, manaChanges);
+      damageDealt = removedHPBoard.get('unitDied');
     } else { // Mana increase, return newBoard
       allowSameMove = true;
       manaChanges = await manaIncrease(newBoard, value, unitPos, target);
@@ -1068,7 +1073,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const move = Map({
       unitPos,
       action,
-      value,
+      value: damageDealt,
       target,
       manaChanges,
       typeEffective: gameConstantsJS.getTypeEffectString(typeFactor),
@@ -1208,7 +1213,7 @@ async function startBattle(boardParam) {
       nextMoveValue = +unit.get('next_move') + +unit.get('speed');
       // Add to dpsBoard
       if(unit.get('team') === 0){
-        dmgBoard = dmgBoard.set(unit.get('display_name'), (dmgBoard.get(unit.get('name')) || 0) + result.get('nextMove').get('value'));
+        dmgBoard = dmgBoard.set(unit.get('display_name'), (dmgBoard.get(unit.get('display_name')) || 0) + result.get('nextMove').get('value'));
       }
     }
     board = board.setIn([pos, 'next_move'], nextMoveValue);
@@ -1246,19 +1251,21 @@ async function startBattle(boardParam) {
       // console.log('@dotDamage battleover', battleOver, dotObj.get('battleOver'), battleOver || dotObj.get('battleOver'));
       const action = 'dotDamage';
       const dotDamage = dotObj.get('damage');
-      const move = await Map({
-        unitPos: nextUnitToMove, action, value: dotDamage, target: nextUnitToMove,
-      });
-      if(unit.get('team') === 1){
-        dmgBoard = dmgBoard.set('dot', (dmgBoard.get('dot') || 0) + dotDamage);
-      }
       // console.log('dot damage dealt!', board);
+      let damageDealt = dotDamage;
       if (dotObj.get('unitDied')) { // Check if battle ends
         console.log('@dot - unitdied');
+        damageDealt = dotObj.get('unitDied');
         battleOver = battleOver || await isBattleOver(board, 1 - team);
         // Delete every key mapping to nextMoveResult
         // console.log('Deleting all keys connected to this: ', nextMoveResult.get('nextMove').get('target'))
         unitMoveMap = await deleteNextMoveResultEntries(unitMoveMap, nextUnitToMove);
+      }
+      const move = await Map({
+        unitPos: nextUnitToMove, action, value: damageDealt, target: nextUnitToMove,
+      });
+      if(unit.get('team') === 1){
+        dmgBoard = dmgBoard.set('dot', (dmgBoard.get('dot') || 0) + damageDealt);
       }
       console.log('@dotDamage', dotDamage);
       f.printBoard(board, move);

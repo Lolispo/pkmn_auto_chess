@@ -88,9 +88,6 @@ Odd behaviour:
 
 ## Backend
 
-dmgBoard give actual damage given and not damage set out to do
-    if unit has 5 hp and i do 10 dmg, put in board as 5 dmg
-
 Move: Get closest enemy
     If undefined, try again for second closest
 
