@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import configureSocket from './socket';
+import { configureSocket, AjaxLoadSprites } from './socket';
 import { createStore } from 'redux';
 import reducer from './reducer';
 import { Provider } from 'react-redux';
@@ -12,6 +12,7 @@ const store = createStore(reducer);
 
 // setup socket connection
 export const socket = configureSocket(store.dispatch);
+AjaxLoadSprites(store.dispatch);
 
 ReactDOM.render(
   <Provider store={store}>

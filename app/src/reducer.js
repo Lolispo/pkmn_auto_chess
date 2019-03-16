@@ -54,7 +54,7 @@ const reducer = (
     typeStatsString: '',
     typeBonusString: '',
     round: 1,
-    musicEnabled: true,
+    musicEnabled: false,
     soundEnabled: true,
     chatSoundEnabled: true,
     selectedSound: '',
@@ -72,7 +72,7 @@ const reducer = (
     loaded: false,
     visiting: -1,
     actionStacks: {},
-    battleStartBoard: {},
+    battleStartBoards: {},
     winners: {},
   },
   action
@@ -80,7 +80,7 @@ const reducer = (
   let tempSoundEffects;
   switch (action.type) { // Listens to events dispatched from from socket.js
     case 'LOAD_SPRITES_JSON': 
-      console.log('Loading sprites ...');
+      console.log('Loaded sprites!');
       state = {...state, pokemonSprites: action.pokemonSprites, loaded: true}
       console.log('SPRITES:', state.pokemonSprites)
       break;

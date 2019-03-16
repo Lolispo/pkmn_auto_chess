@@ -229,14 +229,16 @@ Level scoreboard
 
 Lock as deadplayer
 
-sync more stuff for visit, 
+sync more stuff for visit
+    Type bonuses
+    Level, gold, 
 
 Firefox make chat scrollable
 
 Chat sound overlap normal sounds
 
-696x696
 Enable sound on connect
+    Acts weird
 
 Enemy -> Npc / Gym
     Images
@@ -291,6 +293,7 @@ Rotate unit in attack direction
 Ability effects from canvas
 
 Redo pokeball
+    696x696
     pokeball align middle
     pokeball design as in https://discordapp.com/channels/102097104322711552/102097104322711552/555146735568158763
     Color as in costColor1 or gray in pokeball

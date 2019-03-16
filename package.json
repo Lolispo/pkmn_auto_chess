@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/Lolispo/pkmn_auto_chess#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "eslint": "^5.6.0",
     "express": "^4.16.4",
     "fs": "0.0.1-security",

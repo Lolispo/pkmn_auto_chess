@@ -13,11 +13,6 @@ let sessions = Map({}); // Maps sessionIds to sessions
 
 const TIME_FACTOR = 15;
 
-let pokemonSpritesJSON = pokemonJS.getPokemonSprites();
-
-const getSprites = async () => {
-  return pokemonSpritesJSON;
-}
 
 const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId');
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
@@ -97,13 +92,6 @@ module.exports = (socket, io) => {
     connectedPlayers = connectedPlayers.set(socket.id, newUser);
     countReadyPlayers(false, socket, io);
     // TODO: Handle many connected players
-  });
-
-  socket.on('GET_SPRITES', async () => {
-    console.log('Connected ...', socket.id)
-    const sprites = await getSprites();
-    console.log('@Get Sprites', socket.id);
-    io.to(socket.id).emit('LOAD_SPRITES_JSON', sprites);
   });
 
   socket.on('READY', async () => {
@@ -375,8 +363,8 @@ module.exports = (socket, io) => {
             console.log('ENDING GAME!');
             sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
             sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
-            const stateToSend = getStateToSend(stateEndedTurn);
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
+            //const stateToSend = getStateToSend(stateEndedTurn);
             emitMessage(socket, io, sessionId, (socketId) => {
               // io.to(socketId).emit('END_BATTLE');
               // io.to(socketId).emit('UPDATED_STATE', stateToSend);

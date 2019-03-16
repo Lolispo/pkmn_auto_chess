@@ -14,6 +14,9 @@ Here: 12 13 16 12 5
 
 ## Current Notes
 
+Gym battles even more difficult
+  At least late, Sabrina +++
+
 Buffs between types?
   Themes of pokemon trainers in anime?
     Ash bonus (many different types)
@@ -39,6 +42,8 @@ Show bonus information
 DotDamage effect - Arvid had idea for effect
 
 #### Potential balance:
+
+  Dragon too strong?
 
   Geodude 3 -> 2?
   Remove iggly/cleffa trio ? 

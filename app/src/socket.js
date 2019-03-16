@@ -9,15 +9,33 @@ const ipAdress = 'http://' + ip + ':8000';
 console.log('Connecting to ' + ipAdress + ' ...');
 const socket = io(ipAdress);
 
+export async function AjaxLoadSprites(dispatch) {
+  console.log('Fetching Sprites from ' + ipAdress + '/sprites');
+  fetch(ipAdress + '/sprites', {
+    method: 'GET',
+    headers: {
+      "Content-Type": "text/plain"
+    },
+  }).then(async response => {
+    // console.log(response);
+    const result = await response.json();
+    // console.log(result);
+    dispatch({ type: 'LOAD_SPRITES_JSON', pokemonSprites: result.sprites});
+  }).catch((err) => {
+    console.log('Failed to fetch', err);
+    setTimeout(() => { // Try again in 2 seconds
+      AjaxLoadSprites(dispatch);
+    }, 2000); 
+  });
+}
+
 // Receiving information
-const configureSocket = dispatch => {
+export const configureSocket = dispatch => {
   // make sure our socket is connected to the port
   socket.on('connect', () => {
-    console.log('connected');
+    console.log('Socket connected');
     dispatch({type: 'SET_CONNECTED', connected: true})
     giveId();
-    console.log('Requesting Sprites ...');
-    getSprites();
     /*
     const sprites = localStorage.getItem('sprites');
     if(sprites){
@@ -32,11 +50,6 @@ const configureSocket = dispatch => {
     dispatch({type: 'SET_CONNECTED', connected: false})
     window.location.reload();
     console.log('disconnected');
-  });
-
-  socket.on('LOAD_SPRITES_JSON', pokemonSprites => {
-    // localStorage.setItem('sprites', JSON.stringify(pokemonSprites));
-    dispatch({ type: 'LOAD_SPRITES_JSON', pokemonSprites});
   });
 
   socket.on('UPDATED_STATE', state => {
