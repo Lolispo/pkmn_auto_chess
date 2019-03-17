@@ -174,7 +174,7 @@ const reducer = (
           streak: action.player.streak,
         };
       }
-      if(state.visiting === action.index && !state.isDead) {
+      if(state.visiting === action.index) {
         state = {...state,
           myHand: action.player.hand,
           myBoard: action.player.board,
