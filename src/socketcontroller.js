@@ -6,6 +6,7 @@ const sessionJS = require('./session');
 const pokemonJS = require('./pokemon');
 const abilitiesJS = require('./abilities');
 const typesJS = require('./types');
+const gameConstantsJS = require('./game_constants');
 const f = require('./f');
 
 let connectedPlayers = Map({}); // Stores connected players, socketids -> ConnectedUser
@@ -297,6 +298,7 @@ module.exports = (socket, io) => {
         const newState = obj.get('state');
         const preBattleState = obj.get('preBattleState');
         const roundType = obj.get('roundType');
+        const gymLeader = obj.get('gymLeader');
         const battleObject = obj.get('battleObject');
         // console.log('@sc.battleReady Players in state after Battle', newState.getIn(['players']));
         // console.log('@sc.battleReady Pre battle state', preBattleState.getIn(['players']));
@@ -318,14 +320,14 @@ module.exports = (socket, io) => {
         while (!temp.done) {
           const socketId = temp.value;
           const tempIndex = connectedSessionPlayers.get(socketId);
-          const enemy = (matchups ? matchups.get(tempIndex) : undefined);
+          const enemy = (matchups ? 'Player ' + matchups.get(tempIndex) : (roundType === 'gym' ? gymLeader : 'Npc Battle'));
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
           emitMessage(socket, io, sessionId, (socketId) => {
             io.to(socketId).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           });
           // io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
-          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, enemy, dmgBoards);
+          io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, dmgBoards, enemy, roundType);
           temp = iter.next();
         }
         const longestBattleTime = await sessionJS.getLongestBattleTime(actionStacks)
@@ -373,19 +375,22 @@ module.exports = (socket, io) => {
             sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
             sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
             const winningPlayer = stateEndedTurn.get('players').values().next().value;
-            //const stateToSend = getStateToSend(stateEndedTurn);
             emitMessage(socket, io, sessionId, (socketId) => {
-              // io.to(socketId).emit('END_BATTLE');
-              // io.to(socketId).emit('UPDATED_STATE', stateToSend);
               io.to(socketId).emit('END_GAME', winningPlayer);
             });
           } else {
-            // Send to users, not all
             sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
             sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
             const stateToSend = getStateToSend(stateEndedTurn);
+            const round = stateToSend.get('round');
+            const upcomingRoundType = gameConstantsJS.getRoundType(round);
+            const upcomingGymLeader = gameConstantsJS.getGymLeader(round);
             emitMessage(socket, io, sessionId, (socketId) => {
-              io.to(socketId).emit('END_BATTLE');
+              if(f.isUndefined(upcomingGymLeader)){
+                io.to(socketId).emit('END_BATTLE', upcomingRoundType);
+              } else {
+                io.to(socketId).emit('END_BATTLE', upcomingRoundType, upcomingGymLeader);
+              }
               io.to(socketId).emit('UPDATED_STATE', stateToSend);
             });
           }

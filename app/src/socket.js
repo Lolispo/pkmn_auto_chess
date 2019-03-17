@@ -77,12 +77,12 @@ export const configureSocket = dispatch => {
     dispatch({ type: 'READY', playersReady: playersReady, connectedPlayers: connectedPlayers});
   });
   
-  socket.on('BATTLE_TIME', (actionStacks, battleStartBoards, winners, enemy, dmgBoards) => {
-    dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards, winners, enemy, dmgBoards});
+  socket.on('BATTLE_TIME', (actionStacks, battleStartBoards, winners, dmgBoards, enemy, roundType) => {
+    dispatch({ type: 'BATTLE_TIME', actionStacks, battleStartBoards, winners, enemy, dmgBoards, roundType});
   });
 
-  socket.on('END_BATTLE', () => {
-    dispatch({ type: 'END_BATTLE'});
+  socket.on('END_BATTLE', (upcomingRoundType, upcomingGymLeader) => {
+    dispatch({ type: 'END_BATTLE', upcomingRoundType, upcomingGymLeader});
     setTimeout(() => {
       dispatch({ type: 'TOGGLE_SHOW_DMGBOARD'});
     }, 10000);

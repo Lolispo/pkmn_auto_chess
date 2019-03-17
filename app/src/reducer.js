@@ -53,6 +53,7 @@ const reducer = (
     streak: 0,
     onGoingBattle: false,
     enemyIndex: -1,
+    roundType: '',
     startBattle: false,
     actionStack: {},
     battleStartBoard: {},
@@ -236,6 +237,7 @@ const reducer = (
         soundEffects: [...tempSoundEffects],
         onGoingBattle: true,
         enemyIndex: action.enemy,
+        roundType: action.roundType,
         startBattle: true,
         actionStacks: action.actionStacks,
         battleStartBoard: action.battleStartBoards,
@@ -301,8 +303,9 @@ const reducer = (
       state = {...state, mouseOverId: action.mouseOverId}
       break;
     case 'END_BATTLE':  
-      console.log('Battle ended', state.startTimer)
-      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), startTimer: true, showDmgBoard: true}
+      console.log('Battle ended', state.startTimer, action.upcomingRoundType, action.upcomingGymLeader)
+      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), 
+      startTimer: true, showDmgBoard: true, roundType: action.upcomingRoundType, enemyIndex: (action.upcomingGymLeader || '')}
       break;
     case 'TOGGLE_SHOW_DMGBOARD': {
       state = {...state, showDmgBoard: !state.showDmgBoard}

@@ -40,6 +40,16 @@ import dark from './assets/images/types/typeDark.png';
 import steel from './assets/images/types/typeSteel.png';
 import fairy from './assets/images/types/typeFairy.png';
 
+// Gym Leaders
+import Brock from './assets/images/gym/Brock.png';
+import Misty from './assets/images/gym/Misty.png';
+import Lt_Surge from './assets/images/gym/Lt.Surge.png';
+import Erika from './assets/images/gym/Erika.png';
+import Koga from './assets/images/gym/Koga.png';
+import Sabrina from './assets/images/gym/Sabrina.png';
+import Blaine from './assets/images/gym/Blaine.png';
+import Giovanni from './assets/images/gym/Giovanni.png';
+
 export function getImage(name) {
   switch(name) {
     case 'lockedLock':
@@ -126,5 +136,28 @@ export function getTypeImg(type) {
       return fairy;
     default:  
       return normal;
+  }
+}
+
+export function getGymImage(name) {
+  switch(name) {
+    case 'Brock':
+      return Brock;
+    case 'Misty':
+      return Misty;
+    case 'Lt.Surge':
+      return Lt_Surge;
+    case 'Erika':
+      return Erika;
+    case 'Koga':
+      return Koga;
+    case 'Sabrina':
+      return Sabrina;
+    case 'Blaine':
+      return Blaine;
+    case 'Giovanni':
+      return Giovanni;
+    default:  
+      return Brock;
   }
 }

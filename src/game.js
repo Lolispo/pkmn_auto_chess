@@ -1809,14 +1809,20 @@ exports.battleSetup = async (stateParam) => {
   const round = state.get('round');
   const roundType = gameConstantsJS.getRoundType(round);
   switch (roundType) {
-    case 'gym':
-    case 'npc':
+    case 'gym': {
+      const gymLeader = gameConstantsJS.getGymLeader(round);
+      const boardNpc = await gameConstantsJS.getSetRound(round);
+      return (await npcRound(state, boardNpc)).set('roundType', roundType).set('gymLeader', gymLeader);
+    }
+    case 'npc': {
       const boardNpc = await gameConstantsJS.getSetRound(round);
       return (await npcRound(state, boardNpc)).set('roundType', roundType);
+    }
     case 'shop':
     case 'pvp':
-    default:
+    default: {
       return (await battleTime(state)).set('roundType', roundType);
+    }
   }
 };
 
@@ -2006,7 +2012,7 @@ async function removeHp(state, playerIndex, hpToRemove) {
   return state.setIn(['players', playerIndex, 'hp'], currentHp - hpToRemove);
 }
 
-exports.removeDeadPlayer = (stateParam, playerIndex) => {
+exports.removeDeadPlayer = async (stateParam, playerIndex) => {
   // console.log('@removeDeadPlayer')
   let state = stateParam;
   const filteredShop = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
@@ -2035,7 +2041,10 @@ exports.removeDeadPlayer = (stateParam, playerIndex) => {
   // console.log('HandList', handList);
   const playerUnits = shopUnits.concat(boardList).concat(handList);
   console.log('@removeDeadPlayer', shopUnits, boardList, handList, '=', playerUnits);
-  state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));
+  for(let i = 0; i < playerUnits.size; i++){
+    state = await discardBaseUnits(state, playerUnits.get(i));
+  }
+  // state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));
   const newState = state.set('players', state.get('players').delete(playerIndex));
   // console.log('@removeDeadPlayer', newState.get('players'));
   const amountOfPlayers = newState.get('amountOfPlayers') - 1;

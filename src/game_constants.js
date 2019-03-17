@@ -98,8 +98,8 @@ const roundSetConfiguration = Map({
   10: async () => gameJS.createBattleBoard(List([
     // Map({ name: 'geodude', x: 3, y: 1 }),
     Map({ name: 'onix', x: 4, y: 1 }),
-    Map({ name: 'sandshrew', x: 5, y: 2 }),
-    Map({ name: 'graveler', x: 3, y: 2 }),
+    Map({ name: 'rhyhorn', x: 5, y: 2 }),
+    Map({ name: 'geodude', x: 3, y: 2 }),
   ])),
   15: async () => gameJS.createBattleBoard(List([
     Map({ name: 'staryu', x: 3, y: 1 }),
@@ -113,7 +113,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'pikachu', x: 4, y: 1 }),
     Map({ name: 'raichu', x: 5, y: 1 }),
     Map({ name: 'electrode', x: 7, y: 2 }),
-    Map({ name: 'magnemite', x: 6, y: 2 }),
+    Map({ name: 'electabuzz', x: 6, y: 2 }),
     Map({ name: 'magneton', x: 2, y: 2 }),
   ])),
   25: async () => gameJS.createBattleBoard(List([
@@ -130,9 +130,10 @@ const roundSetConfiguration = Map({
     Map({ name: 'butterfree', x: 4, y: 1 }),
     Map({ name: 'crobat', x: 5, y: 1 }),
     Map({ name: 'crobat', x: 6, y: 1 }),
-    Map({ name: 'crobat', x: 7, y: 1 }),
+    Map({ name: 'crobat', x: 1, y: 1 }),
     Map({ name: 'metapod', x: 7, y: 2 }),
     Map({ name: 'kakuna', x: 2, y: 2 }),
+    Map({ name: 'golbat', x: 1, y: 2 }),
   ])),
   35: async () => gameJS.createBattleBoard(List([
     Map({ name: 'kadabra', x: 3, y: 1 }),
@@ -142,6 +143,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'hypno', x: 7, y: 1 }),
     Map({ name: 'gengar', x: 2, y: 1 }),
     Map({ name: 'jynx', x: 1, y: 1 }),
+    Map({ name: 'exeggutor', x: 2, y: 2 }),
   ])),
   40: async () => gameJS.createBattleBoard(List([
     Map({ name: 'growlithe', x: 3, y: 1 }),
@@ -151,6 +153,8 @@ const roundSetConfiguration = Map({
     Map({ name: 'ninetales', x: 7, y: 1 }),
     Map({ name: 'charizard', x: 2, y: 1 }),
     Map({ name: 'magmar', x: 2, y: 2 }),
+    Map({ name: 'magmortar', x: 4, y: 2 }),
+    Map({ name: 'flareon', x: 6, y: 2 }),
   ])),
   45: async () => gameJS.createBattleBoard(List([
     Map({ name: 'rhyhorn', x: 3, y: 1 }),
@@ -161,6 +165,8 @@ const roundSetConfiguration = Map({
     Map({ name: 'nidorino', x: 2, y: 2 }),
     Map({ name: 'nidorina', x: 5, y: 2 }),
     Map({ name: 'rhydon', x: 3, y: 1 }),
+    Map({ name: 'persian', x: 3, y: 2 }),
+    Map({ name: 'mewtwo', x: 4, y: 2 }),
   ])),
 });
 
@@ -178,6 +184,21 @@ exports.getSetRound = async (round) => {
   }
   return board;
 };
+
+const gymLeader = Map({
+  10: 'Brock',
+  15: 'Misty',
+  20: 'Lt.Surge',
+  25: 'Erika',
+  30: 'Koga',
+  35: 'Sabrina',
+  40: 'Blaine',
+  45: 'Giovanni',
+});
+
+exports.getGymLeader = (round) => {
+  return gymLeader.get(round);
+}
 
 exports.getRoundType = (round) => {
   if (round <= 3) {

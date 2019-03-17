@@ -8,7 +8,7 @@ import { isUndefined, updateMessage } from './f';
 import './App.css';
 
 import { getUnitAudio, getSoundEffect } from './audio.js';
-import { getImage, getTypeImg } from './images.js';
+import { getImage, getTypeImg, getGymImage } from './images.js';
 
 class PokemonImage extends Component{
 
@@ -1177,8 +1177,14 @@ class App extends Component {
           </div>
         </div>
         {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow redFont' style={{paddingLeft: '65px'}}>
-          {(this.props.enemyIndex ? 'Enemy ' + this.props.enemyIndex : '')} 
-        </div> : '')}
+          {(this.props.enemyIndex ? this.props.enemyIndex : '')}
+          {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
+        </div> : <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+          {(this.props.enemyIndex !== -1 ? 'Up next: ' + (this.props.enemyIndex !== '' ? this.props.enemyIndex : 
+          (this.props.roundType === 'npc' ? 'Npc Battle' : (this.props.roundType === 'pvp' ? 'PvP Battle' : ''))) 
+          : '')}
+          {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
+        </div>)}
       </div>;
     const leftBar = <div style={{width: '165px'}}>
         <div className='flex'>
@@ -1310,7 +1316,7 @@ class App extends Component {
             <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'damageBoard'})}/>
             <label className='labels'>Damage</label> 
           </div>: '')}
-            {(!this.props.onGoingBattle && ((this.props.showDmgBoard && this.props.dmgBoard) 
+            {(!this.props.onGoingBattle && Object.keys(this.props.dmgBoard).length > 0 && (this.props.showDmgBoard
               || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>
               <span className='bold'>Damage Dealt:</span>{this.getDmgBoard()}
             </div> : (this.props.help ? this.buildHelp() : ''))}
@@ -1358,6 +1364,7 @@ const mapStateToProps = state => ({
   streak: state.streak,
   onGoingBattle: state.onGoingBattle,
   enemyIndex: state.enemyIndex,
+  roundType: state.roundType,
   startBattle: state.startBattle,
   actionStack: state.actionStack,
   battleStartBoard: state.battleStartBoard,
