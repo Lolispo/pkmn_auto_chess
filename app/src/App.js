@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 import React, { Component } from 'react';
-import { ready, unready, startGame, battleReady,sendMessage} from './socket';
+import { ready, unready, startGame, battleReady, sendMessage } from './socket';
 import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePieceEvent, withdrawPieceEvent, sellPieceEvent, getStatsEvent } from './events';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
@@ -357,7 +357,7 @@ class Timer extends Component {
     if(this.props.startTimer && !this.props.gameEnded){
       console.log('@Timer constructor StartingTimer', this.props.startTime)
       this.startCountDown();
-      this.props.dispatch({type: 'DISABLE_START_TIMER'})
+      this.props.dispatch({ type: 'DISABLE_START_TIMER' });
     }
   }
 
@@ -371,11 +371,16 @@ class Timer extends Component {
         seconds: '0' + this.state.seconds,
       })
     }
+    if(sec <= 5) {
+      console.log('@Tick')
+      this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('Tick')});
+    }
     if (sec === 0) {
       console.log('@Timer.tick Stopping timer since sec === 0', sec, this.secondsRemaining)
       clearInterval(this.intervalHandle);
       if(Object.keys(this.props.storedState).length > 0){
         console.log('BattleReady!')
+        this.props.dispatch({ type: 'SET_ONGOING_BATTLE', value: true });
         battleReady(this.props.storedState);
       }
     }
@@ -561,7 +566,8 @@ class App extends Component {
       if(pokemon){
         this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getUnitAudio(pokemon.name)});
         // console.log('@selectedUnitInformation', pokemon.display_name, pokemon)
-        return this.statsRender(className, pokemon.name, this.props.selectedUnit.displaySell);
+        const displaySell = this.props.selectedUnit.isBoard && this.props.onGoingBattle && this.props.battleStartBoard ? false : this.props.selectedUnit.displaySell;
+        return this.statsRender(className, pokemon.name, displaySell);
       }
     } else if(this.props.stats && this.props.isSelectModeShop && this.props.selectedShopUnit !== ''){
       const name = this.props.selectedShopUnit;

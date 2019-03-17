@@ -90,6 +90,11 @@ Odd behaviour:
 Can units attack teammates?
     Check getClosestEnemy
 
+Move logic of upcoming enemy to calculate before next round beginnings
+    currentLogic -> buildMatchups
+    To logic -> endBattle sending
+    Pvp Battle -> Id of next opponent
+
 if alive, reset visited after battle
 
 battleStartBoard -> battleBoard
@@ -200,12 +205,15 @@ Aoe damage logic
 
 ## Frontend
 
+Guarantee sounds play
+    Weird interaction
+
+Display more clearly as a loser if you are eliminated
+    Also when game is over when you are not winner
+
 Upnext / gymleader text same width
 
 Buying unit when visiting -> change back visited to state.index
-
-Select during battle
-    dont show displaySell if selectedUnit.isBoard during battle
 
 No animation if moving hand -> hand during battle
     Check if onGoingBattle allow pokemonSpawn if !isBoard
@@ -231,14 +239,7 @@ Redo battle rendering
             Array[i - last] where i is where time is at
     })
 
-Deselect
-    Allow deselect but save Stats in infopanel if stats isn't empty
-    Fixed?
-
 Enemy type bonuses during battle
-
-sync more stuff for visit
-    Type bonuses
 
 Firefox make chat scrollable
 
@@ -246,9 +247,6 @@ Chat sound overlap normal sounds
 
 Enable sound on connect
     Acts weird
-
-Enemy -> Npc / Gym
-    Images
 
 2 volume sliders instead of 1
 

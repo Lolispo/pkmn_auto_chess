@@ -19,6 +19,7 @@ import pling from './assets/SoundEffects/pling.mp3';
 import invalid from './assets/SoundEffects/invalid.mp3';
 import horn from './assets/SoundEffects/horn.mp3';
 import heGone from './assets/SoundEffects/heGone.mp3';
+import Tick from './assets/SoundEffects/Tick.mp3';
 
 // Pokemon
 import bulbasaur from './assets/pokemonCries/001 - Bulbasaur.wav'
@@ -345,6 +346,8 @@ export function getSoundEffect(name){
       return battleLose;
     case 'disconnect':
       return heGone;
+    case 'Tick':
+      return Tick;
     default:
       return undefined;
   }

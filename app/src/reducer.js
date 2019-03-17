@@ -2,13 +2,24 @@
 
 import { getBackgroundAudio, getSoundEffect } from './audio.js';
 
+let counter = 0;
+
 const getNewSoundEffects = (soundEffects, newSoundEffect) => {
   let newSoundEffects = soundEffects;
   // console.log('@getNewSoundEffects', soundEffects, soundEffects.length)
-  for(let i = 0; i < soundEffects.length; i++){
+  for(let i = counter; i < soundEffects.length; i++){
     if(soundEffects[i] !== newSoundEffect){
       // console.log('@NewSoundEffect', i, newSoundEffect)
       newSoundEffects[i] = newSoundEffect;
+      counter += 1;
+      break;
+    }
+  }
+  for(let i = 0; i < counter; i++){
+    if(soundEffects[i] !== newSoundEffect){
+      // console.log('@NewSoundEffect', i, newSoundEffect)
+      newSoundEffects[i] = newSoundEffect;
+      counter += 1;
       break;
     }
   }
@@ -302,11 +313,24 @@ const reducer = (
     case 'SET_MOUSEOVER_ID':
       state = {...state, mouseOverId: action.mouseOverId}
       break;
-    case 'END_BATTLE':  
+    case 'SET_ONGOING_BATTLE': {
+      state = {...state, onGoingBattle: action.value}
+      break;
+    }
+    case 'END_BATTLE': {
       console.log('Battle ended', state.startTimer, action.upcomingRoundType, action.upcomingGymLeader)
       state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), 
       startTimer: true, showDmgBoard: true, roundType: action.upcomingRoundType, enemyIndex: (action.upcomingGymLeader || '')}
+      // Get six last soundeffects open
+      let tempSoundEffects = getNewSoundEffects(state.soundEffects, '');
+      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
+      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
+      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
+      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
+      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
+      state = {...state, soundEffects: [...tempSoundEffects]};
       break;
+    }
     case 'TOGGLE_SHOW_DMGBOARD': {
       state = {...state, showDmgBoard: !state.showDmgBoard}
       break;
