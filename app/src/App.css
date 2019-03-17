@@ -285,6 +285,10 @@ body {
   background: url(./assets/images/handBg.png) no-repeat;
 }
 
+.handDivVisiting {
+  background: url(./assets/images/visiting.png) no-repeat;
+}
+
 .cell {
   /*border: 1px solid lightblue;*/
   /*border: 1px solid rgb(33, 33, 33);*/
@@ -939,6 +943,10 @@ body {
 .upNext {
   margin-left: 90px !important;
   margin-top: -38px !important;
+}
+
+.nextUpText {
+  /* TODO */ 
 }
 
 .refreshShopImage {

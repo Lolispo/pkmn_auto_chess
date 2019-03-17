@@ -212,7 +212,10 @@ Guarantee sounds play
 Display more clearly as a loser if you are eliminated
     Also when game is over when you are not winner
 
-Upnext / gymleader text same width
+Matchup gym leaders for same spot all the time
+    Upnext / gymleader text same width
+    Put span -> div => width: 100px maybe (ish)
+        Only when img is relevant put it as forced size
 
 Buying unit when visiting -> change back visited to state.index
 

@@ -1187,15 +1187,17 @@ class App extends Component {
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
         </div>
-        {( this.props.onGoingBattle ? <div className='marginTop5 biggerText text_shadow redFont' style={{paddingLeft: '65px'}}>
-          {(this.props.enemyIndex ? this.props.enemyIndex : '')}
-          {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
-        </div> : <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
-          {(this.props.enemyIndex !== -1 ? 'Up next: ' + (this.props.enemyIndex !== '' ? '' : 
-          (this.props.roundType === 'npc' ? 'Npc Battle' : (this.props.roundType === 'pvp' ? 'PvP Battle' : ''))) 
-          : '')}
-          {(this.props.roundType === 'gym' ? <img className='gymLeader upNext' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
-        </div>)}
+        <div className='marginTop5 biggerText text_shadow redFont' style={{paddingLeft: '65px'}}>
+          {(this.props.onGoingBattle ? <div>
+            {(this.props.enemyIndex ? <span className='nextUpText'>{this.props.enemyIndex}</span>: '')}
+            {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/> : '')}
+          </div> : <div>
+            {(this.props.enemyIndex !== -1 ? <span className='nextUpText'>{'Up next: ' + (this.props.enemyIndex !== '' ? '' : 
+              (this.props.roundType === 'npc' ? 'Npc Battle' : (this.props.roundType === 'pvp' ? 'PvP Battle' : '')))} 
+            </span>: '')}
+            {(this.props.roundType === 'gym' ? <img className='gymLeader upNext' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
+          </div>)}
+        </div>
       </div>;
     const leftBar = <div style={{width: '165px'}}>
         <div className='flex'>
@@ -1259,7 +1261,7 @@ class App extends Component {
             {'Exp: ' + this.props.exp + '/' + this.props.expToReach}
           </div>
         </div>
-        <div className='flex center handDiv'>
+        <div className={`flex center ${(this.props.index === this.props.visiting ? 'handDiv' : 'handDivVisiting')}`}>
           <Board height={1} width={8} map={this.props.myHand} isBoard={false} newProps={this.props}/>
         </div>
       </div>;

@@ -166,16 +166,27 @@ const reducer = (
       if(action.index === state.index && !state.isDead){
         // TODO: Model upgrades on myBoard here
         state = {...state,
-          myHand: action.player.hand,
-          myBoard: action.player.board,
           myShop: action.player.shop,
-          boardBuffs: action.player.boardBuffs,
           level: action.player.level,
           exp: action.player.exp,
           expToReach: action.player.expToReach,
           gold: action.player.gold,
           streak: action.player.streak,
         };
+      }
+      if(state.visiting === action.index && !state.isDead) {
+        state = {...state,
+          myHand: action.player.hand,
+          myBoard: action.player.board,
+          boardBuffs: action.player.boardBuffs,
+        }
+      } else if(action.index === state.index) {
+        state = {...state,
+          visiting: state.index,
+          myHand: action.player.hand,
+          myBoard: action.player.board,
+          boardBuffs: action.player.boardBuffs,
+        }
       }
       const players = state.players;
       players[action.index] = action.player

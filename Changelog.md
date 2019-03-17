@@ -14,6 +14,8 @@ Here: 12 13 16 12 5
 
 ## Current Notes
 
+Font Rockwell
+
 Gym battles even more difficult
   At least late, Sabrina +++
 
