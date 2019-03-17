@@ -288,7 +288,7 @@ module.exports = (socket, io) => {
         // Set Session to reset counter and remove prepBattleStatess
         const newSession = (session.get('prepBattleState') ? session.set('counter', 0).delete('prepBattleState') : session.set('counter', 0));
         sessions = sessions.set(sessionId, newSession);
-        console.log('@sc.battleReady Starting Battle');
+        console.log('@sc.battleReady _________________________ Starting Battle');
         // console.log('@sc.battleReady state', prepBattleState.getIn(['players']));
         // Battle
         const prepBSWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, prepBattleState);
@@ -305,7 +305,7 @@ module.exports = (socket, io) => {
         const actionStacks = battleObject.get('actionStacks');
         const startingBoards = battleObject.get('startingBoards');
         const dmgBoards = battleObject.get('dmgBoards');
-        console.log('dmgBoards', dmgBoards);
+        // console.log('dmgBoards', dmgBoards);
 
         const winners = battleObject.get('winners');
         const finalBoards = battleObject.get('finalBoards');
@@ -353,11 +353,12 @@ module.exports = (socket, io) => {
             const player = stateCheckDead.getIn(['players', pid]);
             if (player.get('dead')) {
               console.log('Dead Player!', pid);
-              stateEndedTurn = gameJS.removeDeadPlayer(stateCheckDead, pid);
+              stateEndedTurn = await gameJS.removeDeadPlayer(stateCheckDead, pid);
               const playerName = `Player ${pid}`;
-              newChatMessage(socket, io, socket.id, `${playerName} Eliminated - `, `Alive players: ${stateEndedTurn.get('amountOfPlayers')}`, 'playerEliminated');
+              const amountOfPlayers = stateEndedTurn.get('amountOfPlayers');
+              newChatMessage(socket, io, socket.id, `${playerName} Eliminated - `, `Alive players: ${amountOfPlayers}`, 'playerEliminated');
               emitMessage(socket, io, sessionId, (socketId) => {
-                io.to(socketId).emit('DEAD_PLAYER', pid, stateEndedTurn.get('amountOfPlayers') + 1);
+                io.to(socketId).emit('DEAD_PLAYER', pid, amountOfPlayers + 1);
               });
               /*
               const deadPlayerSocketId = sessionJS.findSocketId(session, pid);

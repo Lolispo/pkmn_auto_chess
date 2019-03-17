@@ -82,7 +82,12 @@ export const configureSocket = dispatch => {
   });
 
   socket.on('END_BATTLE', (upcomingRoundType, upcomingGymLeader) => {
-    dispatch({ type: 'END_BATTLE', upcomingRoundType, upcomingGymLeader});
+    // console.log('@endBattle', upcomingRoundType, upcomingGymLeader)
+    if(upcomingGymLeader) {
+      dispatch({ type: 'END_BATTLE', upcomingRoundType, upcomingGymLeader});
+    } else {
+      dispatch({ type: 'END_BATTLE', upcomingRoundType});
+    }
     setTimeout(() => {
       dispatch({ type: 'TOGGLE_SHOW_DMGBOARD'});
     }, 10000);

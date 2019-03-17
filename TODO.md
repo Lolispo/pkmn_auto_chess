@@ -87,17 +87,18 @@ Odd behaviour:
 
 ## Backend
 
+Can units attack teammates?
+    Check getClosestEnemy
+
 if alive, reset visited after battle
 
 battleStartBoard -> battleBoard
-
 
 Send information if unit evolved for animation
     Positions of units that got evolved
     https://jsfiddle.net/z92y8pa3/
 
 Target Priorities
-    Make more like move priority, in front of you first
     Never stick on a target where attacks are x0 (No effect)
     If multiple within range: 
         Type effective priority
@@ -123,8 +124,6 @@ Speed rework how it is applied
 Lock
     ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
         During battle: Interact with server, otherwise no
-
-Dps stats after round
 
 Add next round opponent
     pvp: name
@@ -201,8 +200,7 @@ Aoe damage logic
 
 ## Frontend
 
-Lock check
-    Is it ok?
+Upnext / gymleader text same width
 
 Buying unit when visiting -> change back visited to state.index
 

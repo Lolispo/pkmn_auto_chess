@@ -64,7 +64,7 @@ class PokemonImage extends Component{
     const baseMarginTop = paddingTop + height - 15;
     const baseMarginLeft = 85 - width - 7;
     const imgEl = <img
-      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : this.props.renderBase ? 'pokemonSpawn' : 'pokemonEnter')}` +
+      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : this.props.renderBase ? 'pokemonSpawn' : 'pokemonEnter')} ` +
         `${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
       key={src}
       style={{paddingTop: paddingTop, width: width, height: height}}
@@ -270,7 +270,7 @@ class Cell extends Component {
         }
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
-          const classList = `absolute ${(pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : ''))}` +
+          const classList = `absolute ${(pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : ''))} ` +
               `${(this.props.newProps.onGoingBattle && !this.props.isBoard ? 'pokemonEnter' : '')}`;
           // console.log('@rendereding pokemonImage classList', classList)
           return <div className={`relative`} style={styleVar}>
@@ -1180,10 +1180,10 @@ class App extends Component {
           {(this.props.enemyIndex ? this.props.enemyIndex : '')}
           {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
         </div> : <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
-          {(this.props.enemyIndex !== -1 ? 'Up next: ' + (this.props.enemyIndex !== '' ? this.props.enemyIndex : 
+          {(this.props.enemyIndex !== -1 ? 'Up next: ' + (this.props.enemyIndex !== '' ? '' : 
           (this.props.roundType === 'npc' ? 'Npc Battle' : (this.props.roundType === 'pvp' ? 'PvP Battle' : ''))) 
           : '')}
-          {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
+          {(this.props.roundType === 'gym' ? <img className='gymLeader upNext' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/>: '')}
         </div>)}
       </div>;
     const leftBar = <div style={{width: '165px'}}>
@@ -1316,7 +1316,7 @@ class App extends Component {
             <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'damageBoard'})}/>
             <label className='labels'>Damage</label> 
           </div>: '')}
-            {(!this.props.onGoingBattle && Object.keys(this.props.dmgBoard).length > 0 && (this.props.showDmgBoard
+            {(!this.props.onGoingBattle && this.props.dmgBoard && Object.keys(this.props.dmgBoard).length > 0 && (this.props.showDmgBoard
               || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>
               <span className='bold'>Damage Dealt:</span>{this.getDmgBoard()}
             </div> : (this.props.help ? this.buildHelp() : ''))}

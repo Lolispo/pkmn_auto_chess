@@ -197,7 +197,8 @@ const gymLeader = Map({
 });
 
 exports.getGymLeader = (round) => {
-  return gymLeader.get(round);
+  // console.log('@getGymLeader', round, gymLeader.get(round), gymLeader.get(String(round)), gymLeader)
+  return gymLeader.get(String(round));
 }
 
 exports.getRoundType = (round) => {

@@ -41,9 +41,32 @@ Show bonus information
 
 DotDamage effect - Arvid had idea for effect
 
+#### Type Numbers
+
+normal: 9 [4,6,8] -> [3,5,7] Nerf numbers for first level a lot
+fire: 7 [2,4,6]
+water: 12 [3,5,7]
+electric: 6 [2,4,6]
+Grass: 5 [2,4,6] -> buff numbers and remove last -> [2,4] with higher bonuses
+ice: 4 [2,4,6]
+Fighting: 3 (poliwrath) [2,4,6] -> [2,3]?
+poison: 9 [3,6,9]
+ground: 5 (7 nido^top)[3,6] -> [2,4,5]?
+flying: 11 [3,6,9]
+psychic: 7 [3,6,9] -> [3,5,7] High numbers for last
+bug: 4  [2,4]
+rock: 5 [2,4,6]
+ghost/dragon: 1 [1]
+Steel: 1 (3) [1,2]
+
+
 #### Potential balance:
 
   Dragon too strong?
+
+  Type numbers:
+  More grass units?
+  More Fighting units?
 
   Geodude 3 -> 2?
   Remove iggly/cleffa trio ? 
@@ -137,3 +160,17 @@ Upper speed limit changed from 200 -> 250. Might buff speed units or nerf (proba
 Fixed dragon bug with type
 
 Added max mana at ability manaCost
+
+## Balance patch 0.2.2
+
+Type balancing around pokemon numbers:
+
+normal: #9 [4,6,8] -> [3,5,7] Nerf numbers for first level a lot
+
+Grass: #5 [2,4,6] -> buff numbers and remove last -> [2,4] with higher bonuses
+
+Fighting: #3 (poliwrath) [2,4,6] -> [2,3]?
+
+ground: #5 [3,6] -> [2,4,5]?
+
+psychic: #7 [3,6,9] -> [3,5,7] High numbers for last

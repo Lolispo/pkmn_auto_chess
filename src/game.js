@@ -165,7 +165,7 @@ async function refreshShop(stateParam, playerIndex) {
     const shopList = await tempShopList;
     const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
     const shopToList = fromJS(Array.from(filteredShop.map((value, key) => value).values()));
-    console.log('@refreshShop:', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
+    // console.log('@refreshShop:', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
     state = state.set('discardedPieces', discPieces.concat(shopToList));
   }
   state = state.setIn(['players', playerIndex, 'shop'], newShop);
@@ -1205,17 +1205,19 @@ async function startBattle(boardParam) {
     const unit = board.get(unitPos);
     if(unit.get('hp') <= 0) {
       board = board.delete(unitPos);
-      battleOver = battleOver || isBattleOver(board, 1 - team);
+      battleOver = battleOver || await isBattleOver(board, 1 - unit.get('team'));
+      console.log('Removing unit with hp < 0 before battle start', unit.get('name'), unit.get('hp'), 'battleOver', battleOver)
+    } else {
+      const target = unit.get('first_move');
+      const time = 0;
+      const move = Map({
+        unitPos, action, target, time,
+      });
+      actionStack = actionStack.push(move);
+      const newUnit = unit.set('next_move', +unit.get('next_move') + +unit.get('speed'))
+        .delete('first_move');
+      board = board.set(unitPos, newUnit);
     }
-    const target = unit.get('first_move');
-    const time = 0;
-    const move = Map({
-      unitPos, action, target, time,
-    });
-    actionStack = actionStack.push(move);
-    const newUnit = unit.set('next_move', +unit.get('next_move') + +unit.get('speed'))
-      .delete('first_move');
-    board = board.set(unitPos, newUnit);
     temp = iter.next();
   }
   // Start battle

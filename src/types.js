@@ -4,14 +4,14 @@ const { Map, List } = require('immutable');
 
 const f = require('./f');
 
-const increaseSpeed = (unit, bonus) => unit.set('speed', unit.get('speed') - bonus); // Lower speed = better
+const increaseSpeed = (unit, bonus) => unit.set('speed', Math.max(10, unit.get('speed') - bonus)); // Lower speed = better
 const increaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') + +bonus);
 const increaseAttack = (unit, bonus) => unit.set('attack', +unit.get('attack') + +bonus);
 const increaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense') + +bonus);
-const decreaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense') - +bonus);
+const decreaseDefense = (unit, bonus) => unit.set('defense', Math.max(0, +unit.get('defense') - +bonus));
 const decreaseSpeed = (unit, bonus) => unit.set('speed', +unit.get('speed') + +bonus); // Higher speed value = worse
-const decreaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') - +bonus);
-const decreaseAttack = (unit, bonus) => unit.set('attack', +unit.get('attack') - +bonus);
+const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus));
+const decreaseAttack = (unit, bonus) => unit.set('attack', Math.max(0, +unit.get('attack') - +bonus));
 
 // TODO: Add hp reg mechanic?
 
@@ -32,8 +32,8 @@ const typeMap = new Map({
       'Steel',
     ]),
     noDamageAgainst: 'Ghost',
-    req: List([4, 6, 8]),
-    bonusAmount: List([15, 20, 25]),
+    req: List([3, 5, 7]),
+    bonusAmount: List([10, 20, 25]),
     bonusType: 'allBonus',
     bonusStatType: 'hp',
     allBonus: (unit, bonus) => increaseHp(unit, bonus),
@@ -119,8 +119,8 @@ const typeMap = new Map({
       'Dragon',
       'Steel',
     ]),
-    req: List([2, 4, 6]),
-    bonusAmount: List([5, 5, 10]),
+    req: List([2, 4]),
+    bonusAmount: List([10, 15]),
     bonusType: 'enemyDebuff',
     bonusStatType: 'defense',
     enemyDebuff: (unit, bonus) => decreaseHp(unit, bonus),
@@ -162,8 +162,8 @@ const typeMap = new Map({
       'Fairy',
     ]),
     noDamageAgainst: 'Ghost',
-    req: List([2, 4, 6]),
-    bonusAmount: List([10, 15, 20]),
+    req: List([2, 3]),
+    bonusAmount: List([15, 15]),
     bonusType: 'allBonus',
     bonusStatType: 'attack',
     allBonus: (unit, bonus) => increaseAttack(unit, bonus),
@@ -201,8 +201,8 @@ const typeMap = new Map({
       'Bug',
     ]),
     noDamageAgainst: 'Flying',
-    req: List([3, 6]),
-    bonusAmount: List([25, 35]),
+    req: List([2, 4, 5]),
+    bonusAmount: List([15, 15, 10]),
     bonusType: 'enemyDebuff',
     bonusStatType: 'speed',
     enemyDebuff: (unit, bonus) => decreaseSpeed(unit, bonus),
@@ -236,8 +236,8 @@ const typeMap = new Map({
       'Steel',
     ]),
     noDamageAgainst: 'Dark',
-    req: List([3, 6, 9]),
-    bonusAmount: List([20, 40, 60]),
+    req: List([3, 5, 7]),
+    bonusAmount: List([30, 40, 70]),
     bonusType: 'enemyDebuff',
     bonusStatType: 'defense',
     enemyDebuff: (unit, bonus) => decreaseDefense(unit, bonus),
