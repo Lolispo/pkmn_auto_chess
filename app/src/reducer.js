@@ -275,7 +275,7 @@ const reducer = (
       break;
     case 'UPDATE_BATTLEBOARD':
         // console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
-        state = {...state, battleStartBoard: action.board, message: 'Move ' + action.moveNumber, messageMode: ''}
+        state = {...state, battleStartBoard: action.board} //, message: 'Move ' + action.moveNumber, messageMode: ''}
         // console.log('state', state);
         break;
     case 'SET_STATS':

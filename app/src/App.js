@@ -1210,7 +1210,8 @@ class App extends Component {
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
             <img className='soundImg' src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
           </div>
-          <img className='chatSoundImg' src={(this.props.chatSoundEnabled ? getImage('chatSound') : getImage('chatSoundMuted'))} onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})}/>
+          <img className='chatSoundImg' src={(this.props.chatSoundEnabled ? getImage('chatSound') : getImage('chatSoundMuted'))} 
+          onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})} alt='chatSoundToggle'/>
           {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')} 
         </div>
         <div className='paddingLeft5 marginTop5 text_shadow'>
@@ -1287,7 +1288,8 @@ class App extends Component {
               </div>
             </div>
             <div className='toggleHelpDiv'>
-              <img className='toggleHelpImg' src={(this.props.help ? getImage('collapse') : getImage('collapseNot'))} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}/>
+              <img className='toggleHelpImg' src={(this.props.help ? getImage('collapse') : getImage('collapseNot'))} 
+                    onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})} alt='toggleHelp'/>
             </div>
             {/*<div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>*/}
             {/*<div style={{marginLeft: '5px'}}>
