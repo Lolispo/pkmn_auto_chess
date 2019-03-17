@@ -207,6 +207,7 @@ Aoe damage logic
 
 Guarantee sounds play
     Weird interaction
+        Clear all sounds of certain type
 
 Display more clearly as a loser if you are eliminated
     Also when game is over when you are not winner

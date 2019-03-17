@@ -4,6 +4,14 @@ import { getBackgroundAudio, getSoundEffect } from './audio.js';
 
 let counter = 0;
 
+const increaseCounter = (soundEffects) => {
+  if(counter + 1 === soundEffects.length) {
+    counter = 0;
+  } else {
+    counter += 1;
+  }
+}
+
 const getNewSoundEffects = (soundEffects, newSoundEffect) => {
   let newSoundEffects = soundEffects;
   // console.log('@getNewSoundEffects', soundEffects, soundEffects.length)
@@ -11,16 +19,27 @@ const getNewSoundEffects = (soundEffects, newSoundEffect) => {
     if(soundEffects[i] !== newSoundEffect){
       // console.log('@NewSoundEffect', i, newSoundEffect)
       newSoundEffects[i] = newSoundEffect;
-      counter += 1;
-      break;
+      increaseCounter(soundEffects);
+      return newSoundEffects;
     }
   }
   for(let i = 0; i < counter; i++){
     if(soundEffects[i] !== newSoundEffect){
       // console.log('@NewSoundEffect', i, newSoundEffect)
       newSoundEffects[i] = newSoundEffect;
-      counter += 1;
-      break;
+      increaseCounter(soundEffects);
+      return newSoundEffects;
+    }
+  }
+  return newSoundEffects;
+}
+
+const clearSoundEffect = (soundEffects, soundEffect) => {
+  let newSoundEffects = soundEffects;
+  for(let i = 0; i < soundEffects.length; i++){
+    if(soundEffects[i] === soundEffect){
+      // console.log('@NewSoundEffect', i, newSoundEffect)
+      newSoundEffects[i] = '';
     }
   }
   return newSoundEffects;
@@ -321,13 +340,10 @@ const reducer = (
       console.log('Battle ended', state.startTimer, action.upcomingRoundType, action.upcomingGymLeader)
       state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), 
       startTimer: true, showDmgBoard: true, roundType: action.upcomingRoundType, enemyIndex: (action.upcomingGymLeader || '')}
-      // Get six last soundeffects open
-      let tempSoundEffects = getNewSoundEffects(state.soundEffects, '');
-      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
-      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
-      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
-      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
-      tempSoundEffects = getNewSoundEffects(tempSoundEffects, '');
+      break;
+    }
+    case 'CLEAR_TICKS': {
+      const tempSoundEffects = clearSoundEffect(state.soundEffects, getSoundEffect('Tick'));
       state = {...state, soundEffects: [...tempSoundEffects]};
       break;
     }

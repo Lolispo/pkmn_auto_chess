@@ -916,7 +916,12 @@ class App extends Component {
     return <div className='playerScoreboardContainer' key={player.index}>
       <div className='playerScoreboardInner'>
         <span className='flex'>
-          <span className='biggerText'><span className='playerScoreboardName'>{'Player ' + player.index}</span>{(isDead ? <span className='redFont playerScoreboardDead'>{' Dead' + '\n'}</span> : 
+          <span className='biggerText'><span className={`playerScoreboardName ${(player.index === this.props.index ? 'bold' : '')}`}>
+              {'Player ' + player.index}
+            </span>
+            {(isDead ? <span className='redFont playerScoreboardDead'>
+              {' Dead' + '\n'}
+            </span> : 
             <span className='playerScoreBoardVisitButtonDiv'>
               {(this.props.visiting !== player.index ? <button className='normalButton visitButton' onClick={() => this.visitPlayer(player.index)}>
                   {(player.index === this.props.index ? 'Home' : 'Visit')}
