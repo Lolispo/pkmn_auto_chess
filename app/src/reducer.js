@@ -129,7 +129,7 @@ const reducer = (
     case 'UPDATE_PLAYER':
       // console.log('updating player', action.index, action.player);
       state = { ...state,
-        message: 'Updated player', 
+        // message: 'Updated player', 
         messageMode: '',
       }
       if(action.index === state.index && !state.isDead){

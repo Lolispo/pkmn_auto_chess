@@ -56,20 +56,19 @@ Odd behaviour:
 
 # Fix me - Prio
     
-    Die same round gets weird
-        Multiple of same id
+    Move: Get closest enemy
+        If undefined, try again for second closest
+
 
     Max size of shop base (mewtwo moltres wide)
 
     Crash - players[key] = null, somewhere players get null back from server
         Shouldnt crash on this atleast for now
 
-    Lock check
-
     Players die same round
         Handle order as time eliminated
-
-    Dont allow ready before loaded
+        Die same round gets weird
+            Multiple of same id
 
     Start screen better sign of loading
 
@@ -88,37 +87,23 @@ Odd behaviour:
 
 ## Backend
 
-Move: Get closest enemy
-    If undefined, try again for second closest
-
-pieces: 
-    Trying refill for 414000 units
-    Buy upgrades xd
-
-discarded Pieces
-    Nidoran in masses
-
 if alive, reset visited after battle
-
-Dead players
-    Get battleStartBoard and actionStack from visited index
-    Allow dead players to render battle (currently returns if dead)
 
 battleStartBoard -> battleBoard
 
-Redo frontend battle rendering to make possible to jump between battles
 
 Send information if unit evolved for animation
     Positions of units that got evolved
+    https://jsfiddle.net/z92y8pa3/
 
 Target Priorities
     Make more like move priority, in front of you first
     Never stick on a target where attacks are x0 (No effect)
     If multiple within range: 
         Type effective priority
-        Get all units at same length from target as List
-        Get Unit with highest effectivness against
-        If multiple, random
+            Get all units at same length from target as List
+            Get Unit with highest effectivness against
+            If multiple, random
 
 PlacePieceEvent (All piece interactions):
     Which units to be sent back
@@ -216,15 +201,22 @@ Aoe damage logic
 
 ## Frontend
 
+Lock check
+    Is it ok?
+
+Buying unit when visiting -> change back visited to state.index
+
 Select during battle
     dont show displaySell if selectedUnit.isBoard during battle
 
 No animation if moving hand -> hand during battle
+    Check if onGoingBattle allow pokemonSpawn if !isBoard
 
 Make chat text more easily readable
     Dont show damage Dealt if empty
 
 Redo battle rendering
+    Redo frontend battle rendering to make possible to jump between battles
     Init: startBattleTime = new Date(),  
     moves.forEach((move) => {
         timeouts.push(setTimeout((dispatch) => {
@@ -307,7 +299,8 @@ Ability effects from canvas
 Redo pokeball
     696x696
     pokeball align middle
-    pokeball design as in https://discordapp.com/channels/102097104322711552/102097104322711552/555146735568158763
+    pokeball design as in 
+    https://i.guim.co.uk/img/media/3b962fbea708f7ca583ed67ff88119a428aaa504/0_443_1440_1440/master/1440.jpg?width=300&quality=85&auto=format&fit=max&s=bda14865f2c3976cbc163108ef92e7c1
     Color as in costColor1 or gray in pokeball
 
 forceStartGame update for not start 

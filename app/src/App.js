@@ -64,7 +64,8 @@ class PokemonImage extends Component{
     const baseMarginTop = paddingTop + height - 15;
     const baseMarginLeft = 85 - width - 7;
     const imgEl = <img
-      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : this.props.renderBase ? 'pokemonSpawn' : 'pokemonEnter')} ${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
+      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : this.props.renderBase ? 'pokemonSpawn' : 'pokemonEnter')}` +
+        `${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
       key={src}
       style={{paddingTop: paddingTop, width: width, height: height}}
       src={src}
@@ -269,7 +270,8 @@ class Cell extends Component {
         }
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
-          const classList = (pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : '')) + ' absolute';
+          const classList = `absolute ${(pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : ''))}` +
+              `${(this.props.newProps.onGoingBattle && !this.props.isBoard ? 'pokemonEnter' : '')}`;
           // console.log('@rendereding pokemonImage classList', classList)
           return <div className={`relative`} style={styleVar}>
             <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList} newProps={this.props.newProps}/>
@@ -836,7 +838,7 @@ class App extends Component {
       // Jumping animation
       if(battleBoard[unitsAlive[i]].hp > 0 && battleBoard[unitsAlive[i]].team === (winner ? 0 : 1)){
         battleBoard[unitsAlive[i]].winningAnimation = true;
-        console.log('Setting winningAnimation', unitsAlive[i], battleBoard[unitsAlive[i]]);
+        // console.log('Setting winningAnimation', unitsAlive[i], battleBoard[unitsAlive[i]]);
         battleBoard[unitsAlive[i]].actionMessage = '';
       } else {
         // console.log('HEY', battleBoard[unitsAlive[i]].hp > 0, battleBoard[unitsAlive[i]].team === (winner ? 0 : 1), battleBoard[unitsAlive[i]].hp > 0 && battleBoard[unitsAlive[i]].team === (winner ? 0 : 1));
@@ -1114,7 +1116,7 @@ class App extends Component {
     for(let i = 0; i < sortedDmgBoard.length; i++){
       const unitName = sortedDmgBoard[i];
       const value = this.props.dmgBoard[unitName];
-      console.log('@getDmgBoard', value, this.props.dmgBoardTotalDmg)
+      // console.log('@getDmgBoard', value, this.props.dmgBoardTotalDmg)
       const width = value / this.props.dmgBoardTotalDmg * 100 + '%';
       list.push(<div className='dmgBoardUnitDiv' key={unitName}>
         <div className='damageBarDiv'>
@@ -1153,11 +1155,11 @@ class App extends Component {
       </div>
       <div className='mainMenuSoundDiv marginTop5'>
         <div>
-          <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
+          <img className='musicImg' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
           alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}/>
         </div>
         <div>
-          <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} 
+          <img className='soundImg' src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} 
           alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}  onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}/>
         </div>
         {(this.props.musicEnabled ? this.playMusic() : '')} 
@@ -1203,15 +1205,15 @@ class App extends Component {
         </div>
         <div className='marginTop5 flex'>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
-            <img className={(this.props.musicEnabled ? 'musicImg' : 'musicMutedImg')} src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
+            <img className='musicImg' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
           </div>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}>
-            <img className={(this.props.soundEnabled ? 'soundImg' : 'soundMutedImg')} src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
+            <img className='soundImg' src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}/>
           </div>
+          <img className='chatSoundImg' src={(this.props.chatSoundEnabled ? getImage('chatSound') : getImage('chatSoundMuted'))} onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})}/>
           {(this.props.musicEnabled && this.props.gameIsLive ? this.playMusic() : '')} 
         </div>
         <div className='paddingLeft5 marginTop5 text_shadow'>
-          Volume: 
           <input
             type="range"
             className="volume-bar"
@@ -1277,12 +1279,6 @@ class App extends Component {
         </div>
         <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
           <div className='flex'>
-            <button className={`normalButton ${(this.props.help ? '' : 'growAnimation')}`} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}>
-              {(this.props.chatHelpMode === 'chat' ? (this.props.help ? 'Hide Chat' : 'Show Chat') : (this.props.help ? 'Hide Help' : 'Show Help'))}
-            </button>
-            <button style={{marginLeft: '5px'}} className={`normalButton`} onClick={() => this.props.dispatch({type: 'TOGGLE_CHAT_SOUND'})}>
-              {(this.props.chatSoundEnabled ? 'Mute Chat': 'Unmute Chat')}
-            </button>
             <div>
               <button style={{marginLeft: '5px'}} className='normalButton' onClick={() => buyExpEvent(this.props)}>Buy Exp</button>
               <div className='flex marginTop5 goldImageSmallDiv'>
@@ -1290,19 +1286,27 @@ class App extends Component {
                 <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`}>5</div>
               </div>
             </div>
-            <div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>mouseOverId: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>
+            <div className='toggleHelpDiv'>
+              <img className='toggleHelpImg' src={(this.props.help ? getImage('collapse') : getImage('collapseNot'))} onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})}/>
+            </div>
+            {/*<div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>*/}
             {/*<div style={{marginLeft: '5px'}}>
               <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
             </div>*/}
           </div>
         </div>
         <div>
-          {(this.props.help ? <div className='text_shadow marginTop15'>
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>Chat 
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'hotkeys'})}/>Hotkeys 
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'types'})}/>Types
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>Buffs
-            <input type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'damageBoard'})}/>Damage
+          {(this.props.help ? <div className='text_shadow marginTop5'>
+            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>
+            <label className='labels'>Chat</label> 
+            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'hotkeys'})}/> 
+            <label className='labels'>Hotkeys</label> 
+            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'types'})}/>
+            <label className='labels'>Types</label> 
+            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>
+            <label className='labels'>Buffs</label> 
+            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'damageBoard'})}/>
+            <label className='labels'>Damage</label> 
           </div>: '')}
             {(!this.props.onGoingBattle && ((this.props.showDmgBoard && this.props.dmgBoard) 
               || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>

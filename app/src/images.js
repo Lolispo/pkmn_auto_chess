@@ -3,7 +3,6 @@
 // Images
 import lockedLock from './assets/images/lockedLock.png';
 import openLock from './assets/images/openLock.png';
-import goldCoin from './assets/images/goldCoin.png';
 import refreshShopImage from './assets/images/refreshShop.png';
 import pokemonLogo from './assets/images/pokemonLogo.png';
 import autoChess from './assets/images/AutoChess.png';
@@ -11,12 +10,15 @@ import soundMuted from './assets/images/soundMuted.png';
 import sound from './assets/images/sound.png';
 import music from './assets/images/note.png';
 import musicMuted from './assets/images/noteMuted.png';
+import chatSound from './assets/images/chatSound.png';
+import chatSoundMuted from './assets/images/chatSoundMuted.png';
 import pieceImg from './assets/images/piece.png';
 import info from './assets/images/info.png';
-import trophy from './assets/images/trophy.png';
 import flame from './assets/images/flame.png';
 import icecube from './assets/images/icecube.png';
 import pokedollar from './assets/images/pokedollarWhite.png';
+import collapseWhite from './assets/images/collapseWhite.png';
+import collapseNotWhite from './assets/images/collapseNotWhite.png';
 
 // Type images
 import normal from './assets/images/types/typeNormal.png';
@@ -62,6 +64,10 @@ export function getImage(name) {
       return music;
     case 'musicMuted':
       return musicMuted;
+    case 'chatSound':
+      return chatSound;
+    case 'chatSoundMuted':
+      return chatSoundMuted;
     case 'pieceImg':
       return pieceImg;
     case 'info':
@@ -71,6 +77,10 @@ export function getImage(name) {
       return flame;
     case 'icecube':
       return icecube;
+    case 'collapse':
+      return collapseWhite;
+    case 'collapseNot':
+      return collapseNotWhite;
     default:  
       return info;
   }

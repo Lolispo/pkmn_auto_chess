@@ -162,27 +162,29 @@ body {
 }
 
 .soundImg {
-  margin-left: 15px;
+  /* 50 50 */
+  margin-left: 10px;
   margin-top: 12px;
-  width: 50px;
-  height: 50px;
-}
-
-.soundMutedImg {
-  margin-left: 15px;
-  margin-top: 12px;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
 }
 
 .musicImg {
-  width: 70px;
-  height: 70px;
+  /* 70 70 */
+  width: 50px;
+  height: 50px;
 }
 
-.musicMutedImg {
-  width: 70px;
-  height: 70px;
+.chatSoundImg {
+  /* 300 270 */
+  margin-top: 8px;
+  margin-left: 8px;
+  width: 45px;
+  height: 41px;
+}
+
+.toggleHelpDiv {
+  margin-left: 10px;
 }
 
 .updateMessage {
@@ -266,11 +268,17 @@ body {
 .boardDiv {
   background: url(./assets/images/pokeballOpacity.png) no-repeat;
   background-position: 8px 10px; 
+  /*
+  background: url(./assets/images/circle.png) no-repeat;
+  */
 }
 
 .boardDivBattle {
   background: url(./assets/images/pokeball.png) no-repeat;
   background-position: 8px 10px; 
+  /* 
+  background: url(./assets/images/circle.png) no-repeat;
+  */
 }
 
 .handDiv {
@@ -440,7 +448,7 @@ body {
   height: 17px;
   width: 12px;
   padding-top: 7px;
-  margin-left: 6px;
+  margin-left: 10px;
 }
 
 .goldImageTextSmall {
@@ -664,6 +672,13 @@ body {
   z-index: 10;
 }
 
+.toggleHelpImg {
+  /*140 84*/
+  margin-top: 15px;
+  width: 35px;
+  height: 21px;
+}
+
 .chatTypingDiv {
   padding-left: 5px;
   animation-name: enter;
@@ -820,17 +835,16 @@ body {
 }
 
 .streakImage {
+  padding-left: 5px;
   width: 18px;
   height: 18px;
 }
 
 .icecubeImage {
-  padding-left: 2px;
   padding-top: 8px;
 }
 
 .flameImage {
-  padding-left: 2px;
   padding-top: 5px;
 }
 
@@ -1318,4 +1332,16 @@ body {
 		transform: scale(0.01);
 		opacity: 0;
 	}
+}
+
+.check {
+  border: 1px solid black;
+  border-radius: 100%;
+  height: 15px;
+  width: 15px;
+  position: relative;
+}
+
+.labels {
+  position: relative;
 }

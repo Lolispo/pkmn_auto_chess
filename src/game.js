@@ -643,7 +643,7 @@ async function getDirection(unitPos, path){
   return sy + sx;
 }
 
-async function getStepMovePos(board, unitPos, closestEnemyPos) {
+async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exceptionsList = List([])) {
   const stepsToTake = Math.floor(Math.random() * 2 + 1); // 1 currently //  1 - 2, * 2
   const rangeToTarget = getHeuristicScore(unitPos, closestEnemyPos);
   if (stepsToTake > rangeToTarget && rangeToTarget === 1) { // Within range, move to closest available space
@@ -701,8 +701,15 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
     pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux - 1, uy + 1)); // SW
     pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy + 1)); // SE
   }
-  console.log('DIDNT FIND PATH. RETURNING ', unitPos);
-  return Map({movePos: unitPos, direction: ''});
+  const newClosestEnemyObj = getClosestEnemy(board, unitPos, range, team, exceptionsList.push(closestEnemyPos));
+  if(f.isUndefined(newClosestEnemyObj.get('closestEnemy'))){
+    console.log('DIDNT FIND PATH. RETURNING ', unitPos);
+    return Map({movePos: unitPos, direction: ''});
+  } else {
+    // TODO: Check so not blocked in
+    console.log('No path available to piece', closestEnemyPos + '. Going deeper')
+    return getStepMovePos(board, unitPos, newClosestEnemyObj.get('closestEnemy'), range, team, exceptionsList.push(closestEnemyPos));
+  }
 }
 
 /**
@@ -711,40 +718,69 @@ async function getStepMovePos(board, unitPos, closestEnemyPos) {
  * Does this handle positioning good for both teams?
  * Map({closestEnemy, withinRange})
  * Current order: SW, NW, S, N, SE, NE, SW, SE, W, E, NW, NE
+ * New Current Order: N S W E SW NW SE NE
  * Wanted order:
  *    team 0: N, S, W, E, NW, NE, SW, SE
  *    team 1: S, N, W, E, SW, SE, NW, NE
  */
-function getClosestEnemy(board, unitPos, range, team) {
+function getClosestEnemy(board, unitPos, range, team, exceptionsList = List([])) {
   // f.print(board, '@getClosestEnemy board')
   const x = f.x(unitPos);
   const y = f.y(unitPos);
   const enemyTeam = 1 - team;
+  let pos;
+
+  // Check N S W E
+  pos = pos = f.pos(x, y + 1);
+  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+    return Map({ closestEnemy: pos, withinRange: true, direction: 'N' });
+  }
+  pos = pos = f.pos(x, y - 1);
+  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+    return Map({ closestEnemy: pos, withinRange: true, direction: 'S' });
+  }
+  pos = pos = f.pos(x - 1, y);
+  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+    return Map({ closestEnemy: pos, withinRange: true, direction: 'W' });
+  }
+  pos = pos = f.pos(x + 1, y);
+  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+    return Map({ closestEnemy: pos, withinRange: true, direction: 'E' });
+  }
+
   for (let i = 1; i <= 8; i++) {
     const withinRange = i <= range;
     // console.log(withinRange, x, y, i, (x-i), (y-i))
+    
+    // Normal checks
     for (let j = x - i; j <= x + i; j++) {
-      if (!f.isUndefined(board.get(f.pos(j, y - i))) && board.get(f.pos(j, y - i)).get('team') === enemyTeam) {
+      pos = f.pos(j, y - i);
+      if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < x ? 'SW' : j === x ? 'S' : 'SE');
-        return Map({ closestEnemy: f.pos(j, y - i), withinRange, direction });
-      } if (!f.isUndefined(board.get(f.pos(j, y + i))) && board.get(f.pos(j, y + i)).get('team') === enemyTeam) {
+        return Map({ closestEnemy: pos, withinRange, direction });
+      } 
+      pos = f.pos(j, y + i);
+      if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < x ? 'NW' : j === x ? 'N' : 'NE');
-        return Map({ closestEnemy: f.pos(j, y + i), withinRange, direction });
+        return Map({ closestEnemy: pos, withinRange, direction });
       }
     }
     for (let j = y - i + 1; j < y + i; j++) {
-      if (!f.isUndefined(board.get(f.pos(x - i, j))) && board.get(f.pos(x - i, j)).get('team') === enemyTeam) {
+      pos = f.pos(x - i, j)
+      if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < y ? 'SW' : j === y ? 'W' : 'NW');
-        return Map({ closestEnemy: f.pos(x - i, j), withinRange, direction });
-      } if (!f.isUndefined(board.get(f.pos(x + i, j))) && board.get(f.pos(x + i, j)).get('team') === enemyTeam) {
+        return Map({ closestEnemy: pos, withinRange, direction });
+      } 
+      pos = f.pos(x + i, j)
+      if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < y ? 'SE' : j === y ? 'E' : 'NE');
-        return Map({ closestEnemy: f.pos(x + i, j), withinRange, direction });
+        return Map({ closestEnemy: pos, withinRange, direction });
       }
     }
   }
-  f.print(board, '@getClosestEnemy Returning undefined: Board\n');
+  // f.print(board, '@getClosestEnemy Returning undefined: Board\n');
   console.log('@getClosestEnemy Returning undefined: ', x, y, range, team);
-  return undefined;
+  return Map({ closestEnemy: undefined, withinRange: false, direction: '' });
 }
 
 /**
@@ -1093,7 +1129,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     });
   } // Move action
   const closestEnemyPos = enemyPos.get('closestEnemy');
-  const movePosObj = await getStepMovePos(board, unitPos, closestEnemyPos);
+  const movePosObj = await getStepMovePos(board, unitPos, closestEnemyPos, range, team);
   const movePos = movePosObj.get('movePos');
   const direction = movePosObj.get('direction');
   f.p('Move: ', unitPos, 'to', movePos);
