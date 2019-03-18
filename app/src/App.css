@@ -153,7 +153,11 @@ body {
 }
 
 .pieceImg {
+  /*
   width: 17px;
+  height: 30px;
+  */
+  width: 30px;
   height: 30px;
 }
 
@@ -418,7 +422,11 @@ body {
   padding-top: 7px;
 }
 
-.goldImageSmallDiv {
+.goldImageRefreshDiv {
+  margin-left: 9px;
+}
+
+.goldImageBuyExp {
   margin-left: 12px;
 }
 
@@ -950,8 +958,14 @@ body {
 }
 
 .refreshShopImage {
+  /*
   height: 65px;
   width: 35px;
+  350 484
+  */
+  width: 40px;
+  height: 56px;
+  margin-left: -4px;
 }
 
 .type {

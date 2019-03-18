@@ -1,9 +1,9 @@
 // Author: Petter Andersson
 
 // Images
-import lockedLock from './assets/images/lockedLock.png';
+import lockedLock from './assets/images/newLockedLock.png';
 import openLock from './assets/images/openLock.png';
-import refreshShopImage from './assets/images/refreshShop.png';
+import refreshShopNew from './assets/images/refreshShopNew.png';
 import pokemonLogo from './assets/images/pokemonLogo.png';
 import autoChess from './assets/images/AutoChess.png';
 import soundMuted from './assets/images/soundMuted.png';
@@ -12,7 +12,7 @@ import music from './assets/images/note.png';
 import musicMuted from './assets/images/noteMuted.png';
 import chatSound from './assets/images/chatSound.png';
 import chatSoundMuted from './assets/images/chatSoundMuted.png';
-import pieceImg from './assets/images/piece.png';
+import pokeballPiece from './assets/images/pokeballPiece.png';
 import info from './assets/images/info.png';
 import flame from './assets/images/flame.png';
 import icecube from './assets/images/icecube.png';
@@ -61,7 +61,9 @@ export function getImage(name) {
     case 'pokedollar':
       return pokedollar;
     case 'refreshShopImage':
-      return refreshShopImage;
+      // return refreshShopImage;
+    case 'refreshShopNew':
+      return refreshShopNew;
     case 'pokemonLogo':
       return pokemonLogo;
     case 'autoChess':
@@ -79,7 +81,9 @@ export function getImage(name) {
     case 'chatSoundMuted':
       return chatSoundMuted;
     case 'pieceImg':
-      return pieceImg;
+//      return pieceImg;
+    case 'pokeballPiece':
+      return pokeballPiece;
     case 'info':
       return info;
     case 'trophy':

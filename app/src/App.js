@@ -1285,7 +1285,7 @@ class App extends Component {
                     <div style={{paddingTop: '10px'}}>
                       <img className='refreshShopImage' onClick={() => refreshShopEvent(this.props)} src={getImage('refreshShopImage')} alt='refreshShop'/>
                     </div>
-                    <div className='flex goldImageSmallDiv'>
+                    <div className='flex goldImageRefreshDiv'>
                       <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>
                       <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 2 ? 'redFont' : '')}`}>2</div>
                     </div>
@@ -1301,7 +1301,7 @@ class App extends Component {
           <div className='flex'>
             <div>
               <button style={{marginLeft: '5px'}} className='normalButton' onClick={() => buyExpEvent(this.props)}>Buy Exp</button>
-              <div className='flex marginTop5 goldImageSmallDiv'>
+              <div className='flex marginTop5 goldImageBuyExp'>
                 <img className='goldImageSmall' src={getImage('goldCoin')} style={{marginLeft: '18px'}} alt='goldCoin'/>
                 <div className={`text_shadow goldImageTextSmall ${(this.props.gold < 5 ? 'redFont' : '')}`}>5</div>
               </div>
