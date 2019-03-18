@@ -278,7 +278,7 @@ describe('game state', () => {
   describe('getBoardUnit', () => {
     /**
      * Input: (name, x, y) 
-     * Output: Map({name: name, display_name: stats, position: f.pos(x,y)})
+     * Output: Map({name: name, displayName: stats, position: f.pos(x,y)})
      */
       it('getBoardUnit tests?', async () => {
         const unit = await getBoardUnit('rattata', 2, 2);
@@ -286,7 +286,7 @@ describe('game state', () => {
         unitBoard = board.get(f.pos(2,2));
         unitStats = await pokemonJS.getStats('rattata');
         assert.equal(unitBoard.get('name'), 'rattata');
-        assert.equal(unitBoard.get('display_name'), unitStats.get('display_name'));
+        assert.equal(unitBoard.get('displayName'), unitStats.get('displayName'));
         assert.equal(f.x(unitBoard.get('position')), 2);
         assert.equal(f.y(unitBoard.get('position')), 2);
       });

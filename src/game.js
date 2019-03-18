@@ -121,7 +121,7 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
       const unitStats = await pokemonJS.getStats(piece);
       newShop = newShop.set(pos, Map({
         name: piece,
-        display_name: unitStats.get('display_name'),
+        displayName: unitStats.get('displayName'),
         cost: unitStats.get('cost'),
         type: unitStats.get('type'),
       }));
@@ -187,7 +187,7 @@ async function getBoardUnit(name, x, y) {
   // console.log('@getBoardUnit', name, unitInfo)
   return Map({
     name,
-    display_name: unitInfo.get('display_name'),
+    displayName: unitInfo.get('displayName'),
     position: f.pos(x, y),
     type: unitInfo.get('type'),
   });
@@ -350,7 +350,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     const newPiece = await getBoardUnit(evolvesTo, f.x(position), f.y(position));
     state = state.setIn(['players', playerIndex, 'board', position], newPiece);
     // TODO: List -> handle differently
-    const evolutionDisplayName = (await pokemonJS.getStats(evolvesTo)).get('display_name');
+    const evolutionDisplayName = (await pokemonJS.getStats(evolvesTo)).get('displayName');
     // console.log('evolutionDisplayName', evolutionDisplayName);
     const nextPieceUpgrade = await checkPieceUpgrade(state, playerIndex, newPiece, position);
     // Get both upgrades
@@ -1258,7 +1258,7 @@ async function startBattle(boardParam) {
       nextMoveValue = +unit.get('next_move') + +unit.get('speed');
       // Add to dpsBoard
       if (unit.get('team') === 0) {
-        dmgBoard = dmgBoard.set(unit.get('display_name'), (dmgBoard.get(unit.get('display_name')) || 0) + result.get('nextMove').get('value'));
+        dmgBoard = dmgBoard.set(unit.get('displayName'), (dmgBoard.get(unit.get('displayName')) || 0) + result.get('nextMove').get('value'));
       }
     }
     board = board.setIn([pos, 'next_move'], nextMoveValue);

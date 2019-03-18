@@ -99,6 +99,7 @@ Move logic of upcoming enemy to calculate before next round beginnings
     Pvp Battle -> Id of next opponent
 
 battleStartBoard -> battleBoard
+visiting -> visitId
 
 Send information if unit evolved for animation
     Positions of units that got evolved
@@ -174,29 +175,11 @@ first move implement
     Not required atm
     
 Longer range than 1
-    Requires more attack animations
+    Animations:
+        Canvas? Draw projectiles from fromPosition to toPosition
+        Requires more attack animations
         Better way to do these animations
-    2:
-        Caterpie, weedle, pidgey, spearow
-        Butterfree
-        pikachu
-        venomoth
-        zubat
-        clefairy
-        growlithe
-        drowzee
-        voltorb
-        koffing
-        elekid
-        snorlax
-        dratini
-    3:
-        gastly
-        magnemite
-        Abra
-        Blastoise
-        charizard
-        mew/mewtwo/articuno/moltres/zapdos
+
 
 Ability ranges implementation requries check for if ability.withinRange
 

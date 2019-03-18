@@ -114,7 +114,7 @@ class ShopPokemon extends Component{
           <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass} newProps={this.props.newProps}/>
         </div>
         <div className='pokemonShopText'>
-          <span className={costColorTextClass}>{this.props.shopPokemon.display_name + '\n'}</span>
+          <span className={costColorTextClass}>{this.props.shopPokemon.displayName + '\n'}</span>
           {(Array.isArray(this.props.shopPokemon.type) ?
             <div>
               <span className={`type typeLeft ${this.props.shopPokemon.type[0]}`}>{this.props.shopPokemon.type[0]}</span>
@@ -536,7 +536,7 @@ class App extends Component {
     const pokeEl= <PokemonImage name={name} sideLength={50} newProps={this.props}/>;
     return <div className={className}>
       <div className='textAlignCenter'>
-        <div>{this.props.stats.display_name}</div>
+        <div>{this.props.stats.displayName}</div>
         <div className='infoPanelPokemonLogo'>{pokeEl}</div>
       </div>
       {this.buildStats()}
@@ -546,7 +546,7 @@ class App extends Component {
           sellPieceEvent(this.props, from);
         }}>
           <span>
-            {'Sell ' + this.props.stats.display_name + '\n'}
+            {'Sell ' + this.props.stats.displayName + '\n'}
           </span>
           <span className='flex centerWith50'>
             <img className='goldImageSmallest' src={getImage('pokedollar')} alt='pokedollar'/>
@@ -565,7 +565,7 @@ class App extends Component {
         : this.props.myBoard[this.props.selectedUnit.pos]) : this.props.myHand[this.props.selectedUnit.pos]);
       if(pokemon){
         this.props.dispatch({type: 'NEW_UNIT_SOUND', newAudio: getUnitAudio(pokemon.name)});
-        // console.log('@selectedUnitInformation', pokemon.display_name, pokemon)
+        // console.log('@selectedUnitInformation', pokemon.displayName, pokemon)
         const displaySell = this.props.selectedUnit.isBoard && this.props.onGoingBattle && this.props.battleStartBoard ? false : this.props.selectedUnit.displaySell;
         return this.statsRender(className, pokemon.name, displaySell);
       }
