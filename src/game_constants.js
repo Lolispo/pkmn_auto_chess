@@ -196,10 +196,8 @@ const gymLeader = Map({
   45: 'Giovanni',
 });
 
-exports.getGymLeader = (round) => {
-  // console.log('@getGymLeader', round, gymLeader.get(round), gymLeader.get(String(round)), gymLeader)
-  return gymLeader.get(String(round));
-}
+exports.getGymLeader = round => gymLeader.get(String(round));
+
 
 exports.getRoundType = (round) => {
   if (round <= 3) {

@@ -90,11 +90,6 @@ Odd behaviour:
 Improve shuffle
     Some combinations are way more common than others
 
-Npc waves
-    Either give information about them in up next
-    Or random the wave between different presets (wave 2 and 3)
-        Shouldnt have advantage of knowing meta in early game
-
 Can units attack teammates?
     Check getClosestEnemy
 
@@ -102,8 +97,6 @@ Move logic of upcoming enemy to calculate before next round beginnings
     currentLogic -> buildMatchups
     To logic -> endBattle sending
     Pvp Battle -> Id of next opponent
-
-if alive, reset visited after battle
 
 battleStartBoard -> battleBoard
 
@@ -140,19 +133,19 @@ Lock
 
 Add next round opponent
     pvp: name
-    gym battle: image
-        Add/Find images for gym leaders
-            https://pokemon.fandom.com/wiki/File:Brock_(game)(FrLg)Sprite.png
-    npc: Image of matchup
+    Npc waves
+        Alt1: Image/text of matchup
+            Either give information about them in up next
+        Alt2: random the wave between different presets (wave 2 and 3)
+            Shouldnt have advantage of knowing meta in early game
 
-Players die same round
-    Need to record time of death, when removePlayerHp is called, check last actionStack time
-    Handle in socketController and eliminate in order if multiple
-        Check after each elimination if only one player left
-    Is While Iterator problematic if 2 players die same round?
-        Can it continue iterating if element was deleted previously
-    Handle players being eliminated in same round
-        After own battle is done, send post battle state to user?
+Players deaths:
+    After own battle is done, send post battle state to user?
+        Pro: Make battle results come more interactively
+        Start timeouts for all players with their battle length and updatePlayer
+            with result to all, 
+            player = received money for win, but not for income
+                Requires refactor
 
 Sp.attack Sp.defense for ability calculations
     Required in stats panel

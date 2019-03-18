@@ -16,16 +16,10 @@ Here: 12 13 16 12 5
 
 Font Rockwell
 
-Gym battles even more difficult
-  At least late, Sabrina +++
-
 Buffs between types?
-  Themes of pokemon trainers in anime?
+  Themes of pokemon icons?
     Ash bonus (many different types)
     Brock = vulpix + ground/rock (dont know if good)
-
-DecreaseHp from grass buff, what happens if it kills diglett? (10hp)
-  Should be handled
 
 Level 5 unit upgrades?
   3 zapdos for example => uber zapdos
@@ -41,21 +35,21 @@ clear chat after a while?
 Show bonus information
   Clickable? Hoverable? somehow show it if wanted
 
-DotDamage effect - Arvid had idea for effect
+DotDamage effect - Arvid had idea for visual effect
 
 #### Type Numbers
 
-normal: 9 [4,6,8] -> [3,5,7] Nerf numbers for first level a lot
+normal: 9 [3,5,7]
 fire: 7 [2,4,6]
 water: 12 [3,5,7]
 electric: 6 [2,4,6]
-Grass: 5 [2,4,6] -> buff numbers and remove last -> [2,4] with higher bonuses
+Grass: 5 [2,4]
 ice: 4 [2,4,6]
-Fighting: 3 (poliwrath) [2,4,6] -> [2,3]?
+Fighting: 3 (poliwrath) [2,3]?
 poison: 9 [3,6,9]
-ground: 5 (7 nido^top)[3,6] -> [2,4,5]?
+ground: 5 (7 nido^top)[2,4,5]?
 flying: 11 [3,6,9]
-psychic: 7 [3,6,9] -> [3,5,7] High numbers for last
+psychic: 7 [3,5,7]
 bug: 4  [2,4]
 rock: 5 [2,4,6]
 ghost/dragon: 1 [1]
@@ -83,6 +77,7 @@ Steel: 1 (3) [1,2]
   New:
     Simple: 
       Raticate hyper fang
+      Ninetales: Fire ability between ember and flamethrower (maybe also rapidash)
     Unique:
       jigglypuff sing/something better (really bad)
 
@@ -90,12 +85,10 @@ Steel: 1 (3) [1,2]
 
 Electric change?
 
-
-
 #### New effects: 
+  Bugs: Druid buff
   Lifesteal
   Ghost: Evasion
-  Bugs: Druid buff
   Poison: increase dot damage
   Dragon: Ability damage buff
     Better if sp.atk and sp.dfns added
@@ -176,3 +169,5 @@ Fighting: #3 (poliwrath) [2,4,6] -> [2,3]?
 ground: #5 [3,6] -> [2,4,5]?
 
 psychic: #7 [3,6,9] -> [3,5,7] High numbers for last
+
+Gym battles adjusted, made more difficult

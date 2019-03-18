@@ -18,11 +18,11 @@ const TIME_FACTOR = 15;
 const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId');
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
 
-const sessionExist = socketId => {
-  if(f.isUndefined(connectedPlayers)) { return false; }
+const sessionExist = (socketId) => {
+  if (f.isUndefined(connectedPlayers)) { return false; }
   // console.log('If crash: undefined?', connectedPlayers);
   return !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId'))); // Crashed here somehow, early
-}
+};
 
 const emitMessage = (socket, io, sessionId, func) => {
   const iter = connectedPlayers.keys();
@@ -30,7 +30,7 @@ const emitMessage = (socket, io, sessionId, func) => {
   while (!temp.done) {
     const socketId = temp.value;
     const connectedUser = connectedPlayers.get(socketId);
-    if(!connectedUser) continue; // Connection was terminated with this user
+    if (!connectedUser) continue; // Connection was terminated with this user
     if (connectedUser.get('sessionId') === sessionId || (sessionId === true && (connectedUser.get('sessionId') === true || connectedUser.get('sessionId') === false))) {
       func(socketId);
     }
@@ -198,8 +198,8 @@ module.exports = (socket, io) => {
     // Gold, shop, hand
     console.log('Bought exp');
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
-    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
-      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
     });
   });
 
@@ -212,8 +212,8 @@ module.exports = (socket, io) => {
     // socket.emit('UPDATED_PIECES', state);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
-    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
-      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
     });
   });
 
@@ -234,8 +234,8 @@ module.exports = (socket, io) => {
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     // Hand and board
-    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
-      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
     });
   });
 
@@ -245,8 +245,8 @@ module.exports = (socket, io) => {
     const state = await gameJS._withdrawPiece(stateWithPieces, index, from);
     console.log('Withdraw piece at ', from);
     // Hand and board
-    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
-      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
     });
   });
 
@@ -258,8 +258,8 @@ module.exports = (socket, io) => {
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
     // Hand and board
-    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {       
-      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));     
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
     });
   });
 
@@ -316,13 +316,13 @@ module.exports = (socket, io) => {
         sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, newState);
         sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
         if (f.isUndefined(actionStacks)) console.log('@socketController undefined actionStacks', battleObject);
-        
+
         const iter = connectedSessionPlayers.keys();
         let temp = iter.next();
         while (!temp.done) {
           const socketId = temp.value;
           const tempIndex = connectedSessionPlayers.get(socketId);
-          const enemy = (matchups ? 'Player ' + matchups.get(tempIndex) : (roundType === 'gym' ? gymLeader : 'Npc Battle'));
+          const enemy = (matchups ? `Player ${matchups.get(tempIndex)}` : (roundType === 'gym' ? gymLeader : 'Npc Battle'));
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
           emitMessage(socket, io, sessionId, (socketId) => {
@@ -332,9 +332,9 @@ module.exports = (socket, io) => {
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, dmgBoards, enemy, roundType);
           temp = iter.next();
         }
-        const longestBattleTime = await sessionJS.getLongestBattleTime(actionStacks)
-        const longestTime =  TIME_FACTOR * longestBattleTime + 3000;
-        if(longestTime !== 3000) console.log('sc.LongestTime:', longestTime, longestBattleTime, TIME_FACTOR);
+        const longestBattleTime = await sessionJS.getLongestBattleTime(actionStacks);
+        const longestTime = TIME_FACTOR * longestBattleTime + 3000;
+        if (longestTime !== 3000) console.log('sc.LongestTime:', longestTime, longestBattleTime, TIME_FACTOR);
         setTimeout(async () => {
           // After all battles are over
           f.p('Time to End Battle');
@@ -358,7 +358,7 @@ module.exports = (socket, io) => {
               console.log('Dead Player!', pid);
               const endTime = battleEndTimes.get(pid) || 0;
               let tempEndTime = endTime;
-              while(endTimesMap.get(tempEndTime)){
+              while (endTimesMap.get(tempEndTime)) {
                 console.log('Increase endTime by 1 since interference'); // Do something more fair, doesnt matter
                 tempEndTime += 1;
               }
@@ -367,9 +367,9 @@ module.exports = (socket, io) => {
             temp = iter2.next();
           }
           const sortedByEndTimes = Array.from(endTimesMap.keys());
-          sortedByEndTimes.sort((a,b) => endTimesMap.get(b) - endTimesMap.get(a));
+          sortedByEndTimes.sort((a, b) => endTimesMap.get(b) - endTimesMap.get(a));
           let gameEnded = false;
-          for(let i = 0; i < sortedByEndTimes.length; i++){
+          for (let i = 0; i < sortedByEndTimes.length; i++) {
             const timeOfDeath = sortedByEndTimes[i];
             const pid = endTimesMap.get(timeOfDeath);
             // Now players can get eliminated in order
@@ -383,7 +383,7 @@ module.exports = (socket, io) => {
                 io.to(socketId).emit('END_GAME', winningPlayer);
               });
             } else { // Player eliminated but game is not over
-              console.log('Death:', pid, )
+              console.log('Death:', pid);
               stateEndedTurn = await gameJS.removeDeadPlayer(stateEndedTurn, pid);
               const playerName = `Player ${pid}`;
               const amountOfPlayers = stateEndedTurn.get('amountOfPlayers');
@@ -394,7 +394,7 @@ module.exports = (socket, io) => {
             }
           }
 
-          if(!gameEnded) { // Game wasn't ended in prev stage
+          if (!gameEnded) { // Game wasn't ended in prev stage
             if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
               console.log('ENDING GAME!');
               sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
@@ -411,7 +411,7 @@ module.exports = (socket, io) => {
               const upcomingRoundType = gameConstantsJS.getRoundType(round);
               const upcomingGymLeader = gameConstantsJS.getGymLeader(round);
               emitMessage(socket, io, sessionId, (socketId) => {
-                if(f.isUndefined(upcomingGymLeader)){
+                if (f.isUndefined(upcomingGymLeader)) {
                   io.to(socketId).emit('END_BATTLE', upcomingRoundType);
                 } else {
                   io.to(socketId).emit('END_BATTLE', upcomingRoundType, upcomingGymLeader);

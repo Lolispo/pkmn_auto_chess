@@ -61,7 +61,7 @@ async function refillPieces(pieces, discardedPieces) {
   if (discardedPieces.size === 0) {
     return pieces;
   }
-  console.log('@refillPieces Refilling', discardedPieces.size, 'units (Pieces size =', pieces.size + ')'); // pieceStorage
+  console.log(`@refillPieces Refilling ${discardedPieces.size} units (Pieces size = ${pieces.size})`); // pieceStorage
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     const cost = (await pokemonJS.getStats(name)).get('cost');
@@ -147,7 +147,7 @@ async function refreshShop(stateParam, playerIndex) {
   let pieceStorage = state.get('pieces');
   let discPieces = state.get('discardedPieces');
   for (let i = 0; i < 5; i++) { // Loop over pieces
-    if(!level) console.log('@refreshShop adding piece', level, playerIndex)
+    if (!level) console.log('@refreshShop adding piece', level, playerIndex);
     const obj = await addPieceToShop(newShop, f.pos(i), pieceStorage, level, discPieces);
     newShop = obj.newShop;
     pieceStorage = obj.pieceStorage;
@@ -344,7 +344,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     const evolvesUnit = stats.get('evolves_to');
     let evolvesTo = evolvesUnit;
     if (!f.isUndefined(evolvesTo.size)) { // List
-      evolvesTo = evolvesUnit.get(f.getRandomInt(evolvesTo.size))
+      evolvesTo = evolvesUnit.get(f.getRandomInt(evolvesTo.size));
     }
     // Check if multiple evolutions exist, random between
     const newPiece = await getBoardUnit(evolvesTo, f.x(position), f.y(position));
@@ -617,7 +617,7 @@ function handleNeighbor(pathFind, board, current, enemyPos, pos) {
   return pathFind.setIn(['cameFrom', pos], current).setIn(['fromStartScore', pos], distanceTraveled).setIn(['heuristicScore', pos], heuristicScore);
 }
 
-async function getDirection(unitPos, path){
+async function getDirection(unitPos, path) {
   const ux = f.x(unitPos);
   const uy = f.y(unitPos);
   const tx = f.x(path);
@@ -626,16 +626,16 @@ async function getDirection(unitPos, path){
   const x = (tx - ux);
   let sx = '';
   let sy = '';
-  if(x !== 0) {
+  if (x !== 0) {
     let type = 'W';
-    if(x > 0){
+    if (x > 0) {
       type = 'E';
     }
     sx = Math.abs(x) + type;
   }
-  if(y !== 0) {
+  if (y !== 0) {
     let type = 'S';
-    if(y > 0){
+    if (y > 0) {
       type = 'N';
     }
     sy = Math.abs(y) + type;
@@ -650,7 +650,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exce
     const goal = getMovePos(board, closestEnemyPos, 1, team);
     const direction = await getDirection(unitPos, goal);
     // console.log('Move direction: ', direction);
-    return Map({movePos: goal, direction});
+    return Map({ movePos: goal, direction });
   } // More TOWARDS unit with stepsToTake amount of steps
   let pathFind = Map({
     fromStartScore: Map({}).set(unitPos, 0), // gScore
@@ -682,7 +682,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exce
         // console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
         const direction = await getDirection(unitPos, path.get(index));
         // console.log('Move direction: ', direction);
-        return Map({movePos: path.get(index), direction});
+        return Map({ movePos: path.get(index), direction });
       }
     }
     // console.log('@Path Current', current);
@@ -702,14 +702,13 @@ async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exce
     pathFind = await handleNeighbor(pathFind, board, current, closestEnemyPos, f.pos(ux + 1, uy + 1)); // SE
   }
   const newClosestEnemyObj = getClosestEnemy(board, unitPos, range, team, exceptionsList.push(closestEnemyPos));
-  if(f.isUndefined(newClosestEnemyObj.get('closestEnemy'))){
+  if (f.isUndefined(newClosestEnemyObj.get('closestEnemy'))) {
     console.log('DIDNT FIND PATH. RETURNING ', unitPos);
-    return Map({movePos: unitPos, direction: ''});
-  } else {
-    // TODO: Check so not blocked in
-    console.log('No path available to piece', closestEnemyPos + '. Going deeper')
-    return getStepMovePos(board, unitPos, newClosestEnemyObj.get('closestEnemy'), range, team, exceptionsList.push(closestEnemyPos));
+    return Map({ movePos: unitPos, direction: '' });
   }
+  // TODO: Check so not blocked in
+  console.log('No path available to piece', `${closestEnemyPos}. Going deeper`);
+  return getStepMovePos(board, unitPos, newClosestEnemyObj.get('closestEnemy'), range, team, exceptionsList.push(closestEnemyPos));
 }
 
 /**
@@ -732,33 +731,33 @@ function getClosestEnemy(board, unitPos, range, team, exceptionsList = List([]))
 
   // Check N S W E
   pos = pos = f.pos(x, y + 1);
-  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+  if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'N' });
   }
   pos = pos = f.pos(x, y - 1);
-  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+  if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'S' });
   }
   pos = pos = f.pos(x - 1, y);
-  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+  if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'W' });
   }
   pos = pos = f.pos(x + 1, y);
-  if(!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
+  if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'E' });
   }
 
   for (let i = 1; i <= 8; i++) {
     const withinRange = i <= range;
     // console.log(withinRange, x, y, i, (x-i), (y-i))
-    
+
     // Normal checks
     for (let j = x - i; j <= x + i; j++) {
       pos = f.pos(j, y - i);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < x ? 'SW' : j === x ? 'S' : 'SE');
         return Map({ closestEnemy: pos, withinRange, direction });
-      } 
+      }
       pos = f.pos(j, y + i);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < x ? 'NW' : j === x ? 'N' : 'NE');
@@ -766,12 +765,12 @@ function getClosestEnemy(board, unitPos, range, team, exceptionsList = List([]))
       }
     }
     for (let j = y - i + 1; j < y + i; j++) {
-      pos = f.pos(x - i, j)
+      pos = f.pos(x - i, j);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < y ? 'SW' : j === y ? 'W' : 'NW');
         return Map({ closestEnemy: pos, withinRange, direction });
-      } 
-      pos = f.pos(x + i, j)
+      }
+      pos = f.pos(x + i, j);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
         const direction = (j < y ? 'SE' : j === y ? 'E' : 'NE');
         return Map({ closestEnemy: pos, withinRange, direction });
@@ -1142,7 +1141,9 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     newBoard = board.set(movePos, unit.set('position', movePos)).delete(unitPos);
     action = 'move';
   }
-  const move = Map({ unitPos, action, target: movePos, direction });
+  const move = Map({
+    unitPos, action, target: movePos, direction,
+  });
   return Map({ nextMove: move, newBoard });
 }
 
@@ -1203,10 +1204,10 @@ async function startBattle(boardParam) {
     const unitPos = temp.value;
     const action = 'move';
     const unit = board.get(unitPos);
-    if(unit.get('hp') <= 0) {
+    if (unit.get('hp') <= 0) {
       board = board.delete(unitPos);
       battleOver = battleOver || await isBattleOver(board, 1 - unit.get('team'));
-      console.log('Removing unit with hp < 0 before battle start', unit.get('name'), unit.get('hp'), 'battleOver', battleOver)
+      console.log('Removing unit with hp < 0 before battle start', unit.get('name'), unit.get('hp'), 'battleOver', battleOver);
     } else {
       const target = unit.get('first_move');
       const time = 0;
@@ -1256,7 +1257,7 @@ async function startBattle(boardParam) {
     } else {
       nextMoveValue = +unit.get('next_move') + +unit.get('speed');
       // Add to dpsBoard
-      if(unit.get('team') === 0){
+      if (unit.get('team') === 0) {
         dmgBoard = dmgBoard.set(unit.get('display_name'), (dmgBoard.get(unit.get('display_name')) || 0) + result.get('nextMove').get('value'));
       }
     }
@@ -1308,7 +1309,7 @@ async function startBattle(boardParam) {
       const move = await Map({
         unitPos: nextUnitToMove, action, value: damageDealt, target: nextUnitToMove,
       });
-      if(unit.get('team') === 1){
+      if (unit.get('team') === 1) {
         dmgBoard = dmgBoard.set('dot', (dmgBoard.get('dot') || 0) + damageDealt);
       }
       console.log('@dotDamage', dotDamage);
@@ -1324,7 +1325,9 @@ async function startBattle(boardParam) {
   const team = newBoard.get(newBoard.keys().next().value).get('team');
   const winningTeam = team;
   const battleEndTime = actionStack.get(actionStack.size - 1).get('time');
-  return Map({ actionStack, board: newBoard, winner: winningTeam, dmgBoard, battleEndTime });
+  return Map({
+    actionStack, board: newBoard, winner: winningTeam, dmgBoard, battleEndTime,
+  });
 }
 
 
@@ -1687,7 +1690,6 @@ async function battleTime(stateParam) {
     battleObject = battleObject.setIn(['winners', index], winner);
     battleObject = battleObject.setIn(['finalBoards', index], finalBoard);
     battleObject = battleObject.setIn(['battleEndTimes', index], battleEndTime);
-    
 
 
     // console.log('@battleTime newBoard, finished board result', newBoard); // Good print, finished board
@@ -1721,7 +1723,7 @@ async function npcRound(stateParam, npcBoard) {
 
     const actionStack = resultBattle.get('actionStack');
     const startBoard = resultBattle.get('startBoard');
-    const dmgBoard = resultBattle.get('dmgBoard');    
+    const dmgBoard = resultBattle.get('dmgBoard');
     battleObject = battleObject.setIn(['actionStacks', currentPlayer], actionStack);
     battleObject = battleObject.setIn(['startingBoards', currentPlayer], startBoard);
     battleObject = battleObject.setIn(['dmgBoards', currentPlayer], dmgBoard);
@@ -2050,7 +2052,7 @@ exports.removeDeadPlayer = async (stateParam, playerIndex) => {
   // console.log('HandList', handList);
   const playerUnits = shopUnits.concat(boardList).concat(handList);
   console.log('@removeDeadPlayer', shopUnits, boardList, handList, '=', playerUnits);
-  for(let i = 0; i < playerUnits.size; i++){
+  for (let i = 0; i < playerUnits.size; i++) {
     state = await discardBaseUnits(state, playerUnits.get(i));
   }
   // state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));

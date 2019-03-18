@@ -99,7 +99,7 @@ const reducer = (
     round: 1,
     musicEnabled: false,
     soundEnabled: false,
-    timerDuration: 15,
+    timerDuration: 30,
     chatSoundEnabled: true,
     selectedSound: '',
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
