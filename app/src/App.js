@@ -1032,7 +1032,7 @@ class App extends Component {
     for(let i = 0; i < this.props.soundEffects.length; i++){
       const source = this.props.soundEffects[i];
       if(source === '')
-        break;
+        continue;
       let ref = React.createRef();
       const audioEl = <audio ref={ref} key={'sound' + source + i} src={source} onLoadStart={() => ref.current.volume = this.props.volume} autoPlay/>;
       const chatSound = getSoundEffect('pling');

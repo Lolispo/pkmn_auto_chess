@@ -189,6 +189,9 @@ Aoe damage logic
 
 ## Frontend
 
+Sounds: 
+    Plays multiple sounds sometimes
+
 Up next text not red
 
 Display more clearly as a loser if you are eliminated

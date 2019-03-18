@@ -12,26 +12,44 @@ const increaseCounter = (soundEffects) => {
   }
 }
 
+const updateSoundArray = (array, pos, newSound) => {
+  return array.map((item, index) => {
+    if (index !== pos) {
+      // This isn't the item we care about - keep it as-is
+      return item;
+    }
+    // Otherwise, this is the one we want - return an updated value
+    return newSound;
+  })
+}
+
 const getNewSoundEffects = (soundEffects, newSoundEffect) => {
-  let newSoundEffects = soundEffects;
   // console.log('@getNewSoundEffects', soundEffects, soundEffects.length)
+  for(let i = 0; i < soundEffects.length; i++){
+    if(soundEffects[i] !== newSoundEffect){
+      // Overwrites prev sound
+      console.log('@NewSoundEffect', i, newSoundEffect, 'x', soundEffects[i]);
+      return updateSoundArray(soundEffects, i, newSoundEffect);
+    }
+  }
+  /*
+  // New - all playing at the same time - implementation
   for(let i = counter; i < soundEffects.length; i++){
     if(soundEffects[i] !== newSoundEffect){
-      // console.log('@NewSoundEffect', i, newSoundEffect)
-      newSoundEffects[i] = newSoundEffect;
+      console.log('@NewSoundEffect', i, newSoundEffect, 'x', soundEffects[i]);
       increaseCounter(soundEffects);
-      return newSoundEffects;
+      return updateSoundArray(soundEffects, i, newSoundEffect);
     }
   }
+  console.log('@sound over 0')
   for(let i = 0; i < counter; i++){
     if(soundEffects[i] !== newSoundEffect){
-      // console.log('@NewSoundEffect', i, newSoundEffect)
-      newSoundEffects[i] = newSoundEffect;
+      console.log('@NewSoundEffect', i, newSoundEffect, 'x', soundEffects[i]);
       increaseCounter(soundEffects);
-      return newSoundEffects;
+      return updateSoundArray(soundEffects, i, newSoundEffect);
     }
-  }
-  return newSoundEffects;
+  }*/
+  return soundEffects;
 }
 
 const clearSoundEffect = (soundEffects, soundEffect) => {
@@ -99,7 +117,7 @@ const reducer = (
     round: 1,
     musicEnabled: false,
     soundEnabled: false,
-    timerDuration: 30,
+    timerDuration: 15,
     chatSoundEnabled: true,
     selectedSound: '',
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
@@ -276,7 +294,7 @@ const reducer = (
       state = {
         ...state,
         music: (action.enemy ? getBackgroundAudio('pvpbattle') : getBackgroundAudio('battle')),
-        soundEffects: [...tempSoundEffects],
+        soundEffects: tempSoundEffects,
         onGoingBattle: true,
         enemyIndex: action.enemy,
         roundType: action.roundType,
@@ -359,8 +377,9 @@ const reducer = (
       break;
     }
     case 'CLEAR_TICKS': {
+      console.log('Clearing ticks!')
       const tempSoundEffects = clearSoundEffect(state.soundEffects, getSoundEffect('Tick'));
-      state = {...state, soundEffects: [...tempSoundEffects]};
+      state = {...state, soundEffects: tempSoundEffects};
       break;
     }
     case 'TOGGLE_SHOW_DMGBOARD': {
@@ -390,8 +409,9 @@ const reducer = (
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'NEW_SOUND_EFFECT':
+      console.log('@red.Newsoundeffect', action.newSoundEffect)
       tempSoundEffects = getNewSoundEffects(state.soundEffects, action.newSoundEffect);
-      state = {...state, soundEffects: [...tempSoundEffects]};
+      state = {...state, soundEffects: tempSoundEffects};
       break;
     case 'END_GAME': {
       console.log('GAME ENDED! Player ' + action.winningPlayer.index + ' won!');
@@ -445,8 +465,9 @@ const reducer = (
         default:
           soundEffect = getSoundEffect('pling');
       }
+      console.log('newchatmsg')
       tempSoundEffects = getNewSoundEffects(state.soundEffects, soundEffect);
-      state = {...state, soundEffects: [...tempSoundEffects]};
+      state = {...state, soundEffects: tempSoundEffects};
       break;
     case 'TOGGLE_ALTERNATE_ANIMATION': {
       state = {...state, alternateAnimation: !state.alternateAnimation}
