@@ -13,14 +13,18 @@ export function getStatsEvent(props, name) {
   }
 }
 
+// You have enough money to buy this unit
+// Unit != null
+// Hand is not full
+// console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
 export function buyUnitEvent(props, index) {
-  // You have enough money to buy this unit
-  // Unit != null
-  // Hand is not full
-  // console.log('@buyUnitEvent', this.props.shopPokemon.cost, this.props.newProps.gold)
   if(props.newProps.isDead){
     updateMessage(props.newProps, 'You are dead! No buying when dead', 'error');
     props.newProps.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+    return;
+  }
+  if(!props.onGoingBattle && props.isBattle){
+    updateMessage(props.newProps, 'Waiting ...', 'error');
     return;
   }
   if(props.shopPokemon && props.newProps.gameIsLive){
@@ -42,22 +46,30 @@ export function buyUnitEvent(props, index) {
 export function refreshShopEvent(props) {
   // You have enough money to refresh
   if(props.isDead){
-    updateMessage(this.props, 'You are dead! No shop interaction when dead', 'error');
+    updateMessage(props, 'You are dead! No shop interaction when dead', 'error');
     props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+    return;
+  }
+  if(!props.onGoingBattle && props.isBattle){
+    updateMessage(props, 'Waiting ...', 'error');
     return;
   }
   if(props.gold >= 2 && props.gameIsLive){
     refreshShop(props.storedState)
   } else{
-    updateMessage(this.props, 'Not enough gold!', 'error');
+    updateMessage(props, 'Not enough gold!', 'error');
     props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
   }
 }
 
 export function toggleLockEvent(props) {
   if(props.isDead){
-    updateMessage(this.props, 'You are dead! No shop interaction when dead', 'error');
+    updateMessage(props, 'You are dead! No shop interaction when dead', 'error');
     props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+    return;
+  }
+  if(!props.onGoingBattle && props.isBattle){
+    updateMessage(props, 'Waiting ...', 'error');
     return;
   }
   toggleLock(props.storedState);
@@ -68,6 +80,10 @@ export function buyExpEvent(props) {
   if(props.isDead){
     updateMessage(props, 'You are dead! No exp buying when dead', 'error');
     props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+    return;
+  }
+  if(!props.onGoingBattle && props.isBattle){
+    updateMessage(props, 'Waiting ...', 'error');
     return;
   }
   if(props.gold >= 5 && props.gameIsLive){
@@ -95,6 +111,10 @@ export function placePieceEvent(prop, fromParam, to) {
     prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     return;
   }
+  if(!prop.onGoingBattle && prop.isBattle){
+    updateMessage(prop, 'Waiting ...', 'error');
+    return;
+  }
   if(from && to && prop.gameIsLive){
     console.log('@placePieceEvent', from, to);
     const splitted = to.split(',');
@@ -107,7 +127,7 @@ export function placePieceEvent(prop, fromParam, to) {
       placePiece(prop.storedState, from, to);
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
     } else {
-      // TODO: Hand to hand movement during battle allowed
+      // Hand to hand movement during battle allowed
       if(validPos && unitExists && prop.onGoingBattle) {
         if(!from.includes(',') && !to.includes(',')) {
           placePiece(prop.storedState, from, to);
@@ -129,6 +149,10 @@ export function withdrawPieceEvent(prop, from) {
   } else if(prop.visiting !== prop.index) {
     updateMessage(prop, 'Visiting!', 'error');
     prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
+    return;
+  }
+  if(!prop.onGoingBattle && prop.isBattle){
+    updateMessage(prop, 'Waiting ...', 'error');
     return;
   }
   const size = Object.keys(prop.myHand).length;
@@ -153,11 +177,15 @@ export function sellPieceEvent(prop, from) {
     prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     return;
   }
+  if(!prop.onGoingBattle && prop.isBattle){
+    updateMessage(prop, 'Waiting ...', 'error');
+    return;
+  }
   const validUnit = (prop.selectedUnit.isBoard ? prop.myBoard[from] : prop.myHand[from])
   console.log('@sellPiece', validUnit, from, prop.selectedUnit.isBoard)
   // From contains unit, hand unit is ok during battle
   // TODO: Remove false && and fix allowing sellPiece during battle, currently weird
-  if(validUnit && prop.gameIsLive && (!prop.onGoingBattle || (!prop.selectedUnit.isBoard))){ // false &&
+  if(validUnit && prop.gameIsLive && (!prop.onGoingBattle || !prop.selectedUnit.isBoard)){ // false &&
     sellPiece(prop.storedState, String(from));
     prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
     prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('sellUnit')});

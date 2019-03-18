@@ -372,7 +372,7 @@ class Timer extends Component {
       })
     }
     if(sec <= 5) {
-      console.log('@Tick')
+      // console.log('@Tick')
       this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('Tick')});
     }
     if (sec === 0) {
@@ -380,7 +380,7 @@ class Timer extends Component {
       clearInterval(this.intervalHandle);
       if(Object.keys(this.props.storedState).length > 0){
         console.log('BattleReady!')
-        this.props.dispatch({ type: 'SET_ONGOING_BATTLE', value: true });
+        this.props.dispatch({ type: 'DEACTIVATE_INTERACTIONS' });
         battleReady(this.props.storedState);
       }
     }
@@ -1187,8 +1187,8 @@ class App extends Component {
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
         </div>
-        <div className='marginTop5 biggerText text_shadow redFont' style={{paddingLeft: '65px'}}>
-          {(this.props.onGoingBattle ? <div>
+        <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+          {(this.props.onGoingBattle ? <div className='redFont'>
             {(this.props.enemyIndex ? <span className='nextUpText'>{this.props.enemyIndex}</span>: '')}
             {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/> : '')}
           </div> : <div>
@@ -1376,6 +1376,7 @@ const mapStateToProps = state => ({
   gold: state.gold,
   streak: state.streak,
   onGoingBattle: state.onGoingBattle,
+  isBattle: state.isBattle,
   enemyIndex: state.enemyIndex,
   roundType: state.roundType,
   startBattle: state.startBattle,

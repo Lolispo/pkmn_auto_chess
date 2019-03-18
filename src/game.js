@@ -464,7 +464,7 @@ async function discardBaseUnits(state, name, depth = 1) {
   if (f.isUndefined(evolutionFrom)) { // Base level
     let discPieces = state.get('discardedPieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
-    console.log('@discardBaseUnits', amountOfPieces, depth, name);
+    // console.log('@discardBaseUnits', amountOfPieces, depth, name);
     for (let i = 0; i < amountOfPieces; i++) {
       discPieces = discPieces.push(name);
     }
@@ -1323,7 +1323,8 @@ async function startBattle(boardParam) {
   f.p('@Last - A Survivor', newBoard.keys().next().value, newBoard.get(newBoard.keys().next().value).get('name'));
   const team = newBoard.get(newBoard.keys().next().value).get('team');
   const winningTeam = team;
-  return Map({ actionStack, board: newBoard, winner: winningTeam, dmgBoard });
+  const battleEndTime = actionStack.get(actionStack.size - 1).get('time');
+  return Map({ actionStack, board: newBoard, winner: winningTeam, dmgBoard, battleEndTime });
 }
 
 
@@ -1682,8 +1683,12 @@ async function battleTime(stateParam) {
     // For endbattle calculations
     const winner = (resultBattle.get('winner') === 0);
     const finalBoard = resultBattle.get('board');
+    const battleEndTime = resultBattle.get('battleEndTime');
     battleObject = battleObject.setIn(['winners', index], winner);
     battleObject = battleObject.setIn(['finalBoards', index], finalBoard);
+    battleObject = battleObject.setIn(['battleEndTimes', index], battleEndTime);
+    
+
 
     // console.log('@battleTime newBoard, finished board result', newBoard); // Good print, finished board
     // Store rivals logic
@@ -1724,8 +1729,10 @@ async function npcRound(stateParam, npcBoard) {
     // For endbattle calculations
     const winner = (resultBattle.get('winner') === 0);
     const finalBoard = resultBattle.get('board');
+    const battleEndTime = resultBattle.get('battleEndTime');
     battleObject = battleObject.setIn(['winners', currentPlayer], winner);
     battleObject = battleObject.setIn(['finalBoards', currentPlayer], finalBoard);
+    battleObject = battleObject.setIn(['battleEndTimes', currentPlayer], battleEndTime);
 
     tempPlayer = playerIter.next();
   }

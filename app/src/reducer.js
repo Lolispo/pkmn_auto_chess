@@ -81,7 +81,8 @@ const reducer = (
     expToReach: -1,
     gold: -1,
     streak: 0,
-    onGoingBattle: false,
+    onGoingBattle: false, // Most battle checks
+    isBattle: false,  // Used for checking interactions before battle state is received
     enemyIndex: -1,
     roundType: '',
     startBattle: false,
@@ -174,13 +175,13 @@ const reducer = (
           streak: action.player.streak,
         };
       }
-      if(state.visiting === action.index) {
+      if(state.visiting === action.index && action.index !== state.index) {
         state = {...state,
           myHand: action.player.hand,
           myBoard: action.player.board,
           boardBuffs: action.player.boardBuffs,
         }
-      } else if(action.index === state.index) {
+      } else if(action.index === state.index && !state.isDead) {
         state = {...state,
           visiting: state.index,
           myHand: action.player.hand,
@@ -269,7 +270,7 @@ const reducer = (
       const battleStartBoard = action.battleStartBoards[state.index];
       const winner = action.winners[state.index];
       const dmgBoard = action.dmgBoards[state.index];
-      console.log('New dmg board in reducer', dmgBoard);
+      // console.log('New dmg board in reducer', dmgBoard);
       // console.log('@battle_time', state.soundEffects)
       tempSoundEffects = getNewSoundEffects(state.soundEffects, getSoundEffect('horn'));
       state = {
@@ -347,10 +348,14 @@ const reducer = (
       state = {...state, onGoingBattle: action.value}
       break;
     }
+    case 'DEACTIVATE_INTERACTIONS': {
+      state = {...state, isBattle: true}
+      break;
+    }
     case 'END_BATTLE': {
       console.log('Battle ended', state.startTimer, action.upcomingRoundType, action.upcomingGymLeader)
       state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), 
-      startTimer: true, showDmgBoard: true, roundType: action.upcomingRoundType, enemyIndex: (action.upcomingGymLeader || '')}
+      startTimer: true, showDmgBoard: true, roundType: action.upcomingRoundType, enemyIndex: (action.upcomingGymLeader || ''), isBattle: false}
       break;
     }
     case 'CLEAR_TICKS': {
@@ -401,12 +406,16 @@ const reducer = (
           delete state.players[key];
         }
       });
-      state = {...state, message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic}
+      const { senderMessages, chatMessages } = state;
+      state = {...state, 
+        message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic,
+        senderMessages: senderMessages.concat('Player ' + action.winningPlayer.index + ' won the game'), chatMessages: chatMessages.concat(''),
+      }
       break;
     }
     case 'DEAD_PLAYER': {
       if(action.pid === state.index) {
-        state = {...state, message: 'You Lost! You finished ' + state.position + '!', messageMode: 'big', isDead: true}
+        state = {...state, message: 'You Lost! You finished ' + action.position + '!', messageMode: 'big', isDead: true}
       }
       console.log('Before: Removing player ' + action.pid, state.players);
       const players = state.players;

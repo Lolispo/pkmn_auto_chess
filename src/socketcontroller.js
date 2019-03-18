@@ -20,7 +20,7 @@ const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connect
 
 const sessionExist = socketId => {
   if(f.isUndefined(connectedPlayers)) { return false; }
-  console.log('If crash: undefined?', connectedPlayers);
+  // console.log('If crash: undefined?', connectedPlayers);
   return !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId'))); // Crashed here somehow, early
 }
 
@@ -311,6 +311,7 @@ module.exports = (socket, io) => {
         const winners = battleObject.get('winners');
         const finalBoards = battleObject.get('finalBoards');
         const matchups = battleObject.get('matchups');
+        const battleEndTimes = battleObject.get('battleEndTimes');
 
         sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, newState);
         sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, newState);
@@ -349,52 +350,75 @@ module.exports = (socket, io) => {
           // TODO: player.get(dead) gets time of death (last actionStack move)
           // Add all dead players to temp list, remove in order
           // Handle if only one player left (amount===1 below) within this directly
+          let endTimesMap = Map({});
           while (!temp.done) {
             const pid = temp.value;
-            const player = stateCheckDead.getIn(['players', pid]);
+            const player = stateEndedTurn.getIn(['players', pid]);
             if (player.get('dead')) {
               console.log('Dead Player!', pid);
-              stateEndedTurn = await gameJS.removeDeadPlayer(stateCheckDead, pid);
+              const endTime = battleEndTimes.get(pid) || 0;
+              let tempEndTime = endTime;
+              while(endTimesMap.get(tempEndTime)){
+                console.log('Increase endTime by 1 since interference'); // Do something more fair, doesnt matter
+                tempEndTime += 1;
+              }
+              endTimesMap = endTimesMap.set(tempEndTime, pid);
+            }
+            temp = iter2.next();
+          }
+          const sortedByEndTimes = Array.from(endTimesMap.keys());
+          sortedByEndTimes.sort((a,b) => endTimesMap.get(b) - endTimesMap.get(a));
+          let gameEnded = false;
+          for(let i = 0; i < sortedByEndTimes.length; i++){
+            const timeOfDeath = sortedByEndTimes[i];
+            const pid = endTimesMap.get(timeOfDeath);
+            // Now players can get eliminated in order
+            if (stateEndedTurn.get('amountOfPlayers') === 1) { // Last players eliminated same round
+              console.log('ENDING GAME!');
+              gameEnded = true;
+              sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
+              sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
+              const winningPlayer = stateEndedTurn.get('players').values().next().value;
+              emitMessage(socket, io, sessionId, (socketId) => {
+                io.to(socketId).emit('END_GAME', winningPlayer);
+              });
+            } else { // Player eliminated but game is not over
+              console.log('Death:', pid, )
+              stateEndedTurn = await gameJS.removeDeadPlayer(stateEndedTurn, pid);
               const playerName = `Player ${pid}`;
               const amountOfPlayers = stateEndedTurn.get('amountOfPlayers');
               newChatMessage(socket, io, socket.id, `${playerName} Eliminated - `, `Alive players: ${amountOfPlayers}`, 'playerEliminated');
               emitMessage(socket, io, sessionId, (socketId) => {
                 io.to(socketId).emit('DEAD_PLAYER', pid, amountOfPlayers + 1);
               });
-              /*
-              const deadPlayerSocketId = sessionJS.findSocketId(session, pid);
-              if(deadPlayerSocketId !== -1){
-                io.to(`${deadPlayerSocketId}`).emit('DEAD_PLAYER', 'You Lost! You finished ' + (stateEndedTurn.get('amountOfPlayers') + 1) + '!');
-              } */
-              // Send information to that player, so they know they are out
             }
-            temp = iter2.next();
           }
 
-
-          if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
-            console.log('ENDING GAME!');
-            sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
-            sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
-            const winningPlayer = stateEndedTurn.get('players').values().next().value;
-            emitMessage(socket, io, sessionId, (socketId) => {
-              io.to(socketId).emit('END_GAME', winningPlayer);
-            });
-          } else {
-            sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
-            sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
-            const stateToSend = getStateToSend(stateEndedTurn);
-            const round = stateToSend.get('round');
-            const upcomingRoundType = gameConstantsJS.getRoundType(round);
-            const upcomingGymLeader = gameConstantsJS.getGymLeader(round);
-            emitMessage(socket, io, sessionId, (socketId) => {
-              if(f.isUndefined(upcomingGymLeader)){
-                io.to(socketId).emit('END_BATTLE', upcomingRoundType);
-              } else {
-                io.to(socketId).emit('END_BATTLE', upcomingRoundType, upcomingGymLeader);
-              }
-              io.to(socketId).emit('UPDATED_STATE', stateToSend);
-            });
+          if(!gameEnded) { // Game wasn't ended in prev stage
+            if (stateEndedTurn.get('amountOfPlayers') === 1) { // No solo play allowed
+              console.log('ENDING GAME!');
+              sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
+              sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
+              const winningPlayer = stateEndedTurn.get('players').values().next().value;
+              emitMessage(socket, io, sessionId, (socketId) => {
+                io.to(socketId).emit('END_GAME', winningPlayer);
+              });
+            } else {
+              sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, stateEndedTurn);
+              sessions = sessionJS.updateSessionPlayers(socket.id, connectedPlayers, sessions, stateEndedTurn);
+              const stateToSend = getStateToSend(stateEndedTurn);
+              const round = stateToSend.get('round');
+              const upcomingRoundType = gameConstantsJS.getRoundType(round);
+              const upcomingGymLeader = gameConstantsJS.getGymLeader(round);
+              emitMessage(socket, io, sessionId, (socketId) => {
+                if(f.isUndefined(upcomingGymLeader)){
+                  io.to(socketId).emit('END_BATTLE', upcomingRoundType);
+                } else {
+                  io.to(socketId).emit('END_BATTLE', upcomingRoundType, upcomingGymLeader);
+                }
+                io.to(socketId).emit('UPDATED_STATE', stateToSend);
+              });
+            }
           }
         }, longestTime);
       } else {

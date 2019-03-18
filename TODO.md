@@ -87,6 +87,14 @@ Odd behaviour:
 
 ## Backend
 
+Improve shuffle
+    Some combinations are way more common than others
+
+Npc waves
+    Either give information about them in up next
+    Or random the wave between different presets (wave 2 and 3)
+        Shouldnt have advantage of knowing meta in early game
+
 Can units attack teammates?
     Check getClosestEnemy
 
@@ -205,9 +213,7 @@ Aoe damage logic
 
 ## Frontend
 
-Guarantee sounds play
-    Weird interaction
-        Clear all sounds of certain type
+Up next text not red
 
 Display more clearly as a loser if you are eliminated
     Also when game is over when you are not winner

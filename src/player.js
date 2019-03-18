@@ -11,7 +11,7 @@ const { Map } = require('immutable');
 function Player(i) {
   return Map({
     index: i,
-    hp: 100,
+    hp: 20,
     level: 1,
     exp: 0,
     expToReach: 1,
