@@ -3,7 +3,7 @@
 // Images
 import lockedLock from './assets/images/newLockedLock.png';
 import openLock from './assets/images/openLock.png';
-import refreshShopNew from './assets/images/refreshShopNew.png';
+import refreshShop from './assets/images/refreshShop.png';
 import pokemonLogo from './assets/images/pokemonLogo.png';
 import autoChess from './assets/images/AutoChess.png';
 import soundMuted from './assets/images/soundMuted.png';
@@ -60,10 +60,8 @@ export function getImage(name) {
       //return goldCoin;
     case 'pokedollar':
       return pokedollar;
-    case 'refreshShopImage':
-      // return refreshShopImage;
-    case 'refreshShopNew':
-      return refreshShopNew;
+    case 'refreshShop':
+      return refreshShop;
     case 'pokemonLogo':
       return pokemonLogo;
     case 'autoChess':

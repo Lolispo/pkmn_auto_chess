@@ -1283,7 +1283,7 @@ class App extends Component {
                       src={this.props.lock ? getImage('lockedLock') : getImage('openLock')} alt='lock'/>   
                     </div>
                     <div style={{paddingTop: '10px'}}>
-                      <img className='refreshShopImage' onClick={() => refreshShopEvent(this.props)} src={getImage('refreshShopImage')} alt='refreshShop'/>
+                      <img className='refreshShopImage' onClick={() => refreshShopEvent(this.props)} src={getImage('refreshShop')} alt='refreshShop'/>
                     </div>
                     <div className='flex goldImageRefreshDiv'>
                       <img className='goldImageSmall' src={getImage('goldCoin')} alt='goldCoin'/>

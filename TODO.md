@@ -55,31 +55,13 @@ Odd behaviour:
     No target move (splash) shouldnt deal damage (curr 1 it seems)
 
 # Fix me - Prio
-    
-    Move: Get closest enemy
-        If undefined, try again for second closest
 
-
-    Max size of shop base (mewtwo moltres wide)
-
-    Crash - players[key] = null, somewhere players get null back from server
-        Shouldnt crash on this atleast for now
-
-    Players die same round
-        Handle order as time eliminated
-        Die same round gets weird
-            Multiple of same id
-
-    Start screen better sign of loading
-
-    DotDamage - NOT MATCHING UP
-    Multistrike - Check
-
-    Player loses
-        dont crash when new battle starts (check .index)
-        dont allow press board during battle
-            no battle start board -> undefined error
-            check for select event player is alive
+    Check battle
+        DotDamage - NOT MATCHING UP
+        Multistrike - Check
+        Can units attack teammates?
+            Check getClosestEnemy
+        Compare prints in server to frontend
 
 ## Add me - Prio
 
@@ -87,31 +69,20 @@ Odd behaviour:
 
 ## Backend
 
+Make unit act correctly connected to their range
+    Unsure if you can know if it works since animations don't exist
+        Should at least give some animation for range but not all the way
+
+Crash - players[key] = null, somewhere players get null back from server
+    Shouldnt crash on this atleast for now
+
 Improve shuffle
     Some combinations are way more common than others
-
-Can units attack teammates?
-    Check getClosestEnemy
 
 Move logic of upcoming enemy to calculate before next round beginnings
     currentLogic -> buildMatchups
     To logic -> endBattle sending
     Pvp Battle -> Id of next opponent
-
-battleStartBoard -> battleBoard
-visiting -> visitId
-
-Send information if unit evolved for animation
-    Positions of units that got evolved
-    https://jsfiddle.net/z92y8pa3/
-
-Target Priorities
-    Never stick on a target where attacks are x0 (No effect)
-    If multiple within range: 
-        Type effective priority
-            Get all units at same length from target as List
-            Get Unit with highest effectivness against
-            If multiple, random
 
 PlacePieceEvent (All piece interactions):
     Which units to be sent back
@@ -124,6 +95,18 @@ Pieces from shop refactor:
     Max 9 units for each player
         Good limit for units that doesn't have level 3?
         Max 6 units if 2 levels, Max 3 for level 1 units
+
+Send information if unit evolved for animation
+    Positions of units that got evolved
+    https://jsfiddle.net/z92y8pa3/
+
+Target Priorities
+    Never stick on a target where attacks are x0 (No effect)
+    If multiple within range: 
+        Type effective priority
+            Get all units at same length from target as List
+            Get Unit with highest effectivness against
+            If multiple, random
 
 Speed rework how it is applied
     Instead of upperlimit - speed = cd between actions
@@ -189,8 +172,11 @@ Aoe damage logic
 
 ## Frontend
 
-Sounds: 
-    Plays multiple sounds sometimes
+Max size of shop base (mewtwo moltres wide)
+
+Sounds - Currently only one at a time
+    Fix playing multiple sounds, currently replays all
+        Would in theory be fixed by not storing in array
 
 Up next text not red
 
@@ -346,10 +332,8 @@ Contain information about all pokemon in the game somewhere
 
 Css:
     hp bar % padding better (100% vs 95%)
-    icecube/flame padding top increase
     GrowText better - Firefox looks bad
     Info button position better?
-    Shine the lock a bit, fades into background
     Bonus hp as shield bar (Original hp + bonus)
     Prettier Volume slider
     Nidoran display name new line in button
@@ -394,13 +378,12 @@ Sound:
     Add hotkey m for toggle mute (for music m, sound n, chat c)
     Edit he gone sound, shorter / remove unnecessary meta data
     New Music/Sounds:
-        Music before any game starts, gold theme main menu
-            Own version?
+        Temp musics
+            Main Menu
+            Victory Trainer (Game won)
         Battle Music same style as idle music?
         More sounds:
             Start New Round sound
-            Game won (Victory! (Trainer))
-                Own version?
             player levelup sound
                 pokemon level up sound from games
 
@@ -432,6 +415,9 @@ Test dot damage functionality
 Test lifesteal functionality
 
 ## Code / Javascript Check me
+
+battleStartBoard -> battleBoard
+visiting -> visitId
 
 Put all switch cases in blocks
 
