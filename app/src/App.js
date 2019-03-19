@@ -605,7 +605,11 @@ class App extends Component {
       const amount = boardBuffs.buffMap[type];
       const marked = boardBuffs.typeBuffMapSolo[type] || boardBuffs.typeBuffMapAll[type] || boardBuffs.typeDebuffMapEnemy[type];
       let bonus;
+      // TODO Lower right req numbers
+      const reqs = this.props.typeMap[type]['req'];
+      let req = reqs[0];
       if(!isUndefined(marked)){
+        req = reqs[marked['tier']];
         bonus = <div>
           <span className='typeTier'>{marked['tier']}</span>
           {/*<span>{' Bonus: ' + marked['typeBuff'] + ': ' + marked['value']}</span>*/}
@@ -617,6 +621,7 @@ class App extends Component {
         <img className='typeImg' src={getTypeImg(type)} alt={type} onClick={() => this.props.dispatch({type: 'SET_MARKED_BUFF', buff: type})}/>
         <span className='typeBonusText'>{amount}</span>
         <span className='typeBonusTextBelow'>{type}</span>
+        <span className='typeBonusTextReq'>{req}</span>
         {bonus}
       </span>
       );

@@ -1005,6 +1005,13 @@ body {
   margin-top: 36px;
 }
 
+.typeBonusTextReq {
+  position: absolute;
+  font-size: 11px;
+  left: 32px;
+  margin-top: 26px;
+}
+
 .typeImg {
   position: absolute;
   width: 35px;
