@@ -728,6 +728,9 @@ class App extends Component {
       case 'f':
         buyExpEvent(this.props);
         break;
+      case 'k':
+        this.props.dispatch({type: 'TOGGLE_DEBUG_MODE'});
+        break;
       default:
     }
   }
@@ -1001,7 +1004,7 @@ class App extends Component {
         <div className='playerHpBarDiv'>
           <div className={`playerHpBar overlap ${(hp === 0 ? 'hidden' : '')}`} 
           style={{width: (hp) + '%'}}/>
-          <div className='playerHpBarText biggerText centerWith50 overlap'>
+          <div className={`playerHpBarText biggerText centerWith50 overlap ${(hp === 100 ? 'playerHpBarTextFull' : '')}`}>
             <span className='text_shadow paddingLeft5 paddingRight5'>{hp + '%'}</span>
           </div>
         </div>
@@ -1364,7 +1367,7 @@ class App extends Component {
               <img className='toggleHelpImg' src={(this.props.help ? getImage('collapse') : getImage('collapseNot'))} 
                     onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})} alt='toggleHelp'/>
             </div>
-            {/*<div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div>*/}
+            {(this.props.debugMode ? <div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div> : '')}
             {/*<div style={{marginLeft: '5px'}}>
               <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
             </div>*/}
@@ -1470,6 +1473,7 @@ const mapStateToProps = state => ({
   dmgBoardTotalDmg: state.dmgBoardTotalDmg,
   markedBuff: state.markedBuff,
   displayMarkedBuff: state.displayMarkedBuff,
+  debugMode: state.debugMode,
 });
 
 export default connect(mapStateToProps)(App);

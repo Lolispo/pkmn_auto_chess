@@ -805,8 +805,12 @@ body {
 }
 
 .playerHpBarText {
-  padding-left: 85px;
+  padding-left: 95px;
   padding-top: 4px;
+}
+
+.playerHpBarTextFull {
+  padding-left: 85px !important;
 }
 
 .scoreboard {
@@ -1026,6 +1030,7 @@ body {
 
 .typeDiv {
   margin-left: 5px;
+  width: 160px;
 }
 
 .buffInfoDiv {
@@ -1033,7 +1038,7 @@ body {
   font-size: 13px;
   background-color: rgb(33, 33, 33);
   border: 2pt solid black;
-  border-radius: 2px;
+  border-radius: 5px;
   padding: 5px;
   z-index: 10;
 }

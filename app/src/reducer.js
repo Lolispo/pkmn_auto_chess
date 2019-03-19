@@ -143,6 +143,7 @@ const reducer = (
     dmgBoardTotalDmg: -1,
     markedBuff: '',
     displayMarkedBuff: false,
+    debugMode: false,
   },
   action
 ) => {
@@ -507,6 +508,9 @@ const reducer = (
     case 'TOGGLE_DISPLAY_MARKED_BUFF': {
       state = {...state, displayMarkedBuff: !state.displayMarkedBuff}
       break;
+    }
+    case 'TOGGLE_DEBUG_MODE': {
+      state = {...state, debugMode: !state.debugMode}
     }
     default:
       break;
