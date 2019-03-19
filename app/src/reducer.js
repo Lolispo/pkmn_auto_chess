@@ -1,6 +1,7 @@
 // Author: Petter Andersson
 
 import { getBackgroundAudio, getSoundEffect } from './audio.js';
+import { stat } from 'fs';
 
 let counter = 0;
 
@@ -114,6 +115,7 @@ const reducer = (
     statsMap: {},
     typeStatsString: '',
     typeBonusString: '',
+    typeMap: '',
     round: 1,
     musicEnabled: false,
     soundEnabled: false,
@@ -139,6 +141,8 @@ const reducer = (
     dmgBoards: {},
     showDmgBoard: false,
     dmgBoardTotalDmg: -1,
+    markedBuff: '',
+    displayMarkedBuff: false,
   },
   action
 ) => {
@@ -281,7 +285,8 @@ const reducer = (
       state = {...state, chatHelpMode: action.chatHelpMode, showDmgBoard: false}    
       break;
     case 'SET_TYPE_BONUSES':
-      state = {...state, typeStatsString: action.typeDescs, typeBonusString: action.typeBonuses}
+      // console.log('setTypeBonuses', action.typeMap);
+      state = {...state, typeStatsString: action.typeDescs, typeBonusString: action.typeBonuses, typeMap: action.typeMap}
       break;
     case 'BATTLE_TIME':
       const actionStack = action.actionStacks[state.index];
@@ -372,8 +377,10 @@ const reducer = (
     }
     case 'END_BATTLE': {
       console.log('Battle ended', state.startTimer, action.upcomingRoundType, action.upcomingGymLeader)
-      state = {...state, onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), 
-      startTimer: true, showDmgBoard: true, roundType: action.upcomingRoundType, enemyIndex: (action.upcomingGymLeader || ''), isBattle: false}
+      state = {...state, 
+        onGoingBattle: false, round: state.round + 1, music: getBackgroundAudio('idle'), 
+        startTimer: true, showDmgBoard: true, roundType: action.upcomingRoundType, enemyIndex: (action.upcomingGymLeader || ''), isBattle: false
+      }
       break;
     }
     case 'CLEAR_TICKS': {
@@ -487,6 +494,18 @@ const reducer = (
           winners: state.winner[index],
         */
       }
+      break;
+    }
+    case 'SET_MARKED_BUFF': {
+      if(state.markedBuff === action.buff) {
+        state = {...state, displayMarkedBuff: !state.displayMarkedBuff}
+      } else {
+        state = {...state, markedBuff: action.buff, displayMarkedBuff: true}
+      }
+      break;
+    }
+    case 'TOGGLE_DISPLAY_MARKED_BUFF': {
+      state = {...state, displayMarkedBuff: !state.displayMarkedBuff}
       break;
     }
     default:

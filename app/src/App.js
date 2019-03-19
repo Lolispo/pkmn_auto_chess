@@ -577,6 +577,8 @@ class App extends Component {
     return noSelected;
   }
   
+  capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
+
   displayBuffs = () => {
     const list = [];
     const boardBuffs = this.props.boardBuffs;
@@ -612,7 +614,7 @@ class App extends Component {
       const left = counter * 40 % 160;
       const top = Math.floor(counter / 4) * 60;
       list.push(<span key={type} className='typeElement' style={{marginLeft: left, marginTop: top}}>
-        <img className='typeImg' src={getTypeImg(type)} alt={type}/>
+        <img className='typeImg' src={getTypeImg(type)} alt={type} onClick={() => this.props.dispatch({type: 'SET_MARKED_BUFF', buff: type})}/>
         <span className='typeBonusText'>{amount}</span>
         <span className='typeBonusTextBelow'>{type}</span>
         {bonus}
@@ -620,7 +622,59 @@ class App extends Component {
       );
       counter += 1;
     };
-    return <div className='typeDiv'>{list}</div>;
+    let buffInfoDiv;
+    if(this.props.markedBuff && this.props.displayMarkedBuff) {
+      const buffedType = this.props.markedBuff;
+      const marked = boardBuffs.typeBuffMapSolo[buffedType] || boardBuffs.typeBuffMapAll[buffedType] || boardBuffs.typeDebuffMapEnemy[buffedType];
+      let tier = 0;
+      if(!isUndefined(marked)){
+        tier = marked['tier'];
+        //bonus = marked['typeBuff'] + ': ' + marked['value'];
+      }
+      const type = this.props.typeMap[buffedType];
+      console.log('@Type', type, type['req'], type['req'][0]);
+      const typeName = type['name'];
+      const capitalTypeName = this.capitalize(typeName);
+      console.log(capitalTypeName)
+      const req = type['req'];
+      const bonusType = type['bonusType'];
+      const inc = (bonusType !== 'enemyDebuff' ? 'Increases' : 'Decreases');
+      const units = (bonusType === 'bonus' ? `all ${typeName} typed units` : (bonusType === 'allBonus' ? 'all units' : 'all enemy units'));
+      const bonusAmount = type['bonusAmount'];
+      const bonusStatType = type['bonusStatType'];
+      if(!isUndefined(req)) {
+        let classList = '';
+        if(0 < tier) {
+          classList += ' goldFont';
+        }
+        let reqList = [<span key={typeName} className={`${classList}`}>{req[0]}</span>];
+        let bonusAmountList = [<span className={`${classList}`}>{bonusAmount[0]}</span>];
+        for(let i = 1; i < req.length; i++){
+          classList = '';
+          if(i < tier) {
+            classList += ' goldFont';
+          }
+          console.log('i: ', i, req[i], bonusAmount[i]);
+          reqList.push(<span key={typeName} className={`${classList}`}>{', ' + req[i]}</span>);
+          bonusAmountList.push(<span className={`${classList}`}>{', ' + bonusAmount[i]}</span>);
+        }
+       buffInfoDiv = <div className='buffInfoDiv' style={{marginTop: Math.floor(counter / 4) * 60 + 60}}>
+          <span>{capitalTypeName + ': '}</span>
+          <span>{'['}</span>{reqList}<span>{']'}</span>
+          <span>{` ${inc} ${bonusStatType} for ${units} `}</span>
+          <span>{'['}</span>{bonusAmountList}<span>{']'}</span>
+        </div>;
+      }
+      // return `${this.capitalize(typeName)}: [${req}] ${inc} ${bonusStatType} for ${units} [${bonusAmount}]`;
+    }
+    return <div className='typeDiv'>
+      <div>
+        {list}
+      </div>
+      <div>
+        {buffInfoDiv}
+      </div>
+    </div>;
   }
 
   handleKeyPress(event){
@@ -1390,6 +1444,7 @@ const mapStateToProps = state => ({
   statsMap: state.statsMap,
   typeStatsString: state.typeStatsString,
   typeBonusString: state.typeBonusString,
+  typeMap: state.typeMap,
   round: state.round,
   musicEnabled: state.musicEnabled,
   soundEnabled: state.soundEnabled,
@@ -1413,6 +1468,8 @@ const mapStateToProps = state => ({
   showDmgBoard: state.showDmgBoard,
   timerDuration: state.timerDuration,
   dmgBoardTotalDmg: state.dmgBoardTotalDmg,
+  markedBuff: state.markedBuff,
+  displayMarkedBuff: state.displayMarkedBuff,
 });
 
 export default connect(mapStateToProps)(App);

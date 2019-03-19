@@ -495,7 +495,7 @@ exports.buildTypeString = () => {
     } */
     temp = iter.next();
   }
-  return [s, typeDesc];
+  return [s, typeDesc, typeMap];
 };
 
 exports.getType = name => typeMap.get(name);

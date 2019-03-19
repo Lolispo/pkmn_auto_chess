@@ -1017,6 +1017,16 @@ body {
   margin-left: 5px;
 }
 
+.buffInfoDiv {
+  position: absolute;
+  font-size: 13px;
+  background-color: rgb(33, 33, 33);
+  border: 2pt solid black;
+  border-radius: 2px;
+  padding: 5px;
+  z-index: 10;
+}
+
 /*
   Rarity colors
   rgb(58, 49, 49)
