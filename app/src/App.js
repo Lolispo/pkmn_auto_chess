@@ -1220,11 +1220,11 @@ class App extends Component {
       </div>
       <div className='mainMenuSoundDiv marginTop5'>
         <div>
-          <img className='musicImg' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
+          <img className='musicImgMainMenu' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
           alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}/>
         </div>
         <div>
-          <img className='soundImg' src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} 
+          <img className='soundImgMainMenu' src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} 
           alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}  onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}/>
         </div>
         {(this.props.musicEnabled ? this.playMusic() : '')} 
