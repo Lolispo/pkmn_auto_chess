@@ -96,7 +96,7 @@
     "type": "water",
     "power": 110,
     "acc_range": 0.8,
-    "mana": 150
+    "mana": 130
   },
   "furyAttack": {
     "name": "furyAttack",

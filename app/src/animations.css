@@ -1,0 +1,873 @@
+.messageUpdate {
+  animation: 0.5s ease-in-out 0s infinite alternate both running invis;
+}
+
+.test_animation {
+  animation: attackUp 0.5s ease-in-out 0s alternate infinite both running;
+}
+
+.winningAnimation {
+  animation: jump 1s ease-in-out 0s normal infinite both running;
+}
+
+.growAnimation {
+  animation: growText 1s ease-in-out 0s alternate infinite both running;
+}
+
+.pokemonSpawn {
+  animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
+  /*animation-name: enter;
+	animation-duration: 0.9s;*/
+}
+
+@keyframes jump {
+  0%    {transform: translate(0px);}
+  15%   {transform: translate(0px, -8px);}
+  30%   {transform: translate(0px);}
+  65%   {transform: translate(0px, -20px);}
+  100%  {transform: translate(0px);}
+}
+
+@keyframes attackN {
+  0% {transform: translate(0px);}
+  33% {transform: translate(0px, -40px);}
+  100% {transform: translate(0px);}
+}
+  
+@keyframes attackNE {
+  0% {transform: translate(0px);}
+  33% {transform: translate(40px, -40px);}
+  100% {transform: translate(0px);}
+}
+  
+@keyframes attackNW {
+  0% {transform: translate(0px);}
+  33% {transform: translate(-40px, -40px);}
+  100% {transform: translate(0px);}
+}
+  
+@keyframes attackW {
+  0% {transform: translate(0px);}
+  33% {transform: translate(-40px);}
+  100% {transform: translate(0px);}
+}
+  
+@keyframes attackE {
+  0% {transform: translate(0px);}
+  33% {transform: translate(40px);}
+  100% {transform: translate(0px);}
+}
+  
+@keyframes attackS {
+  0% {transform: translate(0px);}
+  33% {transform: translate(0px, 40px);}
+  100% {transform: translate(0px);}
+}
+  
+@keyframes attackSE {
+  0% {transform: translate(0px);}
+  33% {transform: translate(40px, 40px);}
+  100% {transform: translate(0px);}
+}
+  
+@keyframes attackSW {
+  0% {transform: translate(0px);}
+  33% {transform: translate(-40px, 40px);}
+  100% {transform: translate(0px);}
+}
+
+
+
+
+
+@keyframes attack1E {
+  0% {transform: translate(0px);}
+  33% {transform: translate(85px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1W {
+  0% {transform: translate(0px);}
+  33% {transform: translate(-85px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1S1E {
+  0% {transform: translate(0px);}
+  33% {transform: translate(85px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1S {
+  0% {transform: translate(0px);}
+  33% {transform: translate(0, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1S1W {
+  0% {transform: translate(0px);}
+  33% {transform: translate(-85px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1N1E {
+  0% {transform: translate(0px);}
+  33% {transform: translate(85px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1N {
+  0% {transform: translate(0px);}
+  33% {transform: translate(0, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1N1W {
+  0% {transform: translate(0px);}
+  33% {transform: translate(-85px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2N {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(0, -170px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes attack2N1E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(85px, -170px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes attack2N2E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(170px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1N2E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(170px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(170px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1S2E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(170px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2S2E{
+  0% {transform: translate(0px);}
+  33%	{transform: translate(170px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2S1E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(85px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2S {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(0, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2S1W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-85px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2S2W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-170px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1S2W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-170px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-170px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1N2W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-170px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2N2W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-170px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2N1W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-85px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+
+
+
+@keyframes attack3N {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(0, -255px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes attack3N1E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(85px, -255px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes attack3N2E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(170px, -255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3N3E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(255px, -255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2N3E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(255px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1N3E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(255px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(255px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1S3E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(255px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2S3E{
+  0% {transform: translate(0px);}
+  33%	{transform: translate(255px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3S3E{
+  0% {transform: translate(0px);}
+  33%	{transform: translate(255px, 255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3S2E{
+  0% {transform: translate(0px);}
+  33%	{transform: translate(170px, 255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3S1E {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(85px, 255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3S {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(0, 255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3S1W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-85px, 255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3S2W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-170px, 255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3S3W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-255px, 255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2S3W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-255px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1S3W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-255px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-255px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack1N3W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-255px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack2N3W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-255px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3N3W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-255px, -255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3N2W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-170px, -255px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes attack3N1W {
+  0% {transform: translate(0px);}
+  33%	{transform: translate(-85px, -255px)}
+  100% {transform: translate(0px)}
+}
+
+
+
+
+.animate1E {
+  animation: attack1E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1W {
+  animation: attack1W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1S1E {
+  animation: attack1S1E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1S {
+  animation: attack1S 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1S1W {
+  animation: attack1S1W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1N1E {
+  animation: attack1N1E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1N {
+  animation: attack1N 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1N1W {
+  animation: attack1N1W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2N {
+  animation: attack2N 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2N1E {
+  animation: attack2N1E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2N2E {
+  animation: attack2N2E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1N2E {
+  animation: attack1N2E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2E {
+  animation: attack2E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1S2E {
+  animation: attack1S2E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2S2E{
+  animation: attack2S2E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2S1E {
+  animation: attack2S1E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2S {
+  animation: attack2S 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2S1W {
+  animation: attack2S1W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2S2W {
+  animation: attack2S2W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1S2W {
+  animation: attack1S2W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2W {
+  animation: attack2W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1N2W {
+  animation: attack1N2W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2N2W {
+  animation: attack2N2W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2N1W {
+  animation: attack2N1W 0.3s ease-in 0s normal 1 both running;  
+}
+
+
+
+
+
+
+
+.animate3N {
+  animation: attack3N 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3N1E {
+  animation: attack3N1E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3N2E {
+  animation: attack3N2E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3N3E {
+  animation: attack3N3E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2N3E {
+  animation: attack2N3E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1N3E {
+  animation: attack1N3E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3E {
+  animation: attack3E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1S3E {
+  animation: attack1S3E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2S3E{
+  animation: attack2S3E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3S3E{
+  animation: attack3S3E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3S2E{
+  animation: attack3S2E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3S1E {
+  animation: attack3S1E 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3S {
+  animation: attack3S 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3S1W {
+  animation: attack3S1W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3S2W {
+  animation: attack3S2W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3S3W {
+  animation: attack3S3W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2S3W {
+  animation: attack2S3W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1S3W {
+  animation: attack1S3W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3W {
+  animation: attack3W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate1N3W {
+  animation: attack1N3W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate2N3W {
+  animation: attack2N3W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3N3W {
+  animation: attack3N3W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3N2W {
+  animation: attack3N2W 0.3s ease-in 0s normal 1 both running;  
+}
+
+.animate3N1W {
+  animation: attack3N1W 0.3s ease-in 0s normal 1 both running;  
+}
+
+
+
+
+
+
+
+.animateN {
+  animation: attackN 0.3s ease-in 0s normal 1 both running;
+}
+
+.animateNW {
+  animation: attackNW 0.3s ease-in 0s normal 1 both running;
+}
+
+.animateNE {
+  animation: attackNE 0.3s ease-in 0s normal 1 both running;
+}
+
+.animateW {
+  animation: attackW 0.3s ease-in 0s normal 1 both running;
+}
+
+.animateE {
+  animation: attackE 0.3s ease-in 0s normal 1 both running;
+}
+
+.animateS {
+  animation: attackS 0.3s ease-in 0s normal 1 both running;
+}
+
+.animateSW {
+  animation: attackSW 0.3s ease-in 0s normal 1 both running;
+}
+
+.animateSE {
+  animation: attackSE 0.3s ease-in 0s normal 1 both running;
+}
+
+
+
+
+
+
+
+
+
+.animateDead {
+  animation: deathAnimation 1s ease-in 0s normal 1 both running;
+}
+
+/* TODO: Make not bad */
+@keyframes deathAnimation {
+  0%    {transform: translate(0)};
+  20%   {transform: translate(0, 300px)}
+  50%   {transform: scale(0.01)}
+  100%   {transform: scale(0.01)}
+}
+
+.rotate {
+  animation: rotate 0.3s ease-in 0s normal 1 both running;
+}
+
+@keyframes rotate {
+  0% {transform: rotate(0deg);} /*var(--rotation)*/
+  100% {transform: rotate(180deg);} /*var(--rotationGoal)*/
+}
+
+
+@keyframes move1E {
+  0% {transform: translate(-85px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1W {
+  0% {transform: translate(85px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S1E {
+  0% {transform: translate(-85px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S {
+  0% {transform: translate(0, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S1W {
+  0% {transform: translate(85px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N1E {
+  0% {transform: translate(-85px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N {
+  0% {transform: translate(0, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N1W {
+  0% {transform: translate(85px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2N {
+  0%	{transform: translate(0, 170px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes move2N1E {
+  0%	{transform: translate(-85px, 170px)}
+  100%	{transform: translate(0px)}
+}
+
+@keyframes move2N2E {
+  0%	{transform: translate(-170px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N2E {
+  0%	{transform: translate(-170px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2E {
+  0%	{transform: translate(-170px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S2E {
+  0%	{transform: translate(-170px, -85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S2E{
+  0%	{transform: translate(-170px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S1E {
+  0%	{transform: translate(-85px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S {
+  0%	{transform: translate(0, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S1W {
+  0%	{transform: translate(85px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2S2W {
+  0%	{transform: translate(170px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1S2W {
+  0%	{transform: translate(85px, -170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2W {
+  0%	{transform: translate(170px, 0)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move1N2W {
+  0%	{transform: translate(170px, 85px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2N2W {
+  0%	{transform: translate(170px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+@keyframes move2N1W {
+  0%	{transform: translate(85px, 170px)}
+  100% {transform: translate(0px)}
+}
+
+.pokemonEnter {
+	animation-name: enter;
+	animation-duration: 0.9s; /* 1.2s */
+}
+
+@keyframes enter {
+	0% {
+
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.01);
+	}
+	
+	33% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 5px white);
+		transform: scale(1.3);
+	}
+	
+	66% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1);
+	}
+	
+	100% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+	}
+}
+
+.leave {
+	animation-name: leave;
+	animation-duration: 0.9s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes leave {
+	0% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+	}
+	
+	33%{
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1);
+	}
+	
+	66% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 5px white);
+		transform: scale(1.4);
+	}
+	
+
+	100% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.01);
+	}
+}
+
+.evolve-enter {
+	animation-name: evolve-enter;
+	animation-duration: 2.2s;
+}
+
+@keyframes evolve-enter {
+	0% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.5);
+		opacity: 0;
+	}
+	15% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 0px white);
+		transform: scale(0.5);
+		opacity: 1;
+	}
+	75% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1.4);
+	}
+	100% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+	}
+}
+
+.evolve-leave {
+	animation-name: evolve-leave;
+	animation-duration: 2.2s;
+	animation-fill-mode: forwards;
+}
+@keyframes evolve-leave {
+	0% {
+		filter: contrast(100%) brightness(100%) drop-shadow(0px 0px 0px white);
+		transform: scale(1);
+	}
+	15% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1.4);
+		opacity: 1;
+	}
+	75% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 10px white);
+		transform: scale(1.4);
+		opacity: 1;
+	}
+	99% {
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 30px white);
+		transform: scale(6);
+		opacity: 0;
+	}
+	100%{
+		filter: contrast(0%) brightness(300%) drop-shadow(0px 0px 30px white);
+		transform: scale(0.01);
+		opacity: 0;
+	}
+}

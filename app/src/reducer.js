@@ -29,7 +29,7 @@ const getNewSoundEffects = (soundEffects, newSoundEffect) => {
   for(let i = 0; i < soundEffects.length; i++){
     if(soundEffects[i] !== newSoundEffect){
       // Overwrites prev sound
-      console.log('@NewSoundEffect', i, newSoundEffect, 'x', soundEffects[i]);
+      // console.log('@NewSoundEffect', i, newSoundEffect, 'x', soundEffects[i]);
       return updateSoundArray(soundEffects, i, newSoundEffect);
     }
   }
@@ -341,11 +341,18 @@ const reducer = (
       // console.log('FIND ME: Changing StartBattle', action.value);
       state = {...state, startBattle: action.value}
       break;
-    case 'UPDATE_BATTLEBOARD':
-        // console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
-        state = {...state, battleStartBoard: action.board, message: 'Move ' + action.moveNumber, messageMode: ''}
-        // console.log('state', state);
-        break;
+    case 'UPDATE_BATTLEBOARD': {
+      // console.log('@reducer.updateBattleBoard: MOVE NUMBER: ', action.moveNumber,'Updating state battleBoard', action.board);
+      state = {...state, battleStartBoard: action.board, message: 'Move ' + action.moveNumber, messageMode: ''}
+      // console.log('state', state);
+      break;
+    }
+    /*
+    case 'RESET_BATTLEBOARD_ACTIONMESSAGE': {
+      const battleBoard = state.battleStartBoard;
+      if(battleBoard[action.id]) battleBoard[action.id].actionMessage = '';
+      state = {...state, battleStartBoard: battleBoard}
+    }*/
     case 'SET_STATS':
       console.log('Updating stats', action.name); // action.stats)
       const statsMap = state.statsMap;
@@ -417,7 +424,7 @@ const reducer = (
       state = {...state, selectedSound: action.newAudio}
       break;
     case 'NEW_SOUND_EFFECT':
-      console.log('@red.Newsoundeffect', action.newSoundEffect)
+      // console.log('@red.Newsoundeffect', action.newSoundEffect)
       tempSoundEffects = getNewSoundEffects(state.soundEffects, action.newSoundEffect);
       state = {...state, soundEffects: tempSoundEffects};
       break;

@@ -97,7 +97,7 @@ exports.printBoard = async (boardParam, moveParam) => {
     p(resultString);
     tempUnit = keysIter.next();
   }
-  p();
+  p('');
 };
 
 exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());

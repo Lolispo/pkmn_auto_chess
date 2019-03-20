@@ -6,6 +6,7 @@ import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePiec
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import './App.css';
+import './animations.css';
 
 import { getUnitAudio, getSoundEffect } from './audio.js';
 import { getImage, getTypeImg, getGymImage } from './images.js';
@@ -250,9 +251,14 @@ class Cell extends Component {
       if(this.props.isBoard && this.props.newProps.onGoingBattle && this.props.newProps.battleStartBoard){ // Battle
         // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
         pokemon = this.props.newProps.battleStartBoard[this.state.pos];
+        // (Math.min(pokemon.hp, pokemon.maxHp) / Math.max(pokemon.hp, pokemon.maxHp) * 100)
         const hpBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className={`hpBar text_shadow ${(this.props.isBoard ? (pokemon.team === 0 ? 'friendlyBar' : 'enemyBar') : '')}`} 
-          style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>{`${pokemon.hp}/${pokemon.maxHp}`}</div>
+            style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>
+            {`${pokemon.hp}/${pokemon.maxHp}`}
+          </div>
+          {(pokemon.hp > pokemon.maxHp ? <div className={`boostBar text_shadow ${(this.props.isBoard ? 'boostBar' : '')}`} 
+            style={{width: (/*pokemon.hp-pokemon.maxHp / pokemon.hp*/1 * 100)+'%'}}/> : '')} 
           </div> : '');
         const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
@@ -521,6 +527,7 @@ class App extends Component {
           <span><span>{`Defense: ${s.defense}`}</span>{(buffs['defense'] ? <span className='infoPanelBuff'>{` + ${buffs['defense']}\n`}</span> : '\n')}</span>
           <span><span>{`Speed: ${s.speed}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['speed']}\n`}</span> : '\n')}</span>
           <span>{`Level: ${s.cost}\n`}</span>
+          <span>{`Range: ${s.range || 1}\n`}</span>
           <span className={`type ${s.abilityType}`}>{`Ability: ${s.abilityDisplayName}\n`}</span>
         </div>
         <div>
@@ -605,11 +612,10 @@ class App extends Component {
       const amount = boardBuffs.buffMap[type];
       const marked = boardBuffs.typeBuffMapSolo[type] || boardBuffs.typeBuffMapAll[type] || boardBuffs.typeDebuffMapEnemy[type];
       let bonus;
-      // TODO Lower right req numbers
       const reqs = this.props.typeMap[type]['req'];
-      let req = reqs[0];
+      let reqVar = reqs[0];
       if(!isUndefined(marked)){
-        req = reqs[marked['tier']];
+        reqVar = reqs[marked['tier']];
         bonus = <div>
           <span className='typeTier'>{marked['tier']}</span>
           {/*<span>{' Bonus: ' + marked['typeBuff'] + ': ' + marked['value']}</span>*/}
@@ -617,11 +623,11 @@ class App extends Component {
       }
       const left = counter * 40 % 160;
       const top = Math.floor(counter / 4) * 60;
-      list.push(<span key={type} className='typeElement' style={{marginLeft: left, marginTop: top}}>
-        <img className='typeImg' src={getTypeImg(type)} alt={type} onClick={() => this.props.dispatch({type: 'SET_MARKED_BUFF', buff: type})}/>
+      list.push(<span key={type} className='typeElement' style={{marginLeft: left, marginTop: top}} onClick={() => this.props.dispatch({type: 'SET_MARKED_BUFF', buff: type})}>
+        <img className='typeImg' src={getTypeImg(type)} alt={type}/>
         <span className='typeBonusText'>{amount}</span>
         <span className='typeBonusTextBelow'>{type}</span>
-        <span className='typeBonusTextReq'>{req}</span>
+        <span className='typeBonusTextReq'>{reqVar}</span>
         {bonus}
       </span>
       );
@@ -637,10 +643,9 @@ class App extends Component {
         //bonus = marked['typeBuff'] + ': ' + marked['value'];
       }
       const type = this.props.typeMap[buffedType];
-      console.log('@Type', type, type['req'], type['req'][0]);
+      // console.log('@Type', type, type['req'], type['req'][0]);
       const typeName = type['name'];
       const capitalTypeName = this.capitalize(typeName);
-      console.log(capitalTypeName)
       const req = type['req'];
       const bonusType = type['bonusType'];
       const inc = (bonusType !== 'enemyDebuff' ? 'Increases' : 'Decreases');
@@ -652,16 +657,16 @@ class App extends Component {
         if(0 < tier) {
           classList += ' goldFont';
         }
-        let reqList = [<span key={typeName} className={`${classList}`}>{req[0]}</span>];
-        let bonusAmountList = [<span className={`${classList}`}>{bonusAmount[0]}</span>];
+        let reqList = [<span key={'disp_0' + typeName} className={`${classList}`}>{req[0]}</span>];
+        let bonusAmountList = [<span key={'dispValue_0'} className={`${classList}`}>{bonusAmount[0]}</span>];
         for(let i = 1; i < req.length; i++){
           classList = '';
           if(i < tier) {
             classList += ' goldFont';
           }
-          console.log('i: ', i, req[i], bonusAmount[i]);
-          reqList.push(<span key={typeName} className={`${classList}`}>{', ' + req[i]}</span>);
-          bonusAmountList.push(<span className={`${classList}`}>{', ' + bonusAmount[i]}</span>);
+          // console.log('i: ', i, req[i], bonusAmount[i]);
+          reqList.push(<span key={'disp_' + i + '_' + typeName} className={`${classList}`}>{', ' + req[i]}</span>);
+          bonusAmountList.push(<span key={'dispValue_' + i} className={`${classList}`}>{', ' + bonusAmount[i]}</span>);
         }
        buffInfoDiv = <div className='buffInfoDiv' style={{marginTop: Math.floor(counter / 4) * 60 + 60}}>
           <span>{capitalTypeName + ': '}</span>
@@ -754,7 +759,11 @@ class App extends Component {
     if(actionMessageAttacker) newBoard[unitPos].actionMessage = actionMessageAttacker;
     // console.log('direction: ' + direction)
     if(direction !== '') {
-      newBoard[unitPos].attackAnimation = 'animate' + direction; 
+      console.log('animate: ', direction, 'attack' + direction + ' 0.3s ease-in 0s normal 1 both running');
+      /*newBoard[unitPos].animateMove = { // attackAnimation = {
+        animation: 'attack' + direction + ' 0.3s', // ease-in 0s normal 1 both running',
+      } */
+      newBoard[unitPos].attackAnimation = 'animate' + direction;
     }
     if(newBoard[unitPos].animateMove !== ''){
       newBoard[unitPos].animateMove = '';
@@ -924,6 +933,27 @@ class App extends Component {
     return board;
   }
 
+  removeActionMessage = (nextMove, board) => {
+    const target = nextMove.target;
+    if(board && board[target]){
+      board[target].actionMessage = '';
+      /*
+      const obj = {...board[target], actionMessage: ''}
+      const keys = Object.keys(board);
+      return keys.map((key, index) => {
+        if (index !== target) {
+          // This isn't the item we care about - keep it as-is
+          return board[key]
+        }
+        // Otherwise, this is the one we want - return an updated value
+        return {
+          ...obj,
+        }
+      })*/
+    }
+    return board;
+  }
+
   startBattleEvent = async () => {
     const { dispatch, actionStack, battleStartBoard, winner } = this.props;
     if(this.props.isDead && this.props.visiting === this.props.index){
@@ -947,7 +977,14 @@ class App extends Component {
       // Fix remove class Animation
       board = await this.removeClassAnimation(nextMove, board);
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
+      board = await this.removeActionMessage(nextMove, board);
+      dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
       board = await this.renderMove(nextMove, board);
+      /*
+      setTimeout(() => {
+        dispatch({type: 'RESET_BATTLEBOARD_ACTIONMESSAGE', pos: nextMove.target});
+      }, 1500)
+      */
       // console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
       currentTime = time;
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
@@ -1214,9 +1251,9 @@ class App extends Component {
           <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')} ${(this.props.loaded ? '' : 'hidden')}`} 
           onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={() => this.startGameEvent()}>
-            Start Game{(this.props.connected ? 
+            {(this.props.connected ? 
               (!this.props.loaded ? ' Loading ...' :
-                (this.props.playersReady === -1 ? ' Connected!' : ` (${this.props.playersReady}/${this.props.connectedPlayers})`)
+                (this.props.playersReady === -1 ? ' Connected!' : `Start Game (${this.props.playersReady}/${this.props.connectedPlayers})`)
               ) 
             : ' Connecting ...')}
           </button>

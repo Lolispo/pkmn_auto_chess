@@ -58,7 +58,7 @@ Steel: 1 (3) [1,2]
 
 #### Potential balance:
 
-  Dragon too strong?
+  Buff 7:s a bit
 
   Type numbers:
   More grass units?
@@ -171,3 +171,17 @@ ground: #5 [3,6] -> [2,4,5]?
 psychic: #7 [3,6,9] -> [3,5,7] High numbers for last
 
 Gym battles adjusted, made more difficult
+
+## Balance patch 0.3
+
+Added range functionality to the game
+
+Range can be seen in infopanel for a unit
+
+Bug buffs [20,40] => [40,50]
+
+Hydro pump manaCost 150 => 130
+
+Dragon buff 30 => 25
+
+Rock first level bonus 15 => 20

@@ -617,7 +617,7 @@ function handleNeighbor(pathFind, board, current, enemyPos, pos) {
   return pathFind.setIn(['cameFrom', pos], current).setIn(['fromStartScore', pos], distanceTraveled).setIn(['heuristicScore', pos], heuristicScore);
 }
 
-async function getDirection(unitPos, path) {
+function getDirection(unitPos, path) {
   const ux = f.x(unitPos);
   const uy = f.y(unitPos);
   const tx = f.x(path);
@@ -646,9 +646,9 @@ async function getDirection(unitPos, path) {
 async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exceptionsList = List([])) {
   const stepsToTake = Math.floor(Math.random() * 2 + 1); // 1 currently //  1 - 2, * 2
   const rangeToTarget = getHeuristicScore(unitPos, closestEnemyPos);
-  if (stepsToTake > rangeToTarget && rangeToTarget === 1) { // Within range, move to closest available space
+  if (stepsToTake > rangeToTarget) { // Within range, move to closest available space // && rangeToTarget === 1
     const goal = getMovePos(board, closestEnemyPos, 1, team);
-    const direction = await getDirection(unitPos, goal);
+    const direction = getDirection(unitPos, goal);
     // console.log('Move direction: ', direction);
     return Map({ movePos: goal, direction });
   } // More TOWARDS unit with stepsToTake amount of steps
@@ -680,7 +680,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exce
           index = stepsToTake;
         }
         // console.log('Finished Path Finding! Return Path[' + index + ']:', path.get(index), path);
-        const direction = await getDirection(unitPos, path.get(index));
+        const direction = getDirection(unitPos, path.get(index));
         // console.log('Move direction: ', direction);
         return Map({ movePos: path.get(index), direction });
       }
@@ -715,7 +715,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exce
  * return closest enemy and marks if within range or not
  * If someones at spot && its enemy unit
  * Does this handle positioning good for both teams?
- * Map({closestEnemy, withinRange})
+ * Map({closestEnemy, withinRange, direction})
  * Current order: SW, NW, S, N, SE, NE, SW, SE, W, E, NW, NE
  * New Current Order: N S W E SW NW SE NE
  * Wanted order:
@@ -728,21 +728,21 @@ function getClosestEnemy(board, unitPos, range, team, exceptionsList = List([]))
   const y = f.y(unitPos);
   const enemyTeam = 1 - team;
   let pos;
-
+  console.log('@getClosestEnemy', unitPos, team, range, enemyTeam, board.get(f.pos(x,y)).get('team'));
   // Check N S W E
-  pos = pos = f.pos(x, y + 1);
+  pos = f.pos(x, y + 1);
   if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'N' });
   }
-  pos = pos = f.pos(x, y - 1);
+  pos = f.pos(x, y - 1);
   if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'S' });
   }
-  pos = pos = f.pos(x - 1, y);
+  pos = f.pos(x - 1, y);
   if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'W' });
   }
-  pos = pos = f.pos(x + 1, y);
+  pos = f.pos(x + 1, y);
   if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
     return Map({ closestEnemy: pos, withinRange: true, direction: 'E' });
   }
@@ -755,24 +755,24 @@ function getClosestEnemy(board, unitPos, range, team, exceptionsList = List([]))
     for (let j = x - i; j <= x + i; j++) {
       pos = f.pos(j, y - i);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
-        const direction = (j < x ? 'SW' : j === x ? 'S' : 'SE');
+        const direction = getDirection(unitPos, pos);
         return Map({ closestEnemy: pos, withinRange, direction });
       }
       pos = f.pos(j, y + i);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
-        const direction = (j < x ? 'NW' : j === x ? 'N' : 'NE');
+        const direction = getDirection(unitPos, pos);
         return Map({ closestEnemy: pos, withinRange, direction });
       }
     }
     for (let j = y - i + 1; j < y + i; j++) {
       pos = f.pos(x - i, j);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
-        const direction = (j < y ? 'SW' : j === y ? 'W' : 'NW');
+        const direction = getDirection(unitPos, pos);
         return Map({ closestEnemy: pos, withinRange, direction });
       }
       pos = f.pos(x + i, j);
       if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
-        const direction = (j < y ? 'SE' : j === y ? 'E' : 'NE');
+        const direction = getDirection(unitPos, pos);
         return Map({ closestEnemy: pos, withinRange, direction });
       }
     }
@@ -1010,7 +1010,7 @@ async function deleteNextMoveResultEntries(unitMoveMapParam, targetToRemove) {
     }
     tempUnit = keysIter.next();
   }
-  return unitMoveMap;
+  return unitMoveMap.delete(targetToRemove);
 }
 
 /**
@@ -1077,7 +1077,8 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       battleOver,
     });
   }
-  const range = unit.get('range') || pokemonJS.getStatsDefault('range');
+  const range = unit.get('range');
+  if(range !== 1) f.p(range + ' Range !');
   const team = unit.get('team');
   let tarpos;
   if (!f.isUndefined(optPreviousTarget)) {
@@ -1089,6 +1090,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
   if (enemyPos.get('withinRange')) { // Attack action
     const action = 'attack';
     const target = enemyPos.get('closestEnemy');
+    console.log('Closest Enemy: ', unitPos, team, target)
     const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type'));
     // console.log('@nextmove - normal attack target: ', target, enemyPos)
     const typeFactor = await typesJS.getTypeFactor(attackerType, board.get(target).get('type'));
@@ -1128,6 +1130,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     });
   } // Move action
   const closestEnemyPos = enemyPos.get('closestEnemy');
+  console.log('Moving ...', unitPos, 'to', closestEnemyPos, range)
   const movePosObj = await getStepMovePos(board, unitPos, closestEnemyPos, range, team);
   const movePos = movePosObj.get('movePos');
   const direction = movePosObj.get('direction');
@@ -1252,7 +1255,7 @@ async function startBattle(boardParam) {
     // Calc nextMove value
     let nextMoveValue;
     if (moveAction === 'move') { // Faster recharge on moves
-      nextMoveValue = +unit.get('next_move') + (+unit.get('speed') / 3);
+      nextMoveValue = +unit.get('next_move') + Math.round(+unit.get('speed') / 3);
       pos = result.get('nextMove').get('target');
     } else {
       nextMoveValue = +unit.get('next_move') + +unit.get('speed');
@@ -1554,6 +1557,7 @@ async function createBattleUnit(unit, unitPos, team) {
     .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken')) */
     .set('mana_multiplier', unitStats.get('mana_multiplier') || pokemonJS.getStatsDefault('mana_multiplier'))
     .set('position', unitPos)
+    .set('range', unitStats.get('range') || pokemonJS.getStatsDefault('range'))
     .set('manaCost', (await ability).get('mana') || abilitiesJS.getDefault('mana'));
 }
 
@@ -1957,7 +1961,6 @@ const endBattle = async (stateParam, playerIndex, winner, finishedBoard, roundTy
         /* TODO: Add item drops / special money drop */
       case 'shop':
       default:
-        f.p('default case winner');
     }
   } else { // Loser
     switch (roundType) {
@@ -1979,7 +1982,6 @@ const endBattle = async (stateParam, playerIndex, winner, finishedBoard, roundTy
       }
       case 'shop':
       default:
-        f.p('default case loser');
     }
   }
   // console.log('@endBattle prep', stateParam.get('players'));

@@ -69,6 +69,8 @@ Odd behaviour:
 
 ## Backend
 
+f.p => print all arguments with space between
+
 Make unit act correctly connected to their range
     Unsure if you can know if it works since animations don't exist
         Should at least give some animation for range but not all the way
@@ -171,6 +173,25 @@ More advanced Matchup system
 Aoe damage logic
 
 ## Frontend
+
+Length of move animation connected to when next move should be made
+
+Socket:
+    End game reload page after 2 minutes
+
+Sprites force start
+
+Visit dead player -> move to another player / self
+
+Spec when dead:
+    Up Next fix
+    gold, level, units etc
+    Hide shop / Show shop
+
+Fix actionMessage
+    Ugly shit
+    Only render ON CHANGE of attack info
+        Rerender actionMessage if changed, otherwise let it be
 
 Max size of shop base (mewtwo moltres wide)
 
