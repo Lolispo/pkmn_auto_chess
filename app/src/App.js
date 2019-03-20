@@ -1473,7 +1473,6 @@ const mapStateToProps = state => ({
   exp: state.exp,
   expToReach: state.expToReach,
   gold: state.gold,
-  streak: state.streak,
   onGoingBattle: state.onGoingBattle,
   isBattle: state.isBattle,
   enemyIndex: state.enemyIndex,

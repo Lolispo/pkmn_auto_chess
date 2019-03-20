@@ -174,6 +174,8 @@ Aoe damage logic
 
 ## Frontend
 
+Spectator cant currently lock toggles
+
 Length of move animation connected to when next move should be made
 
 Socket:
@@ -181,12 +183,8 @@ Socket:
 
 Sprites force start
 
-Visit dead player -> move to another player / self
-
-Spec when dead:
-    Up Next fix
-    gold, level, units etc
-    Hide shop / Show shop
+Visit dead player
+    Should move to yourself as dead (require a new move)
 
 Fix actionMessage
     Ugly shit
@@ -198,8 +196,6 @@ Max size of shop base (mewtwo moltres wide)
 Sounds - Currently only one at a time
     Fix playing multiple sounds, currently replays all
         Would in theory be fixed by not storing in array
-
-Up next text not red
 
 Display more clearly as a loser if you are eliminated
     Also when game is over when you are not winner

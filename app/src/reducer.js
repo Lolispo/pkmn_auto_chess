@@ -99,7 +99,6 @@ const reducer = (
     exp: -1,
     expToReach: -1,
     gold: -1,
-    streak: 0,
     onGoingBattle: false, // Most battle checks
     isBattle: false,  // Used for checking interactions before battle state is received
     enemyIndex: -1,
@@ -174,7 +173,6 @@ const reducer = (
           exp: action.newState.players[state.index].exp,
           expToReach: action.newState.players[state.index].expToReach,
           gold: action.newState.players[state.index].gold,
-          streak: action.newState.players[state.index].streak,
           // lock: action.newState.players[state.index].lock,
         };
       }
@@ -195,10 +193,18 @@ const reducer = (
           exp: action.player.exp,
           expToReach: action.player.expToReach,
           gold: action.player.gold,
-          streak: action.player.streak,
         };
-      }
+      } 
       if(state.visiting === action.index && action.index !== state.index) {
+        if(state.isDead) { // Sync everything when dead
+          state = {...state, 
+            myShop: action.player.shop,
+            level: action.player.level,
+            exp: action.player.exp,
+            expToReach: action.player.expToReach,
+            gold: action.player.gold,
+          }
+        }
         state = {...state,
           myHand: action.player.hand,
           myBoard: action.player.board,
@@ -212,6 +218,7 @@ const reducer = (
           boardBuffs: action.player.boardBuffs,
         }
       }
+
       const players = state.players;
       players[action.index] = action.player
       state = {...state, players: {...players}}
@@ -451,6 +458,9 @@ const reducer = (
     case 'DEAD_PLAYER': {
       if(action.pid === state.index) {
         state = {...state, message: 'You Lost! You finished ' + action.position + '!', messageMode: 'big', isDead: true}
+      }
+      if(state.isDead && state.visiting === action.pid){
+        state = {...state, visiting: state.index}
       }
       console.log('Before: Removing player ' + action.pid, state.players);
       const players = state.players;
