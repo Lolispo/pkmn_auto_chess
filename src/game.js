@@ -77,23 +77,41 @@ async function refillPieces(pieces, discardedPieces) {
  * i is used to know which rarity it is checking (from 1 to 5)
  * Made sure after method that rarity contain pieces
  */
-async function getPieceFromRarity(random, prob, index, pieceStorage) {
+async function getPieceFromRarity(random, prob, index, pieceStorage, unitAmounts, newUnitAmounts) {
   let piece;
+  let pieceIndex;
   if (prob > random) {
-    piece = pieceStorage.get(index).get(0);
+    if(f.isUndefined(unitAmounts)){
+      piece = pieceStorage.get(index).get(0);
+      pieceIndex = 0;
+    } else {
+      const keys = Array.from(unitAmounts.keys());
+      for(let i = 0; i < keys.length; i++){
+        const tempPiece = pieceStorage.get(index).get(i);
+        if(!keys.includes(tempPiece) || (keys.includes(tempPiece) && (unitAmounts.get(tempPiece) + (newUnitAmounts.get(tempPiece) || 0)) < 9)) {
+          piece = tempPiece;
+          pieceIndex = i;
+          break;
+        }
+      }
+    }
   }
-  return piece;
+  return Map({piece, index: pieceIndex});
 }
 
 /**
  * Updates shop with a new piece from getPieceFromRarity
  * Removes the piece from correct place in pieceStorage
  */
-async function addPieceToShop(shop, pos, pieces, level, discPieces) {
+async function addPieceToShop(shop, pos, pieces, level, discPieces, player) {
   const prob = gameConstantsJS.getPieceProbabilityNum(level);
   let newShop = shop;
   let newPieceStorage = pieces;
   let newDiscPieces = discPieces;
+  // TODO: Get amount of units of different types
+  // Units at 9 => add to not allowed list
+  const unitAmounts = player.get('unitAmounts');
+  let newUnitAmounts = Map({});
   // console.log('addPieceToShop LEVEL ', level, prob)
   for (let i = 0; i < 5; i++) { // Loop over levels
     // If any piece storage goes empty -> put all discarded pieces in pieces
@@ -103,9 +121,12 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
       newDiscPieces = List([]);
     }
     // TODO: In theory, pieces might still be empty here, if not enough pieces were in the deck.
-    // Temp: If still empty for that level, try a level below
+    // Temp: Assumes enough pieces are available
     const random = Math.random();
-    let piece;
+    let pieceObj = await getPieceFromRarity(random, prob[i], i, newPieceStorage, unitAmounts, newUnitAmounts);
+    let piece = pieceObj.get('piece');
+    let pieceIndex = pieceObj.get('index');
+    /*
     if (newPieceStorage.get(i).size === 0) {
       if (i != 0) {
         piece = await getPieceFromRarity(random, prob[i - 1], i - 1, newPieceStorage);
@@ -114,8 +135,8 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
         process.exit();
       }
     } else {
-      piece = await getPieceFromRarity(random, prob[i], i, newPieceStorage);
-    }
+      */
+    //}
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
       const unitStats = await pokemonJS.getStats(piece);
@@ -126,7 +147,8 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces) {
         type: unitStats.get('type'),
       }));
       // Removes first from correct rarity array
-      newPieceStorage = await f.removeFirst(newPieceStorage, i);
+      newPieceStorage = await f.removeFromPieceStorage(newPieceStorage, i, pieceIndex);
+      newUnitAmounts = newUnitAmounts.set(piece, (newUnitAmounts.get(piece) || 0 ) + 1);
       break;
     }
   }
@@ -148,7 +170,7 @@ async function refreshShop(stateParam, playerIndex) {
   let discPieces = state.get('discardedPieces');
   for (let i = 0; i < 5; i++) { // Loop over pieces
     if (!level) console.log('@refreshShop adding piece', level, playerIndex);
-    const obj = await addPieceToShop(newShop, f.pos(i), pieceStorage, level, discPieces);
+    const obj = await addPieceToShop(newShop, f.pos(i), pieceStorage, level, discPieces, state.getIn(['players', playerIndex]));
     newShop = obj.newShop;
     pieceStorage = obj.pieceStorage;
     discPieces = obj.discPieces;
@@ -235,9 +257,10 @@ exports.buyUnit = async (stateParam, playerIndex, unitID) => {
     const unitHand = await getBoardUnit(unit, f.x(handIndex));
     // console.log('@buyUnit unitHand', unitHand)
     state = state.setIn(['players', playerIndex, 'hand'], hand.set(unitHand.get('position'), unitHand));
-
+    
     const currentGold = state.getIn(['players', playerIndex, 'gold']);
     state = state.setIn(['players', playerIndex, 'gold'], currentGold - unitInfo.get('cost'));
+    state = state.setIn(['players', playerIndex, 'unitAmounts', unit], (state.getIn(['players', playerIndex, 'unitAmounts', unit]) || 0) + 1);
   }
   return state;
 };
@@ -457,7 +480,7 @@ exports._withdrawPiece = async (state, playerIndex, piecePosition) => withdrawPi
  * When units are sold, when level 1, a level 1 unit should be added to discardedPieces
  * Level 2 => 3 level 1 units, Level 3 => 9 level 1 units
  */
-async function discardBaseUnits(state, name, depth = 1) {
+async function discardBaseUnits(state, playerIndex, name, depth = 1) {
   const unitStats = await pokemonJS.getStats(name);
   const evolutionFrom = unitStats.get('evolves_from');
   // console.log('@discardBaseUnits start', name, depth);
@@ -468,11 +491,12 @@ async function discardBaseUnits(state, name, depth = 1) {
     for (let i = 0; i < amountOfPieces; i++) {
       discPieces = discPieces.push(name);
     }
+    state = state.setIn(['players', playerIndex, 'unitAmounts', name], state.getIn(['players', playerIndex, 'unitAmounts', name]) - amountOfPieces);
     return state.set('discardedPieces', (await discPieces));
   }
   const newName = evolutionFrom;
   console.log('CHECK ME IF CRASH', newName, depth);
-  return discardBaseUnits(state, newName, depth + 1);
+  return discardBaseUnits(state, playerIndex, newName, depth + 1);
 }
 
 /**
@@ -505,7 +529,7 @@ async function sellPiece(state, playerIndex, piecePosition) {
     newState = newDiscardedPieces.setIn(['players', playerIndex, 'board'], newBoard);
   }
   // Add units to discarded Cards, add base level of card
-  return discardBaseUnits(newState, piece.get('name'));
+  return discardBaseUnits(newState, playerIndex, piece.get('name'));
 }
 
 exports._sellPiece = (state, playerIndex, piecePosition) => sellPiece(state, playerIndex, piecePosition);
@@ -1078,7 +1102,6 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     });
   }
   const range = unit.get('range');
-  if(range !== 1) f.p(range + ' Range !');
   const team = unit.get('team');
   let tarpos;
   if (!f.isUndefined(optPreviousTarget)) {
@@ -2055,7 +2078,7 @@ exports.removeDeadPlayer = async (stateParam, playerIndex) => {
   const playerUnits = shopUnits.concat(boardList).concat(handList);
   console.log('@removeDeadPlayer', shopUnits, boardList, handList, '=', playerUnits);
   for (let i = 0; i < playerUnits.size; i++) {
-    state = await discardBaseUnits(state, playerUnits.get(i));
+    state = await discardBaseUnits(state, playerIndex, playerUnits.get(i));
   }
   // state = state.set('discardedPieces', state.get('discardedPieces').concat(playerUnits));
   const newState = state.set('players', state.get('players').delete(playerIndex));

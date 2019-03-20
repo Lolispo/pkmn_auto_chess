@@ -30,12 +30,13 @@ Fixed Check:
     Sell piece button cost css alignment
 
 Test me ingame:
-    Player loses
-        Shouldn't be able to interact with anything board related
-            Fix select event
+    9 units of a base type
+        Can you receive anymore?
+        Can you get 2 in shop when you have 8 of that type?
     Move
         Does it allow jumping over if close enough?
-            Better when priorities are set for target better
+    Visit dead player
+        Should move to yourself as dead (require a new move)
     Low Prios Tests:
         Player disconnects
             During battle or normally
@@ -71,8 +72,6 @@ Sp.attack Sp.defense for ability calculations
 
 Improve shuffle
     Some combinations are way more common than others
-
-f.p => print all arguments with space between
 
 Crash - players[key] = null, somewhere players get null back from server
     Shouldnt crash on this atleast for now
@@ -169,22 +168,12 @@ Aoe damage logic
 End battle isn't reached for spectators
     Doesnt get up next and stuff
 
-Dont do horn if music enabled
-
-Spectator cant currently lock toggles
+Spectator cant currently see lock toggles
 
 Length of move animation connected to when next move should be made
 
-Socket:
-    End game reload page after 2 minutes
-
-Sprites force start
-
-Visit dead player
-    Should move to yourself as dead (require a new move)
-
 Fix actionMessage
-    Ugly shit
+    Ugly atm, super ugly
     Only render ON CHANGE of attack info
         Rerender actionMessage if changed, otherwise let it be
 

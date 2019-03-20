@@ -57,11 +57,19 @@ exports.reverseUnitPos = posInput => pos(7 - x(posInput), 7 - y(posInput));
 // exports.print = (obj, msg) => console.log(msg + JSON.stringify(obj)); // Normal version
 exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2)); // Pretty printed version
 
-const p = (msg) => {
-  if (gameConstantsJS.debugMode) console.log(msg);
+const p = (msg, msgs) => {
+  if (gameConstantsJS.debugMode) {
+    let s = msg;
+    if(!isUndefined(msgs)) {
+      for(let i = 0; i < msgs.length; i++) {
+        s += ' ' + msgs[i];
+      }      
+    }
+    console.log(s);
+  } 
 };
 
-exports.p = msg => p(msg);
+exports.p = (msg, ...msgs) => p(msg, msgs);
 
 exports.printBoard = async (boardParam, moveParam) => {
   const board = await boardParam;
@@ -100,7 +108,7 @@ exports.printBoard = async (boardParam, moveParam) => {
   p('');
 };
 
-exports.removeFirst = async (state, id) => state.set(id, state.get(id).shift());
+exports.removeFromPieceStorage = async (pieceStorage, id, index) => pieceStorage.set(id, pieceStorage.get(id).splice(index, 1));
 
 exports.push = (state, id, value) => state.set(id, state.get(id).push(value));
 

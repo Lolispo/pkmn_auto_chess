@@ -66,6 +66,7 @@ Steel: 1 (3) [1,2]
   More grass units?
   More Fighting units?
 
+  SlowKing might be too weak compared to slowbro
   Geodude 3 -> 2?
   Remove iggly/cleffa trio ? 
     Maybe not, tanky units, need buff in spells, especially for level 3 versions

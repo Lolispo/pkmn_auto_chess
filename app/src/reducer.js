@@ -303,11 +303,13 @@ const reducer = (
       const dmgBoard = action.dmgBoards[state.index];
       // console.log('New dmg board in reducer', dmgBoard);
       // console.log('@battle_time', state.soundEffects)
-      tempSoundEffects = getNewSoundEffects(state.soundEffects, getSoundEffect('horn'));
+      if(!state.musicEnabled) {
+        tempSoundEffects = getNewSoundEffects(state.soundEffects, getSoundEffect('horn'));
+        state = {...state, soundEffects: tempSoundEffects}
+      }
       state = {
         ...state,
         music: (action.enemy ? getBackgroundAudio('pvpbattle') : getBackgroundAudio('battle')),
-        soundEffects: tempSoundEffects,
         onGoingBattle: true,
         enemyIndex: action.enemy,
         roundType: action.roundType,
