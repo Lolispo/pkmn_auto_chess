@@ -58,13 +58,10 @@ Odd behaviour:
     Check battle
         DotDamage - NOT MATCHING UP
         Multistrike - Check
-        Can units attack teammates?
-            Check getClosestEnemy
-        Compare prints in server to frontend
 
 ## Add me - Prio
 
-    Timer sound
+
 
 ## Backend
 
@@ -168,6 +165,9 @@ More advanced Matchup system
 Aoe damage logic
 
 ## Frontend
+
+End battle isn't reached for spectators
+    Doesnt get up next and stuff
 
 Dont do horn if music enabled
 

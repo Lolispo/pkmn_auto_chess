@@ -98,6 +98,9 @@ export const configureSocket = dispatch => {
 
   socket.on('END_GAME', winningPlayer => {
     dispatch({ type: 'END_GAME', winningPlayer});
+    setTimeout(() => {
+      window.location.reload();
+    }, 120000);
   });
 
   socket.on('SET_STATS', (name, stats) => {
