@@ -177,8 +177,7 @@
     "evolves_from": "caterpie",
     "evolves_to": "butterfree",
     "specialAttack": 25,
-    "specialDefense": 25,
-    "range": 2
+    "specialDefense": 25
   },
   "butterfree": {
     "name": "butterfree",
@@ -232,8 +231,7 @@
     "evolves_from": "weedle",
     "evolves_to": "beedrill",
     "specialAttack": 25,
-    "specialDefense": 25,
-    "range": 2
+    "specialDefense": 25
   },
   "beedrill": {
     "name": "beedrill",

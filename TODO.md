@@ -50,9 +50,8 @@ Odd behaviour:
 
     Something doing 0.5 damage (brock vs parasect)
 
-    Attack from 2 tiles away bug?
-
     No target move (splash) shouldnt deal damage (curr 1 it seems)
+        Check
 
 # Fix me - Prio
 
@@ -69,17 +68,17 @@ Odd behaviour:
 
 ## Backend
 
-f.p => print all arguments with space between
-
-Make unit act correctly connected to their range
-    Unsure if you can know if it works since animations don't exist
-        Should at least give some animation for range but not all the way
-
-Crash - players[key] = null, somewhere players get null back from server
-    Shouldnt crash on this atleast for now
+Sp.attack Sp.defense for ability calculations
+    Required in stats panel
+    Dragon +sp.attack
 
 Improve shuffle
     Some combinations are way more common than others
+
+f.p => print all arguments with space between
+
+Crash - players[key] = null, somewhere players get null back from server
+    Shouldnt crash on this atleast for now
 
 Move logic of upcoming enemy to calculate before next round beginnings
     currentLogic -> buildMatchups
@@ -133,10 +132,6 @@ Players deaths:
             player = received money for win, but not for income
                 Requires refactor
 
-Sp.attack Sp.defense for ability calculations
-    Required in stats panel
-    Dragon +sp.attack
-
 Rivals:
     When playing against the person you played the most
     > 3 Battles
@@ -173,6 +168,8 @@ More advanced Matchup system
 Aoe damage logic
 
 ## Frontend
+
+Dont do horn if music enabled
 
 Spectator cant currently lock toggles
 

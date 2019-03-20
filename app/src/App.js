@@ -254,7 +254,7 @@ class Cell extends Component {
         // (Math.min(pokemon.hp, pokemon.maxHp) / Math.max(pokemon.hp, pokemon.maxHp) * 100)
         const hpBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
           <div className={`hpBar text_shadow ${(this.props.isBoard ? (pokemon.team === 0 ? 'friendlyBar' : 'enemyBar') : '')}`} 
-            style={{width: (pokemon.hp / pokemon.maxHp * 100)+'%'}}>
+            style={{width: (pokemon.hp / Math.max(pokemon.hp, pokemon.maxHp) * 100)+'%'}}>
             {`${pokemon.hp}/${pokemon.maxHp}`}
           </div>
           {(pokemon.hp > pokemon.maxHp ? <div className={`boostBar text_shadow ${(this.props.isBoard ? 'boostBar' : '')}`} 
@@ -1257,7 +1257,7 @@ class App extends Component {
               ) 
             : ' Connecting ...')}
           </button>
-          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers ? '' : 'hidden')}`} 
+          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready ? '' : 'hidden')}`} 
             onClick={() => this.startGameEvent(true)}>
             Force Start Game{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
           </button>

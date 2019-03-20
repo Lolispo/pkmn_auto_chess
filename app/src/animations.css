@@ -407,67 +407,67 @@
 }
 
 .animate2N {
-  animation: attack2N 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2N 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2N1E {
-  animation: attack2N1E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2N1E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2N2E {
-  animation: attack2N2E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2N2E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1N2E {
-  animation: attack1N2E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1N2E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2E {
-  animation: attack2E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1S2E {
-  animation: attack1S2E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1S2E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2S2E{
-  animation: attack2S2E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2S2E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2S1E {
-  animation: attack2S1E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2S1E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2S {
-  animation: attack2S 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2S 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2S1W {
-  animation: attack2S1W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2S1W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2S2W {
-  animation: attack2S2W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2S2W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1S2W {
-  animation: attack1S2W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1S2W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2W {
-  animation: attack2W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1N2W {
-  animation: attack1N2W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1N2W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2N2W {
-  animation: attack2N2W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2N2W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2N1W {
-  animation: attack2N1W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2N1W 0.5s ease-in 0s normal 1 both running;  
 }
 
 
@@ -477,99 +477,99 @@
 
 
 .animate3N {
-  animation: attack3N 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3N 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3N1E {
-  animation: attack3N1E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3N1E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3N2E {
-  animation: attack3N2E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3N2E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3N3E {
-  animation: attack3N3E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3N3E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2N3E {
-  animation: attack2N3E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2N3E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1N3E {
-  animation: attack1N3E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1N3E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3E {
-  animation: attack3E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1S3E {
-  animation: attack1S3E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1S3E 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2S3E{
-  animation: attack2S3E 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2S3E 0.5s ease-in 0s normal 1 both running;  
 }
 
-.animate3S3E{
-  animation: attack3S3E 0.3s ease-in 0s normal 1 both running;  
+.animate5s3E{
+  animation: attack5s3E 0.5s ease-in 0s normal 1 both running;  
 }
 
-.animate3S2E{
-  animation: attack3S2E 0.3s ease-in 0s normal 1 both running;  
+.animate5s2E{
+  animation: attack5s2E 0.5s ease-in 0s normal 1 both running;  
 }
 
-.animate3S1E {
-  animation: attack3S1E 0.3s ease-in 0s normal 1 both running;  
+.animate5s1E {
+  animation: attack5s1E 0.5s ease-in 0s normal 1 both running;  
 }
 
-.animate3S {
-  animation: attack3S 0.3s ease-in 0s normal 1 both running;  
+.animate5s {
+  animation: attack5s 0.5s ease-in 0s normal 1 both running;  
 }
 
-.animate3S1W {
-  animation: attack3S1W 0.3s ease-in 0s normal 1 both running;  
+.animate5s1W {
+  animation: attack5s1W 0.5s ease-in 0s normal 1 both running;  
 }
 
-.animate3S2W {
-  animation: attack3S2W 0.3s ease-in 0s normal 1 both running;  
+.animate5s2W {
+  animation: attack5s2W 0.5s ease-in 0s normal 1 both running;  
 }
 
-.animate3S3W {
-  animation: attack3S3W 0.3s ease-in 0s normal 1 both running;  
+.animate5s3W {
+  animation: attack5s3W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2S3W {
-  animation: attack2S3W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2S3W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1S3W {
-  animation: attack1S3W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1S3W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3W {
-  animation: attack3W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate1N3W {
-  animation: attack1N3W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack1N3W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate2N3W {
-  animation: attack2N3W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack2N3W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3N3W {
-  animation: attack3N3W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3N3W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3N2W {
-  animation: attack3N2W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3N2W 0.5s ease-in 0s normal 1 both running;  
 }
 
 .animate3N1W {
-  animation: attack3N1W 0.3s ease-in 0s normal 1 both running;  
+  animation: attack3N1W 0.5s ease-in 0s normal 1 both running;  
 }
 
 
@@ -760,10 +760,29 @@
   100% {transform: translate(0px)}
 }
 
+@keyframes textMove {
+	0% {
+		transform: scale(0.01);
+	}
+	
+	33% {
+		transform: scale(1.2);
+	}
+	
+	66% {
+		transform: scale(1);
+	}
+	
+	100% {
+    transform: scale(1);
+	}
+}
+
 .pokemonEnter {
 	animation-name: enter;
 	animation-duration: 0.9s; /* 1.2s */
 }
+
 
 @keyframes enter {
 	0% {

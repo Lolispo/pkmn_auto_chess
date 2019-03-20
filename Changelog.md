@@ -32,8 +32,10 @@ Speed might be too strong atm
 
 clear chat after a while?
 
-Show bonus information
-  Clickable? Hoverable? somehow show it if wanted
+sp.atk addition
+  Defense guys buff both def and sp.def
+  Dragon -> +sp.atk
+  Psychic -> Decrease Enemy damage
 
 DotDamage effect - Arvid had idea for visual effect
 
