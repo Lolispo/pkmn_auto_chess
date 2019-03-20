@@ -165,6 +165,17 @@ Aoe damage logic
 
 ## Frontend
 
+Clickable more obvious through hover
+    Increase size / something
+
+Add hover as well for types
+
+Add information about hotkeys in hud
+    Refresh on d
+    Buy exp on F
+    Sell Piece E
+    More difficult with q and w
+
 End battle isn't reached for spectators
     Doesnt get up next and stuff
 

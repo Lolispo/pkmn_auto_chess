@@ -1216,16 +1216,15 @@ class App extends Component {
     </div>);
   }
 
-  getDmgBoard = () => {
+  getDmgBoard = (dmgBoard) => {
     const list = [];
-    const dmgBoard = this.props.dmgBoard;
-    if(!this.props.dmgBoard) return '';
-    const keys = Object.keys(this.props.dmgBoard);
+    if(!dmgBoard) return '';
+    const keys = Object.keys(dmgBoard);
     const sortedDmgBoard = keys.sort((a,b) => dmgBoard[b] - dmgBoard[a]);
     // keys.forEach(unitName => {
     for(let i = 0; i < sortedDmgBoard.length; i++){
       const unitName = sortedDmgBoard[i];
-      const value = this.props.dmgBoard[unitName];
+      const value = dmgBoard[unitName];
       // console.log('@getDmgBoard', value, this.props.dmgBoardTotalDmg)
       const width = value / this.props.dmgBoardTotalDmg * 100 + '%';
       list.push(<div className='dmgBoardUnitDiv' key={unitName}>
@@ -1430,8 +1429,11 @@ class App extends Component {
           </div>: '')}
             {(!this.props.onGoingBattle && this.props.dmgBoard && Object.keys(this.props.dmgBoard).length > 0 && (this.props.showDmgBoard
               || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>
-              <span className='bold'>Damage Dealt:</span>{this.getDmgBoard()}
-            </div> : (this.props.help ? this.buildHelp() : ''))}
+              <span className='bold'>Damage Dealt:</span>{this.getDmgBoard(this.props.dmgBoard)}
+            </div> : (this.props.onGoingBattle && this.props.prevDmgBoard && Object.keys(this.props.prevDmgBoard).length > 0 && (this.props.showDmgBoard
+              || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>
+              <span className='bold'>Damage Dealt Previous Round:</span>{this.getDmgBoard(this.props.prevDmgBoard)}
+            </div> : (this.props.help ? this.buildHelp() : '')))}
         </div>
       </div>
       {this.playerStatsDiv()}
@@ -1515,6 +1517,7 @@ const mapStateToProps = state => ({
   markedBuff: state.markedBuff,
   displayMarkedBuff: state.displayMarkedBuff,
   debugMode: state.debugMode,
+  prevDmgBoard: state.prevDmgBoard,
 });
 
 export default connect(mapStateToProps)(App);

@@ -143,6 +143,7 @@ const reducer = (
     markedBuff: '',
     displayMarkedBuff: false,
     debugMode: false,
+    prevDmgBoard: {},
   },
   action
 ) => {
@@ -318,6 +319,7 @@ const reducer = (
         battleStartBoard: action.battleStartBoards,
         winners: action.winners,
         dmgBoards: action.dmgBoards,
+        prevDmgBoard: state.dmgBoard,
       }
       if(!state.isDead) {
         state = {
