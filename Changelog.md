@@ -62,6 +62,9 @@ Steel: 1 (3) [1,2]
 
   Buff 7:s a bit
 
+  Babies only cost 2 to upgrade?
+    igglybuff, cleffa, magby, elekid, smoochum, munchlax
+
   Type numbers:
   More grass units?
   More Fighting units?
@@ -188,3 +191,7 @@ Hydro pump manaCost 150 => 130
 Dragon buff 30 => 25
 
 Rock first level bonus 15 => 20
+
+## Balance patch 0.3.1
+
+Dragon 25 => 15

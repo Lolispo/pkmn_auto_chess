@@ -122,7 +122,7 @@ const typeMap = new Map({
     req: List([2, 4]),
     bonusAmount: List([10, 15]),
     bonusType: 'enemyDebuff',
-    bonusStatType: 'defense',
+    bonusStatType: 'hp',
     enemyDebuff: (unit, bonus) => decreaseHp(unit, bonus),
   }),
   ice: Map({
@@ -283,7 +283,7 @@ const typeMap = new Map({
     req: List([2, 4, 6]),
     bonusAmount: List([20, 25, 30]),
     bonusType: 'bonus',
-    bonusStatType: 'attack',
+    bonusStatType: 'defense',
     bonus: (unit, bonus) => increaseDefense(unit, bonus),
     // 5 units
   }),
@@ -311,7 +311,7 @@ const typeMap = new Map({
     ineffectiveAgainst: 'Steel',
     noDamageAgainst: 'Fairy',
     req: List([1]),
-    bonusAmount: List([25]),
+    bonusAmount: List([15]),
     bonusType: 'enemyDebuff',
     bonusStatType: 'attack',
     enemyDebuff: (unit, bonus) => decreaseAttack(unit, bonus),

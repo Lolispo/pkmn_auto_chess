@@ -350,6 +350,7 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     if (unit.get('name') === name) {
       pieceCounter += 1;
       positions = positions.push(unit.get('position'));
+      // TODO: Check for bug buff here (baby pkmns)
     }
     tempUnit = keysIter.next();
   }
