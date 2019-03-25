@@ -23,6 +23,16 @@ Buffs between types?
 
 Level 5 unit upgrades?
   3 zapdos for example => uber zapdos
+  Idea for upgrades: 
+    Give Zapdos 2 and 3 with improved stats based on percentage of their skills
+    For stage 2 units: either upgrade between units (stats on half between evos) or above with improved based on perc
+      Could also add for tier 1 if base unit is strong
+    No fix for 3 upgrade (might require balancing)
+    -
+    Would require more interesting infopanel to the left to check upgrade stats
+    Star information on units, behind unit gif, not in battle
+      One star top left, two stars to the side, one big star and 2 to the side for 3
+      Easier indication between pikachu 1 and 2
 
 Flying longer movement
   Assasins?
