@@ -49,6 +49,8 @@ Known issues:
 
 Odd behaviour:
 
+    Sometimes doesn't lose hp after battle
+
     Something doing 0.5 damage (brock vs parasect)
 
     No target move (splash) shouldnt deal damage (curr 1 it seems)
@@ -61,7 +63,6 @@ Odd behaviour:
         Multistrike - Check
 
 ## Add me - Prio
-
 
 
 ## Backend
@@ -164,6 +165,18 @@ More advanced Matchup system
 Aoe damage logic
 
 ## Frontend
+
+End game lose sound
+
+Reset time 120 000 -> 60 000
+
+Prevent empty message
+
+Upnext firefox gym trainer height
+
+Display enemy buffs during battle somewhere
+
+Display information about types weaknesses better
 
 Clickable more obvious through hover
     Increase size / something
