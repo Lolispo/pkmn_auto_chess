@@ -1664,15 +1664,12 @@ async function buildMatchups(players) {
         break;
       } else if (j === 0) { // Last index, last player is on itself alone
         // console.log('@buildMatchups last swap', j, innerPid, pid, shuffledKeys.get(innerPid))
-        // Swap with first player that doesn't have last player as opponent
-        for (let k = 0; k < keys.length - 1; k++) {
-          const currentKEnemy = matchups.get(keys[k]);
-          if (currentKEnemy !== innerPid) {
-            matchups = matchups.set(pid, currentKEnemy);
-            matchups = matchups.set(keys[k], innerPid);
-            break;
-          }
-        }
+        // Swap last player left in shuffle with random player that already got a matchup
+        const newKeys = keys.slice();
+        newKeys.pop();
+        const keyToSwap = Math.random(keys.size - 1);
+        const enemyToSwap = matchups.get(newKeys[keyToSwap]);
+        matchups = matchups.set(pid, enemyToSwap).set(newKeys[keyToSwap], innerPid);
       }
     }
   }
