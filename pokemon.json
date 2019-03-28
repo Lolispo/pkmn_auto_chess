@@ -15,7 +15,11 @@
     "evolves_to": "ivysaur",
     "specialAttack": 65,
     "specialDefense": 65,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Grass"
+    ]
   },
   "ivysaur": {
     "name": "ivysaur",
@@ -34,7 +38,11 @@
     "evolves_to": "venusaur",
     "specialAttack": 80,
     "specialDefense": 80,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Grass"
+    ]
   },
   "venusaur": {
     "name": "venusaur",
@@ -52,7 +60,11 @@
     "evolves_from": "ivysaur",
     "specialAttack": 100,
     "specialDefense": 100,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Grass"
+    ]
   },
   "charmander": {
     "name": "charmander",
@@ -67,7 +79,11 @@
     "evolves_to": "charmeleon",
     "specialAttack": 60,
     "specialDefense": 50,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Dragon"
+    ]
   },
   "charmeleon": {
     "name": "charmeleon",
@@ -83,7 +99,11 @@
     "evolves_to": "charizard",
     "specialAttack": 80,
     "specialDefense": 65,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Dragon"
+    ]
   },
   "charizard": {
     "name": "charizard",
@@ -101,7 +121,11 @@
     "evolves_from": "charmeleon",
     "specialAttack": 109,
     "specialDefense": 85,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Dragon"
+    ]
   },
   "squirtle": {
     "name": "squirtle",
@@ -116,7 +140,11 @@
     "evolves_to": "wartortle",
     "specialAttack": 60,
     "specialDefense": 54,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Water 1"
+    ]
   },
   "wartortle": {
     "name": "wartortle",
@@ -132,7 +160,11 @@
     "evolves_to": "blastoise",
     "specialAttack": 65,
     "specialDefense": 80,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Water 1"
+    ]
   },
   "blastoise": {
     "name": "blastoise",
@@ -147,7 +179,11 @@
     "evolves_from": "wartortle",
     "specialAttack": 85,
     "specialDefense": 105,
-    "range": 3
+    "range": 3,
+    "eggGroup": [
+      "Monster",
+      "Water 1"
+    ]
   },
   "caterpie": {
     "name": "caterpie",
@@ -162,7 +198,8 @@
     "evolves_to": "metapod",
     "specialAttack": 20,
     "specialDefense": 20,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Bug"
   },
   "metapod": {
     "name": "metapod",
@@ -177,7 +214,8 @@
     "evolves_from": "caterpie",
     "evolves_to": "butterfree",
     "specialAttack": 25,
-    "specialDefense": 25
+    "specialDefense": 25,
+    "eggGroup": "Bug"
   },
   "butterfree": {
     "name": "butterfree",
@@ -195,7 +233,8 @@
     "evolves_from": "metapod",
     "specialAttack": 80,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Bug"
   },
   "weedle": {
     "name": "weedle",
@@ -213,7 +252,8 @@
     "evolves_to": "kakuna",
     "specialAttack": 20,
     "specialDefense": 20,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Bug"
   },
   "kakuna": {
     "name": "kakuna",
@@ -231,7 +271,8 @@
     "evolves_from": "weedle",
     "evolves_to": "beedrill",
     "specialAttack": 25,
-    "specialDefense": 25
+    "specialDefense": 25,
+    "eggGroup": "Bug"
   },
   "beedrill": {
     "name": "beedrill",
@@ -249,7 +290,8 @@
     "evolves_from": "kakuna",
     "specialAttack": 40,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Bug"
   },
   "pidgey": {
     "name": "pidgey",
@@ -267,7 +309,7 @@
     "evolves_to": "pidgeotto",
     "specialAttack": 35,
     "specialDefense": 35,
-    "range": 2
+    "eggGroup": "Flying"
   },
   "pidgeotto": {
     "name": "pidgeotto",
@@ -286,7 +328,7 @@
     "evolves_to": "pidgeot",
     "specialAttack": 50,
     "specialDefense": 50,
-    "range": 2
+    "eggGroup": "Flying"
   },
   "pidgeot": {
     "name": "pidgeot",
@@ -304,7 +346,7 @@
     "evolves_from": "pidgeotto",
     "specialAttack": 70,
     "specialDefense": 70,
-    "range": 2
+    "eggGroup": "Flying"
   },
   "rattata": {
     "name": "rattata",
@@ -318,7 +360,8 @@
     "ability": "quickAttack",
     "evolves_to": "raticate",
     "specialAttack": 25,
-    "specialDefense": 35
+    "specialDefense": 35,
+    "eggGroup": "Field"
   },
   "raticate": {
     "name": "raticate",
@@ -332,7 +375,8 @@
     "ability": "quickAttack",
     "evolves_from": "rattata",
     "specialAttack": 50,
-    "specialDefense": 70
+    "specialDefense": 70,
+    "eggGroup": "Field"
   },
   "spearow": {
     "name": "spearow",
@@ -350,7 +394,7 @@
     "evolves_to": "fearow",
     "specialAttack": 31,
     "specialDefense": 31,
-    "range": 2
+    "eggGroup": "Flying"
   },
   "fearow": {
     "name": "fearow",
@@ -368,7 +412,7 @@
     "evolves_from": "spearow",
     "specialAttack": 61,
     "specialDefense": 61,
-    "range": 2
+    "eggGroup": "Flying"
   },
   "ekans": {
     "name": "ekans",
@@ -382,7 +426,11 @@
     "ability": "poisonSting",
     "evolves_to": "arbok",
     "specialAttack": 40,
-    "specialDefense": 54
+    "specialDefense": 54,
+    "eggGroup": [
+      "Field",
+      "Dragon"
+    ]
   },
   "arbok": {
     "name": "arbok",
@@ -396,7 +444,11 @@
     "ability": "poisonSting",
     "evolves_from": "ekans",
     "specialAttack": 65,
-    "specialDefense": 79
+    "specialDefense": 79,
+    "eggGroup": [
+      "Field",
+      "Dragon"
+    ]
   },
   "pikachu": {
     "name": "pikachu",
@@ -411,7 +463,11 @@
     "evolves_to": "raichu",
     "specialAttack": 50,
     "specialDefense": 40,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Field",
+      "Fairy"
+    ]
   },
   "raichu": {
     "name": "raichu",
@@ -426,7 +482,11 @@
     "evolves_from": "pikachu",
     "specialAttack": 90,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Field",
+      "Fairy"
+    ]
   },
   "sandshrew": {
     "name": "sandshrew",
@@ -440,7 +500,8 @@
     "ability": "scratch",
     "evolves_to": "sandslash",
     "specialAttack": 20,
-    "specialDefense": 30
+    "specialDefense": 30,
+    "eggGroup": "Field"
   },
   "sandslash": {
     "name": "sandslash",
@@ -454,7 +515,8 @@
     "ability": "slash",
     "evolves_from": "sandshrew",
     "specialAttack": 45,
-    "specialDefense": 55
+    "specialDefense": 55,
+    "eggGroup": "Field"
   },
   "nidoran-f": {
     "name": "nidoran-f",
@@ -468,7 +530,11 @@
     "ability": "poisonSting",
     "evolves_to": "nidorina",
     "specialAttack": 40,
-    "specialDefense": 40
+    "specialDefense": 40,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
   },
   "nidorina": {
     "name": "nidorina",
@@ -514,7 +580,11 @@
     "ability": "hornAttack",
     "evolves_to": "nidorino",
     "specialAttack": 40,
-    "specialDefense": 40
+    "specialDefense": 40,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
   },
   "nidorino": {
     "name": "nidorino",
@@ -529,7 +599,11 @@
     "evolves_from": "nidoran-m",
     "evolves_to": "nidoking",
     "specialAttack": 55,
-    "specialDefense": 55
+    "specialDefense": 55,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
   },
   "nidoking": {
     "name": "nidoking",
@@ -546,7 +620,11 @@
     "ability": "earthquake",
     "evolves_from": "nidorino",
     "specialAttack": 85,
-    "specialDefense": 75
+    "specialDefense": 75,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
   },
   "cleffa": {
     "name": "cleffa",
@@ -577,7 +655,8 @@
     "evolves_to": "clefable",
     "specialAttack": 60,
     "specialDefense": 65,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Fairy"
   },
   "clefable": {
     "name": "clefable",
@@ -592,7 +671,8 @@
     "evolves_from": "clefairy",
     "specialAttack": 85,
     "specialDefense": 90,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Fairy"
   },
   "vulpix": {
     "name": "vulpix",
@@ -607,7 +687,8 @@
     "evolves_to": "ninetales",
     "specialAttack": 50,
     "specialDefense": 65,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "ninetales": {
     "name": "ninetales",
@@ -622,7 +703,8 @@
     "evolves_from": "vulpix",
     "specialAttack": 81,
     "specialDefense": 100,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "igglybuff": {
     "name": "igglybuff",
@@ -651,7 +733,8 @@
     "evolves_from": "igglybuff",
     "evolves_to": "wigglytuff",
     "specialAttack": 45,
-    "specialDefense": 25
+    "specialDefense": 25,
+    "eggGroup": "Fairy"
   },
   "wigglytuff": {
     "name": "wigglytuff",
@@ -665,7 +748,8 @@
     "ability": "doubleSlap",
     "evolves_from": "jigglypuff",
     "specialAttack": 75,
-    "specialDefense": 50
+    "specialDefense": 50,
+    "eggGroup": "Fairy"
   },
   "zubat": {
     "name": "zubat",
@@ -682,7 +766,8 @@
     "ability": "leechLife",
     "evolves_to": "golbat",
     "specialAttack": 30,
-    "specialDefense": 40
+    "specialDefense": 40,
+    "eggGroup": "Flying"
   },
   "golbat": {
     "name": "golbat",
@@ -700,7 +785,8 @@
     "evolves_from": "zubat",
     "evolves_to": "crobat",
     "specialAttack": 65,
-    "specialDefense": 75
+    "specialDefense": 75,
+    "eggGroup": "Flying"
   },
   "crobat": {
     "name": "crobat",
@@ -717,7 +803,8 @@
     "ability": "wingAttack",
     "evolves_from": "golbat",
     "specialAttack": 70,
-    "specialDefense": 80
+    "specialDefense": 80,
+    "eggGroup": "Flying"
   },
   "oddish": {
     "name": "oddish",
@@ -735,7 +822,8 @@
     "evolves_to": "gloom",
     "specialAttack": 75,
     "specialDefense": 65,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "gloom": {
     "name": "gloom",
@@ -754,7 +842,8 @@
     "evolves_to": "vileplume",
     "specialAttack": 85,
     "specialDefense": 75,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "vileplume": {
     "name": "vileplume",
@@ -772,7 +861,8 @@
     "evolves_from": "gloom",
     "specialAttack": 100,
     "specialDefense": 90,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "paras": {
     "name": "paras",
@@ -790,7 +880,11 @@
     "evolves_to": "parasect",
     "specialAttack": 45,
     "specialDefense": 55,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Bug",
+      "Grass"
+    ]
   },
   "parasect": {
     "name": "parasect",
@@ -808,7 +902,11 @@
     "evolves_from": "paras",
     "specialAttack": 60,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Bug",
+      "Grass"
+    ]
   },
   "diglett": {
     "name": "diglett",
@@ -822,7 +920,8 @@
     "ability": "dig",
     "evolves_to": "dugtrio",
     "specialAttack": 35,
-    "specialDefense": 45
+    "specialDefense": 45,
+    "eggGroup": "Field"
   },
   "dugtrio": {
     "name": "dugtrio",
@@ -836,7 +935,8 @@
     "ability": "earthquake",
     "evolves_from": "diglett",
     "specialAttack": 50,
-    "specialDefense": 70
+    "specialDefense": 70,
+    "eggGroup": "Field"
   },
   "meowth": {
     "name": "meowth",
@@ -850,7 +950,8 @@
     "ability": "scratch",
     "evolves_to": "persian",
     "specialAttack": 40,
-    "specialDefense": 40
+    "specialDefense": 40,
+    "eggGroup": "Field"
   },
   "persian": {
     "name": "persian",
@@ -864,7 +965,8 @@
     "ability": "slash",
     "evolves_from": "meowth",
     "specialAttack": 65,
-    "specialDefense": 65
+    "specialDefense": 65,
+    "eggGroup": "Field"
   },
   "psyduck": {
     "name": "psyduck",
@@ -878,7 +980,11 @@
     "ability": "waterGun",
     "evolves_to": "golduck",
     "specialAttack": 65,
-    "specialDefense": 50
+    "specialDefense": 50,
+    "eggGroup": [
+      "Water 1",
+      "Field"
+    ]
   },
   "golduck": {
     "name": "golduck",
@@ -892,7 +998,11 @@
     "ability": "surf",
     "evolves_from": "psyduck",
     "specialAttack": 95,
-    "specialDefense": 80
+    "specialDefense": 80,
+    "eggGroup": [
+      "Water 1",
+      "Field"
+    ]
   },
   "mankey": {
     "name": "mankey",
@@ -906,7 +1016,8 @@
     "ability": "karateChop",
     "evolves_to": "primeape",
     "specialAttack": 35,
-    "specialDefense": 45
+    "specialDefense": 45,
+    "eggGroup": "Field"
   },
   "primeape": {
     "name": "primeape",
@@ -920,7 +1031,8 @@
     "ability": "seismicToss",
     "evolves_from": "mankey",
     "specialAttack": 60,
-    "specialDefense": 70
+    "specialDefense": 70,
+    "eggGroup": "Field"
   },
   "growlithe": {
     "name": "growlithe",
@@ -935,7 +1047,8 @@
     "evolves_to": "arcanine",
     "specialAttack": 70,
     "specialDefense": 50,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "arcanine": {
     "name": "arcanine",
@@ -950,7 +1063,8 @@
     "evolves_from": "growlithe",
     "specialAttack": 100,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "poliwag": {
     "name": "poliwag",
@@ -965,7 +1079,8 @@
     "evolves_to": "poliwhirl",
     "specialAttack": 40,
     "specialDefense": 40,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Water 1"
   },
   "poliwhirl": {
     "name": "poliwhirl",
@@ -981,7 +1096,8 @@
     "evolves_to": "poliwrath",
     "specialAttack": 50,
     "specialDefense": 50,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Water 1"
   },
   "poliwrath": {
     "name": "poliwrath",
@@ -999,7 +1115,8 @@
     "evolves_from": "poliwhirl",
     "specialAttack": 70,
     "specialDefense": 90,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Water 1"
   },
   "abra": {
     "name": "abra",
@@ -1014,7 +1131,8 @@
     "evolves_to": "kadabra",
     "specialAttack": 105,
     "specialDefense": 55,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Human-Like"
   },
   "kadabra": {
     "name": "kadabra",
@@ -1030,7 +1148,8 @@
     "evolves_to": "alakazam",
     "specialAttack": 120,
     "specialDefense": 70,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Human-Like"
   },
   "alakazam": {
     "name": "alakazam",
@@ -1045,7 +1164,8 @@
     "evolves_from": "kadabra",
     "specialAttack": 135,
     "specialDefense": 85,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Human-Like"
   },
   "machop": {
     "name": "machop",
@@ -1059,7 +1179,8 @@
     "ability": "karateChop",
     "evolves_to": "machoke",
     "specialAttack": 35,
-    "specialDefense": 35
+    "specialDefense": 35,
+    "eggGroup": "Human-Like"
   },
   "machoke": {
     "name": "machoke",
@@ -1074,7 +1195,8 @@
     "evolves_from": "machop",
     "evolves_to": "machamp",
     "specialAttack": 50,
-    "specialDefense": 60
+    "specialDefense": 60,
+    "eggGroup": "Human-Like"
   },
   "machamp": {
     "name": "machamp",
@@ -1088,7 +1210,8 @@
     "ability": "dynamicPunch",
     "evolves_from": "machoke",
     "specialAttack": 65,
-    "specialDefense": 85
+    "specialDefense": 85,
+    "eggGroup": "Human-Like"
   },
   "bellsprout": {
     "name": "bellsprout",
@@ -1106,7 +1229,8 @@
     "evolves_to": "weepinbell",
     "specialAttack": 70,
     "specialDefense": 30,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "weepinbell": {
     "name": "weepinbell",
@@ -1125,7 +1249,8 @@
     "evolves_to": "victreebel",
     "specialAttack": 85,
     "specialDefense": 45,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "victreebel": {
     "name": "victreebel",
@@ -1143,7 +1268,8 @@
     "evolves_from": "weepinbell",
     "specialAttack": 100,
     "specialDefense": 60,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "geodude": {
     "name": "geodude",
@@ -1160,7 +1286,8 @@
     "ability": "rockThrow",
     "evolves_to": "graveler",
     "specialAttack": 30,
-    "specialDefense": 30
+    "specialDefense": 30,
+    "eggGroup": "Mineral"
   },
   "graveler": {
     "name": "graveler",
@@ -1178,7 +1305,8 @@
     "evolves_from": "geodude",
     "evolves_to": "golem",
     "specialAttack": 45,
-    "specialDefense": 45
+    "specialDefense": 45,
+    "eggGroup": "Mineral"
   },
   "golem": {
     "name": "golem",
@@ -1195,7 +1323,8 @@
     "ability": "rollout",
     "evolves_from": "graveler",
     "specialAttack": 55,
-    "specialDefense": 65
+    "specialDefense": 65,
+    "eggGroup": "Mineral"
   },
   "ponyta": {
     "name": "ponyta",
@@ -1210,7 +1339,8 @@
     "evolves_to": "rapidash",
     "specialAttack": 65,
     "specialDefense": 65,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "rapidash": {
     "name": "rapidash",
@@ -1225,7 +1355,8 @@
     "evolves_from": "ponyta",
     "specialAttack": 80,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "slowpoke": {
     "name": "slowpoke",
@@ -1243,7 +1374,11 @@
     "evolves_to": "slowbro",
     "specialAttack": 40,
     "specialDefense": 40,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Monster",
+      "Water 1"
+    ]
   },
   "slowbro": {
     "name": "slowbro",
@@ -1262,7 +1397,11 @@
     "evolves_to": "slowking",
     "specialAttack": 100,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Monster",
+      "Water 1"
+    ]
   },
   "slowking": {
     "name": "slowking",
@@ -1280,7 +1419,11 @@
     "evolves_from": "slowbro",
     "specialAttack": 100,
     "specialDefense": 110,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Monster",
+      "Water 1"
+    ]
   },
   "magnemite": {
     "name": "magnemite",
@@ -1298,7 +1441,8 @@
     "evolves_to": "magneton",
     "specialAttack": 95,
     "specialDefense": 55,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Mineral"
   },
   "magneton": {
     "name": "magneton",
@@ -1317,7 +1461,8 @@
     "evolves_to": "magnezone",
     "specialAttack": 120,
     "specialDefense": 70,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Mineral"
   },
   "magnezone": {
     "name": "magnezone",
@@ -1335,7 +1480,8 @@
     "evolves_from": "magneton",
     "specialAttack": 130,
     "specialDefense": 90,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Mineral"
   },
   "doduo": {
     "name": "doduo",
@@ -1352,7 +1498,8 @@
     "ability": "furyAttack",
     "evolves_to": "dodrio",
     "specialAttack": 35,
-    "specialDefense": 35
+    "specialDefense": 35,
+    "eggGroup": "Flying"
   },
   "dodrio": {
     "name": "dodrio",
@@ -1369,7 +1516,8 @@
     "ability": "furyAttack",
     "evolves_from": "doduo",
     "specialAttack": 60,
-    "specialDefense": 60
+    "specialDefense": 60,
+    "eggGroup": "Flying"
   },
   "seel": {
     "name": "seel",
@@ -1384,7 +1532,11 @@
     "evolves_to": "dewgong",
     "specialAttack": 45,
     "specialDefense": 70,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Field"
+    ]
   },
   "dewgong": {
     "name": "dewgong",
@@ -1402,7 +1554,11 @@
     "evolves_from": "seel",
     "specialAttack": 70,
     "specialDefense": 95,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Field"
+    ]
   },
   "shellder": {
     "name": "shellder",
@@ -1417,7 +1573,8 @@
     "evolves_to": "cloyster",
     "specialAttack": 45,
     "specialDefense": 25,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Water 3"
   },
   "cloyster": {
     "name": "cloyster",
@@ -1435,7 +1592,8 @@
     "evolves_from": "shellder",
     "specialAttack": 85,
     "specialDefense": 45,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Water 3"
   },
   "gastly": {
     "name": "gastly",
@@ -1453,7 +1611,8 @@
     "evolves_to": "haunter",
     "specialAttack": 100,
     "specialDefense": 35,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Amorphous"
   },
   "haunter": {
     "name": "haunter",
@@ -1472,7 +1631,8 @@
     "evolves_to": "gengar",
     "specialAttack": 115,
     "specialDefense": 55,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Amorphous"
   },
   "gengar": {
     "name": "gengar",
@@ -1490,7 +1650,8 @@
     "evolves_from": "haunter",
     "specialAttack": 130,
     "specialDefense": 75,
-    "range": 3
+    "range": 3,
+    "eggGroup": "Amorphous"
   },
   "drowzee": {
     "name": "drowzee",
@@ -1505,7 +1666,8 @@
     "evolves_to": "hypno",
     "specialAttack": 43,
     "specialDefense": 90,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Human-Like"
   },
   "hypno": {
     "name": "hypno",
@@ -1520,7 +1682,8 @@
     "evolves_from": "drowzee",
     "specialAttack": 73,
     "specialDefense": 115,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Human-Like"
   },
   "voltorb": {
     "name": "voltorb",
@@ -1535,7 +1698,8 @@
     "evolves_to": "electrode",
     "specialAttack": 55,
     "specialDefense": 55,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Mineral"
   },
   "electrode": {
     "name": "electrode",
@@ -1550,7 +1714,8 @@
     "evolves_from": "voltorb",
     "specialAttack": 80,
     "specialDefense": 80,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Mineral"
   },
   "exeggcute": {
     "name": "exeggcute",
@@ -1568,7 +1733,8 @@
     "evolves_to": "exeggutor",
     "specialAttack": 60,
     "specialDefense": 45,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "exeggutor": {
     "name": "exeggutor",
@@ -1586,7 +1752,8 @@
     "evolves_from": "exeggcute",
     "specialAttack": 125,
     "specialDefense": 65,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Grass"
   },
   "onix": {
     "name": "onix",
@@ -1603,7 +1770,8 @@
     "ability": "rockThrow",
     "evolves_to": "steelix",
     "specialAttack": 30,
-    "specialDefense": 45
+    "specialDefense": 45,
+    "eggGroup": "Mineral"
   },
   "steelix": {
     "name": "steelix",
@@ -1620,7 +1788,8 @@
     "ability": "ironHead",
     "evolves_from": "onix",
     "specialAttack": 55,
-    "specialDefense": 65
+    "specialDefense": 65,
+    "eggGroup": "Mineral"
   },
   "rhyhorn": {
     "name": "rhyhorn",
@@ -1637,7 +1806,11 @@
     "ability": "hornAttack",
     "evolves_to": "rhydon",
     "specialAttack": 30,
-    "specialDefense": 30
+    "specialDefense": 30,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
   },
   "rhydon": {
     "name": "rhydon",
@@ -1654,7 +1827,11 @@
     "ability": "earthquake",
     "evolves_from": "rhyhorn",
     "specialAttack": 45,
-    "specialDefense": 45
+    "specialDefense": 45,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
   },
   "horsea": {
     "name": "horsea",
@@ -1669,7 +1846,11 @@
     "evolves_to": "seadra",
     "specialAttack": 70,
     "specialDefense": 25,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Dragon"
+    ]
   },
   "seadra": {
     "name": "seadra",
@@ -1685,7 +1866,11 @@
     "evolves_to": "kingdra",
     "specialAttack": 95,
     "specialDefense": 45,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Dragon"
+    ]
   },
   "kingdra": {
     "name": "kingdra",
@@ -1703,7 +1888,11 @@
     "evolves_from": "seadra",
     "specialAttack": 95,
     "specialDefense": 95,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Dragon"
+    ]
   },
   "staryu": {
     "name": "staryu",
@@ -1718,7 +1907,8 @@
     "evolves_to": "starmie",
     "specialAttack": 70,
     "specialDefense": 55,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Water 3"
   },
   "starmie": {
     "name": "starmie",
@@ -1736,7 +1926,8 @@
     "evolves_from": "staryu",
     "specialAttack": 100,
     "specialDefense": 85,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Water 3"
   },
   "scyther": {
     "name": "scyther",
@@ -1753,7 +1944,8 @@
     "ability": "slash",
     "evolves_to": "scizor",
     "specialAttack": 55,
-    "specialDefense": 80
+    "specialDefense": 80,
+    "eggGroup": "Bug"
   },
   "scizor": {
     "name": "scizor",
@@ -1770,7 +1962,8 @@
     "ability": "ironHead",
     "evolves_from": "scyther",
     "specialAttack": 55,
-    "specialDefense": 80
+    "specialDefense": 80,
+    "eggGroup": "Bug"
   },
   "smoochum": {
     "name": "smoochum",
@@ -1806,7 +1999,8 @@
     "evolves_from": "smoochum",
     "specialAttack": 115,
     "specialDefense": 95,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Human-Like"
   },
   "elekid": {
     "name": "elekid",
@@ -1837,7 +2031,8 @@
     "evolves_to": "electivire",
     "specialAttack": 95,
     "specialDefense": 85,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Human-Like"
   },
   "electivire": {
     "name": "electivire",
@@ -1852,7 +2047,8 @@
     "evolves_from": "electabuzz",
     "specialAttack": 95,
     "specialDefense": 85,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Human-Like"
   },
   "magby": {
     "name": "magby",
@@ -1883,7 +2079,8 @@
     "evolves_to": "magmortar",
     "specialAttack": 100,
     "specialDefense": 85,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Human-Like"
   },
   "magmortar": {
     "name": "magmortar",
@@ -1898,7 +2095,8 @@
     "evolves_from": "magmar",
     "specialAttack": 125,
     "specialDefense": 95,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Human-Like"
   },
   "magikarp": {
     "name": "magikarp",
@@ -1912,7 +2110,11 @@
     "ability": "splash",
     "evolves_to": "gyarados",
     "specialAttack": 15,
-    "specialDefense": 20
+    "specialDefense": 20,
+    "eggGroup": [
+      "Water 2",
+      "Dragon"
+    ]
   },
   "gyarados": {
     "name": "gyarados",
@@ -1929,7 +2131,11 @@
     "ability": "hyperBeam",
     "evolves_from": "magikarp",
     "specialAttack": 60,
-    "specialDefense": 100
+    "specialDefense": 100,
+    "eggGroup": [
+      "Water 2",
+      "Dragon"
+    ]
   },
   "eevee": {
     "name": "eevee",
@@ -1947,7 +2153,8 @@
       "flareon"
     ],
     "specialAttack": 45,
-    "specialDefense": 65
+    "specialDefense": 65,
+    "eggGroup": "Field"
   },
   "vaporeon": {
     "name": "vaporeon",
@@ -1962,7 +2169,8 @@
     "evolves_from": "eevee",
     "specialAttack": 110,
     "specialDefense": 95,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "jolteon": {
     "name": "jolteon",
@@ -1977,7 +2185,8 @@
     "evolves_from": "eevee",
     "specialAttack": 110,
     "specialDefense": 95,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "flareon": {
     "name": "flareon",
@@ -1992,7 +2201,8 @@
     "evolves_from": "eevee",
     "specialAttack": 95,
     "specialDefense": 110,
-    "range": 2
+    "range": 2,
+    "eggGroup": "Field"
   },
   "omanyte": {
     "name": "omanyte",
@@ -2010,7 +2220,11 @@
     "evolves_to": "omastar",
     "specialAttack": 90,
     "specialDefense": 55,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Water 3"
+    ]
   },
   "omastar": {
     "name": "omastar",
@@ -2028,7 +2242,11 @@
     "evolves_from": "omanyte",
     "specialAttack": 115,
     "specialDefense": 70,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Water 3"
+    ]
   },
   "kabuto": {
     "name": "kabuto",
@@ -2045,7 +2263,11 @@
     "ability": "slash",
     "evolves_to": "kabutops",
     "specialAttack": 55,
-    "specialDefense": 45
+    "specialDefense": 45,
+    "eggGroup": [
+      "Water 1",
+      "Water 3"
+    ]
   },
   "kabutops": {
     "name": "kabutops",
@@ -2062,7 +2284,11 @@
     "ability": "slash",
     "evolves_from": "kabuto",
     "specialAttack": 65,
-    "specialDefense": 70
+    "specialDefense": 70,
+    "eggGroup": [
+      "Water 1",
+      "Water 3"
+    ]
   },
   "munchlax": {
     "name": "munchlax",
@@ -2090,7 +2316,8 @@
     "ability": "hyperBeam",
     "evolves_from": "snorlax",
     "specialAttack": 65,
-    "specialDefense": 110
+    "specialDefense": 110,
+    "eggGroup": "Monster"
   },
   "articuno": {
     "name": "articuno",
@@ -2156,7 +2383,11 @@
     "evolves_to": "dragonair",
     "specialAttack": 50,
     "specialDefense": 50,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Dragon"
+    ]
   },
   "dragonair": {
     "name": "dragonair",
@@ -2172,7 +2403,11 @@
     "evolves_to": "dragonite",
     "specialAttack": 70,
     "specialDefense": 70,
-    "range": 2
+    "range": 2,
+    "eggGroup": [
+      "Water 1",
+      "Dragon"
+    ]
   },
   "dragonite": {
     "name": "dragonite",
@@ -2189,7 +2424,11 @@
     "ability": "dragonPulse",
     "evolves_from": "dragonair",
     "specialAttack": 100,
-    "specialDefense": 100
+    "specialDefense": 100,
+    "eggGroup": [
+      "Water 1",
+      "Dragon"
+    ]
   },
   "mewtwo": {
     "name": "mewtwo",

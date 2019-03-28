@@ -67,6 +67,9 @@ Odd behaviour:
 
 ## Backend
 
+Egg group type addition
+    Data available in sheet
+
 Sp.attack Sp.defense for ability calculations
     Required in stats panel
     Dragon +sp.attack

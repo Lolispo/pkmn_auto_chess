@@ -206,3 +206,7 @@ Rock first level bonus 15 => 20
 ## Balance patch 0.3.1
 
 Dragon 25 => 15
+
+## Balance patch 0.3.2
+
+Spearow/pidgey families range 2 -> 1
