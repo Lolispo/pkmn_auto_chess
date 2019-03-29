@@ -210,3 +210,12 @@ Dragon 25 => 15
 ## Balance patch 0.3.2
 
 Spearow/pidgey families range 2 -> 1
+
+## Balance patch 0.4
+
+Baby units only require 2 units to upgrade
+
+Baby units that this involves are: cleffa, igglybuff, elekid, smoochum, magby, munchlax
+
+Bug type rework: Only require upgrades for bug tier [1,2] units when you have [2,4] units
+

@@ -117,7 +117,7 @@ const reducer = (
     typeMap: '',
     round: 1,
     musicEnabled: false,
-    soundEnabled: false,
+    soundEnabled: true,
     timerDuration: 30,
     chatSoundEnabled: true,
     selectedSound: '',

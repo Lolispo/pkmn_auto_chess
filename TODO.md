@@ -68,7 +68,12 @@ Odd behaviour:
 ## Backend
 
 Egg group type addition
-    Data available in sheet
+    Data available on units
+    Requires usage logic
+
+Add information about tier for unit? 
+    Something required for druid
+    Use evolvedFrom / what it is
 
 Sp.attack Sp.defense for ability calculations
     Required in stats panel
@@ -91,11 +96,6 @@ PlacePieceEvent (All piece interactions):
         Move logic so units to be called back is already marked in the state
             'expendableUnit': true
         In frontend: if (unit.expendableUnit) Color me
-
-Pieces from shop refactor:
-    Max 9 units for each player
-        Good limit for units that doesn't have level 3?
-        Max 6 units if 2 levels, Max 3 for level 1 units
 
 Send information if unit evolved for animation
     Positions of units that got evolved

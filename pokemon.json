@@ -639,7 +639,8 @@
     "evolves_to": "clefairy",
     "specialAttack": 45,
     "specialDefense": 55,
-    "range": 2
+    "range": 2,
+    "reqEvolve": 2
   },
   "clefairy": {
     "name": "clefairy",
@@ -718,7 +719,8 @@
     "ability": "pound",
     "evolves_to": "jigglypuff",
     "specialAttack": 40,
-    "specialDefense": 20
+    "specialDefense": 20,
+    "reqEvolve": 2
   },
   "jigglypuff": {
     "name": "jigglypuff",
@@ -1981,7 +1983,8 @@
     "evolves_to": "jynx",
     "specialAttack": 85,
     "specialDefense": 65,
-    "range": 2
+    "range": 2,
+    "reqEvolve": 2
   },
   "jynx": {
     "name": "jynx",
@@ -2015,7 +2018,8 @@
     "evolves_to": "electabuzz",
     "specialAttack": 65,
     "specialDefense": 55,
-    "range": 2
+    "range": 2,
+    "reqEvolve": 2
   },
   "electabuzz": {
     "name": "electabuzz",
@@ -2063,7 +2067,8 @@
     "evolves_to": "magmar",
     "specialAttack": 70,
     "specialDefense": 55,
-    "range": 2
+    "range": 2,
+    "reqEvolve": 2
   },
   "magmar": {
     "name": "magmar",
@@ -2302,7 +2307,8 @@
     "ability": "bodySlam",
     "evolves_to": "snorlax",
     "specialAttack": 40,
-    "specialDefense": 85
+    "specialDefense": 85,
+    "reqEvolve": 2
   },
   "snorlax": {
     "name": "snorlax",

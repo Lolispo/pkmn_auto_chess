@@ -3,6 +3,7 @@
 const { Map, List } = require('immutable');
 
 const f = require('./f');
+const pokemonJS = require('./pokemon');
 
 const increaseSpeed = (unit, bonus) => unit.set('speed', Math.max(10, unit.get('speed') - bonus)); // Lower speed = better
 const increaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') + +bonus);
@@ -12,6 +13,17 @@ const decreaseDefense = (unit, bonus) => unit.set('defense', Math.max(0, +unit.g
 const decreaseSpeed = (unit, bonus) => unit.set('speed', +unit.get('speed') + +bonus); // Higher speed value = worse
 const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus));
 const decreaseAttack = (unit, bonus) => unit.set('attack', Math.max(0, +unit.get('attack') - +bonus));
+
+const reqForUpgrade = async (unit, bonus) => {
+  // Get tier of unit
+  const tier = await pokemonJS.getUnitTier(unit.get('name'));
+  console.log('@reqForUpgrade bugs', tier, bonus)
+  if(tier <= bonus) { // Bonus marks highest allowed tier for unit
+    console.log('@reqForUpgrade bugs BONUS', unit)
+    return unit.set('reqEvolve', 2);
+  }
+  return unit;
+}
 
 // TODO: Add hp reg mechanic?
 
@@ -258,13 +270,21 @@ const typeMap = new Map({
       'Steel',
       'Fairy',
     ]),
+    /*
     req: List([2, 4]),
     bonusAmount: List([40, 50]),
     bonusType: 'bonus',
     bonusStatType: 'hp',
     bonus: (unit, bonus) => increaseHp(unit, bonus),
+    */
+    desc: 'Only two units required for upgrade of bug units of tier: ',
+    req: List([2, 4]),
+    bonusAmount: List([1, 2]),
+    bonusType: 'bonus',
+    bonusStatType: 'unique',
+    bonus: (unit, bonus) => reqForUpgrade(unit, bonus),
     /*
-    [2, 4] Druid buff TODO
+    [2, 4] Druid buff
     */
   }),
   rock: Map({
@@ -468,7 +488,13 @@ const getTypeDesc = (name) => {
   const units = (bonusType === 'bonus' ? `all ${typeName} typed units` : (bonusType === 'allBonus' ? 'all units' : 'all enemy units'));
   const bonusAmount = type.get('bonusAmount').toJS();
   const bonusStatType = type.get('bonusStatType');
-  return `${capitalize(typeName)}: [${req}] ${inc} ${bonusStatType} for ${units} [${bonusAmount}]`;
+  let defString = '';
+  if(bonusStatType === 'unique') {
+    defString = type.get('desc');
+  } else {
+    defString = `${inc} ${bonusStatType} for ${units}`;
+  }
+  return `${capitalize(typeName)}: [${req}] ${defString} [${bonusAmount}]`;
   // 'Steel: [1, 2] Increases defense for all steel typed units [15, 30]',
 };
 
@@ -510,18 +536,9 @@ exports.getBuffFuncAll = name => typeMap.get(name).get('allBonus');
 
 exports.getEnemyDebuff = name => typeMap.get(name).get('enemyDebuff');
 
-exports.getBonusType = name => typeMap.get(name).get('bonusType');
+// exports.getBuffNoBattleSolo = name => typeMap.get(name).get('noBattleBonus');
 
-/*
-exports.isSoloBuff = (name) => {
-  const buff = typeMap.get(name);
-  return (!f.isUndefined(buff.get('bonus')));
-};
-*/
-exports.getBuffFunc = (name) => {
-  const buff = typeMap.get(name);
-  return (!f.isUndefined(buff.get('bonus')) ? Map({ func: buff.get('bonus'), forAll: false }) : Map({ func: buff.get('allBonus'), forAll: true }));
-};
+exports.getBonusType = name => typeMap.get(name).get('bonusType');
 
 exports.hasBonus = name => !f.isUndefined(typeMap.get(name).get('req'));
 

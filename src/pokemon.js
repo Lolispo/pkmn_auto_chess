@@ -8,7 +8,7 @@ const f = require('./f');
  * Default stat variables that are used if nothing is found in specific def
  */
 const defaultStat = Map({
-  evolves_from: undefined, // None Assumed
+  evolves_from: undefined, // None Assumed - Not used
   /*
   mana_hit_given: 10,
   mana_hit_taken: 10,
@@ -63,6 +63,21 @@ const getBasePokemonLocal = async (name) => {
 };
 
 exports.getBasePokemon = name => getBasePokemonLocal(name);
+
+const getUnitTierLocal = async (name, counter = 1) => {
+  const pokeMap = await pokemonMap;
+  const unitStats = pokeMap.get(name.toLowerCase());
+  // console.log('@getBasePokemonLocal', unitStats, name, unitStats.get('evolves_from'));
+  if (f.isUndefined(unitStats.get('evolves_from'))) { // Base level
+    // console.log('@getBase This pokemon is a base unit: ', unitStats.get('name'), unitStats.get('evolves_from'), f.isUndefined(unitStats.get('evolves_from')));
+    return counter;
+  }
+  // Go down a level
+  // console.log('@pokemonJs.getBasePokemon Check out', unitStats.get('evolves_from'))
+  return getUnitTierLocal(unitStats.get('evolves_from'), counter + 1);
+}
+
+exports.getUnitTier = name => getUnitTierLocal(name);
 
 exports.getMap = async () => pokemonMap;
 

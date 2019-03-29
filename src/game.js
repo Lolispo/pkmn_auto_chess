@@ -207,12 +207,16 @@ exports._refreshShop = async (stateParam, index) => {
 async function getBoardUnit(name, x, y) {
   const unitInfo = await pokemonJS.getStats(name);
   // console.log('@getBoardUnit', name, unitInfo)
-  return Map({
+  let unit = Map({
     name,
     displayName: unitInfo.get('displayName'),
     position: f.pos(x, y),
     type: unitInfo.get('type'),
   });
+  if(unitInfo.get('reqEvolve')){
+    unit = unit.set('reqEvolve', unitInfo.get('reqEvolve'));
+  }
+  return unit;
 }
 
 /**
@@ -354,7 +358,12 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
     }
     tempUnit = keysIter.next();
   }
-  if (pieceCounter >= 3) { // Upgrade unit @ position
+  let requiredAmount = 3;
+  if (piece.get('reqEvolve')) {
+    console.log('LESS UNITS REQUIRED FOR UPGRADE', piece.get('name'))
+    requiredAmount = piece.get('reqEvolve');
+  }
+  if (pieceCounter >= requiredAmount) { // Upgrade unit @ position
     // console.log('UPGRADING UNIT', name);
     let board = state.getIn(['players', playerIndex, 'board']);
     let discPieces = state.get('discardedPieces');
@@ -407,34 +416,41 @@ async function placePiece(stateParam, playerIndex, fromPosition, toPosition, sho
     state = state.setIn(['players', playerIndex, 'board'], newBoard);
   }
   let newPiece;
-  let upgradeOccured = false;
   if (f.checkHandUnit(toPosition)) { // to hand
     newPiece = state.getIn(['players', playerIndex, 'hand', toPosition]);
     state = state.setIn(['players', playerIndex, 'hand', toPosition], piece);
   } else { // to board
     newPiece = state.getIn(['players', playerIndex, 'board', toPosition]);
     state = state.setIn(['players', playerIndex, 'board', toPosition], piece);
-    const obj = await checkPieceUpgrade(state, playerIndex, piece, toPosition);
-    state = obj.get('state');
-    upgradeOccured = obj.get('upgradeOccured');
   }
   if (shouldSwap && !f.isUndefined(newPiece)) { // Swap allowed
     if (f.checkHandUnit(fromPosition)) { // Swap newPiece to hand
       state = state.setIn(['players', playerIndex, 'hand', fromPosition], newPiece.set('position', fromPosition));
     } else { // Swap newPiece to board
       state = state.setIn(['players', playerIndex, 'board', fromPosition], newPiece.set('position', fromPosition));
-      const obj = await checkPieceUpgrade(state, playerIndex, newPiece, fromPosition);
-      state = obj.get('state');
-      upgradeOccured = obj.get('upgradeOccured');
     }
   }
   // console.log(state.getIn(['players', playerIndex, 'board']));
+  const tempMarkedResults = await markBoardBonuses(state.getIn(['players', playerIndex, 'board']));
+  const tempBoard = tempMarkedResults.get('newBoard');
+  let upgradeOccured = false;
+  if(!f.checkHandUnit(toPosition)) {
+    const obj = await checkPieceUpgrade(state.setIn(['players', playerIndex, 'board'], tempBoard), playerIndex, tempBoard.get(toPosition), toPosition);
+    state = obj.get('state');
+    upgradeOccured = obj.get('upgradeOccured');
+  }
+  if(shouldSwap && !f.isUndefined(newPiece) && !f.checkHandUnit(fromPosition)) {
+    const obj = await checkPieceUpgrade(state.setIn(['players', playerIndex, 'board'], tempBoard), playerIndex, tempBoard.get(fromPosition), fromPosition);
+    state = obj.get('state');
+    upgradeOccured = obj.get('upgradeOccured') || upgradeOccured;
+  }
   const markedResults = await markBoardBonuses(state.getIn(['players', playerIndex, 'board']));
   const buffMap = markedResults.get('buffMap').get('0');
   const typeBuffMapSolo = markedResults.get('typeBuffMapSolo').get('0');
   const typeBuffMapAll = markedResults.get('typeBuffMapAll').get('0');
   const typeDebuffMapEnemy = markedResults.get('typeDebuffMapEnemy').get('0');
   // Add this information to the state, boardBuffs
+
   const boardBuffs = Map({
     buffMap, typeBuffMapSolo, typeBuffMapAll, typeDebuffMapEnemy,
   });
@@ -1470,6 +1486,9 @@ async function markBoardBonuses(board, teamParam = '0') {
                 .setIn([String(i), buff, 'typeBuff'], typesJS.getBonusStatType(buff))
                 .setIn([String(i), buff, 'tier'], j);
               break;
+            case 'noBattleBonus':
+              // No impact in battle
+              break;
             default:
               console.log(`Ability bonus type error ... Error found for ${typesJS.getBonusType(buff)}`);
               process.exit();
@@ -1503,7 +1522,7 @@ async function markBoardBonuses(board, teamParam = '0') {
           const bonusValue = typeBuffMapSolo.get(String(team)).get(types.get(i)).get('value');
           const bonusType = buff.get('bonusStatType');
           const buffText = `${buffName}: ${bonusType} +${bonusValue}`;
-          newUnit = typesJS.getBuffFuncSolo(types.get(i))(newUnit, bonusValue)
+          newUnit = (await typesJS.getBuffFuncSolo(types.get(i))(newUnit, bonusValue))
             .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText)); // Add buff to unit
           newBoard = await newBoard.set(unitPos, newUnit);
         }
@@ -1517,7 +1536,7 @@ async function markBoardBonuses(board, teamParam = '0') {
         const bonusValue = typeBuffMapSolo.get(String(team)).get(types).get('value');
         const bonusType = buff.get('bonusStatType');
         const buffText = `${buffName}: ${bonusType} +${bonusValue}`;
-        const newUnit = typesJS.getBuffFuncSolo(types)(unit, bonusValue)
+        const newUnit = (await typesJS.getBuffFuncSolo(types)(unit, bonusValue))
           .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText)); // Add buff to unit
         newBoard = await newBoard.set(unitPos, newUnit);
       }
@@ -1546,7 +1565,7 @@ async function markBoardBonuses(board, teamParam = '0') {
       const bonusValue = typeDebuffMapEnemy.get(String(enemyTeam)).get(buff).get('value');
       const bonusType = typesJS.getBonusStatType(buff);
       const buffText = `${buff}: ${bonusType} +${bonusValue}`;
-      const newUnit = typesJS.getEnemyDebuff(buff)(newBoard.get(unitPos), bonusValue) // Crash here
+      const newUnit = typesJS.getEnemyDebuff(buff)(newBoard.get(unitPos), bonusValue)
         .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText));
       newBoard = await newBoard.set(unitPos, newUnit);
       tempEnemy = enemyDebuffIter.next();
