@@ -65,6 +65,15 @@ async function refillPieces(pieces, discardedPieces) {
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     const cost = (await pokemonJS.getStats(name)).get('cost');
+    if (f.isUndefined(pieceStorage.get(0)) || f.isUndefined(pieceStorage.get(1)) || f.isUndefined(pieceStorage.get(2)) || 
+        f.isUndefined(pieceStorage.get(3)) || f.isUndefined(pieceStorage.get(4))) {
+      console.log('@refillPieces pieceStorage WAS UNDEFINED HERE', pieceStorage);
+      for(let i = 0; i < 5; i++) {
+        if(f.isUndefined(pieceStorage.get(i))) {
+          pieceStorage = pieceStorage.set(i, List([]));
+        }
+      }
+    }
     pieceStorage = await f.push(pieceStorage, cost - 1, name);
     // console.log('@refillPieces', name);
   }

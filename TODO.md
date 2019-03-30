@@ -64,13 +64,15 @@ Odd behaviour:
 
 ## Add me - Prio
 
-Random FIX
-
 Multistrike FIX
 
 Rendering rework FIX
 
+Not always Lose Hp
+
 ## Backend
+
+Check broken long range units dont find path, standin still
 
 Show baby units ingame more clearly
 
@@ -80,17 +82,10 @@ Bug buff type fix
 Egg group type addition
     Data available on units
     Requires usage logic
-
-Add information about tier for unit? 
-    Something required for druid
-    Use evolvedFrom / what it is
-
+    
 Sp.attack Sp.defense for ability calculations
     Required in stats panel
     Dragon +sp.attack
-
-Improve shuffle
-    Some combinations are way more common than others
 
 Crash - players[key] = null, somewhere players get null back from server
     Shouldnt crash on this atleast for now
