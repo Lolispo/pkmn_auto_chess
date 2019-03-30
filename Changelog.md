@@ -60,7 +60,7 @@ fire: 7 [2,4,6]
 water: 12 [3,5,7]
 electric: 6 [2,4,6]
 Grass: 5 [2,4]
-ice: 4 [2,4,6]
+ice: 4 [2,4]
 Fighting: 3 (poliwrath) [2,3]?
 poison: 9 [3,6,9] -> [3,5,7]
 ground: 5 (7 nido^top)[2,4,5]?
@@ -226,3 +226,7 @@ Bug type rework: Only require upgrades for bug tier [1,2] units when you have [2
 Jigglypuff / Clefairy cost 3 -> 2 to prevent money maker
 
 Poison Type buff: [3,6,9] -> [3,5,7]
+
+## Balance patch 0.4.2
+
+Ice buff nerf: [30,40] => [25,40]
