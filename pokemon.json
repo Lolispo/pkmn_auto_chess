@@ -645,7 +645,7 @@
   "clefairy": {
     "name": "clefairy",
     "displayName": "Clefairy☆☆",
-    "cost": 3,
+    "cost": 2,
     "hp": 70,
     "attack": 45,
     "defense": 48,
@@ -725,7 +725,7 @@
   "jigglypuff": {
     "name": "jigglypuff",
     "displayName": "Jigglypuff☆☆",
-    "cost": 3,
+    "cost": 2,
     "hp": 115,
     "attack": 45,
     "defense": 20,
@@ -2320,7 +2320,7 @@
     "speed": 30,
     "type": "normal",
     "ability": "hyperBeam",
-    "evolves_from": "snorlax",
+    "evolves_from": "munchlax",
     "specialAttack": 65,
     "specialDefense": 110,
     "eggGroup": "Monster"

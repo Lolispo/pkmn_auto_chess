@@ -64,8 +64,18 @@ Odd behaviour:
 
 ## Add me - Prio
 
+Random FIX
+
+Multistrike FIX
+
+Rendering rework FIX
 
 ## Backend
+
+Show baby units ingame more clearly
+
+Bug buff type fix
+    Currently unique + [tier]
 
 Egg group type addition
     Data available on units
@@ -169,6 +179,13 @@ Aoe damage logic
 
 ## Frontend
 
+Allow shopping with hotkeys
+    Ctrl + 1-5
+
+Add type weaknesses/strengths in message buff bonus that toggles
+
+Up next for round 4 show as NPC -> PVP
+
 End game lose sound
 
 Reset time 120 000 -> 60 000
@@ -185,6 +202,10 @@ Clickable more obvious through hover
     Increase size / something
 
 Add hover as well for types
+
+Moving units on hand during battle:
+    Weird animation
+        Gets an error same time when moving, check why (double effect?)
 
 Add information about hotkeys in hud
     Refresh on d

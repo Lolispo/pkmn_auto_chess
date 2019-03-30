@@ -360,8 +360,8 @@ async function checkPieceUpgrade(stateParam, playerIndex, piece, position) {
   }
   let requiredAmount = 3;
   if (piece.get('reqEvolve')) {
-    console.log('LESS UNITS REQUIRED FOR UPGRADE', piece.get('name'))
     requiredAmount = piece.get('reqEvolve');
+    console.log('LESS UNITS REQUIRED FOR UPGRADE', piece.get('name'), requiredAmount);
   }
   if (pieceCounter >= requiredAmount) { // Upgrade unit @ position
     // console.log('UPGRADING UNIT', name);
@@ -1686,8 +1686,9 @@ async function buildMatchups(players) {
         // Swap last player left in shuffle with random player that already got a matchup
         const newKeys = keys.slice();
         newKeys.pop();
-        const keyToSwap = Math.random(keys.size - 1);
+        const keyToSwap = Math.floor(Math.random(keys.length - 1));
         const enemyToSwap = matchups.get(newKeys[keyToSwap]);
+        console.log('@buildMatchups SWAPPING LAST', keyToSwap, keys.length, enemyToSwap, newKeys[keyToSwap]);
         matchups = matchups.set(pid, enemyToSwap).set(newKeys[keyToSwap], innerPid);
       }
     }
@@ -1715,6 +1716,7 @@ async function battleTime(stateParam) {
     // console.log('@battleTime pairing: ', pairing, nextPlayer);
     const board1 = state.getIn(['players', index, 'board']);
     const board2 = state.getIn(['players', enemy, 'board']);
+    if(f.isUndefined(board2)) console.log('Undefined board', enemy)
     const result = prepareBattle(board1, board2);
     // {actionStack: actionStack, board: newBoard, winner: winningTeam, startBoard: initialBoard}
     const resultBattle = await result;

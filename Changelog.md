@@ -16,6 +16,10 @@ Here: 12 13 16 12 5
 
 Font Rockwell
 
+Lt surge buff
+
+is Money laundring ok with bugs?
+
 Buffs between types?
   Themes of pokemon icons?
     Ash bonus (many different types)
@@ -58,7 +62,7 @@ electric: 6 [2,4,6]
 Grass: 5 [2,4]
 ice: 4 [2,4,6]
 Fighting: 3 (poliwrath) [2,3]?
-poison: 9 [3,6,9]
+poison: 9 [3,6,9] -> [3,5,7]
 ground: 5 (7 nido^top)[2,4,5]?
 flying: 11 [3,6,9]
 psychic: 7 [3,5,7]
@@ -80,12 +84,10 @@ Steel: 1 (3) [1,2]
   More Fighting units?
 
   Scyther strong
+  Metapod/Kakuna weak
+  Omastar weak
   SlowKing might be too weak compared to slowbro
   Geodude 3 -> 2?
-  Remove iggly/cleffa trio ? 
-    Maybe not, tanky units, need buff in spells, especially for level 3 versions
-  elekid 4 -> 3?
-  magby 4 -> 3?
   Check slowpoke - really slow
   Check dps, damage
 
@@ -219,3 +221,8 @@ Baby units that this involves are: cleffa, igglybuff, elekid, smoochum, magby, m
 
 Bug type rework: Only require upgrades for bug tier [1,2] units when you have [2,4] units
 
+## Balance patch 0.4.1
+
+Jigglypuff / Clefairy cost 3 -> 2 to prevent money maker
+
+Poison Type buff: [3,6,9] -> [3,5,7]
