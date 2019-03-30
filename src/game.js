@@ -769,7 +769,7 @@ function getClosestEnemy(board, unitPos, range, team, exceptionsList = List([]))
   const y = f.y(unitPos);
   const enemyTeam = 1 - team;
   let pos;
-  console.log('@getClosestEnemy', unitPos, team, range, enemyTeam, board.get(f.pos(x,y)).get('team'));
+  f.p('@getClosestEnemy', unitPos, team, range, enemyTeam, board.get(f.pos(x,y)).get('team'));
   // Check N S W E
   pos = f.pos(x, y + 1);
   if (!f.isUndefined(board.get(pos)) && board.get(pos).get('team') === enemyTeam && !exceptionsList.contains(pos)) {
@@ -1130,7 +1130,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
   if (enemyPos.get('withinRange')) { // Attack action
     const action = 'attack';
     const target = enemyPos.get('closestEnemy');
-    console.log('Closest Enemy: ', unitPos, team, target)
+    f.p('Closest Enemy: ', unitPos, team, target)
     const attackerType = (!f.isUndefined(unit.get('type').size) ? unit.get('type').get(0) : unit.get('type'));
     // console.log('@nextmove - normal attack target: ', target, enemyPos)
     const typeFactor = await typesJS.getTypeFactor(attackerType, board.get(target).get('type'));
@@ -1668,32 +1668,26 @@ async function buildMatchups(players) {
   let matchups = Map({});
   const jsPlayers = players.toJS();
   const keys = Object.keys(jsPlayers);
-  const immutableKeys = fromJS(Object.keys(jsPlayers));
+  const immutableKeys = fromJS(keys);
   let shuffledKeys = f.shuffleImmutable(immutableKeys);
   // console.log('@buildMatchups Keys', players, keys, shuffledKeys);
-  for (let i = 0; i < keys.length; i++) {
-    const pid = keys[i];
-    // console.log('@buildMatchups Key', i, pid)
-    for (let j = shuffledKeys.size - 1; j >= 0; j--) {
-      const innerPid = shuffledKeys.get(j);
-      // console.log('@buildMatchups inner', j, innerPid)
-      if (innerPid !== pid) { // Make matchup
-        matchups = matchups.set(pid, innerPid);
-        shuffledKeys = shuffledKeys.delete(j);
-        break;
-      } else if (j === 0) { // Last index, last player is on itself alone
-        // console.log('@buildMatchups last swap', j, innerPid, pid, shuffledKeys.get(innerPid))
-        // Swap last player left in shuffle with random player that already got a matchup
-        const newKeys = keys.slice();
-        newKeys.pop();
-        const keyToSwap = Math.floor(Math.random(keys.length - 1));
-        const enemyToSwap = matchups.get(newKeys[keyToSwap]);
-        console.log('@buildMatchups SWAPPING LAST', keyToSwap, keys.length, enemyToSwap, newKeys[keyToSwap]);
-        matchups = matchups.set(pid, enemyToSwap).set(newKeys[keyToSwap], innerPid);
-      }
-    }
+  for (let i = shuffledKeys.size - 1; i > 2; i-=2) {
+    const pid = shuffledKeys.get(i);
+    const otherpid = shuffledKeys.get(i-1);
+    matchups = matchups.set(pid, otherpid).set(otherpid, pid);
+    shuffledKeys = shuffledKeys.delete(i).delete(i-1);
   }
-  console.log('@buildMatchups', matchups);
+  if(shuffledKeys.size === 3) {
+    const fst = shuffledKeys.get(0);
+    const snd = shuffledKeys.get(1);
+    const trd = shuffledKeys.get(2);
+    matchups = matchups.set(fst, snd).set(snd, trd).set(trd, fst);
+  } else if(shuffledKeys.size === 2) {
+    const fst = shuffledKeys.get(0);
+    const snd = shuffledKeys.get(1);
+    matchups = matchups.set(fst, snd).set(snd, fst);
+  }
+  console.log('@buildMatchups -------', matchups);
   return matchups;
 }
 
@@ -1957,7 +1951,7 @@ async function prepEndTurn(state, playerIndex) {
  */
 async function calcDamageTaken(boardUnits) {
   if (f.isUndefined(boardUnits) || boardUnits.size === 0) {
-    console.log('@calcDamageTaken Returning 0 ', boardUnits);
+    f.p('@calcDamageTaken Returning 0 ', boardUnits);
     return 0; // When there are no units left for the enemy, don't lose hp (A tie)
   }
   let sum = 0;

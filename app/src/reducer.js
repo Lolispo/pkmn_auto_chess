@@ -1,7 +1,8 @@
 // Author: Petter Andersson
 
 import { getBackgroundAudio, getSoundEffect } from './audio.js';
-import { stat } from 'fs';
+
+const devMode = false;
 
 let counter = 0;
 
@@ -116,7 +117,7 @@ const reducer = (
     typeBonusString: '',
     typeMap: '',
     round: 1,
-    musicEnabled: false,
+    musicEnabled: true,
     soundEnabled: true,
     timerDuration: 30,
     chatSoundEnabled: true,
@@ -148,6 +149,9 @@ const reducer = (
   action
 ) => {
   let tempSoundEffects;
+  if(devMode) {
+    state = {...state, musicEnabled: false, soundEnabled: false, timerDuration: 15}
+  }
   switch (action.type) { // Listens to events dispatched from from socket.js
     case 'LOAD_SPRITES_JSON': 
       console.log('Loaded sprites!');
