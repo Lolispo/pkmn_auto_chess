@@ -115,6 +115,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'electrode', x: 7, y: 2 }),
     Map({ name: 'electabuzz', x: 6, y: 2 }),
     Map({ name: 'magneton', x: 2, y: 2 }),
+    Map({ name: 'magnezone', x: 6, y: 1 }),
   ])),
   25: async () => gameJS.createBattleBoard(List([
     Map({ name: 'victreebel', x: 3, y: 1 }),

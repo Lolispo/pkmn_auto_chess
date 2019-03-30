@@ -230,3 +230,6 @@ Poison Type buff: [3,6,9] -> [3,5,7]
 ## Balance patch 0.4.2
 
 Ice buff nerf: [30,40] => [25,40]
+
+Lt.Surge Added Magnezone
+
