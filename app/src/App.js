@@ -862,7 +862,7 @@ class App extends Component {
                   damage = 0;
                   break;
                 case 'dot': {
-                  // TODO Visualize 'dot' is appled to unit
+                  // TODO Visualize 'dot' is applied to unit
 
                   actionMessageTarget = actionMessageTarget + '! Dot applied'
                   break;

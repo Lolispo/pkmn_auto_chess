@@ -22,11 +22,13 @@ Mana: 15% of damage to mana or 10
 ## Crash and Tests for ingame
 
 Crash: 
-    Dead player
+    RefillPieces
+        Fixed?
+    Crash - players[key] = null, somewhere players get null back from server
+        Tempfixed - Shouldnt crash on this atleast for now
+        Should be looked into, found on frontend, bug probably in backend
     
 Fixed Check:
-    RefillPieces - shouldnt get a list from playerlost (board units)
-    Eevee stats panel (takes big size)
     Sell piece button cost css alignment
 
 Test me ingame:
@@ -46,49 +48,67 @@ Known issues:
         Effects Probably: Dot damage, healing, multistrike
     Battle ending before finish
         longest battle duration check
+            check after rendering rework
 
 Odd behaviour:
 
     Sometimes doesn't lose hp after battle
-
-    Something doing 0.5 damage (brock vs parasect)
 
     No target move (splash) shouldnt deal damage (curr 1 it seems)
         Check
 
 # Fix me - Prio
 
-    Check battle
-        DotDamage - NOT MATCHING UP
-        Multistrike - Check
+    Rendering rework
+
+    Units with long range standing still, not finding path
 
 ## Add me - Prio
 
-Multistrike FIX
+Redo battle rendering
+    Redo frontend battle rendering to make possible to jump between battles
+    Init: startBattleTime = new Date(),  
+    moves.forEach((move) => {
+        timeouts.push(setTimeout((dispatch) => {
+            check bordindex is correct
+                Do move calculations on board
+        }))
+    })
+    onBoardChange: timeouts.forEach((timeout) => {
+        clearTimeout(timeouts)
+        battleStartBoard = battleStartBoards[i]
+        currentTime = newDate = startBattleTime
+        Calc all moves up until currentTime
+        Render moves from here on out with same method as above
+            Array[i - last] where i is where time is at
+    })
 
-Rendering rework FIX
-
-Not always Lose Hp
-
-## Backend
-
-Check broken long range units dont find path, standin still
-
-Show baby units ingame more clearly
-
-Bug buff type fix
-    Currently unique + [tier]
+Sp.attack Sp.defense for ability calculations
+    Required in stats panel
+    Dragon/Psychic +sp.attack
 
 Egg group type addition
     Data available on units
     Requires usage logic
     
-Sp.attack Sp.defense for ability calculations
-    Required in stats panel
-    Dragon +sp.attack
+Rivals:
+    When playing against the person you played the most
+    > 3 Battles
+    Make interesting: Keep record of results from battle between players
+    Rival is the one opponent where you have lost and won to most equally
+        People might not have each other as rivals
 
-Crash - players[key] = null, somewhere players get null back from server
-    Shouldnt crash on this atleast for now
+Target Priorities
+    Never stick on a target where attacks are x0 (No effect)
+    If multiple within range: 
+        Type effective priority
+            Get all units at same length from target as List
+            Get Unit with highest effectivness against
+            If multiple, random
+
+## Backend
+
+Show baby units ingame more clearly
 
 Move logic of upcoming enemy to calculate before next round beginnings
     currentLogic -> buildMatchups
@@ -105,14 +125,6 @@ PlacePieceEvent (All piece interactions):
 Send information if unit evolved for animation
     Positions of units that got evolved
     https://jsfiddle.net/z92y8pa3/
-
-Target Priorities
-    Never stick on a target where attacks are x0 (No effect)
-    If multiple within range: 
-        Type effective priority
-            Get all units at same length from target as List
-            Get Unit with highest effectivness against
-            If multiple, random
 
 Speed rework how it is applied
     Instead of upperlimit - speed = cd between actions
@@ -137,13 +149,6 @@ Players deaths:
             player = received money for win, but not for income
                 Requires refactor
 
-Rivals:
-    When playing against the person you played the most
-    > 3 Battles
-    Make interesting: Keep record of results from battle between players
-    Rival is the one opponent where you have lost and won to most equally
-        People might not have each other as rivals
-
 StepsToTake dependent on pokemon stats
 
 Add longestTimeAllowed for battle, where a tie occurs
@@ -165,55 +170,31 @@ Longer range than 1
         Requires more attack animations
         Better way to do these animations
 
-
-Ability ranges implementation requries check for if ability.withinRange
-
-More advanced Matchup system
-
 Aoe damage logic
 
-## Frontend
+## Frontend - Visual
 
-Allow shopping with hotkeys
-    Ctrl + 1-5
+Gymleader image
+    Matchup gym leaders for same spot all the time
+        Upnext / gymleader text same width
+        Put span -> div => width: 100px maybe (ish)
+            Only when img is relevant put it as forced size
+    Upnext firefox gym trainer height
 
-Add type weaknesses/strengths in message buff bonus that toggles
-
-Up next for round 4 show as NPC -> PVP
-
-End game lose sound
-
-Reset time 120 000 -> 60 000
-
-Prevent empty message
-
-Upnext firefox gym trainer height
+Prevent empty message sending in chat
 
 Display enemy buffs during battle somewhere
-
-Display information about types weaknesses better
 
 Clickable more obvious through hover
     Increase size / something
 
 Add hover as well for types
 
-Moving units on hand during battle:
-    Weird animation
-        Gets an error same time when moving, check why (double effect?)
-
 Add information about hotkeys in hud
     Refresh on d
     Buy exp on F
     Sell Piece E
     More difficult with q and w
-
-End battle isn't reached for spectators
-    Doesnt get up next and stuff
-
-Spectator cant currently see lock toggles
-
-Length of move animation connected to when next move should be made
 
 Fix actionMessage
     Ugly atm, super ugly
@@ -222,43 +203,45 @@ Fix actionMessage
 
 Max size of shop base (mewtwo moltres wide)
 
+Display more clearly as a loser if you are eliminated
+    End game lose sound, eliminated sound more clearly
+    Also when game is over when you are not winner
+
+## Frontend - Logic
+
+Bug buff type fix
+    Currently unique + [tier]
+
+Add type weaknesses/strengths in message buff bonus that toggles
+
+Up next for round 4 show as NPC -> PVP
+
+Reset time 120 000 -> 60 000
+
+Moving units on hand during battle:
+    Weird animation
+        Gets an error same time when moving, check why (double effect?)
+        Check if onGoingBattle allow pokemonSpawn if !isBoard
+
+End battle isn't reached for spectators
+    Doesnt get up next and stuff, enemy undefined
+
+Spectator cant currently see lock toggles
+
+Length of move animation connected to when next move should be made
+
+Allow shopping with hotkeys
+    key + 1-5? what is allowed in browser
+
 Sounds - Currently only one at a time
     Fix playing multiple sounds, currently replays all
         Would in theory be fixed by not storing in array
 
-Display more clearly as a loser if you are eliminated
-    Also when game is over when you are not winner
-
-Matchup gym leaders for same spot all the time
-    Upnext / gymleader text same width
-    Put span -> div => width: 100px maybe (ish)
-        Only when img is relevant put it as forced size
-
 Buying unit when visiting -> change back visited to state.index
-
-No animation if moving hand -> hand during battle
-    Check if onGoingBattle allow pokemonSpawn if !isBoard
+    Necessary? It moves back when buying if not mistaken
 
 Make chat text more easily readable
     Dont show damage Dealt if empty
-
-Redo battle rendering
-    Redo frontend battle rendering to make possible to jump between battles
-    Init: startBattleTime = new Date(),  
-    moves.forEach((move) => {
-        timeouts.push(setTimeout((dispatch) => {
-            check bordindex is correct
-                Do move calculations on board
-        }))
-    })
-    onBoardChange: timeouts.forEach((timeout) => {
-        clearTimeout(timeouts)
-        battleStartBoard = battleStartBoards[i]
-        currentTime = newDate = startBattleTime
-        Calc all moves up until currentTime
-        Render moves from here on out with same method as above
-            Array[i - last] where i is where time is at
-    })
 
 Enemy type bonuses during battle
 
@@ -267,7 +250,7 @@ Firefox make chat scrollable
 Chat sound overlap normal sounds
 
 Enable sound on connect
-    Acts weird
+    Acts weird, music doesnt guarantee start
 
 2 volume sliders instead of 1
 
