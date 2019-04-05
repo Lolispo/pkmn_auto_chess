@@ -530,6 +530,7 @@ Shop: Modal?
 eevee:
     Currently: Random evolution
     Placement of eevees decides evolution!
+        123, 147, 159, 753, 153, 759, 157, 359
     Evolution based on amount of unit types on board
     Temp: Random
 

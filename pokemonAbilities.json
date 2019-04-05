@@ -87,7 +87,7 @@
     "name": "megaDrain",
     "displayName": "Mega Drain",
     "type": "grass",
-    "power": 75,
+    "power": 40,
     "effect": "lifesteal"
   },
   "hydroPump": {
@@ -375,5 +375,42 @@
       0.125
     ],
     "mana": 120
+  },
+  "hammerArm": {
+    "name": "hammerArm",
+    "displayName": "Hammer Arm",
+    "type": "fighting",
+    "power": 100,
+    "acc_range": 0.9,
+    "mana": 110
+  },
+  "leafStorm": {
+    "name": "leafStorm",
+    "displayName": "Leaf Storm",
+    "type": "grass",
+    "power": 130,
+    "acc_range": 0.9,
+    "mana": 140
+  },
+  "stoneEdge": {
+    "name": "stoneEdge",
+    "displayName": "Stone Edge",
+    "type": "rock",
+    "power": 100,
+    "acc_range": 0.8,
+    "mana": 130
+  },
+  "gigaDrain": {
+    "name": "gigaDrain",
+    "displayName": "Giga Drain",
+    "type": "grass",
+    "power": 75
+  },
+  "hyperFang": {
+    "name": "hyperFang",
+    "displayName": "Hyper Fang",
+    "type": "normal",
+    "power": 80,
+    "acc_range": 0.9
   }
 }

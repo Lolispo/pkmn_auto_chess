@@ -10,7 +10,7 @@ Here: 58
 
 Dota: 12 13 14 11 5
 
-Here: 12 13 16 12 5
+Here: 12 13 12 12 6
 
 ## Current Notes
 
@@ -74,20 +74,20 @@ Steel: 1 (3) [1,2]
 
 #### Potential balance:
 
-  Buff 7:s a bit
+  More legendaries: Lugia, Ho-oh, Kyogre, Groudon, Celebi
 
-  Babies only cost 2 to upgrade?
-    igglybuff, cleffa, magby, elekid, smoochum, munchlax
+  Buff 7:s a bit
 
   Type numbers:
   More grass units?
   More Fighting units?
 
-  Scyther strong
+  Stats between scyther and scizor are weird
+    Same total, scyther is faster
+
   Metapod/Kakuna weak
   Omastar weak
   SlowKing might be too weak compared to slowbro
-  Geodude 3 -> 2?
   Check slowpoke - really slow
   Check dps, damage
 
@@ -95,7 +95,7 @@ Steel: 1 (3) [1,2]
   Teleport (does nothing currently)
   New:
     Simple: 
-      Raticate hyper fang
+      Gengar better?
       Ninetales: Fire ability between ember and flamethrower (maybe also rapidash)
     Unique:
       jigglypuff sing/something better (really bad)
@@ -233,3 +233,30 @@ Ice buff nerf: [30,40] => [25,40]
 
 Lt.Surge Added Magnezone
 
+## Balance patch 0.4.3
+
+Ponyta 2 -> 4
+
+Scyther 4 -> 5    This will make it really difficult to get Scizor, test update, can go back on this one
+
+Geodude 3 -> 2
+
+Dratini 4 -> 3
+
+Machop 4 -> 3
+
+Sand shrew 3 -> 4
+
+Mankey 3 -> 4
+
+Benched slowpoke
+
+Benched psyduck
+
+Benched omanyte
+
+Raticate quickAttack -> hyper fang
+
+Golem rollout(not implemented) -> Stone edge
+
+Exeggutor confusion -> leaf storm
