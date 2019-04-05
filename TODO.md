@@ -59,6 +59,13 @@ Odd behaviour:
 
 # Fix me - Prio
 
+    Add new Pokemon sprites
+        Replace pokemonsprites with new rendered one
+
+    Add .cries connection
+
+    Fix empty in pokemon.json compile
+
     Rendering rework
 
     Units with long range standing still, not finding path

@@ -1,3 +1,4 @@
+
 ### Amount of units:
 
 Dota 55 + (at least 4 more)
@@ -8,21 +9,19 @@ Here: 58
 
 Dota: 12 13 14 11 5
 
-Here: 12 13 16 12 5
+Current: 11 13 12 12 5
+ 
+Future: 12 14 12 13 5
 
 ## Current Notes
 
-Font: Rockwell
+Font Rockwell
 
-Ability ranges implementation requries check for if ability.withinRange
-
-
-## Thoughts
+Lt surge buff
 
 is Money laundring ok with bugs?
 
 Buffs between types?
-  Egg groups
   Themes of pokemon icons?
     Ash bonus (many different types)
     Brock = vulpix + ground/rock (dont know if good)
@@ -76,27 +75,28 @@ Steel: 1 (3) [1,2]
 
 #### Potential balance:
 
+  More legendaries: Lugia, Ho-oh, Kyogre, Groudon, Celebi
+
   Buff 7:s a bit
 
   Type numbers:
   More grass units?
   More Fighting units?
-  More units from types # < 3
 
-  Scyther strong, ok after bug change? (Still strong ofc)
-  Metapod/Kakuna weak, money laundring
-  Omastar weak, tanky tho
-  Slowpoke
-    SlowKing might be too weak compared to slowbro
-    Check slowpoke - really slow
-  Geodude 3 -> 2?
+  Stats between scyther and scizor are weird
+    Same total, scyther is faster
+
+  Metapod/Kakuna weak
+  Omastar weak
+  SlowKing might be too weak compared to slowbro
+  Check slowpoke - really slow
   Check dps, damage
 
 #### Abilitiy implementations
   Teleport (does nothing currently)
   New:
     Simple: 
-      Raticate hyper fang
+      Gengar better?
       Ninetales: Fire ability between ember and flamethrower (maybe also rapidash)
     Unique:
       jigglypuff sing/something better (really bad)
@@ -106,6 +106,7 @@ Steel: 1 (3) [1,2]
 Electric change?
 
 #### New effects: 
+  Bugs: Druid buff
   Lifesteal
   Ghost: Evasion
   Poison: increase dot damage
@@ -116,10 +117,11 @@ Electric change?
 #### Type Bonuses Status Currently
   Early Game types:
       Bug, Flying, Poison
-  Entire Game
-      Normal Fire
+  Early - Mid
+      Fire
   Mid Game
-      Electric Ghost Psychic
+      Normal electric
   Late Game
-      Water Dragon Flying 
+      Water Dragon psychic Ghost
+      Flying 
     

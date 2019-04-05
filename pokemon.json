@@ -970,7 +970,6 @@
     "specialDefense": 65,
     "eggGroup": "Field"
   },
-  "": {},
   "mankey": {
     "name": "mankey",
     "displayName": "Mankey☆",
@@ -1084,55 +1083,6 @@
     "specialDefense": 90,
     "range": 2,
     "eggGroup": "Water 1"
-  },
-  "abra": {
-    "name": "abra",
-    "displayName": "Abra☆",
-    "cost": 1,
-    "hp": 25,
-    "attack": 20,
-    "defense": 15,
-    "speed": 90,
-    "type": "psychic",
-    "ability": "teleport",
-    "evolves_to": "kadabra",
-    "specialAttack": 105,
-    "specialDefense": 55,
-    "range": 3,
-    "eggGroup": "Human-Like"
-  },
-  "kadabra": {
-    "name": "kadabra",
-    "displayName": "Kadabra☆☆",
-    "cost": 3,
-    "hp": 40,
-    "attack": 35,
-    "defense": 30,
-    "speed": 105,
-    "type": "psychic",
-    "ability": "psychic",
-    "evolves_from": "abra",
-    "evolves_to": "alakazam",
-    "specialAttack": 120,
-    "specialDefense": 70,
-    "range": 3,
-    "eggGroup": "Human-Like"
-  },
-  "alakazam": {
-    "name": "alakazam",
-    "displayName": "Alakazam☆☆☆",
-    "cost": 5,
-    "hp": 55,
-    "attack": 50,
-    "defense": 45,
-    "speed": 120,
-    "type": "psychic",
-    "ability": "psychic",
-    "evolves_from": "kadabra",
-    "specialAttack": 135,
-    "specialDefense": 85,
-    "range": 3,
-    "eggGroup": "Human-Like"
   },
   "machop": {
     "name": "machop",
@@ -1828,42 +1778,6 @@
     "specialDefense": 85,
     "range": 2,
     "eggGroup": "Water 3"
-  },
-  "scyther": {
-    "name": "scyther",
-    "displayName": "Scyther☆",
-    "cost": 5,
-    "hp": 70,
-    "attack": 110,
-    "defense": 80,
-    "speed": 105,
-    "type": [
-      "bug",
-      "flying"
-    ],
-    "ability": "slash",
-    "evolves_to": "scizor",
-    "specialAttack": 55,
-    "specialDefense": 80,
-    "eggGroup": "Bug"
-  },
-  "scizor": {
-    "name": "scizor",
-    "displayName": "Scizor☆☆",
-    "cost": 7,
-    "hp": 70,
-    "attack": 130,
-    "defense": 100,
-    "speed": 65,
-    "type": [
-      "bug",
-      "steel"
-    ],
-    "ability": "ironHead",
-    "evolves_from": "scyther",
-    "specialAttack": 55,
-    "specialDefense": 80,
-    "eggGroup": "Bug"
   },
   "smoochum": {
     "name": "smoochum",
