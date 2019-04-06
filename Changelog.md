@@ -150,3 +150,24 @@ Added Hoppip
 
 Added Anorith
 
+## Balance patch 0.4.3.3
+
+Added new Legendaries:
+
+Celebi
+
+Groudon
+
+Kyogre
+
+Added Ralts
+
+Added fairy type -> hp buff
+
+Added Dark type -> attack
+
+Clefairy normal -> fairy
+
+Jigglypuff normal -> normal, fairy
+
+Psychic buff [3,5,7] -> [2, 3, 5]

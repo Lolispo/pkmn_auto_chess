@@ -9,7 +9,7 @@ Here: 58
 
 Dota: 12 13 14 11 5
  
-Current: 12 14 12 13 5
+Current: 12 14 13 13 8
 
 ## Current Notes
 

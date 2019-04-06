@@ -634,7 +634,7 @@
     "attack": 25,
     "defense": 28,
     "speed": 15,
-    "type": "normal",
+    "type": "fairy",
     "ability": "pound",
     "evolves_to": "clefairy",
     "specialAttack": 45,
@@ -650,7 +650,7 @@
     "attack": 45,
     "defense": 48,
     "speed": 35,
-    "type": "normal",
+    "type": "fairy",
     "ability": "doubleSlap",
     "evolves_from": "cleffa",
     "evolves_to": "clefable",
@@ -667,7 +667,7 @@
     "attack": 70,
     "defense": 73,
     "speed": 60,
-    "type": "normal",
+    "type": "fairy",
     "ability": "doubleSlap",
     "evolves_from": "clefairy",
     "specialAttack": 85,
@@ -715,7 +715,10 @@
     "attack": 30,
     "defense": 15,
     "speed": 15,
-    "type": "normal",
+    "type": [
+      "normal",
+      "fairy"
+    ],
     "ability": "pound",
     "evolves_to": "jigglypuff",
     "specialAttack": 40,
@@ -730,7 +733,10 @@
     "attack": 45,
     "defense": 20,
     "speed": 20,
-    "type": "normal",
+    "type": [
+      "normal",
+      "fairy"
+    ],
     "ability": "doubleSlap",
     "evolves_from": "igglybuff",
     "evolves_to": "wigglytuff",
@@ -746,7 +752,10 @@
     "attack": 70,
     "defense": 45,
     "speed": 45,
-    "type": "normal",
+    "type": [
+      "normal",
+      "fairy"
+    ],
     "ability": "doubleSlap",
     "evolves_from": "jigglypuff",
     "specialAttack": 75,
@@ -2392,5 +2401,107 @@
     "specialAttack": 70,
     "specialDefense": 80,
     "eggGroup": "Water 3"
+  },
+  "celebi": {
+    "name": "celebi",
+    "displayName": "Celebi",
+    "cost": 5,
+    "hp": 100,
+    "attack": 100,
+    "defense": 100,
+    "speed": 100,
+    "type": [
+      "psychic",
+      "grass"
+    ],
+    "ability": "leafStorm",
+    "specialAttack": 100,
+    "specialDefense": 100,
+    "range": 3
+  },
+  "kyogre": {
+    "name": "kyogre",
+    "displayName": "Kyogre",
+    "cost": 5,
+    "hp": 100,
+    "attack": 100,
+    "defense": 90,
+    "speed": 90,
+    "type": "water",
+    "ability": "hydroPump",
+    "specialAttack": 150,
+    "specialDefense": 140,
+    "range": 3
+  },
+  "groudon": {
+    "name": "groudon",
+    "displayName": "Groudon",
+    "cost": 5,
+    "hp": 100,
+    "attack": 150,
+    "defense": 140,
+    "speed": 90,
+    "type": "ground",
+    "ability": "earthquake",
+    "specialAttack": 100,
+    "specialDefense": 90
+  },
+  "ralts": {
+    "name": "ralts",
+    "displayName": "Ralts",
+    "cost": 3,
+    "hp": 28,
+    "attack": 25,
+    "defense": 25,
+    "speed": 40,
+    "type": [
+      "psychic",
+      "fairy"
+    ],
+    "ability": "confusion",
+    "evolves_to": "kirlia",
+    "specialAttack": 45,
+    "specialDefense": 35,
+    "range": 2,
+    "eggGroup": "Amorphous"
+  },
+  "kirlia": {
+    "name": "kirlia",
+    "displayName": "Kirlia",
+    "cost": 5,
+    "hp": 38,
+    "attack": 35,
+    "defense": 35,
+    "speed": 50,
+    "type": [
+      "psychic",
+      "fairy"
+    ],
+    "ability": "psychic",
+    "evolves_from": "ralts",
+    "evolves_to": "gardevoir",
+    "specialAttack": 65,
+    "specialDefense": 55,
+    "range": 2,
+    "eggGroup": "Amorphous"
+  },
+  "gardevoir": {
+    "name": "gardevoir",
+    "displayName": "Gardevoir",
+    "cost": 7,
+    "hp": 68,
+    "attack": 65,
+    "defense": 65,
+    "speed": 80,
+    "type": [
+      "psychic",
+      "fairy"
+    ],
+    "ability": "psychic",
+    "evolves_from": "kirlia",
+    "specialAttack": 125,
+    "specialDefense": 115,
+    "range": 2,
+    "eggGroup": "Amorphous"
   }
 }
