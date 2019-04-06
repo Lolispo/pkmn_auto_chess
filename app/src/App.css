@@ -159,6 +159,10 @@ body {
   padding-top: 30px;
 }
 
+.musicDiv {
+  /*margin-top: 60px;*/
+}
+
 .soundImg {
   /* 50 50 */
   margin-left: 10px;
@@ -223,7 +227,7 @@ body {
 }
 
 .infoPanel {
-  height: 345px;
+  height: 385px;
   padding-top: 5px;
   white-space: pre-line;
 }
@@ -265,6 +269,24 @@ body {
 .centerWith50{
   margin: auto;
   width: 50%;
+}
+
+.topBarDiv {
+  width: 80%;
+}
+
+.topBarPlayerName {
+  margin-top: 0px;
+  padding-left: 30px;
+  font-weight: bold;
+}
+
+.topBarRound {
+  padding-left: 120px;
+}
+
+.topBarPadding {
+  padding-left: 65px;
 }
 
 .marginTop5 {
@@ -532,6 +554,11 @@ body {
   }
 }
 
+.messageUpdate {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
 .messageUpdate-enter {
   opacity: 0.01;
 }
@@ -555,6 +582,12 @@ body {
 
 .boardBuffs{
   height: 225px;
+  margin-left: -10px;
+}
+
+.battleEnemyBuffs {
+  height: 75px;
+  margin-left: -20px;
 }
 
 .textList {
@@ -906,20 +939,41 @@ body {
   animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
 }
 
-.typeElement {
-  position: absolute;
-}
-
-.relative {
-  position: relative;
-}
-
 .typeTier {
   position: absolute;
   font-size: 20px;
   left: 11px;
   top: 7px;
   animation: enter 1.2s;
+}
+
+.typeImgSmaller {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  animation: 0.50s ease-in-out 0s 1 reverse both running shrinkDown;
+}
+
+.typeTierSmaller {
+  position: absolute;
+  font-size: 15px;
+  left: 8px;
+  top: 4px;
+  animation: enter 1.2s;
+}
+
+.typeBonusTextSmaller {
+  position: absolute;
+  font-size: 9px;
+  left: 23px;
+}
+
+.typeElement {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
 }
 
 .typeDiv {

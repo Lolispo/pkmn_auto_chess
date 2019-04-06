@@ -907,9 +907,10 @@ async function manaChangeBoard(boardParam, manaChanges) {
  * Temp: Assumed typesAttacker is first listed type for normal attacks, set in ability for abilities
  * Power might be wanted
  */
-async function calcDamage(actionType, power, unit, target, typeFactor) { // attack, defense, typesAttacker, typesDefender
+async function calcDamage(actionType, power, unit, target, typeFactor, useSpecial = false) { // attack, defense, typesAttacker, typesDefender
   // console.log('@calcDamage', unit, target)
-  const factor = gameConstantsJS.getDamageFactorType(actionType) * power * (unit.get('attack') / target.get('defense'));
+  let damageRatio = (useSpecial ? unit.get('specialAttack') / target.get('specialDefense') : unit.get('attack') / target.get('defense'));
+  const factor = gameConstantsJS.getDamageFactorType(actionType) * power * damageRatio;
   f.p('@calcDamage returning: ', typeFactor, '*', Math.round(factor), '+ 1 =', Math.round(factor * typeFactor + 1));
   return Math.round(factor * typeFactor + 1);
 }
@@ -1095,7 +1096,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const target = await enemyPos.get('closestEnemy');
     // console.log('@nextmove - ability target: ', target, enemyPos)
     const typeFactor = await typesJS.getTypeFactor(ability.get('type'), board.get(target).get('type'));
-    const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), typeFactor);
+    const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), typeFactor, true);
     const abilityName = ability.get('displayName');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
     // console.log('@abilityResult', abilityResult)
@@ -1128,6 +1129,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
       battleOver,
     });
   }
+  // Attack
   const range = unit.get('range');
   const team = unit.get('team');
   let tarpos;
@@ -1438,7 +1440,7 @@ async function countUniqueOccurences(board, teamParam = '0') {
     // console.log('@countUniqueOccurences', unique.get(String(team)), pokemonJS.getBasePokemon(name))
     const basePokemon = await pokemonJS.getBasePokemon(name);
     if (!unique.get(String(team)).has(basePokemon)) { // TODO: Check
-      f.p('@CountUniqueOccurences Unique', basePokemon, team, unique);
+      // f.p('@CountUniqueOccurences Unique', basePokemon, team, unique);
       const newSet = await unique.get(String(team)).add(basePokemon);
       unique = await unique.set(String(team), newSet); // Store unique version, only count each once
       const types = unit.get('type'); // Value or List
@@ -1453,6 +1455,7 @@ async function countUniqueOccurences(board, teamParam = '0') {
     }
     tempUnit = boardKeysIter.next();
   }
+  f.p('@CountUniqueOccurences', unique);
   return buffMap;
 }
 
@@ -1531,7 +1534,8 @@ async function markBoardBonuses(board, teamParam = '0') {
           const buffName = buff.get('name');
           const bonusValue = typeBuffMapSolo.get(String(team)).get(types.get(i)).get('value');
           const bonusType = buff.get('bonusStatType');
-          const buffText = `${buffName}: ${bonusType} +${bonusValue}`;
+          const buffTextContent = (bonusType.includes('unique') ? bonusType.split('_')[1] + bonusValue : `${bonusType} +${bonusValue}`);
+          const buffText = `${buffName}: ${buffTextContent}`;
           newUnit = (await typesJS.getBuffFuncSolo(types.get(i))(newUnit, bonusValue))
             .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText)); // Add buff to unit
           newBoard = await newBoard.set(unitPos, newUnit);
@@ -1545,7 +1549,8 @@ async function markBoardBonuses(board, teamParam = '0') {
         const buffName = buff.get('name');
         const bonusValue = typeBuffMapSolo.get(String(team)).get(types).get('value');
         const bonusType = buff.get('bonusStatType');
-        const buffText = `${buffName}: ${bonusType} +${bonusValue}`;
+        const buffTextContent = (bonusType.includes('unique') ? bonusType.split('_')[1] + bonusValue : `${bonusType} +${bonusValue}`);
+        const buffText = `${buffName}: ${buffTextContent}`;
         const newUnit = (await typesJS.getBuffFuncSolo(types)(unit, bonusValue))
           .set('buff', (newBoard.get(unitPos).get('buff') || List([])).push(buffText)); // Add buff to unit
         newBoard = await newBoard.set(unitPos, newUnit);
@@ -1609,6 +1614,8 @@ async function createBattleUnit(unit, unitPos, team) {
     /* .set('mana_hit_given', unitStats.get('mana_hit_given') || pokemonJS.getStatsDefault('mana_hit_given'))
     .set('mana_hit_taken', unitStats.get('mana_hit_taken') || pokemonJS.getStatsDefault('mana_hit_taken')) */
     .set('mana_multiplier', unitStats.get('mana_multiplier') || pokemonJS.getStatsDefault('mana_multiplier'))
+    .set('specialAttack', unitStats.get('specialAttack'))
+    .set('specialDefense', unitStats.get('specialDefense'))
     .set('position', unitPos)
     .set('range', unitStats.get('range') || pokemonJS.getStatsDefault('range'))
     .set('manaCost', (await ability).get('mana') || abilitiesJS.getDefault('mana'));

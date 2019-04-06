@@ -9,7 +9,7 @@ const increaseSpeed = (unit, bonus) => unit.set('speed', Math.max(10, unit.get('
 const increaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') + +bonus);
 const increaseAttack = (unit, bonus) => unit.set('attack', +unit.get('attack') + +bonus);
 const increaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense') + +bonus);
-const decreaseDefense = (unit, bonus) => unit.set('defense', Math.max(0, +unit.get('defense') - +bonus));
+const decreaseDefense = (unit, bonus) => unit.set('defense', Math.max(1, +unit.get('defense') - +bonus));
 const decreaseSpeed = (unit, bonus) => unit.set('speed', +unit.get('speed') + +bonus); // Higher speed value = worse
 const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus));
 const decreaseAttack = (unit, bonus) => unit.set('attack', Math.max(0, +unit.get('attack') - +bonus));
@@ -17,9 +17,9 @@ const decreaseAttack = (unit, bonus) => unit.set('attack', Math.max(0, +unit.get
 const reqForUpgrade = async (unit, bonus) => {
   // Get tier of unit
   const tier = await pokemonJS.getUnitTier(unit.get('name'));
-  console.log('@reqForUpgrade bugs', tier, bonus)
+  // console.log('@reqForUpgrade bugs', tier, bonus)
   if(tier <= bonus) { // Bonus marks highest allowed tier for unit
-    console.log('@reqForUpgrade bugs BONUS', unit)
+    // console.log('@reqForUpgrade bugs BONUS', unit)
     return unit.set('reqEvolve', 2);
   }
   return unit;
@@ -249,7 +249,7 @@ const typeMap = new Map({
     ]),
     noDamageAgainst: 'Dark',
     req: List([2, 3, 5]),
-    bonusAmount: List([20, 30, 50]),
+    bonusAmount: List([15, 15, 30]),
     bonusType: 'enemyDebuff',
     bonusStatType: 'defense',
     enemyDebuff: (unit, bonus) => decreaseDefense(unit, bonus),
@@ -281,7 +281,7 @@ const typeMap = new Map({
     req: List([2, 4]),
     bonusAmount: List([1, 2]),
     bonusType: 'bonus',
-    bonusStatType: 'unique',
+    bonusStatType: 'unique_2 Unit Upg. Tier: ',
     bonus: (unit, bonus) => reqForUpgrade(unit, bonus),
     /*
     [2, 4] Druid buff
@@ -499,7 +499,7 @@ const getTypeDesc = (name) => {
   const bonusAmount = type.get('bonusAmount').toJS();
   const bonusStatType = type.get('bonusStatType');
   let defString = '';
-  if(bonusStatType === 'unique') {
+  if(bonusStatType.includes('unique')) {
     defString = type.get('desc');
   } else {
     defString = `${inc} ${bonusStatType} for ${units}`;

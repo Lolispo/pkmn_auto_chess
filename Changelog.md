@@ -181,3 +181,13 @@ Increased cost for eevee evolution to 9 (same as cost), allows resell at full va
 Spearow 1 -> 2
 
 ★ new star
+
+## 0.4.4
+
+SpecialAttack and SpecialDefense used for abilities
+
+Show all evolutions in infopanel
+
+Psychic [20, 30, 50] -> [15, 15, 30]
+
+Added enemy board types

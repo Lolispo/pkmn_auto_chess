@@ -196,7 +196,7 @@ module.exports = (socket, io) => {
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
     const state = await gameJS.buyExp(stateWithPieces, index);
     // Gold, shop, hand
-    console.log('Bought exp');
+    console.log('Bought exp, Player', index);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
       io.to(socketId).emit('UPDATE_PLAYER', index, state.getIn(['players', index]));
@@ -207,7 +207,7 @@ module.exports = (socket, io) => {
     const index = getPlayerIndex(socket.id);
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
     const state = await gameJS._refreshShop(stateWithPieces, index);
-    console.log('Refreshes Shop, level', state.getIn(['players', index, 'level']));
+    console.log('Refreshes Shop, level', state.getIn(['players', index, 'level']), 'Player', index);
     // Requires Shop and Pieces
     // socket.emit('UPDATED_PIECES', state);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);

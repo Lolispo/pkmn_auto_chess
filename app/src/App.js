@@ -488,7 +488,7 @@ class App extends Component {
       }
       if(s.snd_evolves_to) {
         snd_evolves_to = <span className='flex'>
-          <span className='paddingRight5 marginTop15'>Evolves to: </span>
+          <span className='paddingRight5 marginTop15'>Last Evolve: </span>
           <PokemonImage name={s.snd_evolves_to} sideLength={40} newProps={this.props}/>
         </span>
       }
@@ -533,6 +533,8 @@ class App extends Component {
           <span><span>{`Attack: ${s.attack}`}</span>{(buffs['attack'] ? <span className='infoPanelBuff'>{` + ${buffs['attack']}\n`}</span> : '\n')}</span>
           <span><span>{`Defense: ${s.defense}`}</span>{(buffs['defense'] ? <span className='infoPanelBuff'>{` + ${buffs['defense']}\n`}</span> : '\n')}</span>
           <span><span>{`Speed: ${s.speed}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['speed']}\n`}</span> : '\n')}</span>
+          <span><span>{`Sp.Attack: ${s.specialAttack}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['specialAttack']}\n`}</span> : '\n')}</span>
+          <span><span>{`Sp.Defense: ${s.specialDefense}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['specialDefense']}\n`}</span> : '\n')}</span>
           <span>{`Level: ${s.cost}\n`}</span>
           <span>{`Range: ${s.range || 1}\n`}</span>
           <span className={`type ${s.abilityType}`}>{`Ability: ${s.abilityDisplayName}\n`}</span>
@@ -594,18 +596,10 @@ class App extends Component {
   
   capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
 
-  displayBuffs = () => {
+  displayBuffsRender = (boardBuffs, isEnemy = false) => {
     const list = [];
-    const boardBuffs = this.props.boardBuffs;
-    /*
-      {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapSolo && Object.keys(this.props.boardBuffs.typeBuffMapSolo).length > 0 ?
-        JSON.stringify(this.props.boardBuffs.typeBuffMapSolo, null, 2) : '')}
-      {(this.props.boardBuffs && this.props.boardBuffs.typeBuffMapAll && Object.keys(this.props.boardBuffs.typeBuffMapAll).length > 0  ? 
-        JSON.stringify(this.props.boardBuffs.typeBuffMapAll, null, 2) : '')}
-      {(this.props.boardBuffs && this.props.boardBuffs.typeDebuffMapEnemy && Object.keys(this.props.boardBuffs.typeDebuffMapEnemy).length > 0 ? 
-      JSON.stringify(this.props.boardBuffs.typeDebuffMapEnemy, null, 2) : '')}
-    */
     let counter = 0;
+    // if(isEnemy) console.log('DisplayBuffsRender', boardBuffs);
     const buffKeys = Object.keys(boardBuffs.buffMap);
     const sortedBuffKeys = buffKeys.sort((a,b) => {
       const markedA = boardBuffs.typeBuffMapSolo[a] || boardBuffs.typeBuffMapAll[a] || boardBuffs.typeDebuffMapEnemy[a];
@@ -625,24 +619,28 @@ class App extends Component {
       if(!isUndefined(marked)){
         reqVar = reqs[marked['tier']];
         bonus = <div>
-          <span className='typeTier'>{marked['tier']}</span>
+          <span className={`${(!isEnemy ? 'typeTier' : 'typeTierSmaller')}`}>{marked['tier']}</span>
           {/*<span>{' Bonus: ' + marked['typeBuff'] + ': ' + marked['value']}</span>*/}
         </div>
       }
-      const left = counter * 40 % 160;
-      const top = Math.floor(counter / 4) * 60;
+      const left = (!isEnemy ? counter * 40 % 160 : counter * 30 % 180);
+      const top = (!isEnemy ? Math.floor(counter / 4) * 60 : Math.floor(counter / 6) * 30);;
       list.push(<span key={type} className='typeElement' style={{marginLeft: left, marginTop: top}} onClick={() => this.props.dispatch({type: 'SET_MARKED_BUFF', buff: type})}>
-        <img className='typeImg' src={getTypeImg(type)} alt={type}/>
-        <span className='typeBonusText'>{amount}</span>
-        <span className='typeBonusTextBelow'>{type}</span>
-        <span className='typeBonusTextReq'>{reqVar}</span>
+        <img className={`${(isEnemy ? 'typeImgSmaller' : 'typeImg')}`} src={getTypeImg(type)} alt={type}/>
+        {(!isEnemy ? <span>
+          <span className='typeBonusText'>{amount}</span>
+          <span className='typeBonusTextBelow'>{type}</span>
+          <span className='typeBonusTextReq'>{reqVar}</span>
+        </span> : <span>
+          <span className='typeBonusTextSmaller'>{amount}</span>
+        </span>)}
         {bonus}
       </span>
       );
       counter += 1;
     };
     let buffInfoDiv;
-    if(this.props.markedBuff && this.props.displayMarkedBuff) {
+    if(this.props.markedBuff && this.props.displayMarkedBuff && !isEnemy) {
       const buffedType = this.props.markedBuff;
       const marked = boardBuffs.typeBuffMapSolo[buffedType] || boardBuffs.typeBuffMapAll[buffedType] || boardBuffs.typeDebuffMapEnemy[buffedType];
       let tier = 0;
@@ -661,22 +659,16 @@ class App extends Component {
       const bonusAmount = type['bonusAmount'];
       const bonusStatType = type['bonusStatType'];
       if(!isUndefined(req)) {
-        let classList = '';
-        if(0 < tier) {
-          classList += ' goldFont';
-        }
+        let classList = (0 < tier ? 'goldFont' : '');
         let reqList = [<span key={'disp_0' + typeName} className={`${classList}`}>{req[0]}</span>];
         let bonusAmountList = [<span key={'dispValue_0'} className={`${classList}`}>{bonusAmount[0]}</span>];
         for(let i = 1; i < req.length; i++){
-          classList = '';
-          if(i < tier) {
-            classList += ' goldFont';
-          }
+          classList = (0 < tier ? 'goldFont' : '');
           // console.log('i: ', i, req[i], bonusAmount[i]);
           reqList.push(<span key={'disp_' + i + '_' + typeName} className={`${classList}`}>{', ' + req[i]}</span>);
           bonusAmountList.push(<span key={'dispValue_' + i} className={`${classList}`}>{', ' + bonusAmount[i]}</span>);
         }
-       buffInfoDiv = <div className='buffInfoDiv' style={{marginTop: Math.floor(counter / 4) * 60 + 60}}>
+       buffInfoDiv = <div className='buffInfoDiv' style={{marginTop: Math.floor((counter - 1) / 4) * 60 + 60}}>
           <span>{capitalTypeName + ': '}</span>
           <span>{'['}</span>{reqList}<span>{']'}</span>
           <span>{` ${inc} ${bonusStatType} for ${units} `}</span>
@@ -693,6 +685,16 @@ class App extends Component {
         {buffInfoDiv}
       </div>
     </div>;
+  }
+
+  displayBuffs = () => this.displayBuffsRender(this.props.boardBuffs);
+
+  displayEnemyBuffs = () => {
+    const boardBuffsVar = this.props.players[this.props.enemyIndex.split(' ')[1]];
+    // console.log('displayEnemyBuffs', (boardBuffsVar.boardBuffs ? boardBuffsVar.boardBuffs.buffMap : '')); // boardBuffsVar, (boardBuffsVar ? boardBuffsVar.boardBuffs : '')
+    if(boardBuffsVar.boardBuffs) { //
+      return this.displayBuffsRender(boardBuffsVar.boardBuffs, true);
+    }
   }
 
   handleKeyPress(event){
@@ -1282,18 +1284,24 @@ class App extends Component {
         {(this.props.musicEnabled ? this.playMusic() : '')} 
       </div>
     </div>
-    const topBar = <div className='centerWith50 flex' style={{width: '80%'}}>
-        <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+    const topBar = <div className='flex topBarDiv'>
+        <div className='flex topBarPlayerName'>
+          <div className='marginTop5 biggerText text_shadow paddingLeft5'>
+            {(this.props.visiting === this.props.index ? 'Player ' + this.props.index : 
+            <span><span className='goldFont'>{'Visit: '}</span><span>{'Player ' + this.props.visiting}</span></span>)}
+          </div>
+        </div>
+        <div className='marginTop5 biggerText text_shadow topBarRound'>
           {'Round: ' + this.props.round}
         </div>
         {this.getAmountOfUnitsOnBoard()}
-        <div className='flex' style={{paddingLeft: '65px'}}>
+        <div className='flex topBarPadding'>
           <img className='goldImage' src={getImage('goldCoin')} alt='goldCoin'/>
           <div className='marginTop5 biggerText'>
             <span className='text_shadow paddingLeft5'>{JSON.stringify(this.props.gold, null, 2)}</span>
           </div>
         </div>
-        <div className='marginTop5 biggerText text_shadow' style={{paddingLeft: '65px'}}>
+        <div className='marginTop5 biggerText text_shadow topBarPadding'>
           {(this.props.onGoingBattle ? <div className='redFont'>
             {(this.props.enemyIndex ? <span className='nextUpText'>{this.props.enemyIndex}</span>: '')}
             {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/> : '')}
@@ -1306,17 +1314,6 @@ class App extends Component {
         </div>
       </div>;
     const leftBar = <div style={{width: '165px'}}>
-        <div className='flex'>
-          <div className='marginTop5 biggerText text_shadow paddingLeft5'>
-            {(this.props.visiting === this.props.index ? 'Player ' + this.props.index : 
-            <span><span className='goldFont'>{'Visit: '}</span><span>{'Player ' + this.props.visiting}</span></span>)}
-          </div>
-        </div>
-        <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
-          <div className={`updateMessage ${(this.props.messageMode === 'big' ? 'goldFont' : (this.props.messageMode === 'error' ? 'redFont' : ''))}`}>
-            {'Message: ' + this.props.message}
-          </div>
-        </div>
         {this.props.gameIsLive ? <Timer startTime={this.props.timerDuration} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
@@ -1328,7 +1325,11 @@ class App extends Component {
           {(this.props.boardBuffs && this.props.boardBuffs.buffMap && Object.keys(this.props.boardBuffs.buffMap).length > 0 ?
             this.displayBuffs() : '')}
         </div>
-        <div className='marginTop5 flex'>
+        <div className='battleEnemyBuffs text_shadow'>
+          {(this.props.onGoingBattle && this.props.enemyIndex.includes('Player') ?
+            this.displayEnemyBuffs() : '')}
+        </div>
+        <div className='flex musicDiv'>
           <div onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}>
             <img className='musicImg' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')}/>
           </div>
@@ -1417,6 +1418,11 @@ class App extends Component {
                     onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})} alt='toggleHelp'/>
             </div>
             {(this.props.debugMode ? <div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div> : '')}
+            <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
+              <div className={`updateMessage ${(this.props.messageMode === 'big' ? 'goldFont' : (this.props.messageMode === 'error' ? 'redFont' : ''))}`}>
+                {'Message: ' + this.props.message}
+              </div>
+            </div>
             {/*<div style={{marginLeft: '5px'}}>
               <button className='normalButton test_animation' onClick={() => battleReady(this.props.storedState)}>Battle ready</button>
             </div>*/}
@@ -1475,7 +1481,7 @@ const mapStateToProps = state => ({
   storedState: state.storedState,
   players: state.players,
   player: state.player,
-  myHand: state.myHand,
+  myHand: state.myHand, 
   myBoard: state.myBoard,
   myShop: state.myShop,
   lock: state.lock,

@@ -111,11 +111,9 @@ Target Priorities
 
 ## Backend
 
-Dev mode allow testing with sound
+gymleader show board types
 
-Print
-    bought exp print show player and progress
-    Refreshes Shop show playerIndex
+Dev mode allow testing with sound
 
 Mana goes over max, shouldnt allow
 
