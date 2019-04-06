@@ -462,6 +462,7 @@ class App extends Component {
       const s = this.props.stats;
       let evolves_from = '';
       let evolves_to = '';
+      let snd_evolves_to = '';
       if(s.evolves_from) {
         evolves_from = <span className='flex'>
           <span className='paddingRight5 marginTop15'>Evolves from: </span>
@@ -484,6 +485,12 @@ class App extends Component {
             <PokemonImage name={s.evolves_to} sideLength={40} newProps={this.props}/>
           </span>
         }
+      }
+      if(s.snd_evolves_to) {
+        snd_evolves_to = <span className='flex'>
+          <span className='paddingRight5 marginTop15'>Evolves to: </span>
+          <PokemonImage name={s.snd_evolves_to} sideLength={40} newProps={this.props}/>
+        </span>
       }
       const boardBuffs = this.props.boardBuffs;
       const buffs = {};
@@ -533,6 +540,7 @@ class App extends Component {
         <div>
           {evolves_from}
           {evolves_to}
+          {snd_evolves_to}
         </div>
       </div>
       return content;
