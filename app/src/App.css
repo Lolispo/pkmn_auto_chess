@@ -30,8 +30,16 @@ body {
   padding-left: 600px;
 }
 
+.startButton {
+  width: 80px;
+}
+
 .gameDiv {
   margin: 20px;
+}
+
+.wholeBody {
+  margin-top: 10px;
 }
 
 .pokemonShopText {
@@ -287,6 +295,14 @@ body {
 
 .topBarPadding {
   padding-left: 65px;
+}
+
+.topBarPieceDiv {
+  padding-left: 65px;
+}
+
+.leftBar {
+  width: 165px;
 }
 
 .marginTop5 {
@@ -613,6 +629,10 @@ body {
 	animation-duration: 0.9s;
 }
 
+.chatTypingSubmit {
+  height: 25px;
+}
+
 .helpText {
   white-space: pre-line;
   padding-left: 5px;
@@ -893,6 +913,10 @@ body {
   /* TODO */ 
 }
 
+.refreshShopDiv {
+  padding-top: 10px;
+}
+
 .refreshShopImage {
   /*
   height: 65px;
@@ -902,6 +926,16 @@ body {
   width: 40px;
   height: 56px;
   margin-left: -4px;
+}
+
+.belowShopDiv {
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+.hoveringDiv {
+  margin-top: 15px;
+  margin-left: 10px;
 }
 
 .type {

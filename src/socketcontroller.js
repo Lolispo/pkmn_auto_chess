@@ -19,7 +19,7 @@ const getSessionId = socketId => connectedPlayers.get(socketId).get('sessionId')
 const getPlayerIndex = socketId => sessionJS.getPlayerIndex(sessions.get(connectedPlayers.get(socketId).get('sessionId')), socketId);
 
 const sessionExist = (socketId) => {
-  if (f.isUndefined(connectedPlayers)) { return false; }
+  if (f.isUndefined(connectedPlayers) || f.isUndefined(connectedPlayers.get(socketId))) return false;
   // console.log('If crash: undefined?', connectedPlayers);
   return !f.isUndefined(sessions.get(connectedPlayers.get(socketId).get('sessionId'))); // Crashed here somehow, early
 };

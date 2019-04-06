@@ -1100,9 +1100,9 @@ class App extends Component {
     const unitsOnBoard = Object.keys(this.props.myBoard).length;
     const level = this.props.level;
     const content = <span className={(unitsOnBoard > level ? 'redFont' : '')}>{unitsOnBoard}</span>
-    return <div className='marginTop5 flex' style={{paddingLeft: '65px'}}>
+    return <div className='marginTop5 flex topBarPieceDiv'>
       <img style={{marginTop: '-5px'}} className='pieceImg' src={getImage('pieceImg')} alt='Pieces'/>
-      <div className='biggerText text_shadow' style={{paddingLeft: '5px'}}>
+      <div className='biggerText text_shadow paddingLeft5'>
         <span className='pieceDiv'> : {content} / {level}</span>
       </div>
     </div>;
@@ -1217,7 +1217,7 @@ class App extends Component {
           <input placeholder='Type a message ...' className='textInput' type="text" value={this.state.chatMessageInput} 
           onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
         </label>
-        <input className='text_shadow normalButton' style={{height: '25px'}} type="submit" value="Submit" />
+        <input className='text_shadow normalButton chatTypingSubmit' type="submit" value="Submit" />
       </form>
     </div>
     </div> : <div className='helpText text_shadow'>
@@ -1257,8 +1257,8 @@ class App extends Component {
       {/*<div className='titleCard text_shadow'>Pokemon Auto Chess</div>*/}
       <div className='startButtons'>
         <div className='flex'> 
-          <button className={`normalButton ${(!this.props.ready ? 'growAnimation' : '')} ${(this.props.loaded ? '' : 'hidden')}`} 
-          onClick={this.toggleReady} style={{width: '80px'}}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
+          <button className={`normalButton startButton ${(!this.props.ready ? 'growAnimation' : '')} ${(this.props.loaded ? '' : 'hidden')}`} 
+          onClick={this.toggleReady}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={() => this.startGameEvent()}>
             {(this.props.connected ? 
               (!this.props.loaded ? ' Loading ...' :
@@ -1313,7 +1313,7 @@ class App extends Component {
           </div>)}
         </div>
       </div>;
-    const leftBar = <div style={{width: '165px'}}>
+    const leftBar = <div className='leftBar'>
         {this.props.gameIsLive ? <Timer startTime={this.props.timerDuration} key={this.props.round} startTimer={this.props.startTimer} 
         storedState={this.props.storedState} dispatch={this.props.dispatch} gameEnded={this.props.gameEnded}></Timer> : ''}
         <div>
@@ -1389,7 +1389,7 @@ class App extends Component {
                       <img className={`lockImage ${(this.props.lock ? 'shineLock' : '')}`} onClick={() => toggleLockEvent(this.props)} 
                       src={this.props.lock ? getImage('lockedLock') : getImage('openLock')} alt='lock'/>   
                     </div>
-                    <div style={{paddingTop: '10px'}}>
+                    <div className='refreshShopDiv'>
                       <img className='refreshShopImage' onClick={() => refreshShopEvent(this.props)} src={getImage('refreshShop')} alt='refreshShop'/>
                     </div>
                     <div className='flex goldImageRefreshDiv'>
@@ -1404,7 +1404,7 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <div className='marginTop5 paddingLeft5' style={{paddingTop: '5px', paddingLeft: '10px'}}>
+        <div className='marginTop5 paddingLeft5 belowShopDiv'>
           <div className='flex'>
             <div>
               <button style={{marginLeft: '5px'}} className='normalButton' onClick={() => buyExpEvent(this.props)}>Buy Exp</button>
@@ -1417,7 +1417,7 @@ class App extends Component {
               <img className='toggleHelpImg' src={(this.props.help ? getImage('collapse') : getImage('collapseNot'))} 
                     onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})} alt='toggleHelp'/>
             </div>
-            {(this.props.debugMode ? <div className='text_shadow' style={{marginTop: '15px', marginLeft: '10px'}}>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div> : '')}
+            {(this.props.debugMode ? <div className='text_shadow hoveringDiv'>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div> : '')}
             <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
               <div className={`updateMessage ${(this.props.messageMode === 'big' ? 'goldFont' : (this.props.messageMode === 'error' ? 'redFont' : ''))}`}>
                 {'Message: ' + this.props.message}
@@ -1454,7 +1454,7 @@ class App extends Component {
     </div>;
     return (this.props.gameIsLive ? <div className='gameDiv'>
       {topBar}
-      <div className='flex' style={{paddingTop: '10px'}} onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
+      <div className='flex wholeBody' onKeyDown={(event) => this.handleKeyPress(event)} tabIndex='0'>
         {leftBar}
         {boardDiv}
         {rightSide}
