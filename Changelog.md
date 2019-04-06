@@ -179,3 +179,5 @@ Pichu added, baby to pikachu (Cost 1)
 Increased cost for eevee evolution to 9 (same as cost), allows resell at full value
 
 Spearow 1 -> 2
+
+★ new star

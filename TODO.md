@@ -230,8 +230,19 @@ Bug buff type fix
 Add type weaknesses/strengths in message buff bonus that toggles
 
 Up next for round 4 show as NPC -> PVP
+    Check, dont think it does
 
 Reset time 120 000 -> 60 000
+
+Baby name show for babies
+
+Infopanel
+    Add getting information from the types in infoPanel
+    Show bars in infopanel screen for stats (Easier comparisons)
+    Show all evolutions, highlight selected unit
+    Click on evolution, expand that unit
+        evoName: evoImage
+        ^Click -> stats for evolution in indexed tree follows
 
 Moving units on hand during battle:
     Weird animation
@@ -391,18 +402,6 @@ Css:
 Animations: 
     Level up animation -> too full bar and down to zero (or xp over 0)
     Hp bar changes animation
-
-TopBar:
-    Piece Image
-
-Infopanel
-    Add getting information from the types in infoPanel
-    Show bars in infopanel screen for stats (Easier comparisons)
-    Show all evolutions, highlight selected unit
-    Click on evolution, expand that unit
-        evoName: evoImage
-        ^Click -> stats for evolution in indexed tree follows
-    Pokedex give inspiration for some part of infopanel?
 
 Scoreboard: 
     Css me, Stick to right like a menu
