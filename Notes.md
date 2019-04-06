@@ -8,10 +8,8 @@ Here: 58
 ### Unit cost divisions
 
 Dota: 12 13 14 11 5
-
-Current: 11 13 12 12 5
  
-Future: 12 14 12 13 5
+Current: 12 14 12 13 5
 
 ## Current Notes
 
@@ -86,10 +84,10 @@ Steel: 1 (3) [1,2]
   Stats between scyther and scizor are weird
     Same total, scyther is faster
 
+  Add:
+    Omanyte
+
   Metapod/Kakuna weak
-  Omastar weak
-  SlowKing might be too weak compared to slowbro
-  Check slowpoke - really slow
   Check dps, damage
 
 #### Abilitiy implementations

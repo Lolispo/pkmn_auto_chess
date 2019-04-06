@@ -2231,5 +2231,166 @@
     "specialAttack": 100,
     "specialDefense": 100,
     "range": 3
+  },
+  "mareep": {
+    "name": "mareep",
+    "displayName": "Mareep",
+    "cost": 2,
+    "hp": 55,
+    "attack": 40,
+    "defense": 40,
+    "speed": 35,
+    "type": "electric",
+    "ability": "thunderShock",
+    "evolves_to": "flaaffy",
+    "specialAttack": 65,
+    "specialDefense": 45,
+    "range": 2,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
+  },
+  "flaaffy": {
+    "name": "flaaffy",
+    "displayName": "Flaaffy",
+    "cost": 4,
+    "hp": 70,
+    "attack": 55,
+    "defense": 55,
+    "speed": 45,
+    "type": "electric",
+    "ability": "thunderBolt",
+    "evolves_from": "mareep",
+    "evolves_to": "ampharos",
+    "specialAttack": 80,
+    "specialDefense": 60,
+    "range": 2,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
+  },
+  "ampharos": {
+    "name": "ampharos",
+    "displayName": "Ampharos",
+    "cost": 6,
+    "hp": 90,
+    "attack": 75,
+    "defense": 75,
+    "speed": 55,
+    "type": "electric",
+    "ability": "zapCannon",
+    "evolves_from": "flaaffy",
+    "specialAttack": 115,
+    "specialDefense": 90,
+    "range": 2,
+    "eggGroup": [
+      "Monster",
+      "Field"
+    ]
+  },
+  "hoppip": {
+    "name": "hoppip",
+    "displayName": "Hoppip",
+    "cost": 1,
+    "hp": 35,
+    "attack": 35,
+    "defense": 40,
+    "speed": 50,
+    "type": [
+      "grass",
+      "flying"
+    ],
+    "ability": "absorb",
+    "evolves_to": "skiploom",
+    "specialAttack": 35,
+    "specialDefense": 55,
+    "range": 2,
+    "eggGroup": [
+      "Fairy",
+      "Grass"
+    ]
+  },
+  "skiploom": {
+    "name": "skiploom",
+    "displayName": "Skiploom",
+    "cost": 3,
+    "hp": 55,
+    "attack": 45,
+    "defense": 50,
+    "speed": 80,
+    "type": [
+      "grass",
+      "flying"
+    ],
+    "ability": "megaDrain",
+    "evolves_from": "hoppip",
+    "evolves_to": "jumpluff",
+    "specialAttack": 45,
+    "specialDefense": 65,
+    "range": 2,
+    "eggGroup": [
+      "Fairy",
+      "Grass"
+    ]
+  },
+  "jumpluff": {
+    "name": "jumpluff",
+    "displayName": "Jumpluff",
+    "cost": 5,
+    "hp": 75,
+    "attack": 55,
+    "defense": 70,
+    "speed": 110,
+    "type": [
+      "grass",
+      "flying"
+    ],
+    "ability": "gigaDrain",
+    "evolves_from": "skiploom",
+    "specialAttack": 55,
+    "specialDefense": 85,
+    "range": 2,
+    "eggGroup": [
+      "Fairy",
+      "Grass"
+    ]
+  },
+  "anorith": {
+    "name": "anorith",
+    "displayName": "Anorith",
+    "cost": 4,
+    "hp": 45,
+    "attack": 95,
+    "defense": 50,
+    "speed": 75,
+    "type": [
+      "rock",
+      "bug"
+    ],
+    "ability": "scratch",
+    "evolves_to": "armaldo",
+    "specialAttack": 40,
+    "specialDefense": 50,
+    "eggGroup": "Water 3"
+  },
+  "armaldo": {
+    "name": "armaldo",
+    "displayName": "Armaldo",
+    "cost": 6,
+    "hp": 75,
+    "attack": 125,
+    "defense": 100,
+    "speed": 45,
+    "type": [
+      "rock",
+      "bug"
+    ],
+    "ability": "stoneEdge",
+    "evolves_from": "anorith",
+    "specialAttack": 70,
+    "specialDefense": 80,
+    "eggGroup": "Water 3"
   }
 }

@@ -142,10 +142,11 @@ Benched Scyther
 
 Benched Abra
 
-## Not made
+## Balance patch 0.4.3.2
 
 Added Mareep
 
 Added Hoppip
 
 Added Anorith
+

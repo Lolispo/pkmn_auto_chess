@@ -160,6 +160,55 @@ import dragonite from './assets/pokemonCries/149 - Dragonite.wav'
 import mewtwo from './assets/pokemonCries/150 - Mewtwo.wav'
 import mew from './assets/pokemonCries/151 - Mew.wav'
 
+import mareep from './assets/pokemonCries/179 - Mareep.wav'
+import flaaffy from './assets/pokemonCries/180 - Flaaffy.wav'
+import ampharos from './assets/pokemonCries/181 - Ampharos.wav'
+import larvitar from './assets/pokemonCries/246 - Larvitar.wav'
+import pupitar from './assets/pokemonCries/247 - Pupitar.wav'
+import tyranitar from './assets/pokemonCries/248 - Tyranitar.wav'
+import lotad from './assets/pokemonCries/270 - Lotad.wav'
+import lombre from './assets/pokemonCries/271 - Lombre.wav'
+import ludicolo from './assets/pokemonCries/272 - Ludicolo.wav'
+import seedot from './assets/pokemonCries/273 - Seedot.wav'
+import nuzleaf from './assets/pokemonCries/274 - Nuzleaf.wav'
+import shiftry from './assets/pokemonCries/275 - Shiftry.wav'
+import ralts from './assets/pokemonCries/280 - Ralts.wav'
+import kirlia from './assets/pokemonCries/281 - Kirlia.wav'
+import gardevoir from './assets/pokemonCries/282 - Gardevoir.wav'
+import beldum from './assets/pokemonCries/374 - Beldum.wav'
+import metang from './assets/pokemonCries/375 - Metang.wav'
+import metagross from './assets/pokemonCries/376 - Metagross.wav'
+import hoppip from './assets/pokemonCries/187 - Hoppip.wav'
+import skiploom from './assets/pokemonCries/188 - Skiploom.wav'
+import jumpluff from './assets/pokemonCries/189 - Jumpluff.wav'
+import aron from './assets/pokemonCries/304 - Aron.wav'
+import lairon from './assets/pokemonCries/305 - Lairon.wav'
+import aggron from './assets/pokemonCries/306 - Aggron.wav'
+import slakoth from './assets/pokemonCries/287 - Slakoth.wav'
+import vigoroth from './assets/pokemonCries/288 - Vigoroth.wav'
+import slaking from './assets/pokemonCries/289 - Slaking.wav'
+import duskull from './assets/pokemonCries/355 - Duskull.wav'
+import dusclops from './assets/pokemonCries/356 - Dusclops.wav'
+import dusknoir from './assets/pokemonCries/477 - Dusknoir.wav'
+import bagon from './assets/pokemonCries/371 - Bagon.wav'
+import shelgon from './assets/pokemonCries/372 - Shelgon.wav'
+import salamence from './assets/pokemonCries/373 - Salamence.wav'
+import spheal from './assets/pokemonCries/363 - Spheal.wav'
+import sealeo from './assets/pokemonCries/364 - Sealeo.wav'
+import walrein from './assets/pokemonCries/365 - Walrein.wav'
+import lugia from './assets/pokemonCries/249 - Lugia.wav'
+import ho_oh from './assets/pokemonCries/250 - Ho-Oh.wav'
+import celebi from './assets/pokemonCries/251 - Celebi.wav'
+import kyogre from './assets/pokemonCries/382 - Kyogre.wav'
+import groudon from './assets/pokemonCries/383 - Groudon.wav'
+import rayquaza from './assets/pokemonCries/384 - Rayquaza.wav'
+import jirachi from './assets/pokemonCries/385 - Jirachi.wav'
+import whismur from './assets/pokemonCries/293 - Whismur.wav'
+import loudred from './assets/pokemonCries/294 - Loudred.wav'
+import exploud from './assets/pokemonCries/295 - Exploud.wav'
+import anorith from './assets/pokemonCries/347 - Anorith.wav'
+import armaldo from './assets/pokemonCries/348 - Armaldo.wav'
+
 const array = [
   ['bulbasaur', bulbasaur],
   ['ivysaur', ivysaur],
@@ -298,6 +347,54 @@ const array = [
   ['dragonite', dragonite],
   ['mewtwo', mewtwo],
   ['mew', mew],
+  ['mareep', mareep],
+  ['flaaffy', flaaffy],
+  ['ampharos', ampharos],
+  ['larvitar', larvitar],
+  ['pupitar', pupitar],
+  ['tyranitar', tyranitar],
+  ['lotad', lotad],
+  ['lombre', lombre],
+  ['ludicolo', ludicolo],
+  ['seedot', seedot],
+  ['nuzleaf', nuzleaf],
+  ['shiftry', shiftry],
+  ['ralts', ralts],
+  ['kirlia', kirlia],
+  ['gardevoir', gardevoir],
+  ['beldum', beldum],
+  ['metang', metang],
+  ['metagross', metagross],
+  ['hoppip', hoppip],
+  ['skiploom', skiploom],
+  ['jumpluff', jumpluff],
+  ['aron', aron],
+  ['lairon', lairon],
+  ['aggron', aggron],
+  ['slakoth', slakoth],
+  ['vigoroth', vigoroth],
+  ['slaking', slaking],
+  ['duskull', duskull],
+  ['dusclops', dusclops],
+  ['dusknoir', dusknoir],
+  ['bagon', bagon],
+  ['shelgon', shelgon],
+  ['salamence', salamence],
+  ['spheal', spheal],
+  ['sealeo', sealeo],
+  ['walrein', walrein],
+  ['lugia', lugia],
+  ['ho-oh', ho_oh],
+  ['celebi', celebi],
+  ['kyogre', kyogre],
+  ['groudon', groudon],
+  ['rayquaza', rayquaza],
+  ['jirachi', jirachi],
+  ['whismur', whismur],
+  ['loudred', loudred],
+  ['exploud', exploud],
+  ['anorith', anorith],
+  ['armaldo', armaldo],
 ];
 
 const map = new Map(array);
