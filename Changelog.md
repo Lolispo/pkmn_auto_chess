@@ -171,3 +171,11 @@ Clefairy normal -> fairy
 Jigglypuff normal -> normal, fairy
 
 Psychic buff [3,5,7] -> [2, 3, 5]
+
+## Balance patch 0.4.3.4
+
+Pichu added, baby to pikachu (Cost 1)
+
+Increased cost for eevee evolution to 9 (same as cost), allows resell at full value
+
+Spearow 1 -> 2

@@ -59,16 +59,12 @@ Odd behaviour:
 
 # Fix me - Prio
 
-    Add new Pokemon sprites
-        Replace pokemonsprites with new rendered one
-
-    Add .cries connection
-
-    Fix empty in pokemon.json compile
-
     Rendering rework
 
-    Units with long range standing still, not finding path
+    Bug: Units with long range standing still, not finding path
+
+    Find: Not updating hp after battle lost
+        Potential data race
 
 ## Add me - Prio
 
@@ -114,6 +110,18 @@ Target Priorities
             If multiple, random
 
 ## Backend
+
+Dev mode allow testing with sound
+
+Print
+    bought exp print show player and progress
+    Refreshes Shop show playerIndex
+
+Mana goes over max, shouldnt allow
+
+Add cries to spriteBuild logic
+    Minimize the amount of required data for the sound files
+    They are on clientside already so not as important
 
 Show baby units ingame more clearly
 

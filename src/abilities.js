@@ -4,6 +4,7 @@
 const { Map, List, fromJS } = require('immutable');
 const fs = require('fs');
 const pokemonJS = require('./pokemon');
+const f = require('./f');
 
 const abilityDefaults = Map({
   mana: 100,
@@ -39,7 +40,9 @@ exports.getDefault = name => abilityDefaults.get(name);
 exports.getAbility = async (name) => {
   // console.log('@abilties.getAbility', name);
   const ability = (await pokemonJS.getStats(name)).get('ability');
-  return (await abilitiesMap).get(ability);
+  const returnMe = (await abilitiesMap).get(ability);
+  if(f.isUndefined(returnMe)) console.log('@getAbility undefined', name); 
+  return returnMe;
 };
 
 exports.getMap = () => abilitiesMap;

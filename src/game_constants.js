@@ -104,8 +104,8 @@ const roundSetConfiguration = Map({
   15: async () => gameJS.createBattleBoard(List([
     Map({ name: 'staryu', x: 3, y: 1 }),
     Map({ name: 'starmie', x: 4, y: 1 }),
-    Map({ name: 'psyduck', x: 5, y: 2 }),
-    Map({ name: 'golduck', x: 6, y: 2 }),
+    Map({ name: 'horsea', x: 5, y: 2 }),
+    Map({ name: 'seadra', x: 6, y: 2 }),
     Map({ name: 'magikarp', x: 7, y: 2 }),
   ])),
   20: async () => gameJS.createBattleBoard(List([
@@ -137,14 +137,16 @@ const roundSetConfiguration = Map({
     Map({ name: 'golbat', x: 1, y: 2 }),
   ])),
   35: async () => gameJS.createBattleBoard(List([
-    Map({ name: 'kadabra', x: 3, y: 1 }),
+    //Map({ name: 'kadabra', x: 3, y: 1 }),
     Map({ name: 'haunter', x: 4, y: 1 }),
-    Map({ name: 'alakazam', x: 5, y: 1 }),
+    //Map({ name: 'alakazam', x: 5, y: 1 }),
     Map({ name: 'drowzee', x: 6, y: 1 }),
     Map({ name: 'hypno', x: 7, y: 1 }),
     Map({ name: 'gengar', x: 2, y: 1 }),
     Map({ name: 'jynx', x: 1, y: 1 }),
     Map({ name: 'exeggutor', x: 2, y: 2 }),
+    Map({ name: 'gardevoir', x: 3, y: 1 }),
+    Map({ name: 'kirlia', x: 5, y: 1 }),
   ])),
   40: async () => gameJS.createBattleBoard(List([
     Map({ name: 'growlithe', x: 3, y: 1 }),

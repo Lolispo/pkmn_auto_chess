@@ -9,13 +9,13 @@ Here: 58
 
 Dota: 12 13 14 11 5
  
-Current: 12 14 13 13 8
+Current: 11 15 13 13 8
 
 ## Current Notes
 
 Font Rockwell
 
-Lt surge buff
+Eevolutions removes lot of hp
 
 is Money laundring ok with bugs?
 
@@ -73,9 +73,10 @@ Steel: 1 (3) [1,2]
 
 #### Potential balance:
 
-  More legendaries: Lugia, Ho-oh, Kyogre, Groudon, Celebi
+  Strongest Level 1:
+    Rattata, ekans, pidgey, vulpix     diglett   pichu, igglybuff, cleffa, weedle, caterpie
 
-  Buff 7:s a bit
+  More legendaries: Lugia, Ho-oh, Kyogre, Groudon, Celebi
 
   Type numbers:
   More grass units?

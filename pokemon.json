@@ -1,7 +1,7 @@
 {
   "bulbasaur": {
     "name": "bulbasaur",
-    "displayName": "Bulbasaur☆",
+    "displayName": "Bulbasaur★",
     "cost": 2,
     "hp": 45,
     "attack": 49,
@@ -23,7 +23,7 @@
   },
   "ivysaur": {
     "name": "ivysaur",
-    "displayName": "Ivysaur☆☆",
+    "displayName": "Ivysaur★★",
     "cost": 4,
     "hp": 60,
     "attack": 62,
@@ -46,7 +46,7 @@
   },
   "venusaur": {
     "name": "venusaur",
-    "displayName": "Venusaur☆☆☆",
+    "displayName": "Venusaur★★★",
     "cost": 6,
     "hp": 80,
     "attack": 82,
@@ -68,7 +68,7 @@
   },
   "charmander": {
     "name": "charmander",
-    "displayName": "Charmander☆",
+    "displayName": "Charmander★",
     "cost": 2,
     "hp": 39,
     "attack": 52,
@@ -87,7 +87,7 @@
   },
   "charmeleon": {
     "name": "charmeleon",
-    "displayName": "Charmeleon☆☆",
+    "displayName": "Charmeleon★★",
     "cost": 4,
     "hp": 58,
     "attack": 64,
@@ -107,7 +107,7 @@
   },
   "charizard": {
     "name": "charizard",
-    "displayName": "Charizard☆☆☆",
+    "displayName": "Charizard★★★",
     "cost": 6,
     "hp": 78,
     "attack": 84,
@@ -129,7 +129,7 @@
   },
   "squirtle": {
     "name": "squirtle",
-    "displayName": "Squirtle☆",
+    "displayName": "Squirtle★",
     "cost": 2,
     "hp": 44,
     "attack": 48,
@@ -148,7 +148,7 @@
   },
   "wartortle": {
     "name": "wartortle",
-    "displayName": "Wartortle☆☆",
+    "displayName": "Wartortle★★",
     "cost": 4,
     "hp": 59,
     "attack": 63,
@@ -168,7 +168,7 @@
   },
   "blastoise": {
     "name": "blastoise",
-    "displayName": "Blastoise☆☆☆",
+    "displayName": "Blastoise★★★",
     "cost": 6,
     "hp": 79,
     "attack": 83,
@@ -187,7 +187,7 @@
   },
   "caterpie": {
     "name": "caterpie",
-    "displayName": "Caterpie☆",
+    "displayName": "Caterpie★",
     "cost": 1,
     "hp": 45,
     "attack": 30,
@@ -203,7 +203,7 @@
   },
   "metapod": {
     "name": "metapod",
-    "displayName": "Metapod☆☆",
+    "displayName": "Metapod★★",
     "cost": 3,
     "hp": 50,
     "attack": 20,
@@ -219,7 +219,7 @@
   },
   "butterfree": {
     "name": "butterfree",
-    "displayName": "Butterfree☆☆☆",
+    "displayName": "Butterfree★★★",
     "cost": 5,
     "hp": 60,
     "attack": 45,
@@ -238,7 +238,7 @@
   },
   "weedle": {
     "name": "weedle",
-    "displayName": "Weedle☆",
+    "displayName": "Weedle★",
     "cost": 1,
     "hp": 40,
     "attack": 35,
@@ -257,7 +257,7 @@
   },
   "kakuna": {
     "name": "kakuna",
-    "displayName": "Kakuna☆☆",
+    "displayName": "Kakuna★★",
     "cost": 3,
     "hp": 45,
     "attack": 25,
@@ -276,7 +276,7 @@
   },
   "beedrill": {
     "name": "beedrill",
-    "displayName": "Beedrill☆☆☆",
+    "displayName": "Beedrill★★★",
     "cost": 5,
     "hp": 65,
     "attack": 80,
@@ -295,7 +295,7 @@
   },
   "pidgey": {
     "name": "pidgey",
-    "displayName": "Pidgey☆",
+    "displayName": "Pidgey★",
     "cost": 1,
     "hp": 40,
     "attack": 45,
@@ -313,7 +313,7 @@
   },
   "pidgeotto": {
     "name": "pidgeotto",
-    "displayName": "Pidgeotto☆☆",
+    "displayName": "Pidgeotto★★",
     "cost": 3,
     "hp": 63,
     "attack": 60,
@@ -332,7 +332,7 @@
   },
   "pidgeot": {
     "name": "pidgeot",
-    "displayName": "Pidgeot☆☆☆",
+    "displayName": "Pidgeot★★★",
     "cost": 5,
     "hp": 83,
     "attack": 80,
@@ -350,7 +350,7 @@
   },
   "rattata": {
     "name": "rattata",
-    "displayName": "Rattata☆",
+    "displayName": "Rattata★",
     "cost": 1,
     "hp": 30,
     "attack": 56,
@@ -365,7 +365,7 @@
   },
   "raticate": {
     "name": "raticate",
-    "displayName": "Raticate☆☆",
+    "displayName": "Raticate★★",
     "cost": 3,
     "hp": 55,
     "attack": 81,
@@ -380,8 +380,8 @@
   },
   "spearow": {
     "name": "spearow",
-    "displayName": "Spearow☆",
-    "cost": 1,
+    "displayName": "Spearow★",
+    "cost": 2,
     "hp": 40,
     "attack": 60,
     "defense": 30,
@@ -398,8 +398,8 @@
   },
   "fearow": {
     "name": "fearow",
-    "displayName": "Fearow☆☆",
-    "cost": 3,
+    "displayName": "Fearow★★",
+    "cost": 4,
     "hp": 65,
     "attack": 90,
     "defense": 65,
@@ -416,7 +416,7 @@
   },
   "ekans": {
     "name": "ekans",
-    "displayName": "Ekans☆",
+    "displayName": "Ekans★",
     "cost": 1,
     "hp": 30,
     "attack": 60,
@@ -434,7 +434,7 @@
   },
   "arbok": {
     "name": "arbok",
-    "displayName": "Arbok☆☆",
+    "displayName": "Arbok★★",
     "cost": 3,
     "hp": 60,
     "attack": 85,
@@ -450,16 +450,33 @@
       "Dragon"
     ]
   },
+  "pichu": {
+    "name": "pichu",
+    "displayName": "Pichu★",
+    "cost": 1,
+    "hp": 20,
+    "attack": 40,
+    "defense": 15,
+    "speed": 60,
+    "type": "electric",
+    "ability": "thunderShock",
+    "evolves_to": "pikachu",
+    "specialAttack": 35,
+    "specialDefense": 35,
+    "range": 2,
+    "reqEvolve": 2
+  },
   "pikachu": {
     "name": "pikachu",
-    "displayName": "Pikachu☆",
-    "cost": 1,
+    "displayName": "Pikachu★★",
+    "cost": 3,
     "hp": 35,
     "attack": 55,
     "defense": 30,
     "speed": 90,
     "type": "electric",
     "ability": "thunderShock",
+    "evolves_from": "pichu",
     "evolves_to": "raichu",
     "specialAttack": 50,
     "specialDefense": 40,
@@ -471,8 +488,8 @@
   },
   "raichu": {
     "name": "raichu",
-    "displayName": "Raichu☆☆",
-    "cost": 3,
+    "displayName": "Raichu★★★",
+    "cost": 5,
     "hp": 60,
     "attack": 90,
     "defense": 55,
@@ -490,7 +507,7 @@
   },
   "sandshrew": {
     "name": "sandshrew",
-    "displayName": "Sandshrew☆",
+    "displayName": "Sandshrew★",
     "cost": 4,
     "hp": 50,
     "attack": 75,
@@ -505,7 +522,7 @@
   },
   "sandslash": {
     "name": "sandslash",
-    "displayName": "Sandslash☆☆",
+    "displayName": "Sandslash★★",
     "cost": 6,
     "hp": 75,
     "attack": 100,
@@ -520,7 +537,7 @@
   },
   "nidoran-f": {
     "name": "nidoran-f",
-    "displayName": "Nidoran ♀☆",
+    "displayName": "Nidoran ♀★",
     "cost": 2,
     "hp": 55,
     "attack": 47,
@@ -538,7 +555,7 @@
   },
   "nidorina": {
     "name": "nidorina",
-    "displayName": "Nidorina☆☆",
+    "displayName": "Nidorina★★",
     "cost": 4,
     "hp": 70,
     "attack": 62,
@@ -553,7 +570,7 @@
   },
   "nidoqueen": {
     "name": "nidoqueen",
-    "displayName": "Nidoqueen☆☆☆",
+    "displayName": "Nidoqueen★★★",
     "cost": 6,
     "hp": 90,
     "attack": 82,
@@ -570,7 +587,7 @@
   },
   "nidoran-m": {
     "name": "nidoran-m",
-    "displayName": "Nidoran ♂☆",
+    "displayName": "Nidoran ♂★",
     "cost": 2,
     "hp": 46,
     "attack": 57,
@@ -588,7 +605,7 @@
   },
   "nidorino": {
     "name": "nidorino",
-    "displayName": "Nidorino☆☆",
+    "displayName": "Nidorino★★",
     "cost": 4,
     "hp": 61,
     "attack": 72,
@@ -607,7 +624,7 @@
   },
   "nidoking": {
     "name": "nidoking",
-    "displayName": "Nidoking☆☆☆",
+    "displayName": "Nidoking★★★",
     "cost": 6,
     "hp": 81,
     "attack": 92,
@@ -628,7 +645,7 @@
   },
   "cleffa": {
     "name": "cleffa",
-    "displayName": "Cleffa☆",
+    "displayName": "Cleffa★",
     "cost": 1,
     "hp": 50,
     "attack": 25,
@@ -644,7 +661,7 @@
   },
   "clefairy": {
     "name": "clefairy",
-    "displayName": "Clefairy☆☆",
+    "displayName": "Clefairy★★",
     "cost": 2,
     "hp": 70,
     "attack": 45,
@@ -661,7 +678,7 @@
   },
   "clefable": {
     "name": "clefable",
-    "displayName": "Clefable☆☆☆",
+    "displayName": "Clefable★★★",
     "cost": 5,
     "hp": 95,
     "attack": 70,
@@ -677,7 +694,7 @@
   },
   "vulpix": {
     "name": "vulpix",
-    "displayName": "Vulpix☆",
+    "displayName": "Vulpix★",
     "cost": 1,
     "hp": 38,
     "attack": 41,
@@ -693,7 +710,7 @@
   },
   "ninetales": {
     "name": "ninetales",
-    "displayName": "Ninetales☆☆",
+    "displayName": "Ninetales★★",
     "cost": 3,
     "hp": 73,
     "attack": 76,
@@ -709,7 +726,7 @@
   },
   "igglybuff": {
     "name": "igglybuff",
-    "displayName": "Igglybuff☆",
+    "displayName": "Igglybuff★",
     "cost": 1,
     "hp": 90,
     "attack": 30,
@@ -727,7 +744,7 @@
   },
   "jigglypuff": {
     "name": "jigglypuff",
-    "displayName": "Jigglypuff☆☆",
+    "displayName": "Jigglypuff★★",
     "cost": 2,
     "hp": 115,
     "attack": 45,
@@ -746,7 +763,7 @@
   },
   "wigglytuff": {
     "name": "wigglytuff",
-    "displayName": "Wigglytuff☆☆☆",
+    "displayName": "Wigglytuff★★★",
     "cost": 5,
     "hp": 140,
     "attack": 70,
@@ -764,7 +781,7 @@
   },
   "zubat": {
     "name": "zubat",
-    "displayName": "Zubat☆",
+    "displayName": "Zubat★",
     "cost": 2,
     "hp": 40,
     "attack": 45,
@@ -782,7 +799,7 @@
   },
   "golbat": {
     "name": "golbat",
-    "displayName": "Golbat☆☆",
+    "displayName": "Golbat★★",
     "cost": 4,
     "hp": 75,
     "attack": 80,
@@ -801,7 +818,7 @@
   },
   "crobat": {
     "name": "crobat",
-    "displayName": "Crobat☆☆☆",
+    "displayName": "Crobat★★★",
     "cost": 6,
     "hp": 85,
     "attack": 90,
@@ -819,7 +836,7 @@
   },
   "oddish": {
     "name": "oddish",
-    "displayName": "Oddish☆",
+    "displayName": "Oddish★",
     "cost": 2,
     "hp": 45,
     "attack": 50,
@@ -838,7 +855,7 @@
   },
   "gloom": {
     "name": "gloom",
-    "displayName": "Gloom☆☆",
+    "displayName": "Gloom★★",
     "cost": 4,
     "hp": 60,
     "attack": 65,
@@ -858,7 +875,7 @@
   },
   "vileplume": {
     "name": "vileplume",
-    "displayName": "Vileplume☆☆☆",
+    "displayName": "Vileplume★★★",
     "cost": 6,
     "hp": 75,
     "attack": 80,
@@ -877,7 +894,7 @@
   },
   "paras": {
     "name": "paras",
-    "displayName": "Paras☆",
+    "displayName": "Paras★",
     "cost": 2,
     "hp": 35,
     "attack": 70,
@@ -899,7 +916,7 @@
   },
   "parasect": {
     "name": "parasect",
-    "displayName": "Parasect☆☆",
+    "displayName": "Parasect★★",
     "cost": 4,
     "hp": 60,
     "attack": 95,
@@ -921,7 +938,7 @@
   },
   "diglett": {
     "name": "diglett",
-    "displayName": "Diglett☆",
+    "displayName": "Diglett★",
     "cost": 1,
     "hp": 10,
     "attack": 55,
@@ -936,7 +953,7 @@
   },
   "dugtrio": {
     "name": "dugtrio",
-    "displayName": "Dugtrio☆☆",
+    "displayName": "Dugtrio★★",
     "cost": 3,
     "hp": 35,
     "attack": 80,
@@ -951,7 +968,7 @@
   },
   "meowth": {
     "name": "meowth",
-    "displayName": "Meowth☆",
+    "displayName": "Meowth★",
     "cost": 2,
     "hp": 40,
     "attack": 45,
@@ -966,7 +983,7 @@
   },
   "persian": {
     "name": "persian",
-    "displayName": "Persian☆☆",
+    "displayName": "Persian★★",
     "cost": 4,
     "hp": 65,
     "attack": 70,
@@ -981,7 +998,7 @@
   },
   "mankey": {
     "name": "mankey",
-    "displayName": "Mankey☆",
+    "displayName": "Mankey★",
     "cost": 4,
     "hp": 40,
     "attack": 80,
@@ -996,7 +1013,7 @@
   },
   "primeape": {
     "name": "primeape",
-    "displayName": "Primeape☆☆",
+    "displayName": "Primeape★★",
     "cost": 6,
     "hp": 65,
     "attack": 105,
@@ -1011,7 +1028,7 @@
   },
   "growlithe": {
     "name": "growlithe",
-    "displayName": "Growlithe☆",
+    "displayName": "Growlithe★",
     "cost": 4,
     "hp": 55,
     "attack": 70,
@@ -1027,7 +1044,7 @@
   },
   "arcanine": {
     "name": "arcanine",
-    "displayName": "Arcanine☆☆",
+    "displayName": "Arcanine★★",
     "cost": 6,
     "hp": 90,
     "attack": 110,
@@ -1043,7 +1060,7 @@
   },
   "poliwag": {
     "name": "poliwag",
-    "displayName": "Poliwag☆",
+    "displayName": "Poliwag★",
     "cost": 2,
     "hp": 40,
     "attack": 50,
@@ -1059,7 +1076,7 @@
   },
   "poliwhirl": {
     "name": "poliwhirl",
-    "displayName": "Poliwhirl☆☆",
+    "displayName": "Poliwhirl★★",
     "cost": 4,
     "hp": 65,
     "attack": 65,
@@ -1076,7 +1093,7 @@
   },
   "poliwrath": {
     "name": "poliwrath",
-    "displayName": "Poliwrath☆☆☆",
+    "displayName": "Poliwrath★★★",
     "cost": 6,
     "hp": 90,
     "attack": 85,
@@ -1095,7 +1112,7 @@
   },
   "machop": {
     "name": "machop",
-    "displayName": "Machop☆",
+    "displayName": "Machop★",
     "cost": 3,
     "hp": 70,
     "attack": 80,
@@ -1110,7 +1127,7 @@
   },
   "machoke": {
     "name": "machoke",
-    "displayName": "Machoke☆☆",
+    "displayName": "Machoke★★",
     "cost": 5,
     "hp": 80,
     "attack": 100,
@@ -1126,7 +1143,7 @@
   },
   "machamp": {
     "name": "machamp",
-    "displayName": "Machamp☆☆☆",
+    "displayName": "Machamp★★★",
     "cost": 7,
     "hp": 90,
     "attack": 130,
@@ -1141,7 +1158,7 @@
   },
   "bellsprout": {
     "name": "bellsprout",
-    "displayName": "Bellsprout☆",
+    "displayName": "Bellsprout★",
     "cost": 2,
     "hp": 50,
     "attack": 75,
@@ -1160,7 +1177,7 @@
   },
   "weepinbell": {
     "name": "weepinbell",
-    "displayName": "Weepinbell☆☆",
+    "displayName": "Weepinbell★★",
     "cost": 4,
     "hp": 65,
     "attack": 90,
@@ -1180,7 +1197,7 @@
   },
   "victreebel": {
     "name": "victreebel",
-    "displayName": "Victreebel☆☆☆",
+    "displayName": "Victreebel★★★",
     "cost": 6,
     "hp": 80,
     "attack": 105,
@@ -1199,7 +1216,7 @@
   },
   "geodude": {
     "name": "geodude",
-    "displayName": "Geodude☆",
+    "displayName": "Geodude★",
     "cost": 2,
     "hp": 40,
     "attack": 80,
@@ -1217,7 +1234,7 @@
   },
   "graveler": {
     "name": "graveler",
-    "displayName": "Graveler☆☆",
+    "displayName": "Graveler★★",
     "cost": 4,
     "hp": 55,
     "attack": 95,
@@ -1236,7 +1253,7 @@
   },
   "golem": {
     "name": "golem",
-    "displayName": "Golem☆☆☆",
+    "displayName": "Golem★★★",
     "cost": 6,
     "hp": 80,
     "attack": 110,
@@ -1254,7 +1271,7 @@
   },
   "ponyta": {
     "name": "ponyta",
-    "displayName": "Ponyta☆",
+    "displayName": "Ponyta★",
     "cost": 4,
     "hp": 50,
     "attack": 85,
@@ -1270,7 +1287,7 @@
   },
   "rapidash": {
     "name": "rapidash",
-    "displayName": "Rapidash☆☆",
+    "displayName": "Rapidash★★",
     "cost": 6,
     "hp": 65,
     "attack": 100,
@@ -1286,7 +1303,7 @@
   },
   "magnemite": {
     "name": "magnemite",
-    "displayName": "Magnemite☆",
+    "displayName": "Magnemite★",
     "cost": 3,
     "hp": 25,
     "attack": 35,
@@ -1305,7 +1322,7 @@
   },
   "magneton": {
     "name": "magneton",
-    "displayName": "Magneton☆☆",
+    "displayName": "Magneton★★",
     "cost": 5,
     "hp": 50,
     "attack": 60,
@@ -1325,7 +1342,7 @@
   },
   "magnezone": {
     "name": "magnezone",
-    "displayName": "Magnezone☆☆☆",
+    "displayName": "Magnezone★★★",
     "cost": 7,
     "hp": 70,
     "attack": 70,
@@ -1344,7 +1361,7 @@
   },
   "doduo": {
     "name": "doduo",
-    "displayName": "Doduo☆",
+    "displayName": "Doduo★",
     "cost": 3,
     "hp": 35,
     "attack": 85,
@@ -1362,7 +1379,7 @@
   },
   "dodrio": {
     "name": "dodrio",
-    "displayName": "Dodrio☆☆",
+    "displayName": "Dodrio★★",
     "cost": 5,
     "hp": 60,
     "attack": 110,
@@ -1380,7 +1397,7 @@
   },
   "seel": {
     "name": "seel",
-    "displayName": "Seel☆",
+    "displayName": "Seel★",
     "cost": 3,
     "hp": 65,
     "attack": 45,
@@ -1399,7 +1416,7 @@
   },
   "dewgong": {
     "name": "dewgong",
-    "displayName": "Dewgong☆☆",
+    "displayName": "Dewgong★★",
     "cost": 5,
     "hp": 90,
     "attack": 70,
@@ -1421,7 +1438,7 @@
   },
   "shellder": {
     "name": "shellder",
-    "displayName": "Shellder☆",
+    "displayName": "Shellder★",
     "cost": 2,
     "hp": 30,
     "attack": 65,
@@ -1437,7 +1454,7 @@
   },
   "cloyster": {
     "name": "cloyster",
-    "displayName": "Cloyster☆☆",
+    "displayName": "Cloyster★★",
     "cost": 4,
     "hp": 50,
     "attack": 90,
@@ -1456,7 +1473,7 @@
   },
   "gastly": {
     "name": "gastly",
-    "displayName": "Gastly☆",
+    "displayName": "Gastly★",
     "cost": 3,
     "hp": 30,
     "attack": 35,
@@ -1475,7 +1492,7 @@
   },
   "haunter": {
     "name": "haunter",
-    "displayName": "Haunter☆☆",
+    "displayName": "Haunter★★",
     "cost": 5,
     "hp": 45,
     "attack": 50,
@@ -1495,7 +1512,7 @@
   },
   "gengar": {
     "name": "gengar",
-    "displayName": "Gengar☆☆☆",
+    "displayName": "Gengar★★★",
     "cost": 7,
     "hp": 60,
     "attack": 65,
@@ -1514,7 +1531,7 @@
   },
   "drowzee": {
     "name": "drowzee",
-    "displayName": "Drowzee☆",
+    "displayName": "Drowzee★",
     "cost": 3,
     "hp": 60,
     "attack": 48,
@@ -1530,7 +1547,7 @@
   },
   "hypno": {
     "name": "hypno",
-    "displayName": "Hypno☆☆",
+    "displayName": "Hypno★★",
     "cost": 5,
     "hp": 85,
     "attack": 73,
@@ -1546,7 +1563,7 @@
   },
   "voltorb": {
     "name": "voltorb",
-    "displayName": "Voltorb☆",
+    "displayName": "Voltorb★",
     "cost": 3,
     "hp": 40,
     "attack": 30,
@@ -1562,7 +1579,7 @@
   },
   "electrode": {
     "name": "electrode",
-    "displayName": "Electrode☆☆",
+    "displayName": "Electrode★★",
     "cost": 5,
     "hp": 60,
     "attack": 50,
@@ -1578,7 +1595,7 @@
   },
   "exeggcute": {
     "name": "exeggcute",
-    "displayName": "Exeggcute☆",
+    "displayName": "Exeggcute★",
     "cost": 4,
     "hp": 60,
     "attack": 40,
@@ -1597,7 +1614,7 @@
   },
   "exeggutor": {
     "name": "exeggutor",
-    "displayName": "Exeggutor☆☆",
+    "displayName": "Exeggutor★★",
     "cost": 6,
     "hp": 95,
     "attack": 95,
@@ -1616,7 +1633,7 @@
   },
   "onix": {
     "name": "onix",
-    "displayName": "Onix☆",
+    "displayName": "Onix★",
     "cost": 4,
     "hp": 35,
     "attack": 45,
@@ -1634,7 +1651,7 @@
   },
   "steelix": {
     "name": "steelix",
-    "displayName": "Steelix☆☆",
+    "displayName": "Steelix★★",
     "cost": 6,
     "hp": 75,
     "attack": 85,
@@ -1652,7 +1669,7 @@
   },
   "rhyhorn": {
     "name": "rhyhorn",
-    "displayName": "Rhyhorn☆",
+    "displayName": "Rhyhorn★",
     "cost": 4,
     "hp": 80,
     "attack": 85,
@@ -1673,7 +1690,7 @@
   },
   "rhydon": {
     "name": "rhydon",
-    "displayName": "Rhydon☆☆",
+    "displayName": "Rhydon★★",
     "cost": 6,
     "hp": 105,
     "attack": 130,
@@ -1694,7 +1711,7 @@
   },
   "horsea": {
     "name": "horsea",
-    "displayName": "Horsea☆",
+    "displayName": "Horsea★",
     "cost": 3,
     "hp": 30,
     "attack": 40,
@@ -1713,7 +1730,7 @@
   },
   "seadra": {
     "name": "seadra",
-    "displayName": "Seadra☆☆",
+    "displayName": "Seadra★★",
     "cost": 5,
     "hp": 55,
     "attack": 65,
@@ -1733,7 +1750,7 @@
   },
   "kingdra": {
     "name": "kingdra",
-    "displayName": "Kingdra☆☆☆",
+    "displayName": "Kingdra★★★",
     "cost": 7,
     "hp": 75,
     "attack": 95,
@@ -1755,7 +1772,7 @@
   },
   "staryu": {
     "name": "staryu",
-    "displayName": "Staryu☆",
+    "displayName": "Staryu★",
     "cost": 3,
     "hp": 30,
     "attack": 45,
@@ -1771,7 +1788,7 @@
   },
   "starmie": {
     "name": "starmie",
-    "displayName": "Starmie☆☆",
+    "displayName": "Starmie★★",
     "cost": 5,
     "hp": 60,
     "attack": 75,
@@ -1790,7 +1807,7 @@
   },
   "smoochum": {
     "name": "smoochum",
-    "displayName": "Smoochum☆",
+    "displayName": "Smoochum★",
     "cost": 3,
     "hp": 45,
     "attack": 30,
@@ -1809,7 +1826,7 @@
   },
   "jynx": {
     "name": "jynx",
-    "displayName": "Jynx☆☆",
+    "displayName": "Jynx★★",
     "cost": 5,
     "hp": 65,
     "attack": 50,
@@ -1828,7 +1845,7 @@
   },
   "elekid": {
     "name": "elekid",
-    "displayName": "Elekid☆",
+    "displayName": "Elekid★",
     "cost": 4,
     "hp": 45,
     "attack": 63,
@@ -1844,7 +1861,7 @@
   },
   "electabuzz": {
     "name": "electabuzz",
-    "displayName": "Electabuzz☆☆",
+    "displayName": "Electabuzz★★",
     "cost": 6,
     "hp": 65,
     "attack": 83,
@@ -1861,7 +1878,7 @@
   },
   "electivire": {
     "name": "electivire",
-    "displayName": "Electivire☆☆☆",
+    "displayName": "Electivire★★★",
     "cost": 8,
     "hp": 75,
     "attack": 123,
@@ -1877,7 +1894,7 @@
   },
   "magby": {
     "name": "magby",
-    "displayName": "Magby☆",
+    "displayName": "Magby★",
     "cost": 4,
     "hp": 45,
     "attack": 75,
@@ -1893,7 +1910,7 @@
   },
   "magmar": {
     "name": "magmar",
-    "displayName": "Magmar☆☆",
+    "displayName": "Magmar★★",
     "cost": 6,
     "hp": 65,
     "attack": 95,
@@ -1910,7 +1927,7 @@
   },
   "magmortar": {
     "name": "magmortar",
-    "displayName": "Magmortar☆☆☆",
+    "displayName": "Magmortar★★★",
     "cost": 8,
     "hp": 75,
     "attack": 95,
@@ -1926,7 +1943,7 @@
   },
   "magikarp": {
     "name": "magikarp",
-    "displayName": "Magikarp☆",
+    "displayName": "Magikarp★",
     "cost": 4,
     "hp": 20,
     "attack": 10,
@@ -1944,7 +1961,7 @@
   },
   "gyarados": {
     "name": "gyarados",
-    "displayName": "Gyarados☆☆",
+    "displayName": "Gyarados★★",
     "cost": 6,
     "hp": 95,
     "attack": 125,
@@ -1965,7 +1982,7 @@
   },
   "eevee": {
     "name": "eevee",
-    "displayName": "Eevee☆",
+    "displayName": "Eevee★",
     "cost": 3,
     "hp": 55,
     "attack": 55,
@@ -1984,8 +2001,8 @@
   },
   "vaporeon": {
     "name": "vaporeon",
-    "displayName": "Vaporeon☆☆",
-    "cost": 5,
+    "displayName": "Vaporeon★★",
+    "cost": 9,
     "hp": 130,
     "attack": 65,
     "defense": 60,
@@ -2000,8 +2017,8 @@
   },
   "jolteon": {
     "name": "jolteon",
-    "displayName": "Jolteon☆☆",
-    "cost": 5,
+    "displayName": "Jolteon★★",
+    "cost": 9,
     "hp": 65,
     "attack": 65,
     "defense": 60,
@@ -2016,8 +2033,8 @@
   },
   "flareon": {
     "name": "flareon",
-    "displayName": "Flareon☆☆",
-    "cost": 5,
+    "displayName": "Flareon★★",
+    "cost": 9,
     "hp": 65,
     "attack": 130,
     "defense": 60,
@@ -2032,7 +2049,7 @@
   },
   "kabuto": {
     "name": "kabuto",
-    "displayName": "Kabuto☆",
+    "displayName": "Kabuto★",
     "cost": 4,
     "hp": 30,
     "attack": 80,
@@ -2053,7 +2070,7 @@
   },
   "kabutops": {
     "name": "kabutops",
-    "displayName": "Kabutops☆☆",
+    "displayName": "Kabutops★★",
     "cost": 6,
     "hp": 60,
     "attack": 115,
@@ -2074,7 +2091,7 @@
   },
   "munchlax": {
     "name": "munchlax",
-    "displayName": "Munchlax☆",
+    "displayName": "Munchlax★",
     "cost": 4,
     "hp": 135,
     "attack": 85,
@@ -2089,7 +2106,7 @@
   },
   "snorlax": {
     "name": "snorlax",
-    "displayName": "Snorlax☆☆",
+    "displayName": "Snorlax★★",
     "cost": 6,
     "hp": 160,
     "attack": 110,
@@ -2104,7 +2121,7 @@
   },
   "articuno": {
     "name": "articuno",
-    "displayName": "Articuno☆",
+    "displayName": "Articuno★",
     "cost": 5,
     "hp": 90,
     "attack": 85,
@@ -2121,7 +2138,7 @@
   },
   "zapdos": {
     "name": "zapdos",
-    "displayName": "Zapdos☆",
+    "displayName": "Zapdos★",
     "cost": 5,
     "hp": 90,
     "attack": 90,
@@ -2138,7 +2155,7 @@
   },
   "moltres": {
     "name": "moltres",
-    "displayName": "Moltres☆",
+    "displayName": "Moltres★",
     "cost": 5,
     "hp": 90,
     "attack": 100,
@@ -2155,7 +2172,7 @@
   },
   "dratini": {
     "name": "dratini",
-    "displayName": "Dratini☆",
+    "displayName": "Dratini★",
     "cost": 3,
     "hp": 41,
     "attack": 64,
@@ -2174,7 +2191,7 @@
   },
   "dragonair": {
     "name": "dragonair",
-    "displayName": "Dragonair☆☆",
+    "displayName": "Dragonair★★",
     "cost": 5,
     "hp": 61,
     "attack": 84,
@@ -2194,7 +2211,7 @@
   },
   "dragonite": {
     "name": "dragonite",
-    "displayName": "Dragonite☆☆☆",
+    "displayName": "Dragonite★★★",
     "cost": 7,
     "hp": 91,
     "attack": 134,
@@ -2215,7 +2232,7 @@
   },
   "mewtwo": {
     "name": "mewtwo",
-    "displayName": "Mewtwo☆",
+    "displayName": "Mewtwo★",
     "cost": 5,
     "hp": 106,
     "attack": 110,
@@ -2229,7 +2246,7 @@
   },
   "mew": {
     "name": "mew",
-    "displayName": "Mew☆",
+    "displayName": "Mew★",
     "cost": 5,
     "hp": 100,
     "attack": 100,
@@ -2243,7 +2260,7 @@
   },
   "mareep": {
     "name": "mareep",
-    "displayName": "Mareep",
+    "displayName": "Mareep★",
     "cost": 2,
     "hp": 55,
     "attack": 40,
@@ -2262,7 +2279,7 @@
   },
   "flaaffy": {
     "name": "flaaffy",
-    "displayName": "Flaaffy",
+    "displayName": "Flaaffy★★",
     "cost": 4,
     "hp": 70,
     "attack": 55,
@@ -2282,7 +2299,7 @@
   },
   "ampharos": {
     "name": "ampharos",
-    "displayName": "Ampharos",
+    "displayName": "Ampharos★★★",
     "cost": 6,
     "hp": 90,
     "attack": 75,
@@ -2301,7 +2318,7 @@
   },
   "hoppip": {
     "name": "hoppip",
-    "displayName": "Hoppip",
+    "displayName": "Hoppip★",
     "cost": 1,
     "hp": 35,
     "attack": 35,
@@ -2323,7 +2340,7 @@
   },
   "skiploom": {
     "name": "skiploom",
-    "displayName": "Skiploom",
+    "displayName": "Skiploom★★",
     "cost": 3,
     "hp": 55,
     "attack": 45,
@@ -2346,7 +2363,7 @@
   },
   "jumpluff": {
     "name": "jumpluff",
-    "displayName": "Jumpluff",
+    "displayName": "Jumpluff★★★",
     "cost": 5,
     "hp": 75,
     "attack": 55,
@@ -2368,7 +2385,7 @@
   },
   "anorith": {
     "name": "anorith",
-    "displayName": "Anorith",
+    "displayName": "Anorith★",
     "cost": 4,
     "hp": 45,
     "attack": 95,
@@ -2386,7 +2403,7 @@
   },
   "armaldo": {
     "name": "armaldo",
-    "displayName": "Armaldo",
+    "displayName": "Armaldo★★",
     "cost": 6,
     "hp": 75,
     "attack": 125,
@@ -2404,7 +2421,7 @@
   },
   "celebi": {
     "name": "celebi",
-    "displayName": "Celebi",
+    "displayName": "Celebi★",
     "cost": 5,
     "hp": 100,
     "attack": 100,
@@ -2421,7 +2438,7 @@
   },
   "kyogre": {
     "name": "kyogre",
-    "displayName": "Kyogre",
+    "displayName": "Kyogre★",
     "cost": 5,
     "hp": 100,
     "attack": 100,
@@ -2435,7 +2452,7 @@
   },
   "groudon": {
     "name": "groudon",
-    "displayName": "Groudon",
+    "displayName": "Groudon★",
     "cost": 5,
     "hp": 100,
     "attack": 150,
@@ -2448,7 +2465,7 @@
   },
   "ralts": {
     "name": "ralts",
-    "displayName": "Ralts",
+    "displayName": "Ralts★",
     "cost": 3,
     "hp": 28,
     "attack": 25,
@@ -2467,7 +2484,7 @@
   },
   "kirlia": {
     "name": "kirlia",
-    "displayName": "Kirlia",
+    "displayName": "Kirlia★★",
     "cost": 5,
     "hp": 38,
     "attack": 35,
@@ -2487,7 +2504,7 @@
   },
   "gardevoir": {
     "name": "gardevoir",
-    "displayName": "Gardevoir",
+    "displayName": "Gardevoir★★★",
     "cost": 7,
     "hp": 68,
     "attack": 65,

@@ -215,6 +215,7 @@ exports._refreshShop = async (stateParam, index) => {
  */
 async function getBoardUnit(name, x, y) {
   const unitInfo = await pokemonJS.getStats(name);
+  if(f.isUndefined(unitInfo)) console.log('UNDEFINED:', name);
   // console.log('@getBoardUnit', name, unitInfo)
   let unit = Map({
     name,
