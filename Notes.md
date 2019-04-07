@@ -15,6 +15,9 @@ Current: 11 15 13 13 8
 
 Font Rockwell
 
+Guarantee 2 tiers for every unit
+  Legendaries Level 2 versions
+
 Eevolutions removes lot of hp
 
 is Money laundring ok with bugs?
@@ -76,17 +79,13 @@ Steel: 1 (3) [1,2]
   Strongest Level 1:
     Rattata, ekans, pidgey, vulpix     diglett   pichu, igglybuff, cleffa, weedle, caterpie
 
-  More legendaries: Lugia, Ho-oh, Kyogre, Groudon, Celebi
-
   Type numbers:
-  More grass units?
-  More Fighting units?
-
-  Stats between scyther and scizor are weird
-    Same total, scyther is faster
+    More Fighting units?
 
   Add:
     Omanyte
+    Abra
+    Duskull
 
   Metapod/Kakuna weak
   Check dps, damage
@@ -105,13 +104,18 @@ Steel: 1 (3) [1,2]
 Electric change?
 
 #### New effects: 
-  Bugs: Druid buff
-  Lifesteal
-  Ghost: Evasion
-  Poison: increase dot damage
-  Dragon: Ability damage buff
-    Better if sp.atk and sp.dfns added
-  Demon
+  Grass: Lifesteal
+  Ghost: DecreaseHp
+  Flying: Evasion
+  Steel: Counter attack chance?
+  Poison: increase dot damage Chance/damage
+    Ice: decreaseSpeed
+  Ground: Stun chance on attack
+  Dragon: Ability damage buff, sp.attk inc
+  Electric: DecreaseAttack
+  Fairy: Increase Sp.Def
+  dark: Demon
+  Fire: ?
 
 #### Type Bonuses Status Currently
   Early Game types:

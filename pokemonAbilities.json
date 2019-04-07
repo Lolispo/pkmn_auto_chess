@@ -199,8 +199,9 @@
     "effect": [
       "buff",
       "defense",
-      1
-    ]
+      20
+    ],
+    "mana": 50
   },
   "absorb": {
     "name": "absorb",

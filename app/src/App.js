@@ -112,6 +112,9 @@ class ShopPokemon extends Component{
             <img className='infoImg' src={getImage('info')} onClick={this.handleInfoPress} alt={'info' + this.props.shopPokemon.name}/>
             <div className='infoImgBg'/>
           </div>
+          {(this.props.shopPokemon.reqEvolve ? <div className='pokemonBaby'>
+            <img className='babyImg' src={getImage('baby')} alt={'baby' + this.props.shopPokemon.name}/>
+          </div> : '')}
           <PokemonImage name={this.props.shopPokemon.name} sideLength={85} renderBase={costColorClass} newProps={this.props.newProps}/>
         </div>
         <div className='pokemonShopText'>
@@ -533,8 +536,8 @@ class App extends Component {
           <span><span>{`Attack: ${s.attack}`}</span>{(buffs['attack'] ? <span className='infoPanelBuff'>{` + ${buffs['attack']}\n`}</span> : '\n')}</span>
           <span><span>{`Defense: ${s.defense}`}</span>{(buffs['defense'] ? <span className='infoPanelBuff'>{` + ${buffs['defense']}\n`}</span> : '\n')}</span>
           <span><span>{`Speed: ${s.speed}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['speed']}\n`}</span> : '\n')}</span>
-          <span><span>{`Sp.Attack: ${s.specialAttack}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['specialAttack']}\n`}</span> : '\n')}</span>
-          <span><span>{`Sp.Defense: ${s.specialDefense}`}</span>{(buffs['speed'] ? <span className='infoPanelBuff'>{` + ${buffs['specialDefense']}\n`}</span> : '\n')}</span>
+          <span><span>{`Sp.Attack: ${s.specialAttack}`}</span>{(buffs['specialAttack'] ? <span className='infoPanelBuff'>{` + ${buffs['specialAttack']}\n`}</span> : '\n')}</span>
+          <span><span>{`Sp.Defense: ${s.specialDefense}`}</span>{(buffs['specialDefense'] ? <span className='infoPanelBuff'>{` + ${buffs['specialDefense']}\n`}</span> : '\n')}</span>
           <span>{`Level: ${s.cost}\n`}</span>
           <span>{`Range: ${s.range || 1}\n`}</span>
           <span className={`type ${s.abilityType}`}>{`Ability: ${s.abilityDisplayName}\n`}</span>
@@ -692,7 +695,7 @@ class App extends Component {
   displayEnemyBuffs = () => {
     const boardBuffsVar = this.props.players[this.props.enemyIndex.split(' ')[1]];
     // console.log('displayEnemyBuffs', (boardBuffsVar.boardBuffs ? boardBuffsVar.boardBuffs.buffMap : '')); // boardBuffsVar, (boardBuffsVar ? boardBuffsVar.boardBuffs : '')
-    if(boardBuffsVar.boardBuffs) { //
+    if(boardBuffsVar && boardBuffsVar.boardBuffs) { //
       return this.displayBuffsRender(boardBuffsVar.boardBuffs, true);
     }
   }

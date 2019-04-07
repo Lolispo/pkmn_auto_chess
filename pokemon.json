@@ -2286,7 +2286,7 @@
     "defense": 55,
     "speed": 45,
     "type": "electric",
-    "ability": "thunderBolt",
+    "ability": "thunderbolt",
     "evolves_from": "mareep",
     "evolves_to": "ampharos",
     "specialAttack": 80,

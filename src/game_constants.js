@@ -8,7 +8,7 @@ const rarityAmount = List([45, 30, 25, 15, 10]); // Real version
 // const rarityAmount = List([3, 3, 3, 3, 3]); // Test version
 // const rarityAmount = List([9, 9, 9, 9, 9]); // Test version
 
-exports.debugMode = true;
+exports.debugMode = false;
 
 const levelPieceProbability = Map({
   1: Map({
@@ -106,6 +106,8 @@ const roundSetConfiguration = Map({
     Map({ name: 'starmie', x: 4, y: 1 }),
     Map({ name: 'horsea', x: 5, y: 2 }),
     Map({ name: 'seadra', x: 6, y: 2 }),
+    Map({ name: 'seel', x: 2, y: 1 }),
+    Map({ name: 'poliwrath', x: 5, y: 1 }),
     Map({ name: 'magikarp', x: 7, y: 2 }),
   ])),
   20: async () => gameJS.createBattleBoard(List([

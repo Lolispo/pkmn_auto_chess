@@ -149,12 +149,16 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces, player) {
     // console.log('addPieceToShop piece: ', piece, prob[i], i);
     if (!f.isUndefined(piece)) {
       const unitStats = await pokemonJS.getStats(piece);
-      newShop = newShop.set(pos, Map({
+      let newShopUnit = Map({
         name: piece,
         displayName: unitStats.get('displayName'),
         cost: unitStats.get('cost'),
         type: unitStats.get('type'),
-      }));
+      });
+      if(unitStats.get('reqEvolve')){
+        newShopUnit = newShopUnit.set('reqEvolve', unitStats.get('reqEvolve'));
+      }
+      newShop = newShop.set(pos, newShopUnit); 
       // Removes first from correct rarity array
       newPieceStorage = await f.removeFromPieceStorage(newPieceStorage, i, pieceIndex);
       newUnitAmounts = newUnitAmounts.set(piece, (newUnitAmounts.get(piece) || 0 ) + 1);
@@ -514,7 +518,7 @@ async function discardBaseUnits(state, playerIndex, name, depth = 1) {
   if (f.isUndefined(evolutionFrom)) { // Base level
     let discPieces = state.get('discardedPieces');
     const amountOfPieces = 3 ** (depth - 1); // Math.pow
-    // console.log('@discardBaseUnits', amountOfPieces, depth, name);
+    console.log('@discardBaseUnits', amountOfPieces, depth, name);
     for (let i = 0; i < amountOfPieces; i++) {
       discPieces = discPieces.push(name);
     }
@@ -522,7 +526,7 @@ async function discardBaseUnits(state, playerIndex, name, depth = 1) {
     return state.set('discardedPieces', (await discPieces));
   }
   const newName = evolutionFrom;
-  console.log('CHECK ME IF CRASH', newName, depth);
+  // console.log('@discardBaseUnits', newName, depth);
   return discardBaseUnits(state, playerIndex, newName, depth + 1);
 }
 

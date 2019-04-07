@@ -191,3 +191,13 @@ Show all evolutions in infopanel
 Psychic [20, 30, 50] -> [15, 15, 30]
 
 Added enemy board types
+
+## 0.4.4.1
+
+Harden buff
+
+Baby sign ín shop
+
+Buffed Misty
+
+Bug fixes

@@ -85,14 +85,6 @@ Redo battle rendering
         Render moves from here on out with same method as above
             Array[i - last] where i is where time is at
     })
-
-Sp.attack Sp.defense for ability calculations
-    Required in stats panel
-    Dragon/Psychic +sp.attack
-
-Egg group type addition
-    Data available on units
-    Requires usage logic
     
 Rivals:
     When playing against the person you played the most
@@ -111,7 +103,31 @@ Target Priorities
 
 ## Backend
 
+No path available for unit
+    Range 3 units
+
+PokemonList
+    List of all pokemons with type in frontend
+
+Diglett dont die when @ 0 hp
+    Test me, check first move code or something
+
+Discard dead player units
+    Pidgeot -> Pidgey
+    Raticate as well
+
+Dead players reverse order sort
+
+10 Dratinis for one user (2 in shop when 8 in player)
+
+10 different buffs bonus? (12?)
+    Count how many types
+
 gymleader show board types
+
+Egg group type addition
+    Data available on units
+    Requires usage logic
 
 Dev mode allow testing with sound
 
@@ -120,8 +136,6 @@ Mana goes over max, shouldnt allow
 Add cries to spriteBuild logic
     Minimize the amount of required data for the sound files
     They are on clientside already so not as important
-
-Show baby units ingame more clearly
 
 Move logic of upcoming enemy to calculate before next round beginnings
     currentLogic -> buildMatchups
@@ -222,17 +236,15 @@ Display more clearly as a loser if you are eliminated
 
 ## Frontend - Logic
 
-Bug buff type fix
-    Currently unique + [tier]
+Chat change back to damage when chat selected
+
+Eevee infopanel bug
+
+Jolteon no type on board
+
+TypeBonus click, shows all marked instead of correct tier
 
 Add type weaknesses/strengths in message buff bonus that toggles
-
-Up next for round 4 show as NPC -> PVP
-    Check, dont think it does
-
-Reset time 120 000 -> 60 000
-
-Baby name show for babies
 
 Infopanel
     Add getting information from the types in infoPanel

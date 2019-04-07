@@ -19,6 +19,7 @@ import icecube from './assets/images/icecube.png';
 import pokedollar from './assets/images/pokedollarWhite.png';
 import collapseWhite from './assets/images/collapseWhite.png';
 import collapseNotWhite from './assets/images/collapseNotWhite.png';
+import baby from './assets/images/Baby.png';
 
 // Type images
 import normal from './assets/images/types/typeNormal.png';
@@ -93,6 +94,8 @@ export function getImage(name) {
       return collapseWhite;
     case 'collapseNot':
       return collapseNotWhite;
+    case 'baby':
+      return baby;
     default:  
       return info;
   }

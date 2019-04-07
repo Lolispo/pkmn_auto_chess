@@ -441,10 +441,10 @@ module.exports = (socket, io) => {
     if (ability.get('displayName')) {
       newStats = newStats.set('abilityDisplayName', ability.get('displayName'));
     }
-    if(newStats.get('evolves_to')) {
+    if(!Array.isArray(newStats.get('evolves_to').toJS())) { // Test
       const evolStats = await pokemonJS.getStats(newStats.get('evolves_to'));
       newStats = newStats.set('snd_evolves_to', evolStats.get('evolves_to'));
-    } 
+    }
     f.p('Retrieving stats for', name); // , newStats);
     socket.emit('SET_STATS', name, newStats);
   });
