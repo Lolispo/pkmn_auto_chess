@@ -441,7 +441,7 @@ module.exports = (socket, io) => {
     if (ability.get('displayName')) {
       newStats = newStats.set('abilityDisplayName', ability.get('displayName'));
     }
-    if(!Array.isArray(newStats.get('evolves_to').toJS())) { // Test
+    if(typeof newStats.get('evolves_to') === 'string') { // && !Array.isArray(newStats.get('evolves_to').toJS())) { // Test
       const evolStats = await pokemonJS.getStats(newStats.get('evolves_to'));
       newStats = newStats.set('snd_evolves_to', evolStats.get('evolves_to'));
     }

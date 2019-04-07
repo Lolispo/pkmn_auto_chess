@@ -63,7 +63,7 @@ class PokemonImage extends Component{
       }
     }
     const baseMarginTop = paddingTop + height - 15;
-    const baseMarginLeft = 85 - width - 7;
+    const baseMarginLeft = Math.max(85 - width - 7, 0);
     const imgEl = <img
       className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : this.props.renderBase ? 'pokemonSpawn' : 'pokemonEnter')} ` +
         `${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}

@@ -32,9 +32,11 @@ Fixed Check:
     Sell piece button cost css alignment
 
 Test me ingame:
+    Max size of shop base (mewtwo moltres wide)
     9 units of a base type
         Can you receive anymore?
         Can you get 2 in shop when you have 8 of that type?
+            Yes!
     Move
         Does it allow jumping over if close enough?
     Visit dead player
@@ -228,17 +230,16 @@ Fix actionMessage
     Only render ON CHANGE of attack info
         Rerender actionMessage if changed, otherwise let it be
 
-Max size of shop base (mewtwo moltres wide)
-
 Display more clearly as a loser if you are eliminated
     End game lose sound, eliminated sound more clearly
     Also when game is over when you are not winner
 
+Hover baby, show requires only 2 for upgrade
+Baby infopanel
+
 ## Frontend - Logic
 
 Chat change back to damage when chat selected
-
-Eevee infopanel bug
 
 Jolteon no type on board
 
