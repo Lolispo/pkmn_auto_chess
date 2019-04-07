@@ -90,6 +90,9 @@ Steel: 1 (3) [1,2]
   Metapod/Kakuna weak
   Check dps, damage
 
+  Magnemite 3 -> 2 or bench
+  Bench nidoran female
+
 #### Abilitiy implementations
   Teleport (does nothing currently)
   New:

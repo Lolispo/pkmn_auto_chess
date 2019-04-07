@@ -47,7 +47,7 @@ async function initEmptyState(amountPlaying, optList) {
   const state = Map({
     pieces: pieceStorage,
     discardedPieces: List([]),
-    round: 1,
+    round: 1, // (gameConstantsJS.debugMode ? 8 : 1),
     income_basic: 1,
   });
   return playerJS.initPlayers(state, amountPlaying);
@@ -98,6 +98,7 @@ async function getPieceFromRarity(random, prob, index, pieceStorage, unitAmounts
       for(let i = 0; i < keys.length; i++){
         const tempPiece = pieceStorage.get(index).get(i);
         if(!keys.includes(tempPiece) || (keys.includes(tempPiece) && (unitAmounts.get(tempPiece) + (newUnitAmounts.get(tempPiece) || 0)) < 9)) {
+          if(unitAmounts.get(tempPiece) === 8) console.log('@getPieceFromRarity 8 Units, Adding one', (newUnitAmounts.get(tempPiece) || 0));
           piece = tempPiece;
           pieceIndex = i;
           break;

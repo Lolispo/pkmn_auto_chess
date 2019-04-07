@@ -2,6 +2,7 @@
 
 
 const { Map } = require('immutable');
+const gameConstantsJS = require('./game_constants')
 
 /**
  * locked assumed false
@@ -11,11 +12,11 @@ const { Map } = require('immutable');
 function Player(i) {
   return Map({
     index: i,
-    hp: 100,
-    level: 1,
+    hp: (gameConstantsJS.debugMode ? 100 : 100),
+    level: (gameConstantsJS.debugMode ? 5 : 1),
     exp: 0,
     expToReach: 1,
-    gold: 1,
+    gold: (gameConstantsJS.debugMode ? 10000 : 1),
     shop: Map({}), // Buys from 5
     hand: Map({}), // Sideline, 8 at once
     board: Map({}), // Placed on board (8x8 area, placeable is 4x8)

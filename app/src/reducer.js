@@ -413,7 +413,7 @@ const reducer = (
       break;
     }
     case 'TOGGLE_SHOW_DMGBOARD': {
-      state = {...state, showDmgBoard: !state.showDmgBoard}
+      state = {...state, showDmgBoard: false}
       break;
     }
     case 'DISABLE_START_TIMER':

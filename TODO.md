@@ -239,11 +239,7 @@ Baby infopanel
 
 ## Frontend - Logic
 
-Chat change back to damage when chat selected
-
 Jolteon no type on board
-
-TypeBonus click, shows all marked instead of correct tier
 
 Add type weaknesses/strengths in message buff bonus that toggles
 

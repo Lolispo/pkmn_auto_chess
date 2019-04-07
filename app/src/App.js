@@ -65,7 +65,7 @@ class PokemonImage extends Component{
     const baseMarginTop = paddingTop + height - 15;
     const baseMarginLeft = Math.max(85 - width - 7, 0);
     const imgEl = <img
-      className={`pokemonImg ${(this.props.newProps.onGoingBattle ? '' : this.props.renderBase ? 'pokemonSpawn' : 'pokemonEnter')} ` +
+      className={`pokemonImg ${(this.props.renderBase ? 'pokemonSpawn' : (this.props.newProps.onGoingBattle ? (this.props.isBoard ? '' : 'pokemonEnter') : 'pokemonEnter'))} ` +
         `${this.props.name} ${(this.props.classList ? this.props.classList : '')}`}
       key={src}
       style={{paddingTop: paddingTop, width: width, height: height}}
@@ -283,7 +283,7 @@ class Cell extends Component {
               `${(this.props.newProps.onGoingBattle && !this.props.isBoard ? 'pokemonEnter' : '')}`;
           // console.log('@rendereding pokemonImage classList', classList)
           return <div className={`relative`} style={styleVar}>
-            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList} newProps={this.props.newProps}/>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} classList={classList} newProps={this.props.newProps} isBoard={this.props.isBoard}/>
             {hpBar}
             {manaBar}
             {actionMessage}
@@ -306,7 +306,7 @@ class Cell extends Component {
         if(!isUndefined(pokemon)){
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           return <div>
-            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} newProps={this.props.newProps}/>
+            <PokemonImage name={pokemon.name} back={back} sideLength={sideLength} newProps={this.props.newProps} isBoard={this.props.isBoard}/>
             {buffs}
           </div>
         }
@@ -666,7 +666,7 @@ class App extends Component {
         let reqList = [<span key={'disp_0' + typeName} className={`${classList}`}>{req[0]}</span>];
         let bonusAmountList = [<span key={'dispValue_0'} className={`${classList}`}>{bonusAmount[0]}</span>];
         for(let i = 1; i < req.length; i++){
-          classList = (0 < tier ? 'goldFont' : '');
+          classList = (i < tier ? 'goldFont' : '');
           // console.log('i: ', i, req[i], bonusAmount[i]);
           reqList.push(<span key={'disp_' + i + '_' + typeName} className={`${classList}`}>{', ' + req[i]}</span>);
           bonusAmountList.push(<span key={'dispValue_' + i} className={`${classList}`}>{', ' + bonusAmount[i]}</span>);
@@ -792,6 +792,8 @@ class App extends Component {
     if(newHp <= 0){
       // TODO: Death Animation then remove
       // console.log('Attack / Dot DA');
+      newBoard[target].actionMessage = '';
+      newBoard[target].mana = 0;
       newBoard[target].hp = newHp;
       newBoard[target].animateMove = {
         animation: 'deathAnimation 1.0s', // TODO: Test on normal div if animation work

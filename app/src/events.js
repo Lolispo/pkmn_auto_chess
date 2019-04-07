@@ -128,14 +128,13 @@ export function placePieceEvent(prop, fromParam, to) {
       prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
     } else {
       // Hand to hand movement during battle allowed
-      if(validPos && unitExists && prop.onGoingBattle) {
-        if(!from.includes(',') && !to.includes(',')) {
+      if(validPos && unitExists && prop.onGoingBattle && !from.includes(',') && !to.includes(',')) {
           placePiece(prop.storedState, from, to);
           prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {pos: ''}});
-        }
+      } else {
+        updateMessage(prop, 'Invalid target placing!', 'error');
+        prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
       }
-      updateMessage(prop, 'Invalid target placing!', 'error');
-      prop.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('invalid')});
     }
   }
 }
