@@ -42,6 +42,16 @@ body {
   margin-top: 10px;
 }
 
+.babyImgInfoPanel {
+  position: absolute;
+  width: 44px;
+  height: 10px;
+  transform: rotate(30deg);
+  margin-left: 115px;
+  margin-top: -50px;
+  border-radius: 15%;
+}
+
 .babyImg {
   position: absolute;
   width: 53px;

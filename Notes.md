@@ -1,15 +1,11 @@
 
-### Amount of units:
-
-Dota 55 + (at least 4 more)
-
-Here: 58
-
 ### Unit cost divisions
 
-Dota: 12 13 14 11 5
+Dota:    55: 12 13 14 11 5
+
+UpdDota: 60: 13 14 15 11 7
  
-Current: 11 15 13 13 8
+Current: 60: 11 15 13 13 8
 
 ## Current Notes
 

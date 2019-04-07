@@ -522,6 +522,9 @@ class App extends Component {
             </div>
           : <span className={`type ${s.type}`}>{s.type + '\n'}</span>)}
         </div>
+        {(s.reqEvolve ? <div className='pokemonBabyInfoPanel'>
+          <img className='babyImgInfoPanel' src={getImage('baby')} alt={'baby' + s.name}/>
+        </div> : '')}
         <div className='infoPanelStats'>
           {/*<div>
             <span>Hp: </span>

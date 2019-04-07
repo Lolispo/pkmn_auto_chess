@@ -32,6 +32,7 @@ Fixed Check:
     Sell piece button cost css alignment
 
 Test me ingame:
+    Jolteon no type on board
     Max size of shop base (mewtwo moltres wide)
     9 units of a base type
         Can you receive anymore?
@@ -235,11 +236,8 @@ Display more clearly as a loser if you are eliminated
     Also when game is over when you are not winner
 
 Hover baby, show requires only 2 for upgrade
-Baby infopanel
 
 ## Frontend - Logic
-
-Jolteon no type on board
 
 Add type weaknesses/strengths in message buff bonus that toggles
 
