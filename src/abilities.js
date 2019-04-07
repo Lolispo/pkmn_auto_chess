@@ -41,7 +41,7 @@ exports.getAbility = async (name) => {
   // console.log('@abilties.getAbility', name);
   const ability = (await pokemonJS.getStats(name)).get('ability');
   const returnMe = (await abilitiesMap).get(ability);
-  if(f.isUndefined(returnMe)) console.log('@getAbility undefined', name); 
+  if (f.isUndefined(returnMe)) console.log('@getAbility undefined', name);
   return returnMe;
 };
 

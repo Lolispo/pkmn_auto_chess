@@ -2,7 +2,7 @@
 
 
 const { Map } = require('immutable');
-const gameConstantsJS = require('./game_constants')
+const gameConstantsJS = require('./game_constants');
 
 /**
  * locked assumed false

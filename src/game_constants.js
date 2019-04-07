@@ -139,9 +139,9 @@ const roundSetConfiguration = Map({
     Map({ name: 'golbat', x: 1, y: 2 }),
   ])),
   35: async () => gameJS.createBattleBoard(List([
-    //Map({ name: 'kadabra', x: 3, y: 1 }),
+    // Map({ name: 'kadabra', x: 3, y: 1 }),
     Map({ name: 'haunter', x: 4, y: 1 }),
-    //Map({ name: 'alakazam', x: 5, y: 1 }),
+    // Map({ name: 'alakazam', x: 5, y: 1 }),
     Map({ name: 'drowzee', x: 6, y: 1 }),
     Map({ name: 'hypno', x: 7, y: 1 }),
     Map({ name: 'gengar', x: 2, y: 1 }),

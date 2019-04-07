@@ -18,12 +18,12 @@ const reqForUpgrade = async (unit, bonus) => {
   // Get tier of unit
   const tier = await pokemonJS.getUnitTier(unit.get('name'));
   // console.log('@reqForUpgrade bugs', tier, bonus)
-  if(tier <= bonus) { // Bonus marks highest allowed tier for unit
+  if (tier <= bonus) { // Bonus marks highest allowed tier for unit
     // console.log('@reqForUpgrade bugs BONUS', unit)
     return unit.set('reqEvolve', 2);
   }
   return unit;
-}
+};
 
 // TODO: Add hp reg mechanic?
 
@@ -499,7 +499,7 @@ const getTypeDesc = (name) => {
   const bonusAmount = type.get('bonusAmount').toJS();
   const bonusStatType = type.get('bonusStatType');
   let defString = '';
-  if(bonusStatType.includes('unique')) {
+  if (bonusStatType.includes('unique')) {
     defString = type.get('desc');
   } else {
     defString = `${inc} ${bonusStatType} for ${units}`;

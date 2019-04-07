@@ -124,7 +124,7 @@ exports.pushSessionMessage = (socketId, connectedPlayers, sessions, message) => 
   return sessions.set(sessionId, newSession);
 };
 
-exports.getPlayerID = (socketId, connectedPlayers, sessions, message) => {
+exports.getPlayerID = (socketId, connectedPlayers, sessions) => {
   const sessionId = connectedPlayers.get(socketId).get('sessionId');
   const session = sessions.get(sessionId);
   return session.get('connectedPlayers').get(socketId);

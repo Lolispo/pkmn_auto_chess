@@ -60,13 +60,13 @@ exports.print = (obj, msg = '') => console.log(msg + JSON.stringify(obj, null, 2
 const p = (msg, msgs) => {
   if (gameConstantsJS.debugMode) {
     let s = msg;
-    if(!isUndefined(msgs)) {
-      for(let i = 0; i < msgs.length; i++) {
-        s += ' ' + msgs[i];
-      }      
+    if (!isUndefined(msgs)) {
+      for (let i = 0; i < msgs.length; i++) {
+        s += ` ${msgs[i]}`;
+      }
     }
     console.log(s);
-  } 
+  }
 };
 
 exports.p = (msg, ...msgs) => p(msg, msgs);

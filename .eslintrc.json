@@ -5,6 +5,11 @@
         "no-plusplus": "off",
         "camelcase": "off",
         "no-unused-vars": "warn",
-        "no-use-before-define": "warn"
+        "no-use-before-define": "warn",
+        "no-nested-ternary": "off",
+        "prefer-destructuring": "off",
+        "no-fallthrough": "off",
+        "max-len": "off",
+        "no-await-in-loop": "off"
     }
 }

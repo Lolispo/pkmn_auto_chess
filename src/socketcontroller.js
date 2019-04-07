@@ -30,8 +30,8 @@ const emitMessage = (socket, io, sessionId, func) => {
   while (!temp.done) {
     const socketId = temp.value;
     const connectedUser = connectedPlayers.get(socketId);
-    if (!connectedUser) continue; // Connection was terminated with this user
-    if (connectedUser.get('sessionId') === sessionId || (sessionId === true && (connectedUser.get('sessionId') === true || connectedUser.get('sessionId') === false))) {
+    // Valid connection
+    if (connectedUser && (connectedUser.get('sessionId') === sessionId || (sessionId === true && (connectedUser.get('sessionId') === true || connectedUser.get('sessionId') === false)))) {
       func(socketId);
     }
     temp = iter.next();
@@ -117,7 +117,7 @@ module.exports = (socket, io) => {
     const sessionConnectedPlayers = sessionJS.initializeConnectedPlayers(readyPlayers);
     const sessionId = sessionJS.findFirstAvailableIndex(sessions);
     connectedPlayers = await sessionJS.updateSessionIds(connectedPlayers, Array.from(sessionConnectedPlayers.keys()), sessionId);
-    const state = await gameJS._startGame(amountToPlay);
+    const state = await gameJS.startGameGlobal(amountToPlay);
     // Set pieces in Session
     const newSession = sessionJS.makeSession(sessionConnectedPlayers, state.get('pieces'));
     sessions = sessions.set(sessionId, newSession);
@@ -206,7 +206,7 @@ module.exports = (socket, io) => {
   socket.on('REFRESH_SHOP', async (stateParam) => {
     const index = getPlayerIndex(socket.id);
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
-    const state = await gameJS._refreshShop(stateWithPieces, index);
+    const state = await gameJS.refreshShopGlobal(stateWithPieces, index);
     console.log('Refreshes Shop, level', state.getIn(['players', index, 'level']), 'Player', index);
     // Requires Shop and Pieces
     // socket.emit('UPDATED_PIECES', state);
@@ -220,7 +220,7 @@ module.exports = (socket, io) => {
   socket.on('PLACE_PIECE', async (stateParam, from, to) => {
     const index = getPlayerIndex(socket.id);
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
-    const obj = await gameJS._placePiece(stateWithPieces, index, from, to);
+    const obj = await gameJS.placePieceGlobal(stateWithPieces, index, from, to);
     const state = obj.get('state');
     const evolutionDisplayName = obj.get('upgradeOccured');
     //  console.log('@PlacePieceSocket', evolutionDisplayName);
@@ -242,7 +242,7 @@ module.exports = (socket, io) => {
   socket.on('WITHDRAW_PIECE', async (stateParam, from) => {
     const index = getPlayerIndex(socket.id);
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
-    const state = await gameJS._withdrawPiece(stateWithPieces, index, from);
+    const state = await gameJS.withdrawPieceGlobal(stateWithPieces, index, from);
     console.log('Withdraw piece at ', from);
     // Hand and board
     emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
@@ -253,7 +253,7 @@ module.exports = (socket, io) => {
   socket.on('SELL_PIECE', async (stateParam, from) => {
     const index = getPlayerIndex(socket.id);
     const stateWithPieces = sessionJS.addPiecesToState(socket.id, connectedPlayers, sessions, fromJS(stateParam));
-    const state = await gameJS._sellPiece(stateWithPieces, index, from);
+    const state = await gameJS.sellPieceGlobal(stateWithPieces, index, from);
     console.log('Sell piece at ', from);
     sessions = sessionJS.updateSessionPlayer(socket.id, connectedPlayers, sessions, state, index);
     sessions = sessionJS.updateSessionPieces(socket.id, connectedPlayers, sessions, state);
@@ -325,8 +325,8 @@ module.exports = (socket, io) => {
           const enemy = (matchups ? `Player ${matchups.get(tempIndex)}` : (roundType === 'gym' ? gymLeader : 'Npc Battle'));
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
-          emitMessage(socket, io, sessionId, (socketId) => {
-            io.to(socketId).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
+          emitMessage(socket, io, sessionId, (innerSocketId) => {
+            io.to(innerSocketId).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           });
           // io.to(`${socketId}`).emit('UPDATE_PLAYER', tempIndex, preBattleState.getIn(['players', tempIndex]));
           io.to(`${socketId}`).emit('BATTLE_TIME', actionStacks, startingBoards, winners, dmgBoards, enemy, roundType);
@@ -441,7 +441,7 @@ module.exports = (socket, io) => {
     if (ability.get('displayName')) {
       newStats = newStats.set('abilityDisplayName', ability.get('displayName'));
     }
-    if(typeof newStats.get('evolves_to') === 'string') { // && !Array.isArray(newStats.get('evolves_to').toJS())) { // Test
+    if (typeof newStats.get('evolves_to') === 'string') { // && !Array.isArray(newStats.get('evolves_to').toJS())) { // Test
       const evolStats = await pokemonJS.getStats(newStats.get('evolves_to'));
       newStats = newStats.set('snd_evolves_to', evolStats.get('evolves_to'));
     }

@@ -77,9 +77,9 @@ class PokemonImage extends Component{
       <div>
         {(this.props.renderBase ? <div key={this.props.renderBase} className={`pokemonImageBase ${this.props.renderBase}`} 
         style={{
-          marginTop: (isNaN(baseMarginTop) ? '' : baseMarginTop), 
-          marginLeft: (isNaN(baseMarginLeft) ? '' : baseMarginLeft), 
-          width: (!isNaN(width) ? width * 1.5 : '')
+          marginTop: (Number.isNaN(baseMarginTop) ? '' : baseMarginTop), 
+          marginLeft: (Number.isNaN(baseMarginLeft) ? '' : baseMarginLeft), 
+          width: (!Number.isNaN(width) ? width * 1.5 : '')
         }}></div> : '')}
         {imgEl}
       </div>

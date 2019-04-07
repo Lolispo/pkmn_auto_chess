@@ -75,7 +75,7 @@ const getUnitTierLocal = async (name, counter = 1) => {
   // Go down a level
   // console.log('@pokemonJs.getBasePokemon Check out', unitStats.get('evolves_from'))
   return getUnitTierLocal(unitStats.get('evolves_from'), counter + 1);
-}
+};
 
 exports.getUnitTier = name => getUnitTierLocal(name);
 
