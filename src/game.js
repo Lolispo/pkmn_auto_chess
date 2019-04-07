@@ -762,7 +762,7 @@ async function getStepMovePos(board, unitPos, closestEnemyPos, range, team, exce
     return Map({ movePos: unitPos, direction: '' });
   }
   // TODO: Check so not blocked in
-  console.log('No path available to piece', `${closestEnemyPos}. Going deeper`);
+  console.log(`No path available to piece, ${closestEnemyPos} from ${unitPos} (Range: ${range}). Going deeper`);
   return getStepMovePos(board, unitPos, newClosestEnemyObj.get('closestEnemy'), range, team, exceptionsList.push(closestEnemyPos));
 }
 
@@ -1186,7 +1186,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     });
   } // Move action
   const closestEnemyPos = enemyPos.get('closestEnemy');
-  console.log('Moving ...', unitPos, 'to', closestEnemyPos, range)
+  // console.log('Moving ...', unitPos, 'to', closestEnemyPos, range)
   const movePosObj = await getStepMovePos(board, unitPos, closestEnemyPos, range, team);
   const movePos = movePosObj.get('movePos');
   const direction = movePosObj.get('direction');
@@ -1956,6 +1956,7 @@ let synchronizedPlayers = Map({});
 async function prepEndTurn(state, playerIndex) {
   synchronizedPlayers = synchronizedPlayers.set(playerIndex, state.getIn(['players', playerIndex]));
   if (synchronizedPlayers.size === state.get('amountOfPlayers')) {
+    console.log('@prepEndTurn CHECK: Ending Turn', state.get('amountOfPlayers'));
     const newState = state.set('players', synchronizedPlayers); // Set
     synchronizedPlayers = Map({});
     const newRoundState = await endTurn(newState);

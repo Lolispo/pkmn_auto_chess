@@ -866,6 +866,7 @@ class App extends Component {
               switch(typeEffect){
                 case 'multistrike': {
                   // TODO Visualize multistrike ability
+                  console.log('@MULTISTRIKE', damage, valueEffect, 'new Damage', damage * valueEffect, 'hp', newHpSpell);
                   damage *= valueEffect;
                   actionMessageTarget = actionMessageTarget + '! Hit ' + valueEffect + ' times!';
                   break;
