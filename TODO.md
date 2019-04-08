@@ -32,7 +32,6 @@ Fixed Check:
     Sell piece button cost css alignment
 
 Test me ingame:
-    Jolteon no type on board
     Max size of shop base (mewtwo moltres wide)
     9 units of a base type
         Can you receive anymore?
@@ -54,6 +53,8 @@ Known issues:
             check after rendering rework
 
 Odd behaviour:
+
+    Jolteon no type on board
 
     Sometimes doesn't lose hp after battle
 
@@ -203,6 +204,9 @@ Longer range than 1
 Aoe damage logic
 
 ## Frontend - Visual
+
+Pokedollar bigger on top
+    Make money more easily seen
 
 Gymleader image
     Matchup gym leaders for same spot all the time
@@ -511,6 +515,9 @@ Potential to use more functional code, map/filter
 ## Optional Features
 
 Drag-n-drop for placing units
+
+Shop levels for items
+    Trade levels, potential to trade units with others / buy directly from them
 
 http -> Https
 
