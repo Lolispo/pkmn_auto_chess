@@ -9,6 +9,7 @@ const io = require('socket.io')(server);
 const router = express.Router();
 const cors = require('cors');
 
+const deckJS = require('./deck');
 const pokemonJS = require('./pokemon');
 const socketController = require('./socketcontroller.js');
 
