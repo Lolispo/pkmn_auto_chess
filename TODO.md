@@ -23,7 +23,7 @@ Mana: 15% of damage to mana or 10
 
 Crash: 
     RefillPieces
-        Fixed?
+        Refills tier > 1 units. Rquires fix
     Crash - players[key] = null, somewhere players get null back from server
         Tempfixed - Shouldnt crash on this atleast for now
         Should be looked into, found on frontend, bug probably in backend
@@ -205,6 +205,8 @@ Aoe damage logic
 
 ## Frontend - Visual
 
+"napp" instead of baby
+
 Pokedollar bigger on top
     Make money more easily seen
 
@@ -242,6 +244,8 @@ Display more clearly as a loser if you are eliminated
 Hover baby, show requires only 2 for upgrade
 
 ## Frontend - Logic
+
+Display bug text
 
 Add type weaknesses/strengths in message buff bonus that toggles
 
