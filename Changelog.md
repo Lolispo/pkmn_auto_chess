@@ -225,4 +225,11 @@ Steel buff increaseDefense -> increaseHp [1, 2] [10, 15]
 
 Ghost typeUpd -> [1, 2] [20, 25]
 
+## 0.4.5.1
+
+Pichu sound fix
+
+Harden mana 50 -> 25
+
+MultiStrike bug fixed, prevented units from taking correct amount of damage
 

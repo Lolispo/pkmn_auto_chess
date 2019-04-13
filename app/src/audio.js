@@ -160,6 +160,7 @@ import dragonite from './assets/pokemonCries/149 - Dragonite.wav'
 import mewtwo from './assets/pokemonCries/150 - Mewtwo.wav'
 import mew from './assets/pokemonCries/151 - Mew.wav'
 
+import pichu from './assets/pokemonCries/172 - Pichu.wav'
 import mareep from './assets/pokemonCries/179 - Mareep.wav'
 import flaaffy from './assets/pokemonCries/180 - Flaaffy.wav'
 import ampharos from './assets/pokemonCries/181 - Ampharos.wav'
@@ -234,6 +235,7 @@ const array = [
   ['fearow', fearow],
   ['ekans', ekans],
   ['arbok', arbok],
+  ['pichu', pichu],
   ['pikachu', pikachu],
   ['raichu', raichu],
   ['sandshrew', sandshrew],

@@ -8,7 +8,7 @@ const rarityAmount = List([45, 30, 25, 15, 10]); // Real version
 // const rarityAmount = List([3, 3, 3, 3, 3]); // Test version
 // const rarityAmount = List([9, 9, 9, 9, 9]); // Test version
 
-exports.debugMode = false;
+exports.debugMode = true;
 
 const levelPieceProbability = Map({
   1: Map({

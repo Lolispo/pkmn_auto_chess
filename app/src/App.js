@@ -721,14 +721,17 @@ class App extends Component {
       case '7':
       case '8':
         from = String(parseInt(event.key) - 1);
-      case 'q':
+      case 'Q':
+      case 'q': {
         from = (isUndefined(from) ? (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '') : from);
         const to = prop.mouseOverId;
         console.log('@placePiece q pressed', from, to)
         placePieceEvent(this.props, from, to);
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
-      case 'w':
+      }
+      case 'W':
+      case 'w': {
         from = prop.mouseOverId;
         console.log(prop.myBoard, from, prop.mouseOverId)
         if(!isUndefined(from) && prop.myBoard[from]){
@@ -739,7 +742,9 @@ class App extends Component {
         }
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
-      case 'e':
+      }
+      case 'E':
+      case 'e': {
         from = (prop.selectedUnit.displaySell ? prop.selectedUnit.pos : '');
         if(!isUndefined(from)){
           sellPieceEvent(this.props, from);
@@ -748,12 +753,16 @@ class App extends Component {
         }
         prop.dispatch({ type: 'SELECT_UNIT', selectedUnit: {}})
         break;
+      }
+      case 'D':
       case 'd':
         refreshShopEvent(this.props);
         break;
+      case 'F':
       case 'f':
         buyExpEvent(this.props);
         break;
+      case 'K':
       case 'k':
         this.props.dispatch({type: 'TOGGLE_DEBUG_MODE'});
         break;
@@ -869,7 +878,7 @@ class App extends Component {
               const valueEffect = effectToApplyOnUnit[buff];
               console.log('Found', typeEffect, 'effect with value', valueEffect, 'for unit', unitPosEffect);
               switch(typeEffect){
-                case 'multistrike': {
+                case 'multiStrike': {
                   // TODO Visualize multistrike ability
                   console.log('@MULTISTRIKE', damage, valueEffect, 'new Damage', damage * valueEffect, 'hp', newHpSpell);
                   damage *= valueEffect;
@@ -1038,7 +1047,7 @@ class App extends Component {
               {'Player ' + player.index}
             </span>
             {(isDead ? <span className='redFont playerScoreboardDead'>
-              {' Dead' + '\n'}
+              {' Dead\n'}
             </span> : 
             <span className='playerScoreBoardVisitButtonDiv'>
               {(this.props.visiting !== player.index ? <button className='normalButton visitButton' onClick={() => this.visitPlayer(player.index)}>

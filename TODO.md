@@ -23,7 +23,7 @@ Mana: 15% of damage to mana or 10
 
 Crash: 
     RefillPieces
-        Refills tier > 1 units. Rquires fix
+        Something is broken for many units
     Crash - players[key] = null, somewhere players get null back from server
         Tempfixed - Shouldnt crash on this atleast for now
         Should be looked into, found on frontend, bug probably in backend
@@ -32,27 +32,24 @@ Fixed Check:
     Sell piece button cost css alignment
 
 Test me ingame:
-    Max size of shop base (mewtwo moltres wide)
     9 units of a base type
         Can you receive anymore?
         Can you get 2 in shop when you have 8 of that type?
             Yes!
     Move
         Does it allow jumping over if close enough?
-    Visit dead player
-        Should move to yourself as dead (require a new move)
     Low Prios Tests:
         Player disconnects
             During battle or normally
 
 Known issues:
-    Battle ending with units from both teams alive
-        Effects Probably: Dot damage, healing, multistrike
     Battle ending before finish
         longest battle duration check
             check after rendering rework
 
 Odd behaviour:
+
+    Clefairies suddenly in unit pool
 
     Damage dealt bars weird: 
         Connected to prevDmg maybe
@@ -122,8 +119,6 @@ Prep for name being configured for player
     Check for all instances of 'Player' and read from state
     First: choose in menu
     Later: Account
-
-Pichu no sound?
 
 Sound when lose or something
 
