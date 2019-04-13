@@ -546,50 +546,6 @@ body {
   height: 80px;
 }
 
-@keyframes shrinkDown {
-  from  {transform: scale(1);}
-  to    {transform: scale(0.3);}
-}
-
-@keyframes invis {
-  from  {opacity: 0.5;}
-  to    {opacity: 1;}
-}
-
-@keyframes fadeOut {
-  from  {opacity: 1;}
-  to    {opacity: 0.01;}
-}
-
-@keyframes disco {
-  from  {margin-left: 0;}
-  to    {margin-left: 30px;}
-}
-
-@keyframes grow {
-  from  {transform: scale(1);}
-  to    {transform: scale(1.05);}
-}
-
-@keyframes growText {
-  from  {font-size: 12px;}
-  to    {font-size: 13px;}
-}
-
-@keyframes fadeOutDown {
-  from  {
-    margin: auto;
-    opacity: 1;
-    margin-top: 0px;
-  }
-  to    
-  {
-    margin: auto;
-    opacity: 0.01;
-    margin-top: 20px;
-  }
-}
-
 .messageUpdate {
   margin-top: 10px;
   margin-left: 10px;
