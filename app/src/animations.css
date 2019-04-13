@@ -313,7 +313,7 @@
 
 @keyframes attack3E {
   0% {transform: translate(0px);}
-  33%	{transform: translate(255px, 0)}
+  33%	{transform: translate(255px, 0px)}
   100% {transform: translate(0px)}
 }
 
@@ -349,7 +349,7 @@
 
 @keyframes attack3S {
   0% {transform: translate(0px);}
-  33%	{transform: translate(0, 255px)}
+  33%	{transform: translate(0px, 255px)}
   100% {transform: translate(0px)}
 }
 
@@ -385,7 +385,7 @@
 
 @keyframes attack3W {
   0% {transform: translate(0px);}
-  33%	{transform: translate(-255px, 0)}
+  33%	{transform: translate(-255px, 0px)}
   100% {transform: translate(0px)}
 }
 

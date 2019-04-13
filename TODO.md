@@ -222,6 +222,10 @@ Aoe damage logic
 
 ## Frontend - Visual
 
+manaBar align text, overlap more with hpbar?
+
+DamageBar animation from 0 to value
+
 "napp" instead of baby
 
 Pokedollar bigger on top
