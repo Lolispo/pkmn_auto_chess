@@ -473,13 +473,13 @@ body {
 
 .goldImage {
   /*width: 30px;*/
-  height: 20px;
-  width: 16px;
+  height: 30px; /*20*/
+  width: 24px; /*16*/
   padding-left: 5px;
   /*
   padding-top: 1px;
   */
-  padding-top: 7px;
+  padding-top: 1px;
 }
 
 .goldImageRefreshDiv {
@@ -653,6 +653,7 @@ body {
   margin: auto;
 }
 
+/*
 .hpBar {
   text-align: center;
   border: 1px solid black;
@@ -660,7 +661,7 @@ body {
   margin-top: 69px;
   font-size: 12px;
   z-index: 4;
-}
+}*/
 
 .boostBar {
   text-align: center;
@@ -673,6 +674,61 @@ body {
   z-index: 4;
   background-color: rgb(72, 182, 219);
 }
+
+.barContainer {
+  position: absolute;
+  margin-top: 69px;
+}
+
+.hpBar[color="0"] {
+  background: green;
+}
+
+.hpBar[color="1"] {
+  background: red;
+}
+
+
+.barContainer .hpText{
+  position: absolute;
+  left:50%;
+  top:0px;
+  height:100%;
+  margin-top: -0px;
+  transform:translate(-50%,-50%);
+  color:white;
+  float: left;
+  width : 100%;
+  height : 100%;
+  text-align: center;
+  font-size: 12px;
+  z-index: 5;
+}
+
+
+.hpBar {
+  position: absolute;
+  float: left;
+  width: 85px;
+  height: 12px;
+  border: 1px solid black;
+  z-index: 4;
+}
+
+.shieldBar{
+  position: absolute;
+  float: left;
+  background : rgb(0, 170, 255);
+  width : 85px;
+  height: 12px;
+  border: 1px solid black;
+  z-index: 4;
+}
+
+.shieldBar, .hpBar, .levelBar, .playerHpBar{
+  transition:all 0.2s;
+}
+
 
 .damageBarDiv {
   width: 100px;
@@ -1133,4 +1189,14 @@ body {
 
 .labels {
   position: relative;
+}
+
+.noSelect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+  supported by Chrome and Opera */
 }

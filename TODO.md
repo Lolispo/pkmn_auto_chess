@@ -113,6 +113,8 @@ Target Priorities
 
 ## Backend
 
+upnext shop level not showing, show as pvp
+
 Script to AWS to log output to file
 
 Prep for name being configured for player
@@ -296,8 +298,6 @@ Buying unit when visiting -> change back visited to state.index
 
 Make chat text more easily readable
     Dont show damage Dealt if empty
-
-Enemy type bonuses during battle
 
 Firefox make chat scrollable
 

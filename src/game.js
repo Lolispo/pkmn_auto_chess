@@ -1621,6 +1621,7 @@ async function createBattleUnit(unit, unitPos, team) {
   return unit.set('team', team).set('attack', unitStats.get('attack'))
     .set('hp', unitStats.get('hp'))
     .set('maxHp', unitStats.get('hp'))
+    .set('startHp', unitStats.get('hp'))
     .set('type', unitStats.get('type'))
     .set('next_move', unitStats.get('next_move') || pokemonJS.getStatsDefault('next_move'))
     .set('mana', unitStats.get('mana') || pokemonJS.getStatsDefault('mana'))

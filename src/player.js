@@ -12,7 +12,7 @@ const gameConstantsJS = require('./game_constants');
 function Player(i) {
   return Map({
     index: i,
-    hp: (gameConstantsJS.debugMode ? 10 : 100),
+    hp: (gameConstantsJS.debugMode ? 100 : 100),
     level: (gameConstantsJS.debugMode ? 5 : 1),
     exp: 0,
     expToReach: 1,

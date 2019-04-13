@@ -255,29 +255,37 @@ class Cell extends Component {
         // console.log('I WANT TO BE RERENDERED', this.props.newProps.battleStartBoard);
         pokemon = this.props.newProps.battleStartBoard[this.state.pos];
         // (Math.min(pokemon.hp, pokemon.maxHp) / Math.max(pokemon.hp, pokemon.maxHp) * 100)
-        const hpBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
-          <div className={`hpBar text_shadow ${(this.props.isBoard ? (pokemon.team === 0 ? 'friendlyBar' : 'enemyBar') : '')}`} 
-            style={{width: (pokemon.hp / Math.max(pokemon.hp, pokemon.maxHp) * 100)+'%'}}>
-            {`${pokemon.hp}/${pokemon.maxHp}`}
-          </div>
-          {(pokemon.hp > pokemon.maxHp ? <div className={`boostBar text_shadow ${(this.props.isBoard ? 'boostBar' : '')}`} 
-            style={{width: (/*pokemon.hp-pokemon.maxHp / pokemon.hp*/1 * 100)+'%'}}/> : '')} 
-          </div> : '');
-        const manaBar = (pokemon ? <div className='barDiv' style={{width: sideLength}}>
-          <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
-          ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / pokemon.manaCost * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
-          </div> : '');
-        const actionMessage = (pokemon && pokemon.actionMessage && pokemon.actionMessage !== '' ? 
-          <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
-            {pokemon.actionMessage}
-          </div>
-          : '');
-        let styleVar = {position: 'relative'};
-        if(pokemon && pokemon.animateMove){
-          styleVar = pokemon.animateMove;
-          // console.log('StyleVar', pokemon.name, styleVar)
-        }
-        if(!isUndefined(pokemon)){
+        if(pokemon) { 
+          // (pokemon.hp + pokemon.hp-pokemon.maxHp / Math.max(pokemon.hp, pokemon.maxHp) * 100);
+          const percHp = (Math.min(pokemon.hp, pokemon.maxHp) / pokemon.startHp) * 100; // (pokemon.hp > pokemon.maxHp ? (1 - ((pokemon.hp - pokemon.startHp) / pokemon.startHp)) : (pokemon.hp / pokemon.maxHp)) * 100;// ;
+          const percShield = (pokemon.hp > pokemon.maxHp ? (pokemon.startHp - pokemon.maxHp) / pokemon.startHp * 100 : 0); // (pokemon.hp > pokemon.maxHp ? ((pokemon.hp - pokemon.startHp) / pokemon.startHp) * 100 : 0);
+          const shieldMarginLeft = (percHp - 13);
+          const hpBar = <div className='barContainer' style={{width: sideLength}}>
+              <p class='hpText text_shadow'>
+                {`${pokemon.hp}/${pokemon.startHp}`}
+              </p>
+              <div color={pokemon.team} class='hpBar' style={{width: percHp + '%'}}/>
+              {(percShield > 0 ? <div class='shieldBar' style={{width: percShield + '%', marginLeft: shieldMarginLeft + 'px'}}/> : '')}
+            </div>;
+            {/*<div className={`hpBar  ${(pokemon.team === 0 ? 'friendlyBar' : 'enemyBar')}`} 
+              style={{width: (pokemon.hp / Math.max(pokemon.hp, pokemon.maxHp) * 100)+'%'}}>*/}
+            /*(pokemon.hp > pokemon.maxHp ? <div className={`boostBar text_shadow ${(this.props.isBoard ? 'boostBar' : '')}`} 
+              style={{width: (pokemon.hp-pokemon.maxHp / pokemon.hp1 * 100)+'%'}}/> : '')} 
+            </div> : '')*/
+          const manaBar = <div className='barDiv' style={{width: sideLength}}>
+            <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
+            ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / pokemon.manaCost * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+            </div>;
+          const actionMessage = (pokemon.actionMessage && pokemon.actionMessage !== '' ? 
+            <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
+              {pokemon.actionMessage}
+            </div>
+            : '');
+          let styleVar = {position: 'relative'};
+          if(pokemon.animateMove){
+            styleVar = pokemon.animateMove;
+            // console.log('StyleVar', pokemon.name, styleVar)
+          }
           const back = (this.props.isBoard ? (!isUndefined(pokemon.team) ? pokemon.team === 0 : true) : false);
           const classList = `absolute ${(pokemon.winningAnimation ? ' winningAnimation' : (pokemon.attackAnimation ? ' ' + pokemon.attackAnimation : ''))} ` +
               `${(this.props.newProps.onGoingBattle && !this.props.isBoard ? 'pokemonEnter' : '')}`;
