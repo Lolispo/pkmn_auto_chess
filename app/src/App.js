@@ -259,7 +259,7 @@ class Cell extends Component {
           // (pokemon.hp + pokemon.hp-pokemon.maxHp / Math.max(pokemon.hp, pokemon.maxHp) * 100);
           const percHp = (Math.min(pokemon.hp, pokemon.maxHp) / pokemon.startHp) * 100; // (pokemon.hp > pokemon.maxHp ? (1 - ((pokemon.hp - pokemon.startHp) / pokemon.startHp)) : (pokemon.hp / pokemon.maxHp)) * 100;// ;
           const percShield = (pokemon.hp > pokemon.maxHp ? (pokemon.startHp - pokemon.maxHp) / pokemon.startHp * 100 : 0); // (pokemon.hp > pokemon.maxHp ? ((pokemon.hp - pokemon.startHp) / pokemon.startHp) * 100 : 0);
-          const shieldMarginLeft = (percHp - 13);
+          const shieldMarginLeft = ((percHp / 100.0) * sideLength) - 2; // - 13);
           const hpBar = <div className='barContainer' style={{width: sideLength}}>
               <p class='hpText text_shadow'>
                 {`${pokemon.hp}/${pokemon.startHp}`}
