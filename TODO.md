@@ -57,24 +57,25 @@ Odd behaviour:
 
     Jolteon no type on board
 
-    Sometimes doesn't lose hp after battle
-
     No target move (splash) shouldnt deal damage (curr 1 it seems)
         Check
 
 # Fix me - Prio
 
     Refillpieces crash
+        Attempt to fix
 
-    mana with spell over 100, check mana cost
-        uses default somewhere instead of abilitycost
+    Cap units of same type
+        > 9 units
 
     Rendering rework
 
     Bug: Units with long range standing still, not finding path
+        Check if withinRange can be true and still not attack is valid
 
     Find: Not updating hp after battle lost
         Potential data race
+        Sometimes doesn't lose hp after battle
 
 ## Add me - Prio
 
@@ -222,7 +223,11 @@ Aoe damage logic
 
 ## Frontend - Visual
 
+
+
 manaBar align text, overlap more with hpbar?
+
+Fix shield hp animation
 
 DamageBar animation from 0 to value
 
@@ -266,6 +271,14 @@ Hover baby, show requires only 2 for upgrade
 
 ## Frontend - Logic
 
+harden / no target spells dont do animation
+
+Visit
+    See enemyBoardBuffs when visiting
+    Spectator cant currently see lock toggles
+    End battle isn't reached for spectators
+        Doesnt get up next and stuff, enemy undefined
+
 Display bug text
 
 Add type weaknesses/strengths in message buff bonus that toggles
@@ -283,11 +296,6 @@ Moving units on hand during battle:
         Gets an error same time when moving, check why (double effect?)
         Check if onGoingBattle allow pokemonSpawn if !isBoard
 
-End battle isn't reached for spectators
-    Doesnt get up next and stuff, enemy undefined
-
-Spectator cant currently see lock toggles
-
 Length of move animation connected to when next move should be made
 
 Allow shopping with hotkeys
@@ -296,9 +304,6 @@ Allow shopping with hotkeys
 Sounds - Currently only one at a time
     Fix playing multiple sounds, currently replays all
         Would in theory be fixed by not storing in array
-
-Buying unit when visiting -> change back visited to state.index
-    Necessary? It moves back when buying if not mistaken
 
 Make chat text more easily readable
     Dont show damage Dealt if empty

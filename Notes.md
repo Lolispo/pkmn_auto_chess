@@ -80,17 +80,23 @@ Steel: 1 (3) [1,2]
 
   Type numbers:
     More Fighting units?
+    Fire: 3 units cost 4, ponyta magby 
 
   Add:
     Omanyte
     Abra
-    Duskull
 
-  Metapod/Kakuna weak
+  Water too strong?
+
+  Geodude worse ability
+  Strong:
+    Parasect
+    groudon
+    aron
+  Weak:
+    Caterpie
+
   Check dps, damage
-
-  Magnemite 3 -> 2 or bench
-  Bench nidoran female
 
 #### Abilitiy implementations
   Teleport (does nothing currently)
@@ -103,9 +109,9 @@ Steel: 1 (3) [1,2]
 
 ### Type Bonuses
 
-Electric change?
-
 #### New effects: 
+  Electric: DecreaseAttack
+
   Grass: Lifesteal
   Ghost: DecreaseHp
   Flying: Evasion
@@ -114,7 +120,6 @@ Electric change?
     Ice: decreaseSpeed
   Ground: Stun chance on attack
   Dragon: Ability damage buff, sp.attk inc
-  Electric: DecreaseAttack
   Fairy: Increase Sp.Def
   dark: Demon
   Fire: ?

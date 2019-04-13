@@ -65,6 +65,7 @@ async function refillPieces(pieces, discardedPieces) {
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
     const cost = (await pokemonJS.getStats(name)).get('cost');
+    /*
     if (f.isUndefined(pieceStorage.get(0)) || f.isUndefined(pieceStorage.get(1)) || f.isUndefined(pieceStorage.get(2))
         || f.isUndefined(pieceStorage.get(3)) || f.isUndefined(pieceStorage.get(4))) {
       console.log('@refillPieces pieceStorage WAS UNDEFINED HERE', pieceStorage);
@@ -73,7 +74,11 @@ async function refillPieces(pieces, discardedPieces) {
           pieceStorage = pieceStorage.set(j, List([]));
         }
       }
-    }
+    }*/
+    if(f.isUndefined(pieceStorage.get(cost - 1))) {
+      console.log('@RefillPieces Undefined', cost - 1, pieceStorage.get(cost - 1), name);
+      pieceStorage = await pieceStorage.set(cost - 1, List([]));
+    }       
     pieceStorage = await f.push(pieceStorage, cost - 1, name);
     // console.log('@refillPieces', name);
   }
@@ -878,7 +883,7 @@ async function manaIncrease(board, damage, unitPos, enemyPos) {
   let manaChanges = Map({});
   const unitMana = board.get(unitPos).get('mana');
   const unitManaMult = board.get(unitPos).get('mana_multiplier');
-  const unitManaInc = Math.round(Math.min(Math.max(unitManaMult * damage, 3), 15));
+  const unitManaInc = Math.round(Math.min(Math.max(unitManaMult * damage, 5), 15));
   const manaCost = board.get(unitPos).get('manaCost');
   const newMana = Math.min(+unitMana + +unitManaInc, manaCost);
   manaChanges = manaChanges.set(unitPos, newMana);
@@ -1114,7 +1119,7 @@ async function nextMove(board, unitPos, optPreviousTarget) {
     const target = await enemyPos.get('closestEnemy');
     // console.log('@nextmove - ability target: ', target, enemyPos)
     const typeFactor = await typesJS.getTypeFactor(ability.get('type'), board.get(target).get('type'));
-    const abilityDamage = await calcDamage(action, (ability.get('power') || 0), unit, board.get(target), typeFactor, true);
+    const abilityDamage = (ability.get('power') ? await calcDamage(action, ability.get('power'), unit, board.get(target), typeFactor, true) : 0);
     const abilityName = ability.get('displayName');
     const abilityResult = await useAbility(board, ability, abilityDamage, unitPos, target);
     // console.log('@abilityResult', abilityResult)

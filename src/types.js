@@ -12,8 +12,8 @@ const increaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense'
 const increaseSpecialAttack = (unit, bonus) => unit.set('specialAttack', +unit.get('specialAttack') + +bonus);
 const increaseSpecialDefense = (unit, bonus) => unit.set('specialDefense', +unit.get('specialDefense') + +bonus);
 const decreaseDefense = (unit, bonus) => unit.set('defense', Math.max(1, +unit.get('defense') - +bonus));
-const decreaseSpeed = (unit, bonus) => unit.set('speed', Math.min(pokemonJS.getStatsDefault('upperLimitSpeed'), +unit.get('speed') + +bonus)); // Higher speed value = worse
-const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus)).set('startHp', Math.max(0, +unit.get('hp') - +bonus));
+const decreaseSpeed = (unit, bonus) => unit.set('speed', Math.min(pokemonJS.getStatsDefault('upperLimitSpeed') + 100, +unit.get('speed') + +bonus)); // Higher speed value = worse
+const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus)); //.set('startHp', Math.max(0, +unit.get('hp') - +bonus));
 const decreaseAttack = (unit, bonus) => unit.set('attack', Math.max(0, +unit.get('attack') - +bonus));
 
 const reqForUpgrade = async (unit, bonus) => {
@@ -89,7 +89,7 @@ const typeMap = new Map({
       'Dragon',
     ]),
     req: List([3, 5, 7]),
-    bonusAmount: List([15, 20, 25]),
+    bonusAmount: List([15, 15, 20]),
     bonusType: 'allBonus',
     bonusStatType: 'speed',
     allBonus: (unit, bonus) => increaseSpeed(unit, bonus),

@@ -677,7 +677,7 @@ body {
 
 .barContainer {
   position: absolute;
-  margin-top: 69px;
+  margin-top: 72px;
 }
 
 .hpBar[color="0"] {
@@ -694,7 +694,7 @@ body {
   left:50%;
   top:0px;
   height:100%;
-  margin-top: -0px;
+  margin-top: 0px;
   transform:translate(-50%,-50%);
   color:white;
   float: left;
@@ -711,8 +711,20 @@ body {
   float: left;
   width: 85px;
   height: 12px;
-  border: 1px solid black;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid none solid solid;
   z-index: 4;
+}
+
+.barBorderShield {
+  border-width: 1px;
+  border-color: black;
+  border-style: solid none solid solid;
+}
+
+.barBorderNormal {
+  border: 1px black solid;
 }
 
 .shieldBar{
@@ -720,8 +732,10 @@ body {
   float: left;
   background : rgb(0, 170, 255);
   width : 85px;
-  height: 12px;
-  border: 1px solid black;
+  height: 12px;  
+  border-width: 1px;
+  border-color: black;
+  border-style: solid solid solid none;
   z-index: 4;
 }
 
@@ -872,8 +886,8 @@ body {
   text-align: center;
   border: 1px solid black;
   position: absolute; 
-  z-index: 30;
-  margin-top: 83px;
+  z-index: 311;
+  margin-top: 85px;
   font-size: 12px;
 }
 
@@ -1054,7 +1068,7 @@ body {
   border: 2pt solid black;
   border-radius: 5px;
   padding: 5px;
-  z-index: 10;
+  z-index: 12;
 }
 
 /*

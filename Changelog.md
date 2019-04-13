@@ -229,10 +229,14 @@ Ghost typeUpd -> [1, 2] [20, 25]
 
 Pichu sound fix
 
-Harden mana 50 -> 25
+Harden mana 50 -> 15
 
 MultiStrike bug fixed, prevented units from taking correct amount of damage
 
 Min mana gained from interaction is 3 (previous 1)
 
+  Changed to 5
+
 Fixed mana not going over 100 in certain situations where abilities cost more than 100
+
+Water Nerfed [15, 20, 25] -> [15, 15, 20]

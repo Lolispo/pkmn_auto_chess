@@ -277,7 +277,7 @@
 
 @keyframes attack3N {
   0% {transform: translate(0px);}
-  33%	{transform: translate(0, -255px)}
+  33%	{transform: translate(0px, -255px)}
   100%	{transform: translate(0px)}
 }
 
