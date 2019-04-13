@@ -9,6 +9,8 @@ const increaseSpeed = (unit, bonus) => unit.set('speed', Math.max(10, unit.get('
 const increaseHp = (unit, bonus) => unit.set('hp', +unit.get('hp') + +bonus);
 const increaseAttack = (unit, bonus) => unit.set('attack', +unit.get('attack') + +bonus);
 const increaseDefense = (unit, bonus) => unit.set('defense', +unit.get('defense') + +bonus);
+const increaseSpecialAttack = (unit, bonus) => unit.set('specialAttack', +unit.get('specialAttack') + +bonus);
+const increaseSpecialDefense = (unit, bonus) => unit.set('specialDefense', +unit.get('specialDefense') + +bonus);
 const decreaseDefense = (unit, bonus) => unit.set('defense', Math.max(1, +unit.get('defense') - +bonus));
 const decreaseSpeed = (unit, bonus) => unit.set('speed', Math.min(pokemonJS.getStatsDefault('upperLimitSpeed'), +unit.get('speed') + +bonus)); // Higher speed value = worse
 const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus));
@@ -110,10 +112,10 @@ const typeMap = new Map({
     ]),
     noDamageAgainst: 'Ground',
     req: List([2, 4, 6]),
-    bonusAmount: List([25, 30, 35]),
-    bonusType: 'bonus',
-    bonusStatType: 'speed',
-    bonus: (unit, bonus) => increaseSpeed(unit, bonus),
+    bonusAmount: List([10, 15, 15]),
+    bonusType: 'enemyDebuff',
+    bonusStatType: 'attack',
+    enemyDebuff: (unit, bonus) => decreaseAttack(unit, bonus),
   }),
   grass: Map({
     name: 'grass',
@@ -315,8 +317,8 @@ const typeMap = new Map({
     ]),
     ineffectiveAgainst: 'Dark',
     noDamageAgainst: 'Normal',
-    req: List([1]),
-    bonusAmount: List([30]),
+    req: List([1, 2]),
+    bonusAmount: List([20, 25]),
     bonusType: 'bonus',
     bonusStatType: 'attack',
     bonus: (unit, bonus) => increaseAttack(unit, bonus),
@@ -331,10 +333,10 @@ const typeMap = new Map({
     ineffectiveAgainst: 'Steel',
     noDamageAgainst: 'Fairy',
     req: List([1]),
-    bonusAmount: List([15]),
-    bonusType: 'enemyDebuff',
-    bonusStatType: 'attack',
-    enemyDebuff: (unit, bonus) => decreaseAttack(unit, bonus),
+    bonusAmount: List([50]),
+    bonusType: 'bonus',
+    bonusStatType: 'Sp.Attk',
+    bonus: (unit, bonus) => increaseSpecialAttack(unit, bonus),
     /*
     dratini
     Better spell power
@@ -354,10 +356,10 @@ const typeMap = new Map({
       'Steel',
     ]),
     req: List([1, 2]),
-    bonusAmount: List([15, 30]),
+    bonusAmount: List([10, 20]),
     bonusType: 'bonus',
-    bonusStatType: 'defense',
-    bonus: (unit, bonus) => increaseDefense(unit, bonus),
+    bonusStatType: 'hp',
+    bonus: (unit, bonus) => increaseHp(unit, bonus),
     /*
     Defense for steel units
     No combo, simple bonus

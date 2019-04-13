@@ -413,5 +413,33 @@
     "type": "normal",
     "power": 80,
     "acc_range": 0.9
+  },
+  "astonish": {
+    "name": "astonish",
+    "displayName": "Astonish",
+    "type": "ghost",
+    "power": 30
+  },
+  "metalClaw": {
+    "name": "metalClaw",
+    "displayName": "Metal Claw",
+    "type": "steel",
+    "power": 50,
+    "acc_range": 0.95
+  },
+  "ironTail": {
+    "name": "ironTail",
+    "displayName": "Iron Tail",
+    "type": "steel",
+    "power": 100,
+    "acc_range": 0.75,
+    "mana": 130
+  },
+  "bulletSeed": {
+    "name": "bulletSeed",
+    "displayName": "Bullet Seed",
+    "type": "grass",
+    "power": 25,
+    "effect": "multiStrike"
   }
 }

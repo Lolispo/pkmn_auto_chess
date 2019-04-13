@@ -535,56 +535,6 @@
     "specialDefense": 55,
     "eggGroup": "Field"
   },
-  "nidoran-f": {
-    "name": "nidoran-f",
-    "displayName": "Nidoran ♀★",
-    "cost": 2,
-    "hp": 55,
-    "attack": 47,
-    "defense": 52,
-    "speed": 41,
-    "type": "poison",
-    "ability": "poisonSting",
-    "evolves_to": "nidorina",
-    "specialAttack": 40,
-    "specialDefense": 40,
-    "eggGroup": [
-      "Monster",
-      "Field"
-    ]
-  },
-  "nidorina": {
-    "name": "nidorina",
-    "displayName": "Nidorina★★",
-    "cost": 4,
-    "hp": 70,
-    "attack": 62,
-    "defense": 67,
-    "speed": 56,
-    "type": "poison",
-    "ability": "poisonSting",
-    "evolves_from": "nidoran-f",
-    "evolves_to": "nidoqueen",
-    "specialAttack": 55,
-    "specialDefense": 55
-  },
-  "nidoqueen": {
-    "name": "nidoqueen",
-    "displayName": "Nidoqueen★★★",
-    "cost": 6,
-    "hp": 90,
-    "attack": 82,
-    "defense": 87,
-    "speed": 76,
-    "type": [
-      "poison",
-      "ground"
-    ],
-    "ability": "earthquake",
-    "evolves_from": "nidorina",
-    "specialAttack": 75,
-    "specialDefense": 85
-  },
   "nidoran-m": {
     "name": "nidoran-m",
     "displayName": "Nidoran ♂★",
@@ -1304,7 +1254,7 @@
   "magnemite": {
     "name": "magnemite",
     "displayName": "Magnemite★",
-    "cost": 3,
+    "cost": 2,
     "hp": 25,
     "attack": 35,
     "defense": 70,
@@ -1323,7 +1273,7 @@
   "magneton": {
     "name": "magneton",
     "displayName": "Magneton★★",
-    "cost": 5,
+    "cost": 4,
     "hp": 50,
     "attack": 60,
     "defense": 95,
@@ -1343,7 +1293,7 @@
   "magnezone": {
     "name": "magnezone",
     "displayName": "Magnezone★★★",
-    "cost": 7,
+    "cost": 6,
     "hp": 70,
     "attack": 70,
     "defense": 115,
@@ -2466,7 +2416,7 @@
   "ralts": {
     "name": "ralts",
     "displayName": "Ralts★",
-    "cost": 3,
+    "cost": 2,
     "hp": 28,
     "attack": 25,
     "defense": 25,
@@ -2485,7 +2435,7 @@
   "kirlia": {
     "name": "kirlia",
     "displayName": "Kirlia★★",
-    "cost": 5,
+    "cost": 4,
     "hp": 38,
     "attack": 35,
     "defense": 35,
@@ -2505,7 +2455,7 @@
   "gardevoir": {
     "name": "gardevoir",
     "displayName": "Gardevoir★★★",
-    "cost": 7,
+    "cost": 6,
     "hp": 68,
     "attack": 65,
     "defense": 65,
@@ -2520,5 +2470,155 @@
     "specialDefense": 115,
     "range": 2,
     "eggGroup": "Amorphous"
+  },
+  "slakoth": {
+    "name": "slakoth",
+    "displayName": "Slakoth★",
+    "cost": 3,
+    "hp": 60,
+    "attack": 60,
+    "defense": 60,
+    "speed": 30,
+    "type": "normal",
+    "ability": "scratch",
+    "evolves_to": "vigoroth",
+    "specialAttack": 35,
+    "specialDefense": 35,
+    "eggGroup": "Field"
+  },
+  "vigoroth": {
+    "name": "vigoroth",
+    "displayName": "Vigoroth★★",
+    "cost": 5,
+    "hp": 80,
+    "attack": 80,
+    "defense": 80,
+    "speed": 90,
+    "type": "normal",
+    "ability": "slash",
+    "evolves_from": "slakoth",
+    "evolves_to": "slaking",
+    "specialAttack": 55,
+    "specialDefense": 55,
+    "eggGroup": "Field"
+  },
+  "slaking": {
+    "name": "slaking",
+    "displayName": "Slaking★★★",
+    "cost": 7,
+    "hp": 150,
+    "attack": 160,
+    "defense": 100,
+    "speed": 100,
+    "type": "normal",
+    "ability": "hammerArm",
+    "evolves_from": "vigoroth",
+    "specialAttack": 95,
+    "specialDefense": 65,
+    "eggGroup": "Field"
+  },
+  "duskull": {
+    "name": "duskull",
+    "displayName": "Duskull★",
+    "cost": 3,
+    "hp": 20,
+    "attack": 40,
+    "defense": 90,
+    "speed": 25,
+    "type": "ghost",
+    "ability": "astonish",
+    "evolves_to": "dusclops",
+    "specialAttack": 30,
+    "specialDefense": 90,
+    "range": 3,
+    "eggGroup": "Amorphous"
+  },
+  "dusclops": {
+    "name": "dusclops",
+    "displayName": "Dusclops★★",
+    "cost": 5,
+    "hp": 40,
+    "attack": 70,
+    "defense": 130,
+    "speed": 25,
+    "type": "ghost",
+    "ability": "shadowBall",
+    "evolves_from": "duskull",
+    "evolves_to": "dusknoir",
+    "specialAttack": 60,
+    "specialDefense": 130,
+    "range": 3,
+    "eggGroup": "Amorphous"
+  },
+  "dusknoir": {
+    "name": "dusknoir",
+    "displayName": "Dusknoir★★★",
+    "cost": 7,
+    "hp": 45,
+    "attack": 100,
+    "defense": 135,
+    "speed": 45,
+    "type": "ghost",
+    "ability": "shadowBall",
+    "evolves_from": "dusclops",
+    "specialAttack": 65,
+    "specialDefense": 135,
+    "range": 3,
+    "eggGroup": "Amorphous"
+  },
+  "aron": {
+    "name": "aron",
+    "displayName": "Aron★",
+    "cost": 3,
+    "hp": 50,
+    "attack": 70,
+    "defense": 100,
+    "speed": 30,
+    "type": [
+      "steel",
+      "rock"
+    ],
+    "ability": "metalClaw",
+    "evolves_to": "lairon",
+    "specialAttack": 40,
+    "specialDefense": 40,
+    "eggGroup": "Monster"
+  },
+  "lairon": {
+    "name": "lairon",
+    "displayName": "Lairon★★",
+    "cost": 5,
+    "hp": 60,
+    "attack": 90,
+    "defense": 140,
+    "speed": 40,
+    "type": [
+      "steel",
+      "rock"
+    ],
+    "ability": "ironHead",
+    "evolves_from": "aron",
+    "evolves_to": "aggron",
+    "specialAttack": 50,
+    "specialDefense": 50,
+    "eggGroup": "Monster"
+  },
+  "aggron": {
+    "name": "aggron",
+    "displayName": "Aggron★★★",
+    "cost": 7,
+    "hp": 70,
+    "attack": 110,
+    "defense": 180,
+    "speed": 50,
+    "type": [
+      "steel",
+      "rock"
+    ],
+    "ability": "ironTail",
+    "evolves_from": "lairon",
+    "specialAttack": 60,
+    "specialDefense": 60,
+    "eggGroup": "Monster"
   }
 }

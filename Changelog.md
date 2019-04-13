@@ -201,3 +201,28 @@ Baby sign ín shop
 Buffed Misty
 
 Bug fixes
+
+## 0.4.5
+
+nidoran female benched
+
+Magnemite 3 -> 2
+
+Ralts 3 -> 2
+
+Added slaking
+
+Added duskull
+
+Added Aron
+
+Electric buff -> enemy damage decrease
+  [10, 15, 15]
+
+Dragon -> increaseSpecialAttack +50
+
+Steel buff increaseDefense -> increaseHp [1, 2] [10, 15]
+
+Ghost typeUpd -> [1, 2] [20, 25]
+
+

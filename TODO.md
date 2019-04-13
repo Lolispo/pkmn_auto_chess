@@ -54,6 +54,10 @@ Known issues:
 
 Odd behaviour:
 
+    Damage dealt bars weird: 
+        Connected to prevDmg maybe
+        https://gyazo.com/ddd654d97001566c15ccc85f5ccb0ca2
+
     Jolteon no type on board
 
     Sometimes doesn't lose hp after battle
@@ -62,6 +66,11 @@ Odd behaviour:
         Check
 
 # Fix me - Prio
+
+    Refillpieces crash
+
+    mana with spell over 100, check mana cost
+        uses default somewhere instead of abilitycost
 
     Rendering rework
 
@@ -106,6 +115,17 @@ Target Priorities
             If multiple, random
 
 ## Backend
+
+Script to AWS to log output to file
+
+Prep for name being configured for player
+    Check for all instances of 'Player' and read from state
+    First: choose in menu
+    Later: Account
+
+Pichu no sound?
+
+Sound when lose or something
 
 No path available for unit
     Range 3 units

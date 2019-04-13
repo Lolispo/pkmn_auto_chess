@@ -5,11 +5,14 @@ Dota:    55: 12 13 14 11 5
 
 UpdDota: 60: 13 14 15 11 7
  
-Current: 60: 11 15 13 13 8
+Current: 60: 11 16 14 13 8
 
 ## Current Notes
 
 Font Rockwell
+
+Mana gain for lower hp units
+  Is it possible for some units to do spells even?
 
 Guarantee 2 tiers for every unit
   Legendaries Level 2 versions
@@ -115,6 +118,8 @@ Electric change?
   Fairy: Increase Sp.Def
   dark: Demon
   Fire: ?
+
+  Manareg
 
 #### Type Bonuses Status Currently
   Early Game types:
