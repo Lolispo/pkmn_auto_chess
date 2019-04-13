@@ -233,3 +233,6 @@ Harden mana 50 -> 25
 
 MultiStrike bug fixed, prevented units from taking correct amount of damage
 
+Min mana gained from interaction is 3 (previous 1)
+
+Fixed mana not going over 100 in certain situations where abilities cost more than 100

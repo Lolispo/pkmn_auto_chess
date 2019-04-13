@@ -878,7 +878,7 @@ async function manaIncrease(board, damage, unitPos, enemyPos) {
   let manaChanges = Map({});
   const unitMana = board.get(unitPos).get('mana');
   const unitManaMult = board.get(unitPos).get('mana_multiplier');
-  const unitManaInc = Math.round(Math.min(unitManaMult * damage, 15));
+  const unitManaInc = Math.round(Math.min(Math.max(unitManaMult * damage, 3), 15));
   const manaCost = board.get(unitPos).get('manaCost');
   const newMana = Math.min(+unitMana + +unitManaInc, manaCost);
   manaChanges = manaChanges.set(unitPos, newMana);
@@ -886,7 +886,7 @@ async function manaIncrease(board, damage, unitPos, enemyPos) {
     const enemyMana = board.get(enemyPos).get('mana');
     const enemyManaMult = board.get(enemyPos).get('mana_multiplier');
     const enemyManaInc = Math.round(Math.min(enemyManaMult * damage, 15));
-    const enemyManaCost = board.get(unitPos).get('manaCost');
+    const enemyManaCost = board.get(enemyPos).get('manaCost');
     const enemyNewMana = Math.min(+enemyMana + +enemyManaInc, enemyManaCost);
     return manaChanges.set(enemyPos, enemyNewMana);
   }
@@ -1617,7 +1617,7 @@ async function markBoardBonuses(board, teamParam = '0') {
 async function createBattleUnit(unit, unitPos, team) {
   const unitStats = await pokemonJS.getStats(unit.get('name'));
   const ability = await abilitiesJS.getAbility(unit.get('name'));
-  console.log('@createBattleUnit', unit.get('name'), unitStats.get('ability'), ability.get('mana'))
+  if(ability.get('mana')) console.log('@createBattleUnit', unit.get('name'), unitStats.get('ability'), ability.get('mana'));
   return unit.set('team', team).set('attack', unitStats.get('attack'))
     .set('hp', unitStats.get('hp'))
     .set('maxHp', unitStats.get('hp'))

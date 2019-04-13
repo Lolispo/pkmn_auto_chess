@@ -2,7 +2,7 @@
 
 import { getBackgroundAudio, getSoundEffect } from './audio.js';
 
-const devMode = false;
+const devMode = true;
 
 let counter = 0;
 
