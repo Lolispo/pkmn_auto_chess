@@ -272,11 +272,11 @@ class Cell extends Component {
             /*(pokemon.hp > pokemon.maxHp ? <div className={`boostBar text_shadow ${(this.props.isBoard ? 'boostBar' : '')}`} 
               style={{width: (pokemon.hp-pokemon.maxHp / pokemon.hp1 * 100)+'%'}}/> : '')} 
             </div> : '')*/
-          const manaBar = <div className='barDiv' style={{width: sideLength}}>
+          const manaBar = <div className={`barDiv ${(pokemon.mana === 0 ? 'hidden' : '')}`} style={{width: sideLength}}>
               <p class='manaText text_shadow'>
                 {`${pokemon.mana}/${pokemon.manaCost}`}
               </p>
-              <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
+              <div className={`manaBar text_shadow
                 ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / pokemon.manaCost * 100)+'%'}}/>
             </div>;
           const actionMessage = (pokemon.actionMessage && pokemon.actionMessage !== '' ? 
@@ -1190,7 +1190,7 @@ class App extends Component {
   }
 
   handleNameChange = (event) => {
-    if(this.state.nameChangeInput.length < 12) {
+    if(this.state.nameChangeInput.length < 12 && this.state.nameChangeInput != '') {
       this.props.dispatch({type: 'UPDATE_PRIVATE_NAME', name: this.state.nameChangeInput});
     }
     this.setState({...this.state, nameChangeInput: ''})

@@ -35,7 +35,7 @@ Test me ingame:
     9 units of a base type
         Can you receive anymore?
         Can you get 2 in shop when you have 8 of that type?
-            Yes!
+            Should be fixed
     Move
         Does it allow jumping over if close enough?
     Low Prios Tests:
@@ -58,17 +58,15 @@ Odd behaviour:
     Jolteon no type on board
 
     No target move (splash) shouldnt deal damage (curr 1 it seems)
-        Check
+        Check, see if damage is dealt on splash
 
 # Fix me - Prio
 
     Refillpieces crash
-        Attempt to fix
+        Attempt to fix was made
 
     Cap units of same type
         > 9 units
-
-    Rendering rework
 
     Bug: Units with long range standing still, not finding path
         Check if withinRange can be true and still not attack is valid
@@ -76,6 +74,9 @@ Odd behaviour:
     Find: Not updating hp after battle lost
         Potential data race
         Sometimes doesn't lose hp after battle
+
+    Diglett dont die when @ 0 hp
+        Test me, check first move code or something
 
 ## Add me - Prio
 
@@ -116,23 +117,13 @@ Target Priorities
 
 upnext shop level not showing, show as pvp
 
-Script to AWS to log output to file
-
-Prep for name being configured for player
-    Check for all instances of 'Player' and read from state
-    First: choose in menu
-    Later: Account
-
-Sound when lose or something
+Sound when lose
 
 No path available for unit
     Range 3 units
 
 PokemonList
     List of all pokemons with type in frontend
-
-Diglett dont die when @ 0 hp
-    Test me, check first move code or something
 
 Discard dead player units
     Pidgeot -> Pidgey
@@ -223,7 +214,7 @@ Aoe damage logic
 
 ## Frontend - Visual
 
-Fix shield hp animation
+Add hover functionality to system in general
 
 DamageBar animation from 0 to value
 
@@ -285,11 +276,6 @@ Infopanel
         evoName: evoImage
         ^Click -> stats for evolution in indexed tree follows
 
-Moving units on hand during battle:
-    Weird animation
-        Gets an error same time when moving, check why (double effect?)
-        Check if onGoingBattle allow pokemonSpawn if !isBoard
-
 Length of move animation connected to when next move should be made
 
 Allow shopping with hotkeys
@@ -300,6 +286,7 @@ Sounds - Currently only one at a time
         Would in theory be fixed by not storing in array
 
 Make chat text more easily readable
+    Types etc
     Dont show damage Dealt if empty
 
 Firefox make chat scrollable
@@ -340,11 +327,11 @@ Cache / Store gifs somehow in browser?
     Only get sprites if not stored
     Localstorage was not big enough, might not be possible
 
-EnemyDebuff: 
-    Select unit
-        Notice if marking friendly or enemy unit during battle
-    Mark debuffs for enemies when selecting enemy units .team === 1
-        For this to be relevant: Needs to load enemy buffs aswell
+EnemyDebuff in infoPanel:
+    Notice if marking friendly or enemy unit during battle
+    Show enemy effects on own units with theirs buffs
+    Show debuffs for enemies when selecting enemy units
+        team === 1
 
 Rotate unit in attack direction
     Up and down normal front and back
@@ -361,8 +348,6 @@ Redo pokeball
     Color as in costColor1 or gray in pokeball
 
 forceStartGame update for not start 
-
-Shrink animation fix during battle
 
 Clickable (:hover) effect
 
