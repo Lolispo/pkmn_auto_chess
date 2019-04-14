@@ -147,6 +147,7 @@ const reducer = (
     displayMarkedBuff: false,
     debugMode: false,
     prevDmgBoard: {},
+    loadingCounter: 1,
   },
   action
 ) => {
@@ -557,10 +558,14 @@ const reducer = (
     case 'TOGGLE_DEBUG_MODE': {
       state = {...state, debugMode: !state.debugMode}
     }
+    case 'LOADING_STRING': {
+      if(!(state.connected && state.loaded)) {
+        state = {...state, loadingCounter: action.loadingCounter}
+      }
+    }
     default:
       break;
   }
-
   return state;
 };
 

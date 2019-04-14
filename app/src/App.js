@@ -1289,7 +1289,15 @@ class App extends Component {
   }
 
   render() {
-    const loadingProgress = 1/3 * (this.props.connected + this.props.loaded + (this.props.playersReady !== -1)) * 100;
+    const loadingProgress = 100/3 * (this.props.connected + this.props.loaded + (this.props.playersReady !== -1));
+    let loadingCounter = this.props.loadingCounter || 1;
+    if(loadingProgress < 100) {
+      loadingCounter = (loadingCounter === 3 ? 1 : loadingCounter + 1);
+      setTimeout(() => {
+        this.props.dispatch({type: 'LOADING_STRING', loadingCounter});
+      }, 1000);
+    }
+    let loadingString = (loadingProgress > 0 ? 'Loading' + '.'.repeat(loadingCounter) : 'Connecting' + '.'.repeat(loadingCounter));
     const mainMenu = <div>
       <div className='logos'>
         <img src={getImage('pokemonLogo')} alt='pokemonLogo'/>
@@ -1298,13 +1306,16 @@ class App extends Component {
       {/*<div className='titleCard text_shadow'>Pokemon Auto Chess</div>*/}
       <div className='startButtons'>
         <div className='flex'> 
-          <button className={`normalButton startButton ${(!this.props.ready ? 'growAnimation' : '')} ${(this.props.loaded ? '' : 'hidden')}`} 
+          <button className={`normalButton startButton ${(!this.props.ready ? 'growAnimation' : '')} ${(loadingProgress >= 100 ? '' : 'hidden')}`} 
           onClick={this.toggleReady}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} 
             onClick={() => this.startGameEvent()}>
              {(loadingProgress >= 100 ? `Start Game (${this.props.playersReady}/${this.props.connectedPlayers})` 
               : <div className='text_shadow loadingBarContainer'>
-                  <div className='loadingBar' style={{width: loadingProgress + '%'}}></div>
+                  {(loadingProgress > 0 ? <div className='loadingBar' style={{width: loadingProgress + '%'}}></div> : '')}
+                  <p className={`loadingBarText ${loadingProgress > 0 ? '' : 'loadingBarConnecting'}`}>
+                    {loadingString}
+                  </p>
                 </div>)}
           </button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready ? '' : 'hidden')}`} 
@@ -1584,6 +1595,7 @@ const mapStateToProps = state => ({
   displayMarkedBuff: state.displayMarkedBuff,
   debugMode: state.debugMode,
   prevDmgBoard: state.prevDmgBoard,
+  loadingCounter: state.loadingCounter,
 });
 
 export default connect(mapStateToProps)(App);

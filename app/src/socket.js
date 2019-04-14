@@ -8,6 +8,7 @@ const ip = url.split(':3000')[0].split('http://')[1];
 const ipAdress = 'http://' + ip + ':8000';
 console.log('Connecting to ' + ipAdress + ' ...');
 const socket = io(ipAdress);
+let timeoutCounter = 1;
 
 export async function AjaxLoadSprites(dispatch) {
   console.log('Fetching Sprites from ' + ipAdress + '/sprites');
@@ -23,9 +24,10 @@ export async function AjaxLoadSprites(dispatch) {
     dispatch({ type: 'LOAD_SPRITES_JSON', pokemonSprites: result.sprites});
   }).catch((err) => {
     console.log('Failed to fetch', err);
+    timeoutCounter = (timeoutCounter < 10 ? timeoutCounter + 1 : 10);
     setTimeout(() => { // Try again in 2 seconds
       AjaxLoadSprites(dispatch);
-    }, 2000); 
+    }, 2000 * timeoutCounter); 
   });
 }
 
