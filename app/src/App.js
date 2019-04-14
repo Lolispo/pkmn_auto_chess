@@ -428,7 +428,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     document.title = 'Pokemon Auto Chess';
-    this.state = {chatMessageInput: ''};
+    this.state = {chatMessageInput: '', nameChangeInput: ''};
   }
   // Event listener example, can be attached to example buttons
   
@@ -1053,7 +1053,7 @@ class App extends Component {
       <div className='playerScoreboardInner'>
         <span className='flex'>
           <span className='biggerText'><span className={`playerScoreboardName ${(player.index === this.props.index ? 'bold' : '')}`}>
-              {'Player ' + player.index}
+              {player.name}
             </span>
             {(isDead ? <span className='redFont playerScoreboardDead'>
               {' Dead\n'}
@@ -1179,17 +1179,27 @@ class App extends Component {
   }
 
   handleChatSubmit = (event) => {
-    sendMessage(this.state.chatMessageInput);
-    this.setState({chatMessageInput: ''})
+    if(this.state.chatMessageInput !== '') {
+      sendMessage(this.state.chatMessageInput);
+    }
+    this.setState({...this.state, chatMessageInput: ''})
+    event.preventDefault();
+  }
+
+  handleNameChange = (event) => {
+    if(this.state.nameChangeInput.length < 12) {
+      this.props.dispatch({type: 'UPDATE_PRIVATE_NAME', name: this.state.nameChangeInput});
+    }
+    this.setState({...this.state, nameChangeInput: ''})
     event.preventDefault();
   }
 
   // TODO: Fix not working
-  scrollToBottom = () => {
+  /*scrollToBottom = () => {
     if(this.messagesEnd !== null){
       this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  }*/
 
   buildHelp = () => {
     let s = '';
@@ -1242,7 +1252,7 @@ class App extends Component {
       <form onSubmit={this.handleChatSubmit}>
         <label>
           <input placeholder='Type a message ...' className='textInput' type="text" value={this.state.chatMessageInput} 
-          onChange={(event) => this.setState({chatMessageInput: event.target.value})} />
+          onChange={(event) => this.setState({...this.state, chatMessageInput: event.target.value})} />
         </label>
         <input className='text_shadow normalButton chatTypingSubmit' type="submit" value="Submit" />
       </form>
@@ -1291,13 +1301,23 @@ class App extends Component {
               (!this.props.loaded ? ' Loading ...' :
                 (this.props.playersReady === -1 ? ' Connected!' : `Start Game (${this.props.playersReady}/${this.props.connectedPlayers})`)
               ) 
-            : ' Connecting ...')}
+            : ' Connecting ... ' + this.props.loaded)}
           </button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready ? '' : 'hidden')}`} 
             onClick={() => this.startGameEvent(true)}>
             Force Start Game{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
           </button>
         </div>
+      </div>
+      <div className='mainMenuNameChange'>
+        <form onSubmit={this.handleNameChange}>
+          <label className='text_shadow'>Name:</label>
+          <label>
+            <input placeholder={this.props.playerName} className='textInputSmaller' type="text" value={this.state.nameChangeInput} 
+            onChange={(event) => this.setState({...this.state, nameChangeInput: event.target.value})} />
+          </label>
+          <input className='text_shadow normalButton chatTypingSubmit' type="submit" value="Submit" />
+        </form>
       </div>
       <div className='mainMenuSoundDiv marginTop5'>
         <div>
@@ -1314,8 +1334,8 @@ class App extends Component {
     const topBar = <div className='flex topBarDiv'>
         <div className='flex topBarPlayerName'>
           <div className='marginTop5 biggerText text_shadow paddingLeft5'>
-            {(this.props.visiting === this.props.index ? 'Player ' + this.props.index : 
-            <span><span className='goldFont'>{'Visit: '}</span><span>{'Player ' + this.props.visiting}</span></span>)}
+            {(this.props.visiting === this.props.index ? this.props.playerName : 
+            <span><span className='goldFont'>{'Visit: '}</span><span>{this.props.players[this.props.visiting].name}</span></span>)}
           </div>
         </div>
         <div className='marginTop5 biggerText text_shadow topBarRound'>
@@ -1501,6 +1521,7 @@ const mapStateToProps = state => ({
   allReady: state.allReady,
   message: state.message,
   messageMode: state.messageMode,
+  playerName: state.playerName,
   help: state.help,
   chatHelpMode: state.chatHelpMode,
   senderMessages: state.senderMessages,

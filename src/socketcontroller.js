@@ -112,6 +112,15 @@ module.exports = (socket, io) => {
     countReadyPlayers(false, socket, io);
   });
 
+  socket.on('UPDATE_PLAYER_NAME', async (name) => {
+    const index = getPlayerIndex(socket.id);
+    console.log('Player', index, 'name to', name);
+    sessions = sessionJS.updateSessionPlayerName(socket.id, connectedPlayers, sessions, index, name);
+    emitMessage(socket, io, getSessionId(socket.id), (socketId) => {
+      io.to(socketId).emit('UPDATE_PLAYER_NAME', index, name);
+    });
+  });
+
   socket.on('START_GAME', async (amountToPlay) => {
     const readyPlayers = connectedPlayers.filter(player => player.get('sessionId') === true); // || player.get('sessionId') === false
     const sessionConnectedPlayers = sessionJS.initializeConnectedPlayers(readyPlayers);

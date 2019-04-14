@@ -117,6 +117,13 @@ exports.updateSessionPlayer = (socketId, connectedPlayers, sessions, state, inde
   return sessions.set(sessionId, newSession);
 };
 
+exports.updateSessionPlayerName = (socketId, connectedPlayers, sessions, index, name) => {
+  const sessionId = connectedPlayers.get(socketId).get('sessionId');
+  const session = sessions.get(sessionId);
+  const newSession = session.setIn(['players', index, 'name'], name);
+  return sessions.set(sessionId, newSession);
+};
+
 exports.pushSessionMessage = (socketId, connectedPlayers, sessions, message) => {
   const sessionId = connectedPlayers.get(socketId).get('sessionId');
   const session = sessions.get(sessionId);

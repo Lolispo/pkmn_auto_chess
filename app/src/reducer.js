@@ -1,8 +1,9 @@
 // Author: Petter Andersson
 
-import { getBackgroundAudio, getSoundEffect } from './audio.js';
+import { getBackgroundAudio, getSoundEffect } from './audio';
+import { updatePlayerName } from './socket';
 
-const devMode = false;
+const devMode = true;
 
 let counter = 0;
 
@@ -86,6 +87,7 @@ const reducer = (
     allReady: false,
     message: 'default',
     messageMode: '',
+    playerName: '',
     help: true,
     chatHelpMode: 'chat',
     chatMessages: [],
@@ -237,6 +239,7 @@ const reducer = (
       break;
     case 'NEW_PLAYER':
       console.log('Received player index', action.index);
+      state.playerName === '' ? updatePlayerName('Player ' + action.index) : updatePlayerName(state.playerName);
       state = { ...state, 
         index: action.index, 
         visiting: action.index,
@@ -269,6 +272,23 @@ const reducer = (
         deadPlayers: [],
       }
       break;
+    case 'UPDATE_PLAYER_NAME': {
+      const newPlayers = state.players;
+      newPlayers[action.pid].name = action.name
+      if(state.index === action.pid) {
+        state = {...state, playerName: action.name}
+      }
+      state = {...state,
+        players: newPlayers,
+      }
+      console.log('Update name for player with index', action.id, 'to', action.name);
+      break;
+    }
+    case 'UPDATE_PRIVATE_NAME': {
+      state = {...state, playerName: action.name}
+      console.log('Updated name:', action.name);
+      break;
+    }
     case 'SET_CONNECTED':
       state = {...state, connected: action.connected};
       break;

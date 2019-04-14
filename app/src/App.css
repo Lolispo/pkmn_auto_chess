@@ -642,6 +642,12 @@ body {
   border-radius: 4px;
 }
 
+.textInputSmaller {
+  width: 100px;
+  max-width: 100px;
+  border-radius: 4px;
+}
+
 .barDiv {
 
 }
@@ -1069,6 +1075,11 @@ body {
   border-radius: 5px;
   padding: 5px;
   z-index: 12;
+}
+
+.mainMenuNameChange {
+  margin-top: 10px;
+  margin-left: 600px;
 }
 
 /*
