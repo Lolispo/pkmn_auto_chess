@@ -42,6 +42,17 @@ body {
   margin-top: 10px;
 }
 
+.loadingBarContainer {
+  width: 202px;
+}
+
+.loadingBar {
+  height: 24px;
+  color: rgb(19, 190, 19);
+  background-color: rgb(19, 190, 19);
+  width: 0px;
+}
+
 .babyImgInfoPanel {
   position: absolute;
   width: 44px;
@@ -758,7 +769,7 @@ body {
   z-index: 4;
 }
 
-.shieldBar, .hpBar, .levelBar, .playerHpBar{
+.shieldBar, .hpBar, .levelBar, .playerHpBar, .loadingBar{
   transition:all 0.2s;
 }
 

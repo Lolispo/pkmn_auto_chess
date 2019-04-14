@@ -1289,6 +1289,7 @@ class App extends Component {
   }
 
   render() {
+    const loadingProgress = 1/3 * (this.props.connected + this.props.loaded + (this.props.playersReady !== -1)) * 100;
     const mainMenu = <div>
       <div className='logos'>
         <img src={getImage('pokemonLogo')} alt='pokemonLogo'/>
@@ -1299,12 +1300,12 @@ class App extends Component {
         <div className='flex'> 
           <button className={`normalButton startButton ${(!this.props.ready ? 'growAnimation' : '')} ${(this.props.loaded ? '' : 'hidden')}`} 
           onClick={this.toggleReady}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} onClick={() => this.startGameEvent()}>
-            {(this.props.connected ? 
-              (!this.props.loaded ? ' Loading ...' :
-                (this.props.playersReady === -1 ? ' Connected!' : `Start Game (${this.props.playersReady}/${this.props.connectedPlayers})`)
-              ) 
-            : ' Connecting ... ' + this.props.loaded)}
+          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} 
+            onClick={() => this.startGameEvent()}>
+             {(loadingProgress >= 100 ? `Start Game (${this.props.playersReady}/${this.props.connectedPlayers})` 
+              : <div className='text_shadow loadingBarContainer'>
+                  <div className='loadingBar' style={{width: loadingProgress + '%'}}></div>
+                </div>)}
           </button>
           <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready ? '' : 'hidden')}`} 
             onClick={() => this.startGameEvent(true)}>
