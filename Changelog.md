@@ -265,3 +265,5 @@ Dragon buff [1] [50] -> [1, 2] [40, 40]
 ## 0.4.5.2.1
 
 Bug [3] -> +25 hp
+
+Caterpie Npc -> Weedle

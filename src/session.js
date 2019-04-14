@@ -137,6 +137,13 @@ exports.getPlayerID = (socketId, connectedPlayers, sessions) => {
   return session.get('connectedPlayers').get(socketId);
 };
 
+exports.getPlayerName = (socketId, connectedPlayers, sessions) => {
+  const sessionId = connectedPlayers.get(socketId).get('sessionId');
+  const session = sessions.get(sessionId);
+  const id = session.get('connectedPlayers').get(socketId);
+  return session.getIn(['players', id, 'name'])
+};
+
 exports.findSocketId = (session, pid) => {
   const sessionPlayers = session.get('connectedPlayers');
   const iter = sessionPlayers.keys();

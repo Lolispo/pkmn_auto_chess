@@ -439,7 +439,7 @@ module.exports = (socket, io) => {
 
   socket.on('SEND_MESSAGE', async (message) => {
     // TODO: Login: Player name here instead
-    const playerName = `Player ${sessionJS.getPlayerID(socket.id, connectedPlayers, sessions)}`;
+    const playerName = sessionJS.getPlayerName(socket.id, connectedPlayers, sessions);
     newChatMessage(socket, io, socket.id, `${playerName}: `, message);
   });
 

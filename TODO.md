@@ -258,6 +258,8 @@ Hover baby, show requires only 2 for upgrade
 
 ## Frontend - Logic
 
+Names scoreboard not instantly loaded in
+
 harden / no target spells dont do animation
 
 Visit
