@@ -223,10 +223,6 @@ Aoe damage logic
 
 ## Frontend - Visual
 
-
-
-manaBar align text, overlap more with hpbar?
-
 Fix shield hp animation
 
 DamageBar animation from 0 to value
@@ -234,7 +230,7 @@ DamageBar animation from 0 to value
 "napp" instead of baby
 
 Pokedollar bigger on top
-    Make money more easily seen
+    Adjust
 
 Gymleader image
     Matchup gym leaders for same spot all the time
@@ -242,8 +238,6 @@ Gymleader image
         Put span -> div => width: 100px maybe (ish)
             Only when img is relevant put it as forced size
     Upnext firefox gym trainer height
-
-Prevent empty message sending in chat
 
 Display enemy buffs during battle somewhere
 

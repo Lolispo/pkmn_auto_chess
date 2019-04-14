@@ -273,8 +273,11 @@ class Cell extends Component {
               style={{width: (pokemon.hp-pokemon.maxHp / pokemon.hp1 * 100)+'%'}}/> : '')} 
             </div> : '')*/
           const manaBar = <div className='barDiv' style={{width: sideLength}}>
-            <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
-            ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / pokemon.manaCost * 100)+'%'}}>{`${pokemon.mana}/${pokemon.manaCost}`}</div>
+              <p class='manaText text_shadow'>
+                {`${pokemon.mana}/${pokemon.manaCost}`}
+              </p>
+              <div className={`manaBar text_shadow ${(pokemon.mana === 0 ? 'hidden' : '')}
+                ${(pokemon.mana >= pokemon.manaCost ? 'colorPurple' : '')}`} style={{width: (pokemon.mana / pokemon.manaCost * 100)+'%'}}/>
             </div>;
           const actionMessage = (pokemon.actionMessage && pokemon.actionMessage !== '' ? 
             <div className={`text_shadow actionMessage ${(pokemon.actionMessage.split(' ').length > 2 ? 'actionMessagePadding' : '')}`} style={{position: 'absolute'}}>
