@@ -49,8 +49,6 @@ Known issues:
 
 Odd behaviour:
 
-    Clefairies suddenly in unit pool
-
     Damage dealt bars weird: 
         Connected to prevDmg maybe
         https://gyazo.com/ddd654d97001566c15ccc85f5ccb0ca2
@@ -61,6 +59,20 @@ Odd behaviour:
         Check, see if damage is dealt on splash
 
 # Fix me - Prio
+
+    Crash on win, enemyIndex?
+
+    Clefairies suddenly in unit pool
+        Check when units are sold, if discardBaseUnits is run correctly
+
+    Type bug, normal buff showing for 3 units with 2 active
+        Weird
+
+    Sometimes changing target during battle
+
+    EnemyIndex fix
+        Visiting when dead Test
+        undefined disconnected - socketcontroller
 
     Refillpieces crash
         Attempt to fix was made
@@ -114,6 +126,8 @@ Target Priorities
             If multiple, random
 
 ## Backend
+
+enemyIndex text on 'pvp' or 'shop'
 
 Update bug tooltip text
 
@@ -216,6 +230,15 @@ Aoe damage logic
 
 ## Frontend - Visual
 
+Longer names than 12 allow
+
+noSelect for board stuff
+    Also infopanel
+
+Color player names in chat
+    Player colors?
+        Wc3
+
 Add hover functionality to system in general
 
 DamageBar animation from 0 to value
@@ -244,6 +267,7 @@ Add information about hotkeys in hud
     Buy exp on F
     Sell Piece E
     More difficult with q and w
+    1-8 below hand
 
 Fix actionMessage
     Ugly atm, super ugly
@@ -286,6 +310,7 @@ Allow shopping with hotkeys
     key + 1-5? what is allowed in browser
 
 Sounds - Currently only one at a time
+    Don't hear "He gone" if you are eliminated as last player in battle cause of this
     Fix playing multiple sounds, currently replays all
         Would in theory be fixed by not storing in array
 

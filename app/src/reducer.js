@@ -479,8 +479,8 @@ const reducer = (
       });
       const { senderMessages, chatMessages } = state;
       state = {...state, 
-        message: 'Player ' + action.winningPlayer.index + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic,
-        senderMessages: senderMessages.concat('Player ' + action.winningPlayer.index + ' won the game'), chatMessages: chatMessages.concat(''),
+        message: state.players[action.winningPlayer.index].name + ' won the game', messageMode: 'big', gameEnded: action.winningPlayer, music: newMusic,
+        senderMessages: senderMessages.concat(state.players[action.winningPlayer.index].name + ' won the game'), chatMessages: chatMessages.concat(''),
       }
       break;
     }
@@ -493,9 +493,9 @@ const reducer = (
       }
       console.log('Before: Removing player ' + action.pid, state.players);
       const players = state.players;
+      const deadPlayer = {index: action.pid, hp: 0, pos: state.position, name: players[action.pid].name};
       delete players[action.pid];
       console.log('Removing player ' + action.pid, players, state.players);
-      const deadPlayer = {index: action.pid, hp: 0, pos: state.position};
       const deadPlayers = state.deadPlayers;
       deadPlayers.push(deadPlayer);
       state = {...state, deadPlayers, players}

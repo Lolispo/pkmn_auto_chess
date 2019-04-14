@@ -130,13 +130,13 @@ const roundSetConfiguration = Map({
   ])),
   30: async () => gameJS.createBattleBoard(List([
     Map({ name: 'beedrill', x: 3, y: 1 }),
-    Map({ name: 'butterfree', x: 4, y: 1 }),
+    Map({ name: 'beedrill', x: 4, y: 1 }),
     Map({ name: 'crobat', x: 5, y: 1 }),
     Map({ name: 'crobat', x: 6, y: 1 }),
     Map({ name: 'crobat', x: 1, y: 1 }),
-    Map({ name: 'metapod', x: 7, y: 2 }),
-    Map({ name: 'kakuna', x: 2, y: 2 }),
+    Map({ name: 'golbat', x: 7, y: 2 }),
     Map({ name: 'golbat', x: 1, y: 2 }),
+    Map({ name: 'kakuna', x: 2, y: 2 }),
   ])),
   35: async () => gameJS.createBattleBoard(List([
     // Map({ name: 'kadabra', x: 3, y: 1 }),

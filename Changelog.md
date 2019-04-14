@@ -266,4 +266,6 @@ Dragon buff [1] [50] -> [1, 2] [40, 40]
 
 Bug [3] -> +25 hp
 
-Caterpie Npc -> Weedle
+Koga: Caterpie Npc -> Weedle
+  
+Metapod -> golbat

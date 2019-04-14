@@ -2608,7 +2608,7 @@
   },
   "bagon": {
     "name": "bagon",
-    "displayName": "Bagon",
+    "displayName": "Bagon★",
     "cost": 3,
     "hp": 45,
     "attack": 75,
@@ -2623,7 +2623,7 @@
   },
   "shelgon": {
     "name": "shelgon",
-    "displayName": "Shelgon",
+    "displayName": "Shelgon★★",
     "cost": 5,
     "hp": 65,
     "attack": 95,
@@ -2639,7 +2639,7 @@
   },
   "salamence": {
     "name": "salamence",
-    "displayName": "Salamence",
+    "displayName": "Salamence★★★",
     "cost": 7,
     "hp": 95,
     "attack": 135,

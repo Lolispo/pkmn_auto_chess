@@ -88,6 +88,13 @@ Steel: 1 (3) [1,2]
 
   Check dps, damage
 
+  Zap Cannon reduce mana cost 150 -> 130
+
+  Strong:
+    Arbok early game
+  Weak:
+    Abra
+
 #### Abilitiy implementations
   Teleport (does nothing currently)
   New:
@@ -95,6 +102,7 @@ Steel: 1 (3) [1,2]
       Gengar better?
       Ninetales: Fire ability between ember and flamethrower (maybe also rapidash)
     Unique:
+      snorlax rest
       jigglypuff sing/something better (really bad)
 
 ### Type Bonuses

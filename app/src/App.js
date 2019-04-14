@@ -708,7 +708,7 @@ class App extends Component {
   displayBuffs = () => this.displayBuffsRender(this.props.boardBuffs);
 
   displayEnemyBuffs = () => {
-    const boardBuffsVar = this.props.players[this.props.enemyIndex.split(' ')[1]];
+    const boardBuffsVar = this.props.players[this.props.enemyIndex];
     // console.log('displayEnemyBuffs', (boardBuffsVar.boardBuffs ? boardBuffsVar.boardBuffs.buffMap : '')); // boardBuffsVar, (boardBuffsVar ? boardBuffsVar.boardBuffs : '')
     if(boardBuffsVar && boardBuffsVar.boardBuffs) { //
       return this.displayBuffsRender(boardBuffsVar.boardBuffs, true);
@@ -1365,7 +1365,9 @@ class App extends Component {
         </div>
         <div className='marginTop5 biggerText text_shadow topBarPadding'>
           {(this.props.onGoingBattle ? <div className='redFont'>
-            {(this.props.enemyIndex ? <span className='nextUpText'>{this.props.enemyIndex}</span>: '')}
+            {(this.props.enemyIndex ? <span className='nextUpText'>
+              {(this.props.roundType === 'pvp' ? this.props.players[this.props.enemyIndex].name : this.props.enemyIndex) }
+            </span>: '')}
             {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/> : '')}
           </div> : <div>
             {(this.props.enemyIndex !== -1 ? <span className='nextUpText'>{'Up next: ' + (this.props.enemyIndex !== '' ? '' : 
@@ -1388,7 +1390,7 @@ class App extends Component {
             this.displayBuffs() : '')}
         </div>
         <div className='battleEnemyBuffs text_shadow'>
-          {(this.props.onGoingBattle && this.props.enemyIndex.includes('Player') ?
+          {(this.props.onGoingBattle && !Number.isNaN(this.props.enemyIndex) ?
             this.displayEnemyBuffs() : '')}
         </div>
         <div className='flex musicDiv'>

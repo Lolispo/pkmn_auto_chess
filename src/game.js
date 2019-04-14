@@ -523,7 +523,7 @@ async function discardBaseUnits(stateParam, playerIndex, name, depth = 1) {
       discPieces = discPieces.push(name);
     }
     const unitAmounts = state.getIn(['players', playerIndex, 'unitAmounts']);
-    const newValue = unitAmounts.get('name') - amountOfPieces;
+    const newValue = unitAmounts.get(name) - amountOfPieces;
     if(newValue === 0) {
       state = state.setIn(['players', playerIndex, 'unitAmounts'], unitAmounts.delete(name));
     } else {

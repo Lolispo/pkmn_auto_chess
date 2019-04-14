@@ -157,6 +157,7 @@ module.exports = (socket, io) => {
       const sessionId = user.get('sessionId');
       const session = sessions.get(sessionId);
       if (sessionId && session) { // User was in a session (not false, true | sessionId)
+        const playerName = sessionJS.getPlayerName(socket.id, connectedPlayers, sessions);
         const updatedSession = sessionJS.sessionPlayerDisconnect(socket.id, session);
         if (f.isUndefined(updatedSession)) {
           console.log('Removing Session:', sessionId, '(All players left)');
@@ -164,7 +165,6 @@ module.exports = (socket, io) => {
         } else {
           const playersLeft = updatedSession.get('connectedPlayers').size;
           console.log(`Session ${sessionId} players left: `, playersLeft);
-          const playerName = `Player ${sessionJS.getPlayerID(socket.id, connectedPlayers, sessions)}`;
           sessions = sessions.set(sessionId, updatedSession);
           newChatMessage(socket, io, socket.id, `${playerName} disconnected - `, `${playersLeft} still connected`, 'disconnect');
         }
@@ -235,7 +235,7 @@ module.exports = (socket, io) => {
     //  console.log('@PlacePieceSocket', evolutionDisplayName);
     if (evolutionDisplayName) {
       for (let i = 0; i < evolutionDisplayName.size; i++) {
-        const playerName = `Player ${sessionJS.getPlayerID(socket.id, connectedPlayers, sessions)}`;
+        const playerName = sessionJS.getPlayerName(socket.id, connectedPlayers, sessions);
         newChatMessage(socket, io, socket.id, `${playerName} -> `, evolutionDisplayName.get(i), 'pieceUpgrade');
       }
     }
@@ -331,7 +331,7 @@ module.exports = (socket, io) => {
         while (!temp.done) {
           const socketId = temp.value;
           const tempIndex = connectedSessionPlayers.get(socketId);
-          const enemy = (matchups ? `Player ${matchups.get(tempIndex)}` : (roundType === 'gym' ? gymLeader : 'Npc Battle'));
+          const enemy = (matchups ? matchups.get(tempIndex) : (roundType === 'gym' ? gymLeader : 'Npc Battle'));
           // const index = getPlayerIndex(socketId);
           // console.log('Player update', index, preBattleState.getIn(['players', index]));
           emitMessage(socket, io, sessionId, (innerSocketId) => {
@@ -394,7 +394,7 @@ module.exports = (socket, io) => {
             } else { // Player eliminated but game is not over
               console.log('Death:', pid);
               stateEndedTurn = await gameJS.removeDeadPlayer(stateEndedTurn, pid);
-              const playerName = `Player ${pid}`;
+              const playerName = sessionJS.getPlayerNameSession(session, pid);
               const amountOfPlayers = stateEndedTurn.get('amountOfPlayers');
               newChatMessage(socket, io, socket.id, `${playerName} Eliminated - `, `Alive players: ${amountOfPlayers}`, 'playerEliminated');
               emitMessage(socket, io, sessionId, (socketId) => {
