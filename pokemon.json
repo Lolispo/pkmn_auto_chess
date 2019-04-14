@@ -185,56 +185,54 @@
       "Water 1"
     ]
   },
-  "caterpie": {
-    "name": "caterpie",
-    "displayName": "Caterpie★",
+  "abra": {
+    "name": "abra",
+    "displayName": "Abra★",
     "cost": 1,
-    "hp": 45,
-    "attack": 30,
-    "defense": 35,
-    "speed": 45,
-    "type": "bug",
-    "ability": "tackle",
-    "evolves_to": "metapod",
-    "specialAttack": 20,
-    "specialDefense": 20,
-    "range": 2,
-    "eggGroup": "Bug"
-  },
-  "metapod": {
-    "name": "metapod",
-    "displayName": "Metapod★★",
-    "cost": 3,
-    "hp": 50,
+    "hp": 25,
     "attack": 20,
-    "defense": 55,
-    "speed": 30,
-    "type": "bug",
-    "ability": "harden",
-    "evolves_from": "caterpie",
-    "evolves_to": "butterfree",
-    "specialAttack": 25,
-    "specialDefense": 25,
-    "eggGroup": "Bug"
+    "defense": 15,
+    "speed": 90,
+    "type": "psychic",
+    "ability": "teleport",
+    "evolves_to": "kadabra",
+    "specialAttack": 105,
+    "specialDefense": 55,
+    "range": 3,
+    "eggGroup": "Human-Like"
   },
-  "butterfree": {
-    "name": "butterfree",
-    "displayName": "Butterfree★★★",
+  "kadabra": {
+    "name": "kadabra",
+    "displayName": "Kadabra★★",
+    "cost": 3,
+    "hp": 40,
+    "attack": 35,
+    "defense": 30,
+    "speed": 105,
+    "type": "psychic",
+    "ability": "psychic",
+    "evolves_from": "abra",
+    "evolves_to": "alakazam",
+    "specialAttack": 120,
+    "specialDefense": 70,
+    "range": 3,
+    "eggGroup": "Human-Like"
+  },
+  "alakazam": {
+    "name": "alakazam",
+    "displayName": "Alakazam★★★",
     "cost": 5,
-    "hp": 60,
-    "attack": 45,
-    "defense": 50,
-    "speed": 70,
-    "type": [
-      "bug",
-      "flying"
-    ],
-    "ability": "confusion",
-    "evolves_from": "metapod",
-    "specialAttack": 80,
-    "specialDefense": 80,
-    "range": 2,
-    "eggGroup": "Bug"
+    "hp": 55,
+    "attack": 50,
+    "defense": 45,
+    "speed": 120,
+    "type": "psychic",
+    "ability": "psychic",
+    "evolves_from": "kadabra",
+    "specialAttack": 135,
+    "specialDefense": 85,
+    "range": 3,
+    "eggGroup": "Human-Like"
   },
   "weedle": {
     "name": "weedle",
@@ -854,7 +852,7 @@
       "bug",
       "grass"
     ],
-    "ability": "leechLife",
+    "ability": "absorb",
     "evolves_to": "parasect",
     "specialAttack": 45,
     "specialDefense": 55,
@@ -1176,7 +1174,7 @@
       "rock",
       "ground"
     ],
-    "ability": "rockThrow",
+    "ability": "tackle",
     "evolves_to": "graveler",
     "specialAttack": 30,
     "specialDefense": 30,
@@ -2400,19 +2398,6 @@
     "specialDefense": 140,
     "range": 3
   },
-  "groudon": {
-    "name": "groudon",
-    "displayName": "Groudon★",
-    "cost": 5,
-    "hp": 100,
-    "attack": 150,
-    "defense": 140,
-    "speed": 90,
-    "type": "ground",
-    "ability": "earthquake",
-    "specialAttack": 100,
-    "specialDefense": 90
-  },
   "ralts": {
     "name": "ralts",
     "displayName": "Ralts★",
@@ -2620,5 +2605,54 @@
     "specialAttack": 60,
     "specialDefense": 60,
     "eggGroup": "Monster"
+  },
+  "bagon": {
+    "name": "bagon",
+    "displayName": "Bagon",
+    "cost": 3,
+    "hp": 45,
+    "attack": 75,
+    "defense": 60,
+    "speed": 50,
+    "type": "dragon",
+    "ability": "twister",
+    "evolves_to": "shelgon",
+    "specialAttack": 40,
+    "specialDefense": 30,
+    "eggGroup": "Dragon"
+  },
+  "shelgon": {
+    "name": "shelgon",
+    "displayName": "Shelgon",
+    "cost": 5,
+    "hp": 65,
+    "attack": 95,
+    "defense": 100,
+    "speed": 50,
+    "type": "dragon",
+    "ability": "dragonBreath",
+    "evolves_from": "bagon",
+    "evolves_to": "salamence",
+    "specialAttack": 60,
+    "specialDefense": 50,
+    "eggGroup": "Dragon"
+  },
+  "salamence": {
+    "name": "salamence",
+    "displayName": "Salamence",
+    "cost": 7,
+    "hp": 95,
+    "attack": 135,
+    "defense": 80,
+    "speed": 100,
+    "type": [
+      "dragon",
+      "flying"
+    ],
+    "ability": "dragonPulse",
+    "evolves_from": "shelgon",
+    "specialAttack": 110,
+    "specialDefense": 80,
+    "eggGroup": "Dragon"
   }
 }

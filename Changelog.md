@@ -240,3 +240,25 @@ Min mana gained from interaction is 3 (previous 1)
 Fixed mana not going over 100 in certain situations where abilities cost more than 100
 
 Water Nerfed [15, 20, 25] -> [15, 15, 20]
+
+## 0.4.5.2
+
+Geodude Rock Throw -> Tackle
+
+Paras Leech Life -> Absorb
+
+Benched caterpie
+
+Benched Groundon
+
+Added Abra
+
+Added Bagon
+
+Steel buff [1,2] [10,20] -> [2] [25]
+
+Bug buff [2,4] -> [2,3]
+  Second buff will be swapped out
+
+Dragon buff [1] [50] -> [1, 2] [40, 40]
+

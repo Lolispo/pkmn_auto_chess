@@ -441,5 +441,17 @@
     "type": "grass",
     "power": 25,
     "effect": "multiStrike"
+  },
+  "bite": {
+    "name": "bite",
+    "displayName": "Bite",
+    "type": "dark",
+    "power": 60
+  },
+  "dragonBreath": {
+    "name": "dragonBreath",
+    "displayName": "Dragon Breath",
+    "type": "dragon",
+    "power": 60
   }
 }

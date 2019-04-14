@@ -5,7 +5,7 @@ Dota:    55: 12 13 14 11 5
 
 UpdDota: 60: 13 14 15 11 7
  
-Current: 60: 11 16 14 13 8
+Current: 60: 11 16 15 13 7
 
 ## Current Notes
 
@@ -82,20 +82,6 @@ Steel: 1 (3) [1,2]
     More Fighting units?
     Fire: 3 units cost 4, ponyta magby 
 
-  Add:
-    Omanyte
-    Abra
-
-  Water too strong?
-
-  Geodude worse ability
-  Strong:
-    Parasect
-    groudon
-    aron
-  Weak:
-    Caterpie
-
   Check dps, damage
 
 #### Abilitiy implementations
@@ -112,6 +98,7 @@ Steel: 1 (3) [1,2]
 #### New effects: 
   Electric: DecreaseAttack
 
+  Bug [2,3] -> new effect for 3
   Grass: Lifesteal
   Ghost: DecreaseHp
   Flying: Evasion
