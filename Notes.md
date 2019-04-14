@@ -52,6 +52,10 @@ sp.atk addition
   Dragon -> +sp.atk
   Psychic -> Decrease Enemy damage
 
+Poison
+  Apply poison prio to units that aren't poison
+  Stack poisons?
+
 DotDamage effect - Arvid had idea for visual effect
 
 #### Type Numbers

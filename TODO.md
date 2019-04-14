@@ -115,6 +115,8 @@ Target Priorities
 
 ## Backend
 
+Update bug tooltip text
+
 upnext shop level not showing, show as pvp
 
 Sound when lose

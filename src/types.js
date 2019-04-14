@@ -16,13 +16,17 @@ const decreaseSpeed = (unit, bonus) => unit.set('speed', Math.min(pokemonJS.getS
 const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus)); //.set('startHp', Math.max(0, +unit.get('hp') - +bonus));
 const decreaseAttack = (unit, bonus) => unit.set('attack', Math.max(0, +unit.get('attack') - +bonus));
 
-const reqForUpgrade = async (unit, bonus) => {
+const reqForUpgrade = async (unitParam, bonus) => {
   // Get tier of unit
+  let unit = unitParam;
   const tier = await pokemonJS.getUnitTier(unit.get('name'));
   // console.log('@reqForUpgrade bugs', tier, bonus)
   if (tier <= bonus) { // Bonus marks highest allowed tier for unit
     // console.log('@reqForUpgrade bugs BONUS', unit)
-    return unit.set('reqEvolve', 2);
+    unit = unit.set('reqEvolve', 2);
+  }
+  if (bonus === 2) {
+    unit = increaseHp(unit, 25);
   }
   return unit;
 };
