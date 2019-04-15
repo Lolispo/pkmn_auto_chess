@@ -3,7 +3,7 @@
 import { getBackgroundAudio, getSoundEffect } from './audio';
 import { updatePlayerName } from './socket';
 
-const devMode = false;
+const devMode = true;
 
 let counter = 0;
 

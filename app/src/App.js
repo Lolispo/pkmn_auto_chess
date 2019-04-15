@@ -1190,7 +1190,7 @@ class App extends Component {
   }
 
   handleNameChange = (event) => {
-    if(this.state.nameChangeInput.length < 12 && this.state.nameChangeInput != '') {
+    if(this.state.nameChangeInput.length <= 20 && this.state.nameChangeInput != '') {
       this.props.dispatch({type: 'UPDATE_PRIVATE_NAME', name: this.state.nameChangeInput});
     }
     this.setState({...this.state, nameChangeInput: ''})
@@ -1328,7 +1328,7 @@ class App extends Component {
         <form onSubmit={this.handleNameChange}>
           <label className='text_shadow'>Name:</label>
           <label>
-            <input placeholder={this.props.playerName} className='textInputSmaller' type="text" value={this.state.nameChangeInput} 
+            <input maxlength='20' placeholder={this.props.playerName} className='textInputSmaller' type="text" value={this.state.nameChangeInput} 
             onChange={(event) => this.setState({...this.state, nameChangeInput: event.target.value})} />
           </label>
           <input className='text_shadow normalButton chatTypingSubmit' type="submit" value="Submit" />
