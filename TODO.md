@@ -49,6 +49,8 @@ Known issues:
 
 Odd behaviour:
 
+    Check if random does its thing now
+
     Damage dealt bars weird: 
         Connected to prevDmg maybe
         https://gyazo.com/ddd654d97001566c15ccc85f5ccb0ca2
@@ -127,8 +129,6 @@ Target Priorities
 
 ## Backend
 
-enemyIndex text on 'pvp' or 'shop'
-
 Update bug tooltip text
 
 upnext shop level not showing, show as pvp
@@ -186,6 +186,8 @@ Speed rework how it is applied
     Instead of upperlimit - speed = cd between actions
 
 Lock
+    Can desynch currently
+    Should be reimplemented to prevent desynch and available for spec2
     ToggleLock Refactor: dispatch directly, dont interact with server (Easy spam)
         During battle: Interact with server, otherwise no
 

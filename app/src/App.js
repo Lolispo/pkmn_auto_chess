@@ -1366,7 +1366,7 @@ class App extends Component {
         <div className='marginTop5 biggerText text_shadow topBarPadding'>
           {(this.props.onGoingBattle ? <div className='redFont'>
             {(this.props.enemyIndex ? <span className='nextUpText'>
-              {(this.props.roundType === 'pvp' ? this.props.players[this.props.enemyIndex].name : this.props.enemyIndex) }
+              {(this.props.roundType === 'pvp' || this.props.roundType === 'shop' ? this.props.players[this.props.enemyIndex].name : this.props.enemyIndex) }
             </span>: '')}
             {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/> : '')}
           </div> : <div>
