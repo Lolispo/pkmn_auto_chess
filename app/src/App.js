@@ -1,5 +1,4 @@
 // Author: Petter Andersson
-
 import React, { Component } from 'react';
 import { ready, unready, startGame, battleReady, sendMessage } from './socket';
 import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePieceEvent, withdrawPieceEvent, sellPieceEvent, getStatsEvent } from './events';
@@ -10,6 +9,9 @@ import './animations.css';
 
 import { getUnitAudio, getSoundEffect } from './audio.js';
 import { getImage, getTypeImg, getGymImage } from './images.js';
+import { ParticleSystemComponent } from './particleSystem/ParticleSystemComponent.js';
+import { Vector2f } from './particleSystem/Vector2f';
+import { FlameThrower } from './particleSystem/Custom/FlameThrower';
 
 class PokemonImage extends Component{
 
@@ -875,6 +877,43 @@ class App extends Component {
         if(direction !== '') {
           newBoard[unitPos].attackAnimation = 'animate' + direction; 
         }
+        
+        console.log("ARRE");
+        console.log(unitPos);
+        console.log(target);
+
+
+       
+
+        var castSpell = function(unitPos,target)
+        {
+          if(unitPos.length==0 || target.length==0)
+          {
+            return;
+          }
+          var thisX = unitPos.split(",")[0];
+          var thisY = 8-unitPos.split(",")[1];
+
+          var targetX = target.split(",")[0];
+          var targetY = 8-target.split(",")[1];
+
+          var squareSize = 87;
+          var thisPixelX = thisX*squareSize + (squareSize/2);
+          var thisPixelY = thisY*squareSize + (squareSize/2);
+
+          var targetPixelX = targetX*squareSize + (squareSize/2);
+          var targetPixelY = targetY*squareSize + (squareSize/2);
+
+          var unitV = new Vector2f(thisPixelX,thisPixelY);
+          var targetV = new Vector2f(targetPixelX,targetPixelY);
+          console.log("Rövballe");
+          console.log(unitV.x + " " + unitV.y);
+          console.log(targetV.x + " " + targetV.y);
+          new FlameThrower(new Vector2f(400,400),new Vector2f(900,400));
+        }
+        castSpell(unitPos,target);
+
+
         if(newBoard[unitPos].animateMove !== ''){
           newBoard[unitPos].animateMove = '';
         }
@@ -1366,7 +1405,7 @@ class App extends Component {
         <div className='marginTop5 biggerText text_shadow topBarPadding'>
           {(this.props.onGoingBattle ? <div className='redFont'>
             {(this.props.enemyIndex ? <span className='nextUpText'>
-              {(this.props.roundType === 'pvp' || this.props.roundType === 'shop' ? this.props.players[this.props.enemyIndex].name : this.props.enemyIndex) }
+              {(this.props.roundType === 'pvp' || this.props.roundType === 'shop' || this.props.players[this.props.enemyIndex] ? this.props.players[this.props.enemyIndex].name : this.props.enemyIndex) }
             </span>: '')}
             {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/> : '')}
           </div> : <div>
@@ -1417,7 +1456,10 @@ class App extends Component {
         </div>
         {/*<div>Selected Unit: {JSON.stringify(this.props.selectedUnit, null, 2)}</div>*/}
       </div>
+      
     const boardDiv = <div className={(!this.props.onGoingBattle ? 'boardDiv' : 'boardDivBattle')}>
+        <ParticleSystemComponent></ParticleSystemComponent>
+        
         <div>
           <Board height={8} width={8} map={this.props.myBoard} isBoard={true} newProps={this.props}/>
         </div>
