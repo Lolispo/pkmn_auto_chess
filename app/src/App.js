@@ -782,12 +782,6 @@ class App extends Component {
     }
   }
 
-  wait = async (ms) => {
-    return new Promise(resolve => {
-      setTimeout(resolve, ms);
-    });
-  }
-
   damageUnit = async (newBoard, target, value, unitPos, direction, actionMessageTarget, manaChanges, actionMessageAttacker) => {
     if(isUndefined(newBoard[target])){
       console.log('Time to crash: ', newBoard, target, value);
@@ -907,16 +901,17 @@ class App extends Component {
                   actionMessageTarget = actionMessageTarget + '! Dot applied'
                   break;
                 }
-                case 'heal':
-                if(unitPosEffect === target){
-                  console.log('Enemy Heal (SHOULDNT OCCUR)')
-                  newHpSpell += valueEffect;
-                } else {
-                  console.log('Normal heal')
-                  newBoard[e].hp = newBoard[e].hp + valueEffect;
-                  actionMessageAttacker = actionMessageAttacker + '! Heal for ' + valueEffect;
+                case 'heal': {
+                  if(unitPosEffect === target){
+                    console.log('Enemy Heal (SHOULDNT OCCUR)')
+                    newHpSpell += valueEffect;
+                  } else {
+                    console.log('Normal heal')
+                    newBoard[e].hp = newBoard[e].hp + valueEffect;
+                    actionMessageAttacker = actionMessageAttacker + '! Heal for ' + valueEffect;
+                  }
+                  break;
                 }
-                break;
                 // case buffs, not required in theory for attack or defence, since not visible
                 default:
               }
@@ -994,6 +989,12 @@ class App extends Component {
     return board;
   }
 
+  wait = async (ms) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
+  }
+
   startBattleEvent = async () => {
     const { dispatch, actionStack, battleStartBoard, winner } = this.props;
     if(this.props.isDead && this.props.visiting === this.props.index){
@@ -1029,18 +1030,18 @@ class App extends Component {
       currentTime = time;
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
       counter += 1;
-    }
-    if(actionStack.length === 0){
-      await this.wait(1000);
-      board = await this.endOfBattleClean(battleStartBoard, winner);
-      dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
-      // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
-      if(winner) {
-        updateMessage(this.props, 'Battle won!', 'big');
-        dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
-      } else {
-        updateMessage(this.props, 'Battle lost!', 'big');
-        dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('battleLose')});
+      if(actionStack.length === 0){
+        await this.wait(1000);
+        board = await this.endOfBattleClean(battleStartBoard, winner);
+        dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
+        // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
+        if(winner) {
+          updateMessage(this.props, 'Battle won!', 'big');
+          dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
+        } else {
+          updateMessage(this.props, 'Battle lost!', 'big');
+          dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('battleLose')});
+        }
       }
     }
   }
@@ -1366,7 +1367,8 @@ class App extends Component {
         <div className='marginTop5 biggerText text_shadow topBarPadding'>
           {(this.props.onGoingBattle ? <div className='redFont'>
             {(this.props.enemyIndex ? <span className='nextUpText'>
-              {(this.props.roundType === 'pvp' || this.props.roundType === 'shop' ? this.props.players[this.props.enemyIndex].name : this.props.enemyIndex) }
+              {(this.props.roundType === 'pvp' || this.props.roundType === 'shop' || this.props.players[this.props.enemyIndex] ? 
+                this.props.players[this.props.enemyIndex].name : this.props.enemyIndex) }
             </span>: '')}
             {(this.props.roundType === 'gym' ? <img className='gymLeader' src={getGymImage(this.props.enemyIndex)} alt={this.props.enemyIndex}/> : '')}
           </div> : <div>

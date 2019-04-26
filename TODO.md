@@ -129,6 +129,9 @@ Target Priorities
 
 ## Backend
 
+Random between starters each game
+    Gen 1-3
+
 Update bug tooltip text
 
 upnext shop level not showing, show as pvp
@@ -283,6 +286,14 @@ Display more clearly as a loser if you are eliminated
 Hover baby, show requires only 2 for upgrade
 
 ## Frontend - Logic
+
+Client EsLint configuration
+    Force arvids code to change styles for brackets etc
+
+MainMenu
+    Add changelog
+        Add entire list, scrolled to the bottom/ latest patch
+    Add tutorial image toggleable, show HUD information / explain GUI
 
 Names scoreboard not instantly loaded in
 
