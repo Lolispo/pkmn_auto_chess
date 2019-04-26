@@ -251,7 +251,7 @@ Benched caterpie
 
 Benched Groundon
 
-Added Abra
+Readded Abra
 
 Added Bagon
 
@@ -264,8 +264,8 @@ Dragon buff [1] [50] -> [1, 2] [40, 40]
 
 ## 0.4.5.2.1
 
-Bug [3] -> +25 hp
+Bug [3] -> +25 hp, still [2] -> Upgrades only require 2 units
 
-Koga: Caterpie Npc -> Weedle
+Caterpie Npc -> Weedle
   
-Metapod -> golbat
+Koga: Metapod -> golbat
