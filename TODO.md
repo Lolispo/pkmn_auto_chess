@@ -54,6 +54,7 @@ Odd behaviour:
     Damage dealt bars weird: 
         Connected to prevDmg maybe
         https://gyazo.com/ddd654d97001566c15ccc85f5ccb0ca2
+        It happens when you die
 
     Jolteon no type on board
 
@@ -286,6 +287,9 @@ Display more clearly as a loser if you are eliminated
 Hover baby, show requires only 2 for upgrade
 
 ## Frontend - Logic
+
+Sometimes able to scroll height
+    Emoji characters
 
 Client EsLint configuration
     Force arvids code to change styles for brackets etc

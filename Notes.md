@@ -90,6 +90,11 @@ Steel: 1 (3) [1,2]
 
   Zap Cannon reduce mana cost 150 -> 130
 
+  Electric buff ?
+
+  Ralts -> 1
+  remove abra
+
   Strong:
     Arbok early game
   Weak:
