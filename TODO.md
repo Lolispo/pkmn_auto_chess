@@ -130,6 +130,8 @@ Target Priorities
 
 ## Backend
 
+Babies discard pieces add 3 units instead of 2
+
 Random between starters each game
     Gen 1-3
 
@@ -288,8 +290,11 @@ Hover baby, show requires only 2 for upgrade
 
 ## Frontend - Logic
 
+prevent buying after state is sent
+    mark variable at statesending 
+
 Sometimes able to scroll height
-    Emoji characters
+    Emoji characters in name
 
 Client EsLint configuration
     Force arvids code to change styles for brackets etc

@@ -157,7 +157,7 @@ module.exports = (socket, io) => {
       const sessionId = user.get('sessionId');
       const session = sessions.get(sessionId);
       if (sessionId && session) { // User was in a session (not false, true | sessionId)
-        const playerName = sessionJS.getPlayerName(socket.id, connectedPlayers, sessions);
+        const playerName = sessionJS.getPlayerName(socket.id, connectedPlayers, sessions); // On disconnect, shows undefined
         const updatedSession = sessionJS.sessionPlayerDisconnect(socket.id, session);
         if (f.isUndefined(updatedSession)) {
           console.log('Removing Session:', sessionId, '(All players left)');

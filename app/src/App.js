@@ -1031,6 +1031,7 @@ class App extends Component {
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
       counter += 1;
       if(actionStack.length === 0){
+        dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
         await this.wait(1000);
         board = await this.endOfBattleClean(battleStartBoard, winner);
         dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});

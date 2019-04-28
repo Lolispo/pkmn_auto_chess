@@ -64,7 +64,11 @@ async function refillPieces(pieces, discardedPieces) {
   console.log(`@refillPieces Refilling ${discardedPieces.size} units (Pieces size = ${pieces.size})`); // pieceStorage
   for (let i = 0; i < discardedPieces.size; i++) {
     const name = discardedPieces.get(i);
-    const cost = (await pokemonJS.getStats(name)).get('cost');
+    const pokeStats = await pokemonJS.getStats(name);
+    const cost = pokeStats.get('cost');
+    if(pokeStats.get('evolves_from')) {
+      console.log('REFILLING NOT BASE UNIT @refillPieces', name);
+    }
     /*
     if (f.isUndefined(pieceStorage.get(0)) || f.isUndefined(pieceStorage.get(1)) || f.isUndefined(pieceStorage.get(2))
         || f.isUndefined(pieceStorage.get(3)) || f.isUndefined(pieceStorage.get(4))) {
@@ -1709,7 +1713,9 @@ async function buildMatchups(players) {
   const jsPlayers = players.toJS();
   const keys = Object.keys(jsPlayers);
   const immutableKeys = fromJS(keys);
+  console.log('immutableKeys', immutableKeys);
   let shuffledKeys = f.shuffleImmutable(immutableKeys);
+  console.log('shuffledKeys', shuffledKeys);
   // console.log('@buildMatchups Keys', players, keys, shuffledKeys);
   for (let i = shuffledKeys.size - 1; i > 2; i -= 2) {
     const pid = shuffledKeys.get(i);
@@ -1979,9 +1985,9 @@ async function prepEndTurn(state, playerIndex) {
     const newState = state.set('players', synchronizedPlayers); // Set
     synchronizedPlayers = Map({});
     const newRoundState = await endTurn(newState);
-    return newRoundState;
+    return Map({state: newRoundState, last: true});
   }
-  return state;
+  return Map({state, last: false});
 }
 
 /**
@@ -2076,8 +2082,8 @@ const endBattle = async (stateParam, playerIndex, winner, finishedBoard, roundTy
     }
   }
   // console.log('@endBattle prep', stateParam.get('players'));
-  const potentialEndTurn = await prepEndTurn(state, playerIndex);
-  return potentialEndTurn;
+  const potentialEndTurnObj = await prepEndTurn(state, playerIndex);
+  return potentialEndTurnObj;
 };
 
 exports.endBattleForAll = async (stateParam, winners, finalBoards, matchups, roundType) => {
@@ -2091,9 +2097,11 @@ exports.endBattleForAll = async (stateParam, winners, finalBoards, matchups, rou
     const enemy = (matchups ? matchups.get(tempIndex) : undefined);
     // winner & newBoard & isPvpRound & enemy index required
     const round = tempState.get('round');
-    const newStateAfterBattle = await endBattle(tempState, tempIndex, winner, finalBoard, roundType, enemy);
-    if (newStateAfterBattle.get('round') === round + 1) {
-      tempState = newStateAfterBattle;
+    const newStateAfterBattleObj = await endBattle(tempState, tempIndex, winner, finalBoard, roundType, enemy);
+    const newStateAfterBattle = newStateAfterBattleObj.get('state');
+    const isLast = newStateAfterBattleObj.get('last');
+    if (isLast && newStateAfterBattle.get('round') === round + 1) {
+      tempState = await newStateAfterBattle;
     } else {
       tempState = tempState.setIn(['players', tempIndex], newStateAfterBattle.getIn(['players', tempIndex]));
     }

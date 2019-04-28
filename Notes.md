@@ -94,6 +94,7 @@ Steel: 1 (3) [1,2]
 
   Ralts -> 1
   remove abra
+    or abra honorary baby
 
   Strong:
     Arbok early game
