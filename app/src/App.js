@@ -997,7 +997,7 @@ class App extends Component {
 
   startBattleEvent = async () => {
     const { dispatch, actionStack, battleStartBoard, winner } = this.props;
-    if(this.props.isDead && this.props.visiting === this.props.index){
+    if(this.props.isDead && this.props.visiting === this.props.index) {
       return;
     }
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
@@ -1008,6 +1008,9 @@ class App extends Component {
     // Add some kind of timer here for battle countdowns (setTimeout here made dispatch not update correct state)
     let counter = 0;
     while(actionStack.length > 0) {
+      if(this.props.isDead && this.props.visiting === this.props.index) {
+        return;
+      }
       const nextMove = actionStack.shift(); // actionStack is mutable
       const time = nextMove.time;
       const nextRenderTime =  (time - currentTime) * timeFactor;
@@ -1032,7 +1035,7 @@ class App extends Component {
       counter += 1;
       if(actionStack.length === 0){
         dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
-        await this.wait(1000);
+        await this.wait(1500);
         board = await this.endOfBattleClean(battleStartBoard, winner);
         dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
         // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));

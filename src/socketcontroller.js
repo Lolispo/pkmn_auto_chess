@@ -342,7 +342,7 @@ module.exports = (socket, io) => {
           temp = iter.next();
         }
         const longestBattleTime = await sessionJS.getLongestBattleTime(actionStacks);
-        const longestTime = TIME_FACTOR * longestBattleTime + 3000;
+        const longestTime = TIME_FACTOR * longestBattleTime + 3500;
         if (longestTime !== 3000) console.log('sc.LongestTime:', longestTime, longestBattleTime, TIME_FACTOR);
         setTimeout(async () => {
           // After all battles are over
