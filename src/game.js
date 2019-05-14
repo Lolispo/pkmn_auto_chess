@@ -888,7 +888,7 @@ async function manaIncrease(board, damage, unitPos, enemyPos) {
   let manaChanges = Map({});
   const unitMana = board.get(unitPos).get('mana');
   const unitManaMult = board.get(unitPos).get('mana_multiplier');
-  const unitManaInc = Math.round(Math.min(Math.max(unitManaMult * damage, 5), 15));
+  const unitManaInc = Math.round(Math.min(Math.max(unitManaMult * damage, 5), 15)); // Move 5 and 15 to pokemon.js
   const manaCost = board.get(unitPos).get('manaCost');
   const newMana = Math.min(+unitMana + +unitManaInc, manaCost);
   manaChanges = manaChanges.set(unitPos, newMana);

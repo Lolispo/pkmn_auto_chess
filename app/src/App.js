@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 import React, { Component } from 'react';
-import { ready, unready, startGame, battleReady, sendMessage } from './socket';
+import { ready, unready, startGame, battleReady, sendMessage, AjaxGetUnitJson } from './socket';
 import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePieceEvent, withdrawPieceEvent, sellPieceEvent, getStatsEvent } from './events';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
@@ -79,7 +79,7 @@ class PokemonImage extends Component{
         style={{
           marginTop: (Number.isNaN(baseMarginTop) ? '' : baseMarginTop), 
           marginLeft: (Number.isNaN(baseMarginLeft) ? '' : baseMarginLeft), 
-          width: (!Number.isNaN(width) ? width * 1.5 : '')
+          width: (typeof width === 'number' ? width * 1.5 : '')
         }}></div> : '')}
         {imgEl}
       </div>
@@ -261,11 +261,11 @@ class Cell extends Component {
           const percShield = (pokemon.hp > pokemon.maxHp ? (pokemon.hp - pokemon.maxHp) / pokemon.startHp * 100 : 0); // (pokemon.hp > pokemon.maxHp ? ((pokemon.hp - pokemon.startHp) / pokemon.startHp) * 100 : 0);
           const shieldMarginLeft = ((percHp / 100.0) * sideLength) - 2; // - 13);
           const hpBar = <div className='barContainer' style={{width: sideLength}}>
-              <p class='hpText text_shadow'>
+              <p className='hpText text_shadow'>
                 {`${pokemon.hp}/${pokemon.startHp}`}
               </p>
-              <div color={pokemon.team} class={`hpBar ${percShield > 0 ? 'barBorderShield' : 'barBorderNormal'}`} style={{width: percHp + '%'}}/>
-              {(percShield > 0 ? <div class='shieldBar' style={{width: percShield + '%', marginLeft: shieldMarginLeft + 'px'}}/> : '')}
+              <div color={pokemon.team} className={`hpBar ${percShield > 0 ? 'barBorderShield' : 'barBorderNormal'}`} style={{width: percHp + '%'}}/>
+              {(percShield > 0 ? <div className='shieldBar' style={{width: percShield + '%', marginLeft: shieldMarginLeft + 'px'}}/> : '')}
             </div>;
             {/*<div className={`hpBar  ${(pokemon.team === 0 ? 'friendlyBar' : 'enemyBar')}`} 
               style={{width: (pokemon.hp / Math.max(pokemon.hp, pokemon.maxHp) * 100)+'%'}}>*/}
@@ -469,6 +469,16 @@ class App extends Component {
     const buff = solo[type];
     if(buff) {
       buffs[buff['typeBuff']] = (buffs[buff['typeBuff']] || 0) + buff['value'];
+    }
+  }
+
+  // TODO: Load unitJson
+  displayUnitList = () => {
+    if(this.props.loadedUnitJson) {
+      // TODO: Display here
+      // this.props.unitJson
+    } else {
+      AjaxGetUnitJson(this.props.dispatch);
     }
   }
 
@@ -790,7 +800,7 @@ class App extends Component {
     if(actionMessageAttacker) newBoard[unitPos].actionMessage = actionMessageAttacker;
     // console.log('direction: ' + direction)
     if(direction !== '') {
-      console.log('animate: ', direction, 'attack' + direction + ' 0.3s ease-in 0s normal 1 both running');
+      // console.log('animate: ', direction, 'attack' + direction + ' 0.3s ease-in 0s normal 1 both running');
       /*newBoard[unitPos].animateMove = { // attackAnimation = {
         animation: 'attack' + direction + ' 0.3s', // ease-in 0s normal 1 both running',
       } */
@@ -995,11 +1005,27 @@ class App extends Component {
     });
   }
 
+  battleAction = async (currentRound, board, dispatch, counter, nextMove) => {
+    if(currentRound < this.props.round) {
+      return;
+    }
+    // Fix remove class Animation
+    board = await this.removeClassAnimation(nextMove, board);
+    dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
+    board = await this.removeActionMessage(nextMove, board);
+    dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
+    board = await this.renderMove(nextMove, board);
+
+    // console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
+    dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
+  }
+
   startBattleEvent = async () => {
     const { dispatch, actionStack, battleStartBoard, winner } = this.props;
     if(this.props.isDead && this.props.visiting === this.props.index) {
       return;
     }
+    const currentRound = this.props.round;
     dispatch({type: 'CHANGE_STARTBATTLE', value: false});
     let board = battleStartBoard
     let currentTime = 0;
@@ -1007,8 +1033,9 @@ class App extends Component {
     console.log('Starting Battle with', actionStack.length, 'moves');
     // Add some kind of timer here for battle countdowns (setTimeout here made dispatch not update correct state)
     let counter = 0;
+    let timeouts = [];
     while(actionStack.length > 0) {
-      if(this.props.isDead && this.props.visiting === this.props.index) {
+      if(currentRound < this.props.round) {
         return;
       }
       const nextMove = actionStack.shift(); // actionStack is mutable
@@ -1024,18 +1051,16 @@ class App extends Component {
       board = await this.removeActionMessage(nextMove, board);
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
       board = await this.renderMove(nextMove, board);
-      /*
-      setTimeout(() => {
-        dispatch({type: 'RESET_BATTLEBOARD_ACTIONMESSAGE', pos: nextMove.target});
-      }, 1500)
-      */
+
       // console.log('Next action in', nextRenderTime, '(', currentTime, time, ')')
       currentTime = time;
       dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
       counter += 1;
       if(actionStack.length === 0){
-        dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: counter});
         await this.wait(1500);
+        if(currentRound < this.props.round) {
+          return;
+        }
         board = await this.endOfBattleClean(battleStartBoard, winner);
         dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
         // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
@@ -1049,6 +1074,47 @@ class App extends Component {
       }
     }
   }
+      /*
+      if(currentRound < this.props.round) {
+        return;
+      }
+      const nextMove = actionStack.shift(); // actionStack is mutable
+      const time = nextMove.time;
+      const nextRenderTime =  (time - currentTime) * timeFactor;
+      if(isUndefined(board)){
+        console.log('CHECK ME: Board is undefined', board, nextMove, nextRenderTime);
+      }
+      timeouts.push(await setTimeout(() => {
+        this.battleAction(currentRound, board, dispatch, counter, nextMove)
+      }, time));
+      counter += 1;
+      if(actionStack.length === 0){
+        await this.wait(time + 1500);
+        if(currentRound < this.props.round) {
+          return;
+        }
+        board = await this.endOfBattleClean(battleStartBoard, winner);
+        dispatch({type: 'UPDATE_BATTLEBOARD', board, moveNumber: 'Ended'});
+        // console.log('END OF BATTLE: winningTeam', winningTeam, 'x', Object.values(battleStartBoard));
+        if(winner) {
+          updateMessage(this.props, 'Battle won!', 'big');
+          dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('cheer')});
+        } else {
+          updateMessage(this.props, 'Battle lost!', 'big');
+          dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('battleLose')});
+        }
+      }
+
+      */
+
+      /*
+
+      */
+  /*
+  setTimeout(() => {
+    dispatch({type: 'RESET_BATTLEBOARD_ACTIONMESSAGE', pos: nextMove.target});
+  }, 1500)
+  */
 
   visitPlayer = (playerIndex) => {
     console.log('Visiting Player', playerIndex, '...')
@@ -1333,7 +1399,7 @@ class App extends Component {
         <form onSubmit={this.handleNameChange}>
           <label className='text_shadow'>Name:</label>
           <label>
-            <input maxlength='20' placeholder={this.props.playerName} className='textInputSmaller' type="text" value={this.state.nameChangeInput} 
+            <input maxLength='20' placeholder={this.props.playerName} className='textInputSmaller' type="text" value={this.state.nameChangeInput} 
             onChange={(event) => this.setState({...this.state, nameChangeInput: event.target.value})} />
           </label>
           <input className='text_shadow normalButton chatTypingSubmit' type="submit" value="Submit" />
@@ -1593,6 +1659,8 @@ const mapStateToProps = state => ({
   deadPlayers: state.deadPlayers,
   gameEnded: state.gameEnded,
   pokemonSprites: state.pokemonSprites,
+  unitJson: state.unitJson,
+  loadedUnitJson: state.loadedUnitJson,
   alternateAnimation: state.alternateAnimation,
   loaded: state.loaded,
   visiting: state.visiting,

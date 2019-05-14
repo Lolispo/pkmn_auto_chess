@@ -134,6 +134,8 @@ const reducer = (
     boardBuffs: {},
     deadPlayers: [],
     pokemonSprites: {},
+    unitJson: {},
+    loadedUnitJson: false,
     alternateAnimation: true,
     loaded: false,
     visiting: -1,
@@ -156,11 +158,17 @@ const reducer = (
     state = {...state, musicEnabled: false, soundEnabled: false, timerDuration: 15} // Disallows testing sounds currently
   }
   switch (action.type) { // Listens to events dispatched from from socket.js
-    case 'LOAD_SPRITES_JSON': 
+    case 'LOAD_UNIT_JSON': {
+      console.log('Loaded sprites!');
+      state = {...state, unitJson: action.json, loadedUnitJson: true}
+      break;
+    }
+    case 'LOAD_SPRITES_JSON': {
       console.log('Loaded sprites!');
       state = {...state, pokemonSprites: action.pokemonSprites, loaded: true}
-      console.log('SPRITES:', state.pokemonSprites)
+      console.log('SPRITES:', state.pokemonSprites);
       break;
+    }
     case 'NEW_STATE':
       // Update state with incoming data from server
       console.log('@NewState Players: ', action.newState.players);

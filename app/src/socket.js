@@ -31,6 +31,23 @@ export async function AjaxLoadSprites(dispatch) {
   });
 }
 
+export async function AjaxGetUnitJson(dispatch) {
+  console.log('Fetching json from ' + ipAdress + '/unitJson');
+  fetch(ipAdress + '/unitJson', {
+    method: 'GET',
+    headers: {
+      "Content-Type": "text/plain"
+    },
+  }).then(async response => {
+    // console.log(response);
+    const result = await response.json();
+    // console.log(result);
+    dispatch({ type: 'LOAD_UNIT_JSON', json: result});
+  }).catch((err) => {
+    console.log('Failed to fetch', err);
+  });
+}
+
 // Receiving information
 export const configureSocket = dispatch => {
   // make sure our socket is connected to the port
