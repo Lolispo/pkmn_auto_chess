@@ -92,6 +92,8 @@ Odd behaviour:
 
     Diglett dont die when @ 0 hp
         Test me, check first move code or something
+        
+    Update buffs on sell
 
 ## Add me - Prio
 
