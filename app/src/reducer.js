@@ -565,11 +565,13 @@ const reducer = (
     }
     case 'TOGGLE_DEBUG_MODE': {
       state = {...state, debugMode: !state.debugMode}
+      break;
     }
     case 'LOADING_STRING': {
       if(!(state.connected && state.loaded)) {
         state = {...state, loadingCounter: action.loadingCounter}
       }
+      break;
     }
     default:
       break;

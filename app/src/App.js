@@ -1261,7 +1261,7 @@ class App extends Component {
   }
 
   handleNameChange = (event) => {
-    if(this.state.nameChangeInput.length <= 20 && this.state.nameChangeInput != '') {
+    if(this.state.nameChangeInput.length <= 20 && this.state.nameChangeInput !== '') {
       this.props.dispatch({type: 'UPDATE_PRIVATE_NAME', name: this.state.nameChangeInput});
     }
     this.setState({...this.state, nameChangeInput: ''})
