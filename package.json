@@ -34,7 +34,7 @@
     "mocha": "^5.2.0",
     "npm": "^6.14.6",
     "rewire": "^4.0.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.5.0"
   },
   "devDependencies": {
     "eslint-config-airbnb": "^17.1.1",
