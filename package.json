@@ -11,7 +11,8 @@
     "test": "mocha --exit",
     "mocha": "mocha --exit",
     "lint": "eslint ./src",
-    "lintfix": "eslint --fix ./src"
+    "lintfix": "eslint --fix ./src",
+    "container:start": "docker-compose up -d"
   },
   "repository": {
     "type": "git",
