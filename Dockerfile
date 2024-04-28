@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 8000
 
 # Define the command to run your app using CMD which defines your runtime
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start", ">", "output.out"]
