@@ -37,6 +37,9 @@ build/Release
 
 # Dependency directories
 node_modules/
+
+# CDK output
+infra/cdk.out/
 jspm_packages/
 
 # TypeScript v1 declaration files
