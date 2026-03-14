@@ -27,21 +27,22 @@
   "homepage": "https://github.com/Lolispo/pkmn_auto_chess#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "fs": "0.0.1-security",
-    "http": "0.0.0",
+    "express": "^4.21.0",
     "immutable": "^3.8.2",
     "immutable-shuffle": "^1.0.3",
-    "npm": "^6.14.6",
-    "rewire": "^4.0.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^4.8.0"
   },
   "devDependencies": {
-    "eslint": "^5.6.0",
-    "eslint-config-airbnb": "^17.1.1",
-    "eslint-plugin-import": "^2.21.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.20.0",
-    "mocha": "^5.2.0"
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "mocha": "^11.1.0",
+    "rewire": "^7.0.0"
+  },
+  "overrides": {
+    "mocha": {
+      "diff": "^8.0.3",
+      "serialize-javascript": "^7.0.4"
+    }
   }
 }

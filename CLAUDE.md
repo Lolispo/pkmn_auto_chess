@@ -31,7 +31,7 @@ test/          → Mocha tests
 
 | File | Purpose |
 |---|---|
-| `App.js` | Main React component (monolithic) |
+| `App.jsx` | Main React component (monolithic) |
 | `reducer.js` | Redux state management |
 | `socket.js` | Socket.io client setup + listeners |
 | `events.js` | Player action → socket emission mapping |
@@ -61,11 +61,14 @@ test/          → Mocha tests
 # Run backend
 npm start
 
-# Run frontend
+# Run frontend (Vite dev server)
 cd app && npm start
 
 # Run both concurrently
 cd app && npm run startboth
+
+# Build frontend for production
+cd app && npm run build
 
 # Run tests
 npm test

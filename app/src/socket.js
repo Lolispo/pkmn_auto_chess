@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 // src/socket.js
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 const url = window.location.href;
 const ip = url.split(':3000')[0].split('http://')[1];

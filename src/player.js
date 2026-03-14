@@ -1,6 +1,5 @@
 // Author: Petter Andersson
 
-
 const { Map } = require('immutable');
 const gameConstantsJS = require('./game_constants');
 

@@ -13,7 +13,7 @@ const increaseSpecialAttack = (unit, bonus) => unit.set('specialAttack', +unit.g
 const increaseSpecialDefense = (unit, bonus) => unit.set('specialDefense', +unit.get('specialDefense') + +bonus);
 const decreaseDefense = (unit, bonus) => unit.set('defense', Math.max(1, +unit.get('defense') - +bonus));
 const decreaseSpeed = (unit, bonus) => unit.set('speed', Math.min(pokemonJS.getStatsDefault('upperLimitSpeed') + 100, +unit.get('speed') + +bonus)); // Higher speed value = worse
-const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus)); //.set('startHp', Math.max(0, +unit.get('hp') - +bonus));
+const decreaseHp = (unit, bonus) => unit.set('hp', Math.max(0, +unit.get('hp') - +bonus)); // .set('startHp', Math.max(0, +unit.get('hp') - +bonus));
 const decreaseAttack = (unit, bonus) => unit.set('attack', Math.max(0, +unit.get('attack') - +bonus));
 
 const reqForUpgrade = async (unitParam, bonus) => {
@@ -413,7 +413,7 @@ const isStrongAgainst = async (attackType, defenseType) => {
   const strongAgainst = typeMap.get(attackType).get('strongAgainst');
   if (!f.isUndefined(strongAgainst)) {
     if (strongAgainst.size > 0) {
-      const lowerCase = strongAgainst.map(v => v.toLowerCase());
+      const lowerCase = strongAgainst.map((v) => v.toLowerCase());
       return (lowerCase.includes(defenseType) ? 2.0 : 1.0);
     }
     const lowerCase = strongAgainst.toLowerCase();
@@ -429,7 +429,7 @@ const isStrongAgainst = async (attackType, defenseType) => {
 const isIneffectiveAgainst = async (attackType, defenseType) => {
   const ineffectiveAgainst = typeMap.get(attackType).get('ineffectiveAgainst');
   if (ineffectiveAgainst.size > 0) {
-    const lowerCase = ineffectiveAgainst.map(v => v.toLowerCase());
+    const lowerCase = ineffectiveAgainst.map((v) => v.toLowerCase());
     return (lowerCase.includes(defenseType) ? 0.5 : 1.0);
   }
   const lowerCase = ineffectiveAgainst.toLowerCase();
@@ -490,7 +490,7 @@ const getStringFromList = (list) => {
   return s;
 };
 
-const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1);
+const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 const getTypeDesc = (name) => {
   const type = typeMap.get(name);
@@ -540,23 +540,23 @@ exports.buildTypeString = () => {
   return [s, typeDesc, typeMap];
 };
 
-exports.getType = name => typeMap.get(name);
+exports.getType = (name) => typeMap.get(name);
 
 exports.getBonusAmount = (name, level) => typeMap.get(name).get('bonusAmount').get(level - 1);
 
-exports.getBonusStatType = name => typeMap.get(name).get('bonusStatType');
+exports.getBonusStatType = (name) => typeMap.get(name).get('bonusStatType');
 
-exports.getBuffFuncSolo = name => typeMap.get(name).get('bonus');
+exports.getBuffFuncSolo = (name) => typeMap.get(name).get('bonus');
 
-exports.getBuffFuncAll = name => typeMap.get(name).get('allBonus');
+exports.getBuffFuncAll = (name) => typeMap.get(name).get('allBonus');
 
-exports.getEnemyDebuff = name => typeMap.get(name).get('enemyDebuff');
+exports.getEnemyDebuff = (name) => typeMap.get(name).get('enemyDebuff');
 
 // exports.getBuffNoBattleSolo = name => typeMap.get(name).get('noBattleBonus');
 
-exports.getBonusType = name => typeMap.get(name).get('bonusType');
+exports.getBonusType = (name) => typeMap.get(name).get('bonusType');
 
-exports.hasBonus = name => !f.isUndefined(typeMap.get(name).get('req'));
+exports.hasBonus = (name) => !f.isUndefined(typeMap.get(name).get('req'));
 
 // Given name and level, returns required amount for that level
 exports.getTypeReq = (name, level) => typeMap.get(name).get('req').get(level - 1);
