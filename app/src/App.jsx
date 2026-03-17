@@ -384,13 +384,8 @@ class Timer extends Component {
   tick() {
     const sec = this.secondsRemaining;
     this.setState({
-      seconds: sec
+      seconds: sec < 10 ? '0' + sec : String(sec),
     })
-    if (sec < 10) {
-      this.setState({
-        seconds: '0' + this.state.seconds,
-      })
-    }
     if(sec <= 5) {
       // console.log('@Tick')
       this.props.dispatch({type: 'NEW_SOUND_EFFECT', newSoundEffect: getSoundEffect('Tick')});

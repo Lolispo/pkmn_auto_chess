@@ -1,6 +1,6 @@
-# Use the official Node.js 16 image.
+# Use the official Node.js 22 image.
 # Check for the exact tag you want to use at https://hub.docker.com/_/node
-FROM node:16
+FROM node:22
 
 # Create app directory (this is where your application code will live)
 WORKDIR /usr/src/app

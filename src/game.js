@@ -12,7 +12,6 @@ const typesJS = require('./types');
 const gameConstantsJS = require('./game_constants');
 const abilitiesJS = require('./abilities');
 
-
 /**
  * File used for game logic
  */
@@ -66,7 +65,7 @@ async function refillPieces(pieces, discardedPieces) {
     const name = discardedPieces.get(i);
     const pokeStats = await pokemonJS.getStats(name);
     const cost = pokeStats.get('cost');
-    if(pokeStats.get('evolves_from')) {
+    if (pokeStats.get('evolves_from')) {
       console.log('REFILLING NOT BASE UNIT @refillPieces', name);
     }
     /*
@@ -78,11 +77,11 @@ async function refillPieces(pieces, discardedPieces) {
           pieceStorage = pieceStorage.set(j, List([]));
         }
       }
-    }*/
-    if(f.isUndefined(pieceStorage.get(cost - 1))) {
+    } */
+    if (f.isUndefined(pieceStorage.get(cost - 1))) {
       console.log('@RefillPieces Undefined', cost - 1, pieceStorage.get(cost - 1), name);
       pieceStorage = await pieceStorage.set(cost - 1, List([]));
-    }       
+    }
     pieceStorage = await f.push(pieceStorage, cost - 1, name);
     // console.log('@refillPieces', name);
   }
@@ -107,9 +106,9 @@ async function getPieceFromRarity(random, prob, index, pieceStorage, unitAmounts
       for (let i = 0; i < keys.length; i++) {
         const tempPiece = pieceStorage.get(index).get(i);
         if (!keys.includes(tempPiece) || (keys.includes(tempPiece) && (((unitAmounts.get(tempPiece) || 0) + (newUnitAmounts.get(tempPiece) || 0)) < 9))) {
-          /*if (unitAmounts.get(tempPiece) === 8) 
-          console.log('@getPieceFromRarity 8 Units, Adding one', (newUnitAmounts.get(tempPiece) || 0), (unitAmounts.get(tempPiece) || 0), tempPiece, 
-          ((unitAmounts.get(tempPiece) || 0) + (newUnitAmounts.get(tempPiece) || 0)), unitAmounts, newUnitAmounts);*/
+          /* if (unitAmounts.get(tempPiece) === 8)
+          console.log('@getPieceFromRarity 8 Units, Adding one', (newUnitAmounts.get(tempPiece) || 0), (unitAmounts.get(tempPiece) || 0), tempPiece,
+          ((unitAmounts.get(tempPiece) || 0) + (newUnitAmounts.get(tempPiece) || 0)), unitAmounts, newUnitAmounts); */
           piece = tempPiece;
           pieceIndex = i;
           break;
@@ -143,7 +142,7 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces, player, newU
     // TODO: In theory, pieces might still be empty here, if not enough pieces were in the deck.
     // Temp: Assumes enough pieces are available
     const random = Math.random();
-    //console.log('Before call:', i, newUnitAmounts)
+    // console.log('Before call:', i, newUnitAmounts)
     const pieceObj = await getPieceFromRarity(random, prob[i], i, newPieceStorage, unitAmounts, newUnitAmounts);
     const piece = pieceObj.get('piece');
     const pieceIndex = pieceObj.get('index');
@@ -162,11 +161,13 @@ async function addPieceToShop(shop, pos, pieces, level, discPieces, player, newU
       // Removes first from correct rarity array
       newPieceStorage = await f.removeFromPieceStorage(newPieceStorage, i, pieceIndex);
       newUnitAmounts = newUnitAmounts.set(piece, (newUnitAmounts.get(piece) || 0) + 1);
-      //console.log('@newUnitAmounts', piece, newUnitAmounts);
+      // console.log('@newUnitAmounts', piece, newUnitAmounts);
       break;
     }
   }
-  return { newShop, pieceStorage: newPieceStorage, discPieces: newDiscPieces, newUnitAmounts};
+  return {
+    newShop, pieceStorage: newPieceStorage, discPieces: newDiscPieces, newUnitAmounts,
+  };
 }
 
 /**
@@ -201,7 +202,7 @@ async function refreshShop(stateParam, playerIndex) {
       temp = iter.next();
     }
     const shopList = await tempShopList;
-    const filteredShop = shopList.filter(piece => !f.isUndefined(piece));
+    const filteredShop = shopList.filter((piece) => !f.isUndefined(piece));
     const shopToList = fromJS(Array.from(filteredShop.map((value, key) => value).values()));
     // console.log('@refreshShop:', shopToList, '(', pieceStorage.size, '/', discPieces.size, ')');
     state = state.set('discardedPieces', discPieces.concat(shopToList));
@@ -304,7 +305,6 @@ exports.buyUnit = async (stateParam, playerIndex, unitID) => {
   return state;
 };
 
-
 /**
  * toggleLock for player (setIn)
  */
@@ -362,7 +362,6 @@ exports.buyExp = (state, playerIndex) => {
   const newState = state.setIn(['players', playerIndex, 'gold'], gold - 5);
   return increaseExp(newState, playerIndex, 4);
 };
-
 
 /**
  * Board interaction
@@ -527,9 +526,9 @@ async function discardBaseUnits(stateParam, playerIndex, name, depth = 1) {
       discPieces = discPieces.push(name);
     }
     const unitAmounts = state.getIn(['players', playerIndex, 'unitAmounts']);
-    if(unitAmounts) {
+    if (unitAmounts) {
       const newValue = unitAmounts.get(name) - amountOfPieces;
-      if(newValue === 0) {
+      if (newValue === 0) {
         state = state.setIn(['players', playerIndex, 'unitAmounts'], unitAmounts.delete(name));
       } else {
         state = state.setIn(['players', playerIndex, 'unitAmounts', name], newValue);
@@ -1413,7 +1412,6 @@ async function startBattle(boardParam) {
   });
 }
 
-
 /**
  * Board with first_move: pos set for all units
  */
@@ -1777,7 +1775,6 @@ async function battleTime(stateParam) {
     battleObject = battleObject.setIn(['finalBoards', index], finalBoard);
     battleObject = battleObject.setIn(['battleEndTimes', index], battleEndTime);
 
-
     // console.log('@battleTime newBoard, finished board result', newBoard); // Good print, finished board
     // Store rivals logic
     const prevRivals = state.getIn(['players', index, 'rivals']);
@@ -1985,9 +1982,9 @@ async function prepEndTurn(state, playerIndex) {
     const newState = state.set('players', synchronizedPlayers); // Set
     synchronizedPlayers = Map({});
     const newRoundState = await endTurn(newState);
-    return Map({state: newRoundState, last: true});
+    return Map({ state: newRoundState, last: true });
   }
-  return Map({state, last: false});
+  return Map({ state, last: false });
 }
 
 /**
@@ -2114,7 +2111,7 @@ exports.endBattleForAll = async (stateParam, winners, finalBoards, matchups, rou
 exports.removeDeadPlayer = async (stateParam, playerIndex) => {
   // console.log('@removeDeadPlayer')
   let state = stateParam;
-  const filteredShop = state.getIn(['players', playerIndex, 'shop']).filter(piece => !f.isUndefined(piece));
+  const filteredShop = state.getIn(['players', playerIndex, 'shop']).filter((piece) => !f.isUndefined(piece));
   const shopUnits = fromJS(Array.from(filteredShop.map((value, key) => value.get('name')).values()));
   const board = state.getIn(['players', playerIndex, 'board']);
   let boardList = List([]);
@@ -2149,7 +2146,6 @@ exports.removeDeadPlayer = async (stateParam, playerIndex) => {
   const amountOfPlayers = newState.get('amountOfPlayers') - 1;
   return newState.set('amountOfPlayers', amountOfPlayers);
 };
-
 
 /**
  * Initialize all shops for all players

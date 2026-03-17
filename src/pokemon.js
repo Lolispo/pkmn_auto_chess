@@ -1,6 +1,5 @@
 // Author: Petter Andersson
 
-
 const { Map, fromJS } = require('immutable');
 const fs = require('fs');
 const f = require('./f');
@@ -62,7 +61,7 @@ const getBasePokemonLocal = async (name) => {
   return getBasePokemonLocal(unitStats.get('evolves_from'));
 };
 
-exports.getBasePokemon = name => getBasePokemonLocal(name);
+exports.getBasePokemon = (name) => getBasePokemonLocal(name);
 
 const getUnitTierLocal = async (name, counter = 1) => {
   const pokeMap = await pokemonMap;
@@ -77,10 +76,10 @@ const getUnitTierLocal = async (name, counter = 1) => {
   return getUnitTierLocal(unitStats.get('evolves_from'), counter + 1);
 };
 
-exports.getUnitTier = name => getUnitTierLocal(name);
+exports.getUnitTier = (name) => getUnitTierLocal(name);
 
 exports.getMap = async () => pokemonMap;
 
 exports.getPokemonSprites = async () => pokemonSprites;
 
-exports.getStatsDefault = stat => defaultStat.get(stat);
+exports.getStatsDefault = (stat) => defaultStat.get(stat);

@@ -1,5 +1,5 @@
 {
-    "extends": "airbnb",
+    "extends": "airbnb-base",
     "rules": {
         "no-console": "off",
         "no-plusplus": "off",
@@ -10,6 +10,10 @@
         "prefer-destructuring": "off",
         "no-fallthrough": "off",
         "max-len": "off",
-        "no-await-in-loop": "off"
+        "no-await-in-loop": "off",
+        "no-param-reassign": "off",
+        "no-shadow": "warn",
+        "global-require": "off",
+        "import/extensions": "off"
     }
 }

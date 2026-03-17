@@ -1,6 +1,5 @@
 // Author: Petter Andersson
 
-
 const { List } = require('immutable');
 const f = require('./f');
 const pokemonJS = require('./pokemon');

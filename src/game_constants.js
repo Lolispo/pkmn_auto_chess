@@ -1,14 +1,21 @@
 // Author: Petter Andersson
 
 const { Map, List } = require('immutable');
-const gameJS = require('./game');
 const f = require('./f');
+
+// Lazy-load game.js to break circular dependency:
+// game.js → deck.js → pokemon.js → f.js → game_constants.js → game.js
+let gameJS;
+function getGameJS() {
+  if (!gameJS) gameJS = require('./game');
+  return gameJS;
+}
 
 const rarityAmount = List([45, 30, 25, 15, 10]); // Real version
 // const rarityAmount = List([3, 3, 3, 3, 3]); // Test version
 // const rarityAmount = List([9, 9, 9, 9, 9]); // Test version
 
-exports.debugMode = true;
+exports.debugMode = false;
 
 const levelPieceProbability = Map({
   1: Map({
@@ -56,14 +63,14 @@ const expRequiredPerLevel = Map({
   9: 40,
 });
 
-exports.getExpRequired = index => expRequiredPerLevel.get(String(index));
+exports.getExpRequired = (index) => expRequiredPerLevel.get(String(index));
 
 const damageFactorType = Map({
   attack: 0.125,
   spell: 0.5,
 });
 
-exports.getDamageFactorType = actionType => damageFactorType.get(actionType);
+exports.getDamageFactorType = (actionType) => damageFactorType.get(actionType);
 
 /**
  * Set level setups
@@ -84,24 +91,24 @@ exports.getDamageFactorType = actionType => damageFactorType.get(actionType);
     70: Final Boss: Pidgeot, alakazam, rhydon, arcanine, exeggutor, blastoise
  */
 const roundSetConfiguration = Map({
-  1: async () => gameJS.createBattleBoard(List([
+  1: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'magikarp', x: 3, y: 1 }),
   ])),
-  2: async () => gameJS.createBattleBoard(List([
+  2: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'rattata', x: 3, y: 1 }),
     Map({ name: 'weedle', x: 5, y: 1 }),
   ])),
-  3: async () => gameJS.createBattleBoard(List([
+  3: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'pidgey', x: 3, y: 1 }),
     Map({ name: 'pidgeotto', x: 5, y: 1 }),
   ])),
-  10: async () => gameJS.createBattleBoard(List([
+  10: async () => getGameJS().createBattleBoard(List([
     // Map({ name: 'geodude', x: 3, y: 1 }),
     Map({ name: 'onix', x: 4, y: 1 }),
     Map({ name: 'rhyhorn', x: 5, y: 2 }),
     Map({ name: 'geodude', x: 3, y: 2 }),
   ])),
-  15: async () => gameJS.createBattleBoard(List([
+  15: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'staryu', x: 3, y: 1 }),
     Map({ name: 'starmie', x: 4, y: 1 }),
     Map({ name: 'horsea', x: 5, y: 2 }),
@@ -110,7 +117,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'poliwhirl', x: 5, y: 1 }),
     Map({ name: 'magikarp', x: 7, y: 2 }),
   ])),
-  20: async () => gameJS.createBattleBoard(List([
+  20: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'voltorb', x: 3, y: 1 }),
     Map({ name: 'pikachu', x: 4, y: 1 }),
     Map({ name: 'raichu', x: 5, y: 1 }),
@@ -119,7 +126,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'magneton', x: 2, y: 2 }),
     Map({ name: 'ampharos', x: 6, y: 1 }),
   ])),
-  25: async () => gameJS.createBattleBoard(List([
+  25: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'victreebel', x: 3, y: 1 }),
     Map({ name: 'parasect', x: 4, y: 1 }),
     Map({ name: 'vileplume', x: 5, y: 1 }),
@@ -128,7 +135,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'ivysaur', x: 2, y: 1 }),
     Map({ name: 'bulbasaur', x: 1, y: 1 }),
   ])),
-  30: async () => gameJS.createBattleBoard(List([
+  30: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'beedrill', x: 3, y: 1 }),
     Map({ name: 'nidorino', x: 4, y: 1 }),
     Map({ name: 'crobat', x: 5, y: 1 }),
@@ -138,7 +145,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'golbat', x: 1, y: 2 }),
     Map({ name: 'kakuna', x: 2, y: 2 }),
   ])),
-  35: async () => gameJS.createBattleBoard(List([
+  35: async () => getGameJS().createBattleBoard(List([
     // Map({ name: 'kadabra', x: 3, y: 1 }),
     Map({ name: 'haunter', x: 4, y: 1 }),
     Map({ name: 'alakazam', x: 5, y: 2 }),
@@ -150,7 +157,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'gardevoir', x: 3, y: 1 }),
     Map({ name: 'kirlia', x: 5, y: 1 }),
   ])),
-  40: async () => gameJS.createBattleBoard(List([
+  40: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'growlithe', x: 3, y: 1 }),
     Map({ name: 'ponyta', x: 4, y: 1 }),
     Map({ name: 'rapidash', x: 5, y: 1 }),
@@ -161,7 +168,7 @@ const roundSetConfiguration = Map({
     Map({ name: 'magmortar', x: 4, y: 2 }),
     Map({ name: 'flareon', x: 6, y: 2 }),
   ])),
-  45: async () => gameJS.createBattleBoard(List([
+  45: async () => getGameJS().createBattleBoard(List([
     Map({ name: 'rhyhorn', x: 3, y: 1 }),
     Map({ name: 'dugtrio', x: 4, y: 1 }),
     Map({ name: 'nidorino', x: 5, y: 1 }),
@@ -179,7 +186,7 @@ exports.getSetRound = async (round) => {
   const board = await roundSetConfiguration.get(String(round))();
   // console.log('@getSetRound', board);
   if (f.isUndefined(board)) {
-    return gameJS.createBattleBoard(List([
+    return getGameJS().createBattleBoard(List([
       Map({ name: 'rhyhorn', x: 3, y: 1 }),
       Map({ name: 'dugtrio', x: 4, y: 1 }),
       Map({ name: 'nidoqueen', x: 5, y: 1 }),
@@ -201,8 +208,7 @@ const gymLeader = Map({
   45: 'Giovanni',
 });
 
-exports.getGymLeader = round => gymLeader.get(String(round));
-
+exports.getGymLeader = (round) => gymLeader.get(String(round));
 
 exports.getRoundType = (round) => {
   if (round <= 3) {
@@ -218,9 +224,9 @@ exports.getRoundType = (round) => {
 };
 
 // index - 1, Handles 0-4 indexes, send cost directly
-exports.getRarityAmount = index => rarityAmount.get(index - 1);
+exports.getRarityAmount = (index) => rarityAmount.get(index - 1);
 
-exports.getLevelPieceProbability = index => levelPieceProbability.get(String(index));
+exports.getLevelPieceProbability = (index) => levelPieceProbability.get(String(index));
 
 exports.getPieceProbabilityNum = (index) => {
   const probs = levelPieceProbability.get(String(index));

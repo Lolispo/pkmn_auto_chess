@@ -1,6 +1,5 @@
 // Author: Petter Andersson
 
-
 const { Map, List, fromJS } = require('immutable');
 const fs = require('fs');
 const pokemonJS = require('./pokemon');
@@ -16,7 +15,7 @@ const abilityDefaults = Map({
   multiStrikePercentage: List([0.375, 0.375, 0.125, 0.125]),
 });
 
-exports.getAbilityDefault = name => abilityDefaults.get(name);
+exports.getAbilityDefault = (name) => abilityDefaults.get(name);
 
 /**
   * Read from json file
@@ -35,7 +34,7 @@ async function loadImmutableAbilitiesJSON() {
 
 const abilitiesMap = loadImmutableAbilitiesJSON();
 
-exports.getDefault = name => abilityDefaults.get(name);
+exports.getDefault = (name) => abilityDefaults.get(name);
 
 exports.getAbility = async (name) => {
   // console.log('@abilties.getAbility', name);

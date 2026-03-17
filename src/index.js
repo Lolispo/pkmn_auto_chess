@@ -4,7 +4,12 @@ const express = require('express');
 
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+});
 
 const router = express.Router();
 const cors = require('cors');
@@ -28,13 +33,13 @@ const getSprites = async () => pokemonSpritesJSON;
 const getPokemonJson = async () => pokemonJson;
 
 router.get('/sprites', async (req, res) => {
-  console.log('/sprites GET Request - ', req.connection.remoteAddress);
+  console.log('/sprites GET Request - ', req.socket.remoteAddress);
   const sprites = await getSprites();
   res.json({ sprites });
 });
 
 router.get('/unitJson', async (req, res) => {
-  console.log('/unitJson GET Request - ', req.connection.remoteAddress);
+  console.log('/unitJson GET Request - ', req.socket.remoteAddress);
   const pokemonJson = await getPokemonJson();
   res.json({ pokemonJson });
 });
