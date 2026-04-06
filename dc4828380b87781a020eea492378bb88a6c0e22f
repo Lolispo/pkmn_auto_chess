@@ -1,0 +1,25 @@
+app/vite.config.js
+  04764be977670e90 5
+.github/workflows/deploy-frontend.yml
+  04764be977670e90 1-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "dc4828380b87781a020eea492378bb88a6c0e22f",
+  "prompts": {
+    "04764be977670e90": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2f7e7837-4f99-4ecc-87c8-177bc8cf704e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Petter Andersson",
+      "messages": [],
+      "total_additions": 52,
+      "total_deletions": 0,
+      "accepted_lines": 52,
+      "overriden_lines": 0
+    }
+  }
+}
