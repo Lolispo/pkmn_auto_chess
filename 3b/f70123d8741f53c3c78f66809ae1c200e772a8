@@ -1,0 +1,23 @@
+README.md
+  s_33bb37f8b441d5::t_3b3d46d9d63f83 11-20
+app/package.json
+  s_33bb37f8b441d5::t_4b669c12d50585 23
+infra/deploy.sh
+  s_33bb37f8b441d5::t_33e77e1fffdfb9 1-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3bf70123d8741f53c3c78f66809ae1c200e772a8",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
