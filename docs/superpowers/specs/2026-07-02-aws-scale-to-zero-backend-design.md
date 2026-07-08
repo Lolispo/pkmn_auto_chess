@@ -177,3 +177,18 @@ scoped by the construct.
   package if a third consumer appears.
 - **DNS-updater race:** frontend connects only after `/health` is ok (not merely when the
   waker returns), which only resolves once DNS + task are both live.
+
+## Follow-ups (post-MVP)
+
+- **Nice waker URL via CloudFront** (TODO): instead of the raw
+  `https://<id>.lambda-url.eu-north-1.on.aws/`, add a `/wake` behavior to the construct's
+  CloudFront distribution whose origin is the waker Lambda Function URL. The frontend then
+  calls `https://pkmn-api.petterbuilds.com/wake` — a clean same-origin URL that also removes
+  the need for the Function URL's CORS config. Construct change in web-platform; the
+  frontend drops `VITE_WAKER_URL` in favour of a fixed `${VITE_BACKEND_URL}/wake`.
+- **CpuArchitecture:** construct defaults the Fargate task to ARM64 (Graviton) — matches
+  Apple-Silicon local image builds and is cheaper. Consumers on amd64 CI pass
+  `cpuArchitecture: X86_64`.
+- **Frontend eslint config:** `app/` has no eslint config of its own (inherits the backend
+  Airbnb rules → hundreds of false errors + no `import.meta` support). Give it a proper
+  React/Vite eslint config so `npm run lint` is meaningful.
