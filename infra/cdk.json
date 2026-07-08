@@ -1,0 +1,7 @@
+{
+  "app": "npx ts-node --skip-ignore --prefer-ts-exts bin/pkmn-infra.ts",
+  "context": {
+    "@aws-cdk/aws-cloudfront:defaultFunctionRuntimeV2_0": true,
+    "@aws-cdk/core:newStyleStackSynthesis": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "pkmn-infra",
+  "version": "0.1.0",
+  "private": true,
+  "bin": { "pkmn-infra": "bin/pkmn-infra.ts" },
+  "scripts": {
+    "synth": "cdk synth",
+    "deploy": "cdk deploy --require-approval never",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "aws-cdk": "2.1128.1",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.9.3",
+    "@types/node": "^24.10.1"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.260.0",
+    "constructs": "^10.5.0",
+    "web-platform": "file:../../web-platform"
+  }
+}
