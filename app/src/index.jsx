@@ -1,13 +1,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
-import { configureSocket, AjaxLoadSprites } from './socket';
+import { configureSocket, AjaxLoadSprites, wakeBackend } from './socket';
 import { createStore } from 'redux';
 import reducer from './reducer';
 import { Provider } from 'react-redux';
 const store = createStore(reducer);
 
-// setup socket connection
+// wake the scale-to-zero backend, then set up the socket connection
+wakeBackend();
 export const socket = configureSocket(store.dispatch);
 AjaxLoadSprites(store.dispatch);
 

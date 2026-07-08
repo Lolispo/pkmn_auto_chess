@@ -3,12 +3,18 @@
 // src/socket.js
 import { io } from 'socket.io-client';
 
-const url = window.location.href;
-const ip = url.split(':3000')[0].split('http://')[1];
-const ipAdress = 'http://' + ip + ':8000';
+const ipAdress = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 console.log('Connecting to ' + ipAdress + ' ...');
-const socket = io(ipAdress);
+const socket = io(ipAdress, { transports: ['websocket'] });
 let timeoutCounter = 1;
+
+// Trigger the scale-to-zero backend to wake. Fire-and-forget; the socket and the
+// /sprites fetch already retry until the backend is up (~30-60s cold start).
+export function wakeBackend() {
+  const wakerUrl = import.meta.env.VITE_WAKER_URL;
+  if (!wakerUrl) return;
+  fetch(wakerUrl, { method: 'POST' }).catch(() => { /* backend will wake shortly */ });
+}
 
 export async function AjaxLoadSprites(dispatch) {
   console.log('Fetching Sprites from ' + ipAdress + '/sprites');
