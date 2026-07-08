@@ -1,0 +1,21 @@
+infra/deploy.sh
+  s_33bb37f8b441d5::t_87fd5c8c4e2e0a 5
+infra/bin/pkmn-infra.ts
+  s_33bb37f8b441d5::t_9451c0936c4a97 7-9,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "da4c15975481558be0a6e5aabf9ad985b8227d4f",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
