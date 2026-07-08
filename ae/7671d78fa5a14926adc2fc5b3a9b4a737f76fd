@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-07-02-aws-scale-to-zero-backend-design.md
+  s_33bb37f8b441d5::t_4898096b7bfddd 180-194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ae7671d78fa5a14926adc2fc5b3a9b4a737f76fd",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
