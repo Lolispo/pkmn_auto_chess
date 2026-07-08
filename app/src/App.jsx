@@ -1363,7 +1363,7 @@ class App extends Component {
         this.props.dispatch({type: 'LOADING_STRING', loadingCounter});
       }, 1000);
     }
-    let loadingString = (loadingProgress > 0 ? 'Loading' + '.'.repeat(loadingCounter) : 'Connecting' + '.'.repeat(loadingCounter));
+    let loadingString = (loadingProgress > 0 ? 'Loading' + '.'.repeat(loadingCounter) : 'Waking up server' + '.'.repeat(loadingCounter));
     const mainMenu = <div>
       <div className='logos'>
         <img src={getImage('pokemonLogo')} alt='pokemonLogo'/>
@@ -1390,6 +1390,11 @@ class App extends Component {
           </button>
         </div>
       </div>
+      {(!this.props.connected) && (
+        <div className='text_shadow' style={{ margin: '8px auto', maxWidth: '520px', opacity: 0.85, fontSize: '0.9em' }}>
+          💤 Waking up the server — it sleeps when nobody is playing (to keep hosting nearly free), so the first load can take up to a minute. Hang tight…
+        </div>
+      )}
       <div className='mainMenuNameChange'>
         <form onSubmit={this.handleNameChange}>
           <label className='text_shadow'>Name:</label>
