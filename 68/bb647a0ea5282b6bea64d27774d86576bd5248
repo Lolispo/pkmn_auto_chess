@@ -1,0 +1,33 @@
+infra/package.json
+  s_33bb37f8b441d5::t_906ab2226e0732 1-22
+infra/.gitignore
+  s_33bb37f8b441d5::t_954d7aa4d7d7b5 1-5
+infra/cdk.json
+  s_33bb37f8b441d5::t_88f1dfea8df1d4 1-7
+infra/lib/backend-stack.ts
+  s_33bb37f8b441d5::t_de78c57a9c84d8 1-32
+infra/tsconfig.json
+  s_33bb37f8b441d5::t_da3636ae1e3f0c 1-13
+infra/bin/pkmn-infra.ts
+  s_33bb37f8b441d5::t_6fcee95305606c 1-12
+infra/.npmrc
+  s_33bb37f8b441d5::t_a83598f4135473 1
+infra/cdk.context.json
+  s_33bb37f8b441d5::t_49bfefa864e9ba 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "68bb647a0ea5282b6bea64d27774d86576bd5248",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
