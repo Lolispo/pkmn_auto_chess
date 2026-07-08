@@ -6,7 +6,7 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: '*',
+    origin: process.env.FRONTEND_ORIGIN || '*',
     methods: ['GET', 'POST'],
   },
 });
@@ -18,8 +18,13 @@ const deckJS = require('./deck');
 const pokemonJS = require('./pokemon');
 const socketController = require('./socketcontroller.js');
 
-// we will use port 8000 for our app
-server.listen(8000, () => console.log('connected to port 8000!'));
+// Bind on all interfaces so the container is reachable; PORT overridable for hosting.
+const PORT = process.env.PORT || 8000;
+if (require.main === module) {
+  server.listen(PORT, '0.0.0.0', () => console.log(`connected to port ${PORT}!`));
+}
+
+module.exports = { app, server };
 
 app.use('/', router);
 app.use(cors());
@@ -42,6 +47,11 @@ router.get('/unitJson', async (req, res) => {
   console.log('/unitJson GET Request - ', req.socket.remoteAddress);
   const pokemonJson = await getPokemonJson();
   res.json({ pokemonJson });
+});
+
+// Health/liveness — read by web-platform's scale-to-zero sleeper Lambda.
+router.get('/health', (req, res) => {
+  res.json({ ok: true, ...socketController.getActivity() });
 });
 
 io.on('connection', (socket) => {
