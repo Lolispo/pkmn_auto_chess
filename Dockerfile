@@ -1,19 +1,15 @@
-# Use the official Node.js 22 image.
-# Check for the exact tag you want to use at https://hub.docker.com/_/node
-FROM node:22
-
-# Create app directory (this is where your application code will live)
+# Backend image for pkmn_auto_chess (Express + Socket.io game server).
+FROM node:22-slim
 WORKDIR /usr/src/app
 
-# Install app dependencies
+# Install only production deps against the root package.json/package-lock.json.
 COPY package*.json ./
+RUN npm ci --omit=dev
 
-RUN npm install
+# App source + the root pokemon *.json data files the backend loads at boot.
+COPY src ./src
+COPY *.json ./
 
-COPY . .
-
-# Your app binds to port 3000 so you'll use the EXPOSE instruction to have it mapped by the docker daemon
+ENV PORT=8000
 EXPOSE 8000
-
-# Define the command to run your app using CMD which defines your runtime
-CMD ["npm", "run", "start", ">", "output.out"]
+CMD ["node", "src/index.js"]
