@@ -12,6 +12,9 @@ const f = require('./f');
 let connectedPlayers = Map({}); // Stores connected players, socketids -> ConnectedUser
 let sessions = Map({}); // Maps sessionIds to sessions
 
+let lastActivityTs = Date.now(); // Updated on connect/disconnect; read by /health for scale-to-zero
+const touch = () => { lastActivityTs = Date.now(); };
+
 const TIME_FACTOR = 15;
 
 const getSessionId = (socketId) => connectedPlayers.get(socketId).get('sessionId');
@@ -95,6 +98,7 @@ module.exports = (socket, io) => {
     console.log('@Give_id', socket.id);
     const newUser = sessionJS.createUser(socket.id);
     connectedPlayers = connectedPlayers.set(socket.id, newUser);
+    touch();
     countReadyPlayers(false, socket, io);
     // TODO: Handle many connected players
   });
@@ -169,6 +173,7 @@ module.exports = (socket, io) => {
         }
       }
       connectedPlayers = connectedPlayers.delete(socket.id);
+      touch();
       countReadyPlayers(false, socket, io);
     }
   });
@@ -457,3 +462,9 @@ module.exports = (socket, io) => {
     socket.emit('SET_STATS', name, newStats);
   });
 };
+
+// Snapshot for the /health endpoint — drives web-platform's scale-to-zero sleeper.
+module.exports.getActivity = () => ({
+  activeSessions: connectedPlayers.size,
+  lastActivityTs,
+});
