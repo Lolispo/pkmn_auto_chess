@@ -1,0 +1,24 @@
+src/socketcontroller.js
+  s_33bb37f8b441d5::t_87700049c33dbd 465-470
+  s_33bb37f8b441d5::t_829632bdf9f204 101
+  s_33bb37f8b441d5::t_cda0706b3592ee 15-17
+  s_33bb37f8b441d5::t_9a84861d8e2c7e 176
+test/health_test.js
+  s_33bb37f8b441d5::t_6817edb58f62d6 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f68c5c6f054f09ad92eb17af8c0242defe7eed51",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
