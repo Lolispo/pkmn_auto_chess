@@ -1,6 +1,6 @@
 # Todos: server status visibility + wake control (candidate Spec C)
 
-**Status:** IN PROGRESS — Todos 1, 2, 5 shipped + validated live; 3, 4 remaining
+**Status:** DONE — all todos shipped + validated live (2026-07-12)
 **Date:** 2026-07-12
 
 ## Progress (2026-07-12)
@@ -8,14 +8,20 @@
 - ✅ **Todo 1 — wake button:** auto-wake removed; "▶ Wake server" button live.
 - ✅ **Todo 2 — status + lastOnline:** waker `GET`/`POST`; `lastOnline` SSM param written by
   the sleeper; frontend status panel. Validated live (`GET` reports state without waking).
+- ✅ **Todo 3 — wake-time measurement:** frontend times wake→connected, logs + shows
+  "⚡ Server woke in Ns". Observed cold start ~70–100s.
+- ✅ **Todo 4 — `validate-wake.sh`:** generic reusable script in `web-platform/scripts`
+  (args: api-url/waker-url/cluster/service/cycles). Live run: **3/3 healthy, 0 failures**;
+  only confirmed cold starts count toward timing (stale-task cycles are flagged).
 - ✅ **Todo 5 — shutdown validation:** confirmed a real `desiredCount → 0` and a real
   `lastOnline` timestamp written + reported while offline.
-- ✅ **Backstop (added):** daily 04:00 UTC force-scale-down catches stuck/unreachable tasks
-  (bounds runaway to <24h), never kills a task with connected players. DNS-updater now retries
+- ✅ **Backstop:** daily 04:00 UTC force-scale-down catches stuck/unreachable tasks
+  (bounds runaway to <24h), never kills a task with connected players. DNS-updater retries
   the public-IP lookup in-Lambda. web-platform tests 21/21.
-- ⏳ **Todo 3 — wake-time measurement** (frontend timing; observed ~51–90s so far).
-- ⏳ **Todo 4 — `validate-wake.sh`** reliability script (N cold-start cycles → median/max).
-- 💡 **Recommended:** AWS Budget alarm (~$5/mo) as a cost tripwire (pending decision).
+- ✅ **Budget alarm:** account-wide AWS Budget (`petterbuilds-monthly`, $10/mo, us-east-1)
+  in `web-platform` (`BudgetStack`), emails at 80% actual + 100% forecast. Deployed.
+
+**Ownership:** wake-time = frontend (pkmn); validate script + budget = web-platform.
 
 ---
 
