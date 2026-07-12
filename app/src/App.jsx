@@ -438,7 +438,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     document.title = 'Pokemon Auto Chess';
-    this.state = {chatMessageInput: '', nameChangeInput: '', serverStatus: null, waking: false};
+    this.state = {chatMessageInput: '', nameChangeInput: '', serverStatus: null, waking: false, wakeStartedAt: null, lastWakeSeconds: null};
   }
 
   componentDidMount() {
@@ -446,8 +446,17 @@ class App extends Component {
     getServerStatus().then((s) => { if (s) this.setState({ serverStatus: s }); });
   }
 
+  componentDidUpdate(prevProps) {
+    // Measure cold-start: time from the wake click to the first successful connection.
+    if (!prevProps.connected && this.props.connected && this.state.wakeStartedAt) {
+      const secs = Math.round((Date.now() - this.state.wakeStartedAt) / 1000);
+      console.log(`Server ready in ${secs}s`);
+      this.setState({ waking: false, wakeStartedAt: null, lastWakeSeconds: secs });
+    }
+  }
+
   wakeServer = () => {
-    this.setState({ waking: true });
+    this.setState({ waking: true, wakeStartedAt: Date.now() });
     wakeBackend();
   };
 
@@ -1436,6 +1445,11 @@ class App extends Component {
               </div>
             </div>
           )}
+        </div>
+      )}
+      {(this.props.connected && this.state.lastWakeSeconds != null) && (
+        <div className='text_shadow' style={{ margin: '6px auto', fontSize: '0.8em', opacity: 0.7 }}>
+          ⚡ Server woke in {this.state.lastWakeSeconds}s
         </div>
       )}
       <div className='mainMenuNameChange'>
