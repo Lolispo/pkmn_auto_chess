@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 import React, { Component } from 'react';
-import { ready, unready, startGame, battleReady, sendMessage, AjaxGetUnitJson } from './socket';
+import { ready, unready, startGame, battleReady, sendMessage, AjaxGetUnitJson, wakeBackend, getServerStatus } from './socket';
 import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePieceEvent, withdrawPieceEvent, sellPieceEvent, getStatsEvent } from './events';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
@@ -422,12 +422,44 @@ class Timer extends Component {
   }
 }
 
+function timeAgo(iso) {
+  if (!iso || iso === 'never') return null;
+  const diff = Date.now() - new Date(iso).getTime();
+  if (Number.isNaN(diff)) return null;
+  const m = Math.round(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return `${m} min ago`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.round(h / 24)}d ago`;
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
     document.title = 'Pokemon Auto Chess';
-    this.state = {chatMessageInput: '', nameChangeInput: ''};
+    this.state = {chatMessageInput: '', nameChangeInput: '', serverStatus: null, waking: false};
   }
+
+  componentDidMount() {
+    // Fetch backend status without waking it, so the menu can show asleep/last-online.
+    getServerStatus().then((s) => { if (s) this.setState({ serverStatus: s }); });
+  }
+
+  wakeServer = () => {
+    this.setState({ waking: true });
+    wakeBackend();
+  };
+
+  renderServerStatusLine = () => {
+    const s = this.state.serverStatus;
+    if (!s) return 'The server sleeps when idle to save cost — click to start it.';
+    if (s.state === 'online') return 'Server is online.';
+    const ago = timeAgo(s.lastOnline);
+    return ago
+      ? `Server is asleep (last online ${ago}) — click to start it.`
+      : 'Server is asleep — click to start it.';
+  };
   // Event listener example, can be attached to example buttons
   
   // Event logic
@@ -1363,7 +1395,7 @@ class App extends Component {
         this.props.dispatch({type: 'LOADING_STRING', loadingCounter});
       }, 1000);
     }
-    let loadingString = (loadingProgress > 0 ? 'Loading' + '.'.repeat(loadingCounter) : 'Waking up server' + '.'.repeat(loadingCounter));
+    let loadingString = (loadingProgress > 0 ? 'Loading' + '.'.repeat(loadingCounter) : (this.state.waking ? 'Waking up server' + '.'.repeat(loadingCounter) : 'Server asleep'));
     const mainMenu = <div>
       <div className='logos'>
         <img src={getImage('pokemonLogo')} alt='pokemonLogo'/>
@@ -1391,8 +1423,19 @@ class App extends Component {
         </div>
       </div>
       {(!this.props.connected) && (
-        <div className='text_shadow' style={{ margin: '8px auto', maxWidth: '520px', opacity: 0.85, fontSize: '0.9em' }}>
-          💤 Waking up the server — it sleeps when nobody is playing (to keep hosting nearly free), so the first load can take up to a minute. Hang tight…
+        <div className='text_shadow' style={{ margin: '8px auto', maxWidth: '540px' }}>
+          {this.state.waking ? (
+            <div style={{ opacity: 0.9, fontSize: '0.9em' }}>
+              💤 Waking up the server — cold start can take up to a minute. Hang tight…
+            </div>
+          ) : (
+            <div>
+              <button className='normalButton growAnimation' onClick={this.wakeServer}>▶ Wake server</button>
+              <div style={{ marginTop: '6px', fontSize: '0.85em', opacity: 0.8 }}>
+                {this.renderServerStatusLine()}
+              </div>
+            </div>
+          )}
         </div>
       )}
       <div className='mainMenuNameChange'>

@@ -8,12 +8,27 @@ console.log('Connecting to ' + ipAdress + ' ...');
 const socket = io(ipAdress, { transports: ['websocket'] });
 let timeoutCounter = 1;
 
-// Trigger the scale-to-zero backend to wake. Fire-and-forget; the socket and the
+// Trigger the scale-to-zero backend to wake (POST). Fire-and-forget; the socket and the
 // /sprites fetch already retry until the backend is up (~30-60s cold start).
 export function wakeBackend() {
   const wakerUrl = import.meta.env.VITE_WAKER_URL;
   if (!wakerUrl) return;
   fetch(wakerUrl, { method: 'POST' }).catch(() => { /* backend will wake shortly */ });
+}
+
+// Report backend status without waking it (GET). Works while the server is asleep
+// because the waker is a Lambda. Returns { state, desiredCount, runningCount, lastOnline }
+// or null if unavailable / not configured.
+export async function getServerStatus() {
+  const wakerUrl = import.meta.env.VITE_WAKER_URL;
+  if (!wakerUrl) return null;
+  try {
+    const res = await fetch(wakerUrl, { method: 'GET' });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
 export async function AjaxLoadSprites(dispatch) {
