@@ -1,0 +1,24 @@
+app/src/App.css
+  s_33bb37f8b441d5::t_315293b10ef7fd 13-14
+app/src/ScaleStage.jsx
+  s_33bb37f8b441d5::t_b6fe3b9588c6e5 1-51
+app/src/index.jsx
+  s_33bb37f8b441d5::t_4fe1ef0da0a84d 4
+  s_33bb37f8b441d5::t_5f96524ccc3488 19-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "48d4e27539880743e3cc91e499323fe5f9b48427",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
