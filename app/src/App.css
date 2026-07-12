@@ -10,8 +10,8 @@ body {
 }
 
 .mainMenu {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   /*background-image: url(./assets/backgroundMainMenu.jpg) no-repeat;*/
   background: url(./assets/images/pikachuBackground.gif) no-repeat;
 }
