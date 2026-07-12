@@ -1,7 +1,24 @@
 # Todos: server status visibility + wake control (candidate Spec C)
 
-**Status:** FLESHED-OUT TODOS — not yet a committed plan
+**Status:** IN PROGRESS — Todos 1, 2, 5 shipped + validated live; 3, 4 remaining
 **Date:** 2026-07-12
+
+## Progress (2026-07-12)
+
+- ✅ **Todo 1 — wake button:** auto-wake removed; "▶ Wake server" button live.
+- ✅ **Todo 2 — status + lastOnline:** waker `GET`/`POST`; `lastOnline` SSM param written by
+  the sleeper; frontend status panel. Validated live (`GET` reports state without waking).
+- ✅ **Todo 5 — shutdown validation:** confirmed a real `desiredCount → 0` and a real
+  `lastOnline` timestamp written + reported while offline.
+- ✅ **Backstop (added):** daily 04:00 UTC force-scale-down catches stuck/unreachable tasks
+  (bounds runaway to <24h), never kills a task with connected players. DNS-updater now retries
+  the public-IP lookup in-Lambda. web-platform tests 21/21.
+- ⏳ **Todo 3 — wake-time measurement** (frontend timing; observed ~51–90s so far).
+- ⏳ **Todo 4 — `validate-wake.sh`** reliability script (N cold-start cycles → median/max).
+- 💡 **Recommended:** AWS Budget alarm (~$5/mo) as a cost tripwire (pending decision).
+
+---
+
 **Context:** Follows the scale-to-zero backend (design `2026-07-02-aws-scale-to-zero-backend-design.md`).
 The backend is live and wakes/sleeps correctly; these items make its state **visible and
 user-controlled**, and **validate** the mechanics we haven't measured yet.
