@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-07-12-server-status-and-wake-control-todos.md
+  s_33bb37f8b441d5::t_affb8dc91ad7c3 3,11-15,18-19,21-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "6e7f83ece712fa5072e87a25c804a0c1ef0a3cb9",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
