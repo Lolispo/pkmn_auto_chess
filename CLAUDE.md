@@ -95,6 +95,18 @@ npm run container:stop    # docker compose down
 - Key overrides: no-console off, camelcase off, max-len off, no-plusplus off
 - Run: `npm run lint` / `npm run lintfix`
 
+## Debugging / logs (hosted backend)
+
+Backend logs live in CloudWatch (region `eu-north-1`, profile `private`). Quick access:
+
+```bash
+infra/dump-logs.sh task            # game-server logs → /tmp/pkmn-task-logs.log
+infra/dump-logs.sh task --follow   # stream live
+infra/dump-logs.sh task --browser  # open in CloudWatch console
+```
+Components: `task` (game server), `waker`, `sleeper`, `dns`. Full guide: `docs/debugging.md`.
+Architecture + deploy: `docs/architecture.md`.
+
 ## Data files (root)
 
 - `pokemon.json` — base stats for all Pokemon
