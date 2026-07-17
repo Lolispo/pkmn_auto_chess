@@ -1261,3 +1261,120 @@ body {
   user-select: none; /* Non-prefixed version, currently
   supported by Chrome and Opera */
 }
+/* ============================================================
+   Main-menu "trainer console" — server status, wake, name entry
+   Palette: Pokémon blue (#3d7dca) primary, Pokémon yellow (#ffcb05)
+   accent, dark glass panel echoing the in-game shop cards.
+   ============================================================ */
+.menuConsole {
+  width: 380px;
+  max-width: 88%;
+  margin: 26px auto 0;
+  padding: 20px 22px 22px;
+  text-align: left;
+  color: #f3f5fb;
+  font-family: sans-serif;
+  background: rgba(15, 17, 25, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.statePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+.stateDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+.state-online .stateDot { color: #39d353; }
+.state-waking .stateDot { color: #ffb020; animation: pulseDot 1s ease-in-out infinite; }
+.state-asleep .stateDot { color: #8a90a0; }
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.3; transform: scale(0.6); }
+}
+.menuSub { margin-top: 5px; font-size: 12.5px; color: #a6adbe; }
+
+.consoleActions { display: flex; gap: 8px; margin-top: 16px; }
+.consoleActions .consoleBtn { margin-top: 0; }
+.consoleBtn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #fff;
+  background: linear-gradient(180deg, #4a8ee0 0%, #2f66b3 100%);
+  box-shadow: 0 3px 0 #234e88, 0 6px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.06s ease, filter 0.15s ease;
+}
+.consoleBtn:hover:not(:disabled) { filter: brightness(1.07); }
+.consoleBtn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #234e88; }
+.consoleBtn:disabled { opacity: 0.7; cursor: default; filter: saturate(0.6); }
+.consoleBtn.ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e7eaf2;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.consoleBtn.ghost:active:not(:disabled) { transform: translateY(1px); }
+.consoleForce { margin-top: 8px; font-size: 13px; }
+
+.menuHint { margin-top: 10px; font-size: 11.5px; line-height: 1.4; color: #8b92a4; }
+.consoleDivider { height: 1px; margin: 18px 0 14px; background: rgba(255, 255, 255, 0.12); }
+.consoleLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: #a6adbe;
+  margin-bottom: 7px;
+}
+.nameRow { display: flex; gap: 8px; }
+.nameInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f3f5fb;
+  font-size: 14px;
+  font-family: sans-serif;
+}
+.nameInput::placeholder { color: #7c8296; }
+.nameInput:focus {
+  outline: none;
+  border-color: #4a8ee0;
+  box-shadow: 0 0 0 3px rgba(74, 142, 224, 0.28);
+}
+.nameSave {
+  flex: 0 0 auto;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  color: #1b1d26;
+  background: #ffcb05;
+  box-shadow: 0 3px 0 #c99f00;
+  transition: transform 0.06s ease, filter 0.15s ease;
+}
+.nameSave:hover { filter: brightness(1.05); }
+.nameSave:active { transform: translateY(2px); box-shadow: 0 1px 0 #c99f00; }

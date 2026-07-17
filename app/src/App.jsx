@@ -1405,61 +1405,50 @@ class App extends Component {
       }, 1000);
     }
     let loadingString = (loadingProgress > 0 ? 'Loading' + '.'.repeat(loadingCounter) : (this.state.waking ? 'Waking up server' + '.'.repeat(loadingCounter) : 'Server asleep'));
+    // Server-status console state
+    const serverState = this.props.connected ? 'online' : (this.state.waking ? 'waking' : 'asleep');
+    const stateLabel = this.props.connected ? 'Connected' : (this.state.waking ? 'Waking up…' : 'Server asleep');
+    const lastOnlineAgo = (!this.props.connected && this.state.serverStatus) ? timeAgo(this.state.serverStatus.lastOnline) : null;
+    let stateSub;
+    if (this.props.connected) stateSub = (this.state.lastWakeSeconds != null) ? `Ready — server woke in ${this.state.lastWakeSeconds}s` : 'Ready to play';
+    else if (this.state.waking) stateSub = 'Cold start can take up to a minute';
+    else stateSub = lastOnlineAgo ? `Last online ${lastOnlineAgo}` : 'Sleeps when idle to save cost';
+    const forceStartVisible = this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready;
     const mainMenu = <div>
       <div className='logos'>
         <img src={getImage('pokemonLogo')} alt='pokemonLogo'/>
         <img src={getImage('autoChess')} alt='autoChessLogo'/>
       </div>
       {/*<div className='titleCard text_shadow'>Pokemon Auto Chess</div>*/}
-      <div className='startButtons'>
-        <div className='flex'> 
-          <button className={`normalButton startButton ${(!this.props.ready ? 'growAnimation' : '')} ${(loadingProgress >= 100 ? '' : 'hidden')}`} 
-          onClick={this.toggleReady}>{(this.props.ready ? 'Unready' : 'Ready')}</button>
-          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady === this.props.connectedPlayers ? 'growAnimation' : '')}`} 
-            onClick={() => this.startGameEvent()}>
-             {(loadingProgress >= 100 ? `Start Game (${this.props.playersReady}/${this.props.connectedPlayers})` 
-              : <div className='text_shadow loadingBarContainer'>
-                  {(loadingProgress > 0 ? <div className='loadingBar' style={{width: loadingProgress + '%'}}></div> : '')}
-                  <p className={`loadingBarText ${loadingProgress > 0 ? '' : 'loadingBarConnecting'}`}>
-                    {loadingString}
-                  </p>
-                </div>)}
-          </button>
-          <button style={{marginLeft: '5px'}} className={`normalButton ${(this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready ? '' : 'hidden')}`} 
-            onClick={() => this.startGameEvent(true)}>
-            Force Start Game{(this.props.connected ? ` (${this.props.playersReady}/${this.props.connectedPlayers})` : ' Connecting ...')}
-          </button>
-        </div>
-      </div>
-      {(!this.props.connected) && (
-        <div className='text_shadow' style={{ margin: '8px auto', maxWidth: '540px' }}>
-          {this.state.waking ? (
-            <div style={{ opacity: 0.9, fontSize: '0.9em' }}>
-              💤 Waking up the server — cold start can take up to a minute. Hang tight…
-            </div>
-          ) : (
-            <div>
-              <button className='normalButton growAnimation' onClick={this.wakeServer}>▶ Wake server</button>
-              <div style={{ marginTop: '6px', fontSize: '0.85em', opacity: 0.8 }}>
-                {this.renderServerStatusLine()}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-      {(this.props.connected && this.state.lastWakeSeconds != null) && (
-        <div className='text_shadow' style={{ margin: '6px auto', fontSize: '0.8em', opacity: 0.7 }}>
-          ⚡ Server woke in {this.state.lastWakeSeconds}s
-        </div>
-      )}
-      <div className='mainMenuNameChange'>
+      <div className={`menuConsole state-${serverState}`}>
+        <div className='statePill'><span className='stateDot'></span>{stateLabel}</div>
+        <div className='menuSub'>{stateSub}</div>
+
+        {loadingProgress >= 100 ? (
+          <div className='consoleActions'>
+            <button className='consoleBtn ghost' onClick={this.toggleReady}>{this.props.ready ? 'Unready' : 'Ready'}</button>
+            <button className='consoleBtn' onClick={() => this.startGameEvent()}>{`Start game (${this.props.playersReady}/${this.props.connectedPlayers})`}</button>
+          </div>
+        ) : (this.props.connected || this.state.waking) ? (
+          <button className='consoleBtn' disabled>{loadingString}</button>
+        ) : (
+          <button className='consoleBtn' onClick={this.wakeServer}>▶ Wake server</button>
+        )}
+        {forceStartVisible && (
+          <button className='consoleBtn ghost consoleForce' onClick={() => this.startGameEvent(true)}>Force start</button>
+        )}
+        {(!this.props.connected && !this.state.waking) && (
+          <div className='menuHint'>First load takes up to a minute while the server wakes.</div>
+        )}
+
+        <div className='consoleDivider'></div>
         <form onSubmit={this.handleNameChange}>
-          <label className='text_shadow'>Name:</label>
-          <label>
-            <input maxLength='20' placeholder={this.props.playerName} className='textInputSmaller' type="text" value={this.state.nameChangeInput} 
-            onChange={(event) => this.setState({...this.state, nameChangeInput: event.target.value})} />
-          </label>
-          <input className='text_shadow normalButton chatTypingSubmit' type="submit" value="Submit" />
+          <div className='consoleLabel'>Trainer name</div>
+          <div className='nameRow'>
+            <input className='nameInput' maxLength='20' type='text' placeholder={this.props.playerName} value={this.state.nameChangeInput}
+              onChange={(event) => this.setState({...this.state, nameChangeInput: event.target.value})} />
+            <button className='nameSave' type='submit'>Save</button>
+          </div>
         </form>
       </div>
       <div className='mainMenuSoundDiv marginTop5'>
