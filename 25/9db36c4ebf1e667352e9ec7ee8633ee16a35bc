@@ -1,0 +1,19 @@
+docs/superpowers/plans/2026-07-18-lobby-system.md
+  s_27e7f8ce0f7df9::t_1ff14b8c52656d 1-573
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "259db36c4ebf1e667352e9ec7ee8633ee16a35bc",
+  "prompts": {},
+  "sessions": {
+    "s_27e7f8ce0f7df9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24a079b4-0bae-44c1-b2f0-49497edb3f60",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
