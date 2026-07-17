@@ -17,8 +17,11 @@ body {
 }
 
 .mainMenuSoundDiv {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-left: 150px;
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 .logos {
@@ -244,15 +247,16 @@ body {
 }
 
 .soundImgMainMenu {
-  margin-left: 0px;
-  margin-top: 6px;
-  width: 60px;
-  height: 60px;
+  margin: 0;
+  width: 58px;
+  height: 58px;
+  cursor: pointer;
 }
 
 .musicImgMainMenu {
-  width: 70px;
-  height: 70px;
+  width: 58px;
+  height: 58px;
+  cursor: pointer;
 }
 
 .chatSoundImg {
