@@ -17,7 +17,8 @@ body {
 }
 
 .mainMenuSoundDiv {
-  margin-left: 220px;
+  margin-left: 150px;
+  margin-top: 14px;
 }
 
 .logos {
@@ -243,8 +244,8 @@ body {
 }
 
 .soundImgMainMenu {
-  margin-left: 5px;
-  margin-top: 30px;
+  margin-left: 0px;
+  margin-top: 6px;
   width: 60px;
   height: 60px;
 }
@@ -1269,7 +1270,7 @@ body {
 .menuConsole {
   width: 380px;
   max-width: 88%;
-  margin: 26px auto 0;
+  margin: 16px 0 0 150px;
   padding: 20px 22px 22px;
   text-align: left;
   color: #f3f5fb;
