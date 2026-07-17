@@ -143,3 +143,26 @@ grace to 15 after.
 
 Todos 2–3 touch the `web-platform` construct → same two-repo split (construct change + pkmn
 consumes). If we build these, promote this doc to a proper Spec C design + implementation plan.
+
+---
+
+## Todo 6 — Prettify the main menu (wake/status + name entry)
+
+**Problem:** the wake/status controls added for Todos 1–2 are functional but visually sloppy —
+loose blue game-buttons, plain status text, and the `Name: [input] Submit` row all feel
+bolted-on and scattered in the menu.
+
+**Direction (frontend-design pass, pkmn `app/` only):**
+- **Server status card:** group state + last-online + the primary action into one tidy block:
+  a small state pill (asleep / waking / online), "last online …" as muted subtext, and a
+  single clear primary **Wake / Play** button. Replace the current stacked "Server asleep" +
+  "▶ Wake server" + hint-line trio.
+- **Name entry:** proper labelled field + button (consistent sizing/rounding with the wake
+  button), sensible width, placeholder, Enter-to-submit already works — just style it.
+- **Consistency:** one button style, aligned spacing, centered cluster under the logos.
+- **De-clutter (see also Todo 2 notes):** consider hiding/tucking the always-on
+  `Message: Received State` line and the `Chat/Hotkeys/Types/Buffs/Damage` help radios
+  (they read as debug UI; `help` defaults to `true`).
+
+**Scope:** pure frontend/CSS (`app/src/App.jsx` menu render + `App.css`); no backend. Use the
+`frontend-design` skill for a cohesive look. Low risk, iterate live via deploy.
