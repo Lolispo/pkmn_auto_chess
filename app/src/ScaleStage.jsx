@@ -30,7 +30,8 @@ export default function ScaleStage({ children }) {
       style={{
         position: 'fixed',
         inset: 0,
-        overflow: 'auto', // safety: scroll rather than clip if content exceeds the canvas
+        overflow: 'hidden', // content is scaled to fit, so nothing visible is clipped; this
+                            // trims the transform's leftover layout box (no phantom scroll)
         background: 'rgb(33, 33, 33)',
         display: 'flex',
         justifyContent: 'center',
