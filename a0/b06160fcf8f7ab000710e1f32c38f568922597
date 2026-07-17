@@ -1,0 +1,23 @@
+infra/dump-logs.sh
+  s_33bb37f8b441d5::t_2c974c5e20d2df 1-63
+CLAUDE.md
+  s_33bb37f8b441d5::t_5928c4dcd0d339 98-109
+docs/debugging.md
+  s_33bb37f8b441d5::t_debb45660fbbf2 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a0b06160fcf8f7ab000710e1f32c38f568922597",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
