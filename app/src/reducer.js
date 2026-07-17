@@ -3,7 +3,9 @@
 import { getBackgroundAudio, getSoundEffect } from './audio';
 import { updatePlayerName } from './socket';
 
-const devMode = true;
+// Dev-only conveniences (mute audio, 15s timers). Auto-on for `vite dev`, off in
+// production builds (`vite build`) — no longer hardcoded true.
+const devMode = import.meta.env.DEV;
 
 let counter = 0;
 

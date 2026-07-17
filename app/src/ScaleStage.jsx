@@ -1,10 +1,12 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 
-// The game UI is a fixed-pixel canvas designed for roughly this size. Instead of a
-// responsive rewrite, we scale the whole canvas to fit the viewport — the same effect
-// as manually setting browser zoom, but automatic. Tune these two numbers to taste.
-const DESIGN_W = 1920;
-const DESIGN_H = 1080;
+// The game UI is a fixed-pixel canvas. We scale the whole canvas to fit the viewport —
+// the same effect as manual browser zoom, but automatic. Only the RATIO matters for how
+// much screen gets used: it should match the game's real proportions (~16:10) so there's
+// no wasted canvas on the right. Absolute size just needs to be >= the game's intrinsic
+// size so nothing clips. Tune to taste.
+const DESIGN_W = 1600;
+const DESIGN_H = 1000;
 
 export default function ScaleStage({ children }) {
   const [scale, setScale] = useState(1);
@@ -28,7 +30,7 @@ export default function ScaleStage({ children }) {
       style={{
         position: 'fixed',
         inset: 0,
-        overflow: 'hidden',
+        overflow: 'auto', // safety: scroll rather than clip if content exceeds the canvas
         background: 'rgb(33, 33, 33)',
         display: 'flex',
         justifyContent: 'center',
