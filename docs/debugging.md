@@ -1,13 +1,23 @@
 # Debugging & logs
 
-Where the backend logs live and how to get at them fast — to a local file or in the browser.
+Control the backend and get at its logs fast — to a local file or in the browser.
 
-## TL;DR
+## Start / stop / status
 
 ```bash
-infra/dump-logs.sh task            # dump last 15m of game-server logs → /tmp/pkmn-task-logs.log
-infra/dump-logs.sh task --follow   # stream live
-infra/dump-logs.sh task --browser  # open in the CloudWatch console
+infra/server.sh status             # awake? last online? health reachable?
+infra/server.sh start              # wake it (scale to 1), wait until healthy (~70–100s)
+infra/server.sh stop               # sleep it now (scale to 0, ~$0 idle)
+```
+`start`/`stop` just set the ECS desiredCount; the normal sleeper + daily backstop still apply,
+so you can't leave it running by accident. Safe to run anytime.
+
+## Logs
+
+```bash
+infra/server.sh logs task          # (or: infra/dump-logs.sh task) → /tmp/pkmn-task-logs.log
+infra/server.sh logs task --follow # stream live
+infra/server.sh logs task --browser# open in the CloudWatch console
 ```
 Components: `task` (game server), `waker`, `sleeper`, `dns` (the three Lambdas).
 Flags: `--follow`, `--browser`, `--since <dur>` (e.g. `1h`, `30m`). Files open with `code /tmp/pkmn-<comp>-logs.log`.

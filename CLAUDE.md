@@ -97,15 +97,17 @@ npm run container:stop    # docker compose down
 
 ## Debugging / logs (hosted backend)
 
-Backend logs live in CloudWatch (region `eu-north-1`, profile `private`). Quick access:
+Control the scale-to-zero backend and read logs (CloudWatch, region `eu-north-1`, profile `private`):
 
 ```bash
-infra/dump-logs.sh task            # game-server logs → /tmp/pkmn-task-logs.log
-infra/dump-logs.sh task --follow   # stream live
-infra/dump-logs.sh task --browser  # open in CloudWatch console
+infra/server.sh status             # awake? last online? health
+infra/server.sh start              # wake it (scale to 1), wait until healthy
+infra/server.sh stop               # sleep it now (scale to 0, ~$0 idle)
+infra/server.sh logs task          # dump game-server logs → /tmp/pkmn-task-logs.log
+infra/server.sh logs task --follow # stream live   (--browser opens CloudWatch console)
 ```
-Components: `task` (game server), `waker`, `sleeper`, `dns`. Full guide: `docs/debugging.md`.
-Architecture + deploy: `docs/architecture.md`.
+Log components: `task` (game server), `waker`, `sleeper`, `dns`.
+Full guide: `docs/debugging.md`. Architecture + deploy: `docs/architecture.md`.
 
 ## Data files (root)
 
