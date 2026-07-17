@@ -11,8 +11,9 @@ all connected trainers to each other, split into **Waiting** and **Ongoing games
 | Open question | Decision |
 |---|---|
 | Ongoing-games section | **Read-only name list** (gameId + trainer names). No spectate/join in v1. |
-| Name uniqueness | **Not enforced** — duplicates allowed. Names are cosmetic pre-game. |
-| Live name edit reflected to others | **Yes** — roster rebroadcasts on every name change. |
+| Name uniqueness | **Not enforced** — duplicates allowed; socketId is the unique key. Names are cosmetic pre-game. |
+| Live name edit reflected to others | **Yes** — roster rebroadcasts on every presence change. |
+| Unready trainers' names visible | **Yes** — name shows as soon as it's set (presence sent with `ready:false`), before readying. |
 
 ## Current reality (grounded in code)
 - `connectedPlayers` (in `socketcontroller.js`) = `Map` socketId → `{ socketId, sessionId }`,
@@ -27,11 +28,23 @@ all connected trainers to each other, split into **Waiting** and **Ongoing games
   and `players` (pid → `{ name, ... }`). Ongoing-game names are derivable from here.
 
 ## Approach (chosen)
-**Additive roster channel, keep existing count events.** Add a new server-built
-`LOBBY_ROSTER` broadcast carrying full display data (waiting names+ready, ongoing games).
-Leave `READY`/`ALL_READY` count events untouched so the Start-game gating logic
-(`allReady`, `playersReady/connectedPlayers`) keeps working unchanged. The roster is a
-pure *display* channel layered on top.
+**Unified presence event + additive roster broadcast.** Each connection has a *presence*
+`{ socketId, name, ready }`. The client sends its presence whenever the name **or** ready
+status changes; the server stores it keyed by socketId and rebroadcasts the full roster to
+everyone. This collapses three separate client events (set-name, ready, unready) into one
+`UPDATE_PRESENCE(name, ready)`.
+
+Internally the presence reuses the existing tri-state `sessionId` field as the ready flag
+(`false`/`true`/gameId) rather than adding a parallel `ready` field — so the existing
+`countReadyPlayers` / Start-game gate keeps working unchanged. `UPDATE_PRESENCE` sets the
+new `name` field **and** `sessionId = ready ? true : false`, then calls **both**
+`countReadyPlayers` (existing count/`allReady` channel — untouched) **and** the new
+`broadcastLobbyRoster` (display channel). The `LOBBY_ROSTER` broadcast is a pure additive
+display layer on top of the unchanged count events.
+
+*Alternative considered — keep `SET_LOBBY_NAME` + `READY` + `UNREADY` as three events:*
+more event surface for the same behavior; the unified presence event is simpler and maps
+directly to the `{socketId, name, ready}` tuple. Rejected.
 
 *Alternative considered — fold counts into the roster and retire `READY`/`ALL_READY`:*
 cleaner single source of truth, but rewires the start-game gate and risks regressions for
@@ -56,28 +69,34 @@ Server emits `LOBBY_ROSTER` to **all connected sockets** on any change:
    the `{ waiting, ongoing }` object above (pure function → unit-testable via rewire).
 3. **`socketcontroller.js`**
    - Add `broadcastLobbyRoster(io)` → `io.emit('LOBBY_ROSTER', sessionJS.buildLobbyRoster(...))`.
-   - New event `SET_LOBBY_NAME(name)`: trim; set `connectedPlayers.setIn([id,'name'], name)`;
-     `broadcastLobbyRoster(io)`. (Dedicated pre-game event — distinct from the index-keyed,
-     in-session `UPDATE_PLAYER_NAME`.)
-   - **Name gate** on `READY`: if the connected user's `name` is empty, do **not** set ready;
-     emit `LOBBY_NAME_REQUIRED` back to that socket and return. (Defense-in-depth; the client
-     also disables the button.)
-   - Call `broadcastLobbyRoster(io)` on: `GIVE_ID` (join), `SET_LOBBY_NAME`, `READY`,
-     `UNREADY`, `disconnect`, `START_GAME` (players leave Waiting → appear in Ongoing).
-     Session removal already happens in the `disconnect` handler, so game-end (reload →
-     disconnect) naturally drops the game from `ongoing`.
+   - New event `UPDATE_PRESENCE(name, ready)` — replaces the old `READY` / `UNREADY` handlers:
+     - trim `name`; set `connectedPlayers.setIn([id, 'name'], name)`.
+     - **Name gate:** if `ready === true` but `name` is empty, keep `sessionId = false` and
+       emit `LOBBY_NAME_REQUIRED` back to that socket (defense-in-depth; client also disables
+       the button). Otherwise set `sessionId = ready ? true : false`.
+     - call `countReadyPlayers(ready, socket, io)` (unchanged count/`allReady` channel) **and**
+       `broadcastLobbyRoster(io)`.
+   - Call `broadcastLobbyRoster(io)` on: `GIVE_ID` (join), `UPDATE_PRESENCE`, `disconnect`,
+     `START_GAME` (players leave Waiting → appear in Ongoing). Session removal already happens
+     in the `disconnect` handler, so game-end (reload → disconnect) naturally drops the game
+     from `ongoing`.
+   - The in-session `UPDATE_PLAYER_NAME` event (index-keyed, used mid-game) is left as-is.
 
 ## Frontend changes (`app/src/`)
 1. **`socket.js`**
    - Listener `LOBBY_ROSTER` → `dispatch({ type: 'SET_LOBBY_ROSTER', waiting, ongoing })`.
    - Listener `LOBBY_NAME_REQUIRED` → `dispatch({ type: 'LOBBY_NAME_REQUIRED' })` (flag for a hint).
-   - Emitter `setLobbyName(name)` → `socket.emit('SET_LOBBY_NAME', name)`.
+   - Emitter `updatePresence(name, ready)` → `socket.emit('UPDATE_PRESENCE', name, ready)`.
+     Replaces the old `ready()` / `unready()` emitters.
 2. **`reducer.js`**
    - Initial state: `lobbyWaiting: []`, `lobbyOngoing: []`, `nameRequiredHint: false`.
    - `SET_LOBBY_ROSTER` → store both arrays. `LOBBY_NAME_REQUIRED` → set hint true.
 3. **`App.jsx`**
-   - `handleNameChange` (pre-game): keep `UPDATE_PRIVATE_NAME` **and** call `setLobbyName(name)`
-     so the server learns the name. Clear `nameRequiredHint`.
+   - `handleNameChange` (pre-game): keep `UPDATE_PRIVATE_NAME` **and** call
+     `updatePresence(name, this.props.ready)` so the server learns the name while preserving
+     current ready status (a rename while ready stays ready). Clear `nameRequiredHint`.
+   - `toggleReady`: call `updatePresence(this.props.playerName, !this.props.ready)` instead of
+     the old `ready()`/`unready()`.
    - Ready button `disabled` when `this.props.playerName === ''`; show inline hint
      "Enter a trainer name to ready up" when blank or on `nameRequiredHint`.
    - **Dedicated lobby panel** shown once `connected && loadingProgress >= 100`, replacing the
