@@ -1,0 +1,22 @@
+docs/superpowers/specs/2026-07-17-lobby-system-design.md
+  s_27e7f8ce0f7df9::t_15704822510280 89-90,95-99
+  s_27e7f8ce0f7df9::t_5ffe5df13f156b 31-47
+  s_27e7f8ce0f7df9::t_cbc25b6c9d381e 14-16
+  s_27e7f8ce0f7df9::t_7f83a813c01daf 72-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "d0f3921ef8b3fb9d881734f118df25767ce8cee2",
+  "prompts": {},
+  "sessions": {
+    "s_27e7f8ce0f7df9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24a079b4-0bae-44c1-b2f0-49497edb3f60",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
