@@ -36,7 +36,31 @@ exports.makeSession = (connectedPlayersInit, pieces) => Map({
 exports.createUser = (socketId) => Map({
   socketId,
   sessionId: false, // Used for ready and sessionId (true|false|sessionId)
+  name: '', // Pre-game lobby display name (set via UPDATE_PRESENCE)
 });
+
+// Build the lobby roster broadcast payload from the connected players map.
+// waiting = users still in the lobby (sessionId false/true); ongoing = users
+// grouped by their numeric in-game sessionId. Pure function (no I/O).
+exports.buildLobbyRoster = (connectedPlayers) => {
+  const waiting = [];
+  const games = {}; // numeric sessionId -> [name]
+  connectedPlayers.forEach((connectedUser) => {
+    const sessionId = connectedUser.get('sessionId');
+    const name = connectedUser.get('name') || '';
+    if (sessionId === false || sessionId === true) {
+      waiting.push({ name, ready: sessionId === true });
+    } else {
+      if (!games[sessionId]) games[sessionId] = [];
+      if (name) games[sessionId].push(name);
+    }
+  });
+  const ongoing = Object.keys(games).map((gameId) => ({
+    gameId: Number(gameId),
+    players: games[gameId],
+  }));
+  return { waiting, ongoing };
+};
 
 exports.findFirstAvailableIndex = (sessions) => {
   const iter = sessions.keys();
