@@ -80,6 +80,10 @@ const countReadyPlayers = (isReadyAction, socket, io) => {
   }
 };
 
+const broadcastLobbyRoster = (io) => {
+  io.emit('LOBBY_ROSTER', sessionJS.buildLobbyRoster(connectedPlayers));
+};
+
 const getStateToSend = (state) => state.delete('pieces').delete('discardedPieces');
 
 module.exports = (socket, io) => {
@@ -100,19 +104,23 @@ module.exports = (socket, io) => {
     connectedPlayers = connectedPlayers.set(socket.id, newUser);
     touch();
     countReadyPlayers(false, socket, io);
+    broadcastLobbyRoster(io);
     // TODO: Handle many connected players
   });
 
-  socket.on('READY', async () => {
-    connectedPlayers = connectedPlayers.setIn([socket.id, 'sessionId'], true); // Ready
-    console.log('Player is ready');
-    countReadyPlayers(true, socket, io);
-  });
-
-  socket.on('UNREADY', async () => {
-    connectedPlayers = connectedPlayers.setIn([socket.id, 'sessionId'], false); // Unready
-    console.log('Player went unready');
-    countReadyPlayers(false, socket, io);
+  // Unified pre-game presence: carries the trainer name + desired ready status.
+  // Name-gated: cannot ready without a name (server rejects; client also disables).
+  socket.on('UPDATE_PRESENCE', async (nameParam, ready) => {
+    const name = (nameParam || '').trim().slice(0, 20);
+    connectedPlayers = connectedPlayers.setIn([socket.id, 'name'], name);
+    if (ready === true && name === '') {
+      io.to(socket.id).emit('LOBBY_NAME_REQUIRED');
+    }
+    const isReady = ready === true && name !== '';
+    connectedPlayers = connectedPlayers.setIn([socket.id, 'sessionId'], isReady);
+    console.log('Presence update', socket.id, JSON.stringify(name), 'ready:', isReady);
+    countReadyPlayers(isReady, socket, io);
+    broadcastLobbyRoster(io);
   });
 
   socket.on('UPDATE_PLAYER_NAME', async (name) => {
@@ -149,6 +157,7 @@ module.exports = (socket, io) => {
     emitMessage(socket, io, sessionId, (socketId) => {
       io.to(socketId).emit('UPDATED_STATE', stateToSend);
     });
+    broadcastLobbyRoster(io);
   });
 
   // disconnect logic
@@ -175,6 +184,7 @@ module.exports = (socket, io) => {
       connectedPlayers = connectedPlayers.delete(socket.id);
       touch();
       countReadyPlayers(false, socket, io);
+      broadcastLobbyRoster(io);
     }
   });
 
