@@ -1,0 +1,22 @@
+src/session.js
+  s_27e7f8ce0f7df9::t_837a562887d025 39,42-63
+  s_27e7f8ce0f7df9::t_d13da3fb52b4a9 64
+test/session_test.js
+  s_27e7f8ce0f7df9::t_ec49620a5ffa0a 1-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "451a6e98a7805a58ecb3176e26d5ececf908c906",
+  "prompts": {},
+  "sessions": {
+    "s_27e7f8ce0f7df9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24a079b4-0bae-44c1-b2f0-49497edb3f60",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
