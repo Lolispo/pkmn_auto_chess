@@ -1,7 +1,7 @@
 // Author: Petter Andersson
 
 import React, { Component } from 'react';
-import { ready, unready, startGame, battleReady, sendMessage, AjaxGetUnitJson, wakeBackend, getServerStatus } from './socket';
+import { updatePresence, startGame, battleReady, sendMessage, AjaxGetUnitJson, wakeBackend, getServerStatus } from './socket';
 import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePieceEvent, withdrawPieceEvent, sellPieceEvent, getStatsEvent } from './events';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
@@ -474,10 +474,10 @@ class App extends Component {
   // Event logic
 
   toggleReady = () => {
-    console.log('@toggleReady', this.props.ready);
-    const { dispatch } = this.props;
-    dispatch({type: 'TOGGLE_READY'});
-    this.props.ready ? unready() : ready();
+    const desiredReady = !this.props.ready;
+    console.log('@toggleReady ->', desiredReady);
+    this.props.dispatch({type: 'TOGGLE_READY'});
+    updatePresence(this.props.playerName, desiredReady);
   };
 
   startGameEvent = (forceStart=false) => {
@@ -1297,11 +1297,13 @@ class App extends Component {
   }
 
   handleNameChange = (event) => {
-    if(this.state.nameChangeInput.length <= 20 && this.state.nameChangeInput !== '') {
-      this.props.dispatch({type: 'UPDATE_PRIVATE_NAME', name: this.state.nameChangeInput});
+    event.preventDefault();
+    const name = this.state.nameChangeInput;
+    if (name.length <= 20 && name !== '') {
+      this.props.dispatch({type: 'UPDATE_PRIVATE_NAME', name});
+      updatePresence(name, this.props.ready); // push name to lobby, keep ready status
     }
     this.setState({...this.state, nameChangeInput: ''})
-    event.preventDefault();
   }
 
   // TODO: Fix not working
@@ -1414,6 +1416,36 @@ class App extends Component {
     else if (this.state.waking) stateSub = 'Cold start can take up to a minute';
     else stateSub = lastOnlineAgo ? `Last online ${lastOnlineAgo}` : 'Sleeps when idle to save cost';
     const forceStartVisible = this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready;
+    const nameSet = this.props.playerName !== '';
+    const lobbyReady = this.props.connected && loadingProgress >= 100;
+    const lobbyPanel = lobbyReady ? (
+      <div className='lobbyPanel'>
+        <div className='lobbySection'>
+          <div className='lobbyHeader'>Waiting</div>
+          {this.props.lobbyWaiting.length === 0 ? (
+            <div className='lobbyEmpty'>No trainers waiting</div>
+          ) : this.props.lobbyWaiting.map((t, i) => (
+            <div className='lobbyRow' key={`w${i}`}>
+              <span className='lobbyName'>{t.name || '(choosing name)'}</span>
+              <span className={t.ready ? 'lobbyReadyTag' : 'lobbyWaitTag'}>
+                {t.ready ? '✓ ready' : 'getting ready…'}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className='lobbySection'>
+          <div className='lobbyHeader'>Ongoing games</div>
+          {this.props.lobbyOngoing.length === 0 ? (
+            <div className='lobbyEmpty'>No games in progress</div>
+          ) : this.props.lobbyOngoing.map((g) => (
+            <div className='lobbyRow' key={`g${g.gameId}`}>
+              <span className='lobbyGameId'>{`Game #${g.gameId + 1}`}</span>
+              <span className='lobbyGamePlayers'>{g.players.join(', ') || '—'}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : null;
     const mainMenu = <div>
       <div className='logos'>
         <img src={getImage('pokemonLogo')} alt='pokemonLogo'/>
@@ -1426,13 +1458,16 @@ class App extends Component {
 
         {loadingProgress >= 100 ? (
           <div className='consoleActions'>
-            <button className='consoleBtn ghost' onClick={this.toggleReady}>{this.props.ready ? 'Unready' : 'Ready'}</button>
+            <button className='consoleBtn ghost' onClick={this.toggleReady} disabled={!nameSet}>{this.props.ready ? 'Unready' : 'Ready'}</button>
             <button className='consoleBtn' onClick={() => this.startGameEvent()}>{`Start game (${this.props.playersReady}/${this.props.connectedPlayers})`}</button>
           </div>
         ) : (this.props.connected || this.state.waking) ? (
           <button className='consoleBtn' disabled>{loadingString}</button>
         ) : (
           <button className='consoleBtn' onClick={this.wakeServer}>▶ Wake server</button>
+        )}
+        {lobbyReady && (!nameSet || this.props.nameRequiredHint) && (
+          <div className='menuHint'>Enter a trainer name below to ready up.</div>
         )}
         {forceStartVisible && (
           <button className='consoleBtn ghost consoleForce' onClick={() => this.startGameEvent(true)}>Force start</button>
@@ -1451,6 +1486,7 @@ class App extends Component {
           </div>
         </form>
       </div>
+      {lobbyPanel}
       <div className='mainMenuSoundDiv marginTop5'>
         <div>
           <img className='musicImgMainMenu' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
@@ -1657,6 +1693,9 @@ const mapStateToProps = state => ({
   message: state.message,
   messageMode: state.messageMode,
   playerName: state.playerName,
+  lobbyWaiting: state.lobbyWaiting,
+  lobbyOngoing: state.lobbyOngoing,
+  nameRequiredHint: state.nameRequiredHint,
   help: state.help,
   chatHelpMode: state.chatHelpMode,
   senderMessages: state.senderMessages,

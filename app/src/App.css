@@ -1383,3 +1383,44 @@ body {
 }
 .nameSave:hover { filter: brightness(1.05); }
 .nameSave:active { transform: translateY(2px); box-shadow: 0 1px 0 #c99f00; }
+
+.lobbyPanel {
+  width: 380px;
+  max-width: 88%;
+  margin: 12px 0 0 150px;
+  text-align: left;
+  color: #f3f5fb;
+  font-family: sans-serif;
+}
+.lobbySection {
+  padding: 14px 18px 16px;
+  margin-top: 10px;
+  background: rgba(15, 17, 25, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.lobbyHeader {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: #a6adbe;
+  margin-bottom: 10px;
+}
+.lobbyEmpty { font-size: 12.5px; color: #8b92a4; font-style: italic; }
+.lobbyRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.lobbyRow:first-of-type { border-top: none; }
+.lobbyName { font-size: 14px; font-weight: 700; color: #f3f5fb; }
+.lobbyReadyTag { font-size: 12px; font-weight: 800; color: #39d353; }
+.lobbyWaitTag { font-size: 12px; color: #8b92a4; }
+.lobbyGameId { font-size: 13px; font-weight: 800; color: #4a8ee0; }
+.lobbyGamePlayers { font-size: 12.5px; color: #a6adbe; text-align: right; }
