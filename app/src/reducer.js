@@ -90,6 +90,9 @@ const reducer = (
     message: 'default',
     messageMode: '',
     playerName: '',
+    lobbyWaiting: [],
+    lobbyOngoing: [],
+    nameRequiredHint: false,
     help: true,
     chatHelpMode: 'chat',
     chatMessages: [],
@@ -296,10 +299,18 @@ const reducer = (
       break;
     }
     case 'UPDATE_PRIVATE_NAME': {
-      state = {...state, playerName: action.name}
+      state = {...state, playerName: action.name, nameRequiredHint: false}
       console.log('Updated name:', action.name);
       break;
     }
+    case 'SET_LOBBY_ROSTER':
+      state = { ...state, lobbyWaiting: action.waiting || [], lobbyOngoing: action.ongoing || [] }
+      break;
+    case 'LOBBY_NAME_REQUIRED':
+      // Server refused the ready because no name was set. Surface a hint and
+      // roll back the optimistic local ready flag so the button label re-syncs.
+      state = { ...state, nameRequiredHint: true, ready: false }
+      break;
     case 'SET_CONNECTED':
       state = {...state, connected: action.connected};
       break;

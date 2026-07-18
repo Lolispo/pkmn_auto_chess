@@ -162,7 +162,15 @@ export const configureSocket = dispatch => {
   socket.on('UPDATE_PLAYER_NAME', (pid, name) => {
     dispatch({type: 'UPDATE_PLAYER_NAME', pid, name});
   });
-  
+
+  socket.on('LOBBY_ROSTER', ({ waiting, ongoing }) => {
+    dispatch({ type: 'SET_LOBBY_ROSTER', waiting, ongoing });
+  });
+
+  socket.on('LOBBY_NAME_REQUIRED', () => {
+    dispatch({ type: 'LOBBY_NAME_REQUIRED' });
+  });
+
   return socket;
 };
 
@@ -170,11 +178,8 @@ export const configureSocket = dispatch => {
 
 // the following are functions that our client side uses
 // to emit actions to everyone connected to our web socket
-export const ready = () =>
-  socket.emit('READY');
-
-export const unready = () =>
-  socket.emit('UNREADY');
+export const updatePresence = (name, ready) =>
+  socket.emit('UPDATE_PRESENCE', name, ready);
 
 export const giveId = () => 
   socket.emit('GIVE_ID');
