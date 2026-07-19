@@ -1444,3 +1444,10 @@ body {
   background: rgba(255, 203, 5, 0.18);
   cursor: copy;
 }
+/* board->hand withdraw drops anywhere in the hand, so highlight the whole strip */
+.handDiv.handDropZone {
+  outline: 2px dashed #ffcb05;
+  outline-offset: 4px;
+  background: rgba(255, 203, 5, 0.12);
+  border-radius: 8px;
+}

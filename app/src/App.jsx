@@ -268,22 +268,45 @@ class Cell extends Component {
 
   handleDragEnd() {
     clearDragSource();
+    // Safety net: clear any highlight left behind if the drag ended off any target.
+    document.querySelectorAll('.handDropZone').forEach((el) => el.classList.remove('handDropZone'));
+    document.querySelectorAll('.cell.dropTarget').forEach((el) => el.classList.remove('dropTarget'));
+  }
+
+  // A board->hand drop is a withdraw and ignores which slot you hit, so highlight the
+  // whole hand as one zone. Every other valid drop targets a specific cell.
+  isWithdrawInto(src) {
+    return src && src.isBoard && !this.props.isBoard;
   }
 
   handleDragOver(e) {
-    if (!this.isValidDropTarget(getDragSource())) return; // no preventDefault => not a drop target
+    const src = getDragSource();
+    if (!this.isValidDropTarget(src)) return; // no preventDefault => not a drop target
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-    e.currentTarget.classList.add('dropTarget');
+    if (this.isWithdrawInto(src)) {
+      const hand = e.currentTarget.closest('.handDiv');
+      if (hand) hand.classList.add('handDropZone');
+    } else {
+      e.currentTarget.classList.add('dropTarget');
+    }
   }
 
   handleDragLeave(e) {
     e.currentTarget.classList.remove('dropTarget');
+    // Only drop the whole-hand highlight when the cursor actually leaves the hand,
+    // not while moving between hand slots (avoids flicker).
+    const hand = e.currentTarget.closest('.handDiv');
+    if (hand && (!e.relatedTarget || !hand.contains(e.relatedTarget))) {
+      hand.classList.remove('handDropZone');
+    }
   }
 
   handleDrop(e) {
     e.preventDefault();
     e.currentTarget.classList.remove('dropTarget');
+    const hand = e.currentTarget.closest('.handDiv');
+    if (hand) hand.classList.remove('handDropZone');
     const src = getDragSource();
     const result = resolveDrop(src, { pos: this.state.pos, isBoard: this.props.isBoard });
     clearDragSource();
