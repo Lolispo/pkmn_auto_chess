@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { updatePresence, startGame, battleReady, sendMessage, AjaxGetUnitJson, wakeBackend, getServerStatus } from './socket';
 import { toggleLockEvent, buyUnitEvent, refreshShopEvent, buyExpEvent, placePieceEvent, withdrawPieceEvent, sellPieceEvent, getStatsEvent } from './events';
+import { resolveDrop, setDragSource, getDragSource, clearDragSource } from './dragPlacement';
 import { connect } from 'react-redux';
 import { isUndefined, updateMessage } from './f';
 import './App.css';
@@ -240,7 +241,56 @@ class Cell extends Component {
       : el.parentElement.id) : el.id);
     if(self.props.newProps.mouseOverId !== id){
       // console.log('Mousing Over:', id);
-      self.props.newProps.dispatch({type: 'SET_MOUSEOVER_ID', mouseOverId: id})        
+      self.props.newProps.dispatch({type: 'SET_MOUSEOVER_ID', mouseOverId: id})
+    }
+  }
+
+  // A tile is a valid drop target if there's a drag in progress, it isn't the source
+  // tile, and (for board cells) it isn't already occupied (v1: no stack/swap). Hand
+  // targets are always valid (withdraw, or hand rearrange handled server-side).
+  isValidDropTarget(src) {
+    const np = this.props.newProps;
+    if (!src) return false;
+    if (src.pos === this.state.pos && src.isBoard === this.props.isBoard) return false;
+    if (this.props.isBoard) {
+      const occupied = !isUndefined(np.myBoard[this.state.pos]) && np.myBoard[this.state.pos];
+      if (occupied) return false;
+    }
+    return true;
+  }
+
+  handleDragStart(e) {
+    setDragSource({ pos: this.state.pos, isBoard: this.props.isBoard });
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', this.state.pos); // Firefox needs data set to start a drag
+    try { e.dataTransfer.setDragImage(e.currentTarget, 40, 40); } catch (err) { /* older browsers */ }
+  }
+
+  handleDragEnd() {
+    clearDragSource();
+  }
+
+  handleDragOver(e) {
+    if (!this.isValidDropTarget(getDragSource())) return; // no preventDefault => not a drop target
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('dropTarget');
+  }
+
+  handleDragLeave(e) {
+    e.currentTarget.classList.remove('dropTarget');
+  }
+
+  handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dropTarget');
+    const src = getDragSource();
+    const result = resolveDrop(src, { pos: this.state.pos, isBoard: this.props.isBoard });
+    clearDragSource();
+    if (result.action === 'place') {
+      placePieceEvent(this.props.newProps, result.from, result.to);
+    } else if (result.action === 'withdraw') {
+      withdrawPieceEvent(this.props.newProps, result.from);
     }
   }
 
@@ -333,9 +383,19 @@ class Cell extends Component {
     let className = 'cell' +
     (!isUndefined(selPos) && this.props.isBoard === selPos.isBoard && selPos.displaySell &&
     selPos.x === this.props.value.x && selPos.y === this.props.value.y ? ' markedUnit' : '');
+    const np = this.props.newProps;
+    const canInteract = !np.onGoingBattle && !np.isDead && np.visiting === np.index && np.gameIsLive;
+    const cellUnit = this.props.isBoard ? np.myBoard[this.state.pos] : np.myHand[this.state.pos];
+    const draggable = canInteract && !isUndefined(cellUnit) && !!cellUnit;
     return (
-      <div id={this.state.pos} className={className} onClick={() => this.handleCellClick(this)} 
-        onMouseOver={(event) => this.handleMouseOver(event, this)}>
+      <div id={this.state.pos} className={className} onClick={() => this.handleCellClick(this)}
+        onMouseOver={(event) => this.handleMouseOver(event, this)}
+        draggable={draggable}
+        onDragStart={draggable ? (e) => this.handleDragStart(e) : undefined}
+        onDragEnd={() => this.handleDragEnd()}
+        onDragOver={canInteract ? (e) => this.handleDragOver(e) : undefined}
+        onDragLeave={(e) => this.handleDragLeave(e)}
+        onDrop={canInteract ? (e) => this.handleDrop(e) : undefined}>
         {this.getValue()}
       </div>
     );
