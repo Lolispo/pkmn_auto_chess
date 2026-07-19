@@ -7,5 +7,14 @@
   "hosted-zone:account=873163838676:domainName=petterbuilds.com:region=eu-west-1": {
     "Id": "/hostedzone/Z0426731D05S70I4TZLV",
     "Name": "petterbuilds.com."
+  },
+  "availability-zones:account=873163838676:region=eu-north-1": [
+    "eu-north-1a",
+    "eu-north-1b",
+    "eu-north-1c"
+  ],
+  "hosted-zone:account=873163838676:domainName=petterbuilds.com:region=eu-north-1": {
+    "Id": "/hostedzone/Z0426731D05S70I4TZLV",
+    "Name": "petterbuilds.com."
   }
 }
