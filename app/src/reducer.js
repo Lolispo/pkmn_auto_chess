@@ -95,6 +95,8 @@ const reducer = (
     nameRequiredHint: false,
     help: true,
     chatHelpMode: 'chat',
+    infoOpen: false,
+    infoSection: 'hotkeys',
     chatMessages: [],
     senderMessages: [],
     storedState: {},
@@ -265,6 +267,8 @@ const reducer = (
         messageMode: '',
         help: true,
         chatHelpMode: 'chat',
+        infoOpen: false,
+        infoSection: 'hotkeys',
         chatMessages: [],
         senderMessages: [],
         storedState: {},
@@ -336,7 +340,16 @@ const reducer = (
       state = {...state, help: !state.help}
       break;
     case 'SET_HELP_MODE':
-      state = {...state, chatHelpMode: action.chatHelpMode, showDmgBoard: false}    
+      state = {...state, chatHelpMode: action.chatHelpMode, showDmgBoard: false}
+      break;
+    case 'TOGGLE_INFO':
+      state = {...state, infoOpen: !state.infoOpen}
+      break;
+    case 'SET_INFO_OPEN':
+      state = {...state, infoOpen: action.open}
+      break;
+    case 'SET_INFO_SECTION':
+      state = {...state, infoSection: action.section, infoOpen: true}
       break;
     case 'SET_TYPE_BONUSES':
       // console.log('setTypeBonuses', action.typeMap);
