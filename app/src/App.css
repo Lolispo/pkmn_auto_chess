@@ -376,6 +376,10 @@ body {
 
 .leftBar {
   width: 165px;
+  min-width: 165px;
+  max-width: 165px;
+  flex: 0 0 165px; /* pin width so buff icons popping in don't widen the bar and shift the board */
+  box-sizing: border-box;
 }
 
 .marginTop5 {
