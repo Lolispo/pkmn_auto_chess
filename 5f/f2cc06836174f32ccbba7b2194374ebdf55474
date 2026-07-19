@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-07-19-bottom-right-hud-redesign-design.md
+  s_27e7f8ce0f7df9::t_724a1d28955bfe 1-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "5ff2cc06836174f32ccbba7b2194374ebdf55474",
+  "prompts": {},
+  "sessions": {
+    "s_27e7f8ce0f7df9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24a079b4-0bae-44c1-b2f0-49497edb3f60",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
