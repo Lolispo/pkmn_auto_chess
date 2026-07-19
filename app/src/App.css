@@ -16,11 +16,22 @@ body {
   background: url(./assets/images/pikachuBackground.gif) no-repeat;
 }
 
+.menuColumns {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  margin-left: 150px;
+  margin-top: 16px;
+}
+.menuColLeft {
+  display: flex;
+  flex-direction: column;
+}
+
 .mainMenuSoundDiv {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-left: 150px;
   margin-top: 16px;
 }
 
@@ -1274,7 +1285,7 @@ body {
 .menuConsole {
   width: 380px;
   max-width: 88%;
-  margin: 16px 0 0 150px;
+  margin: 0;
   padding: 20px 22px 22px;
   text-align: left;
   color: #f3f5fb;
@@ -1385,13 +1396,14 @@ body {
 .nameSave:active { transform: translateY(2px); box-shadow: 0 1px 0 #c99f00; }
 
 .lobbyPanel {
-  width: 380px;
+  width: 340px;
   max-width: 88%;
-  margin: 12px 0 0 150px;
+  margin: 0;
   text-align: left;
   color: #f3f5fb;
   font-family: sans-serif;
 }
+.lobbyPanel .lobbySection:first-child { margin-top: 0; }
 .lobbySection {
   padding: 14px 18px 16px;
   margin-top: 10px;

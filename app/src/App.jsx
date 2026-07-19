@@ -1452,6 +1452,8 @@ class App extends Component {
         <img src={getImage('autoChess')} alt='autoChessLogo'/>
       </div>
       {/*<div className='titleCard text_shadow'>Pokemon Auto Chess</div>*/}
+      <div className='menuColumns'>
+      <div className='menuColLeft'>
       <div className={`menuConsole state-${serverState}`}>
         <div className='statePill'><span className='stateDot'></span>{stateLabel}</div>
         <div className='menuSub'>{stateSub}</div>
@@ -1486,7 +1488,6 @@ class App extends Component {
           </div>
         </form>
       </div>
-      {lobbyPanel}
       <div className='mainMenuSoundDiv marginTop5'>
         <div>
           <img className='musicImgMainMenu' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
@@ -1496,7 +1497,10 @@ class App extends Component {
           <img className='soundImgMainMenu' src={(this.props.soundEnabled ? getImage('sound') : getImage('soundMuted'))} 
           alt={(this.props.soundEnabled ? 'Mute Sound': 'Turn on Sound')}  onClick={() => this.props.dispatch({type: 'TOGGLE_SOUND'})}/>
         </div>
-        {(this.props.musicEnabled ? this.playMusic() : '')} 
+        {(this.props.musicEnabled ? this.playMusic() : '')}
+      </div>
+      </div>
+      {lobbyPanel}
       </div>
     </div>
     const topBar = <div className='flex topBarDiv'>
