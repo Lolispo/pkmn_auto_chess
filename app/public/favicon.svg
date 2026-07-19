@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <title>Pokemon Auto Chess</title>
+  <defs>
+    <clipPath id="rounded"><rect x="1" y="1" width="22" height="22" rx="5"/></clipPath>
+  </defs>
+  <!-- chessboard: 2x2 checker, muted so the bolt reads at small sizes -->
+  <g clip-path="url(#rounded)">
+    <rect x="1" y="1" width="22" height="22" fill="#dbe3f2"/>
+    <rect x="1" y="1" width="11" height="11" fill="#2f66b3"/>
+    <rect x="12" y="12" width="11" height="11" fill="#2f66b3"/>
+  </g>
+  <!-- electric bolt -->
+  <path d="M7 2 v11 h3 v9 l7 -12 h-4 l4 -8 z" fill="#ffcb05" stroke="#12233f" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- rounded border on top -->
+  <rect x="1" y="1" width="22" height="22" rx="5" fill="none" stroke="#12233f" stroke-width="1.5"/>
+</svg>
