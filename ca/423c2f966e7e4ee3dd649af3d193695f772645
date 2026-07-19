@@ -1,0 +1,20 @@
+app/src/reducer.js
+  s_27e7f8ce0f7df9::t_577457c04b2ab5 162-163
+  s_27e7f8ce0f7df9::t_71e060e24705d4 127-129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "ca423c2f966e7e4ee3dd649af3d193695f772645",
+  "prompts": {},
+  "sessions": {
+    "s_27e7f8ce0f7df9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24a079b4-0bae-44c1-b2f0-49497edb3f60",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
