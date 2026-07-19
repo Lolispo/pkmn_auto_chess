@@ -1,28 +1,22 @@
 # TODO
 
-## GitHub Pages Deployment
-
-- [ ] Merge PR for GitHub Actions workflow (branch: `add-github-pages-deploy`)
-  - `gh` CLI wasn't authenticated as collaborator — create PR manually or auth first
-  - PR link: https://github.com/Lolispo/pkmn_auto_chess/pull/new/add-github-pages-deploy
-- [ ] Verify deployment works at https://lolispo.github.io/pkmn_auto_chess/
-- [ ] Handle missing backend gracefully — app currently errors when socket/API calls fail
-  - Make socket connection failure non-blocking so main menu renders
-  - Bundle sprite/unit JSON as static fallbacks or degrade gracefully on fetch failure
-
-## Lobby system (designed, ready to implement)
+## Lobby system (shipped)
 
 Spec: `docs/superpowers/specs/2026-07-18-lobby-system-design.md`
-Plan: `docs/superpowers/plans/2026-07-18-lobby-system.md` (4 tasks, TDD backend + manual FE verify)
+Plan: `docs/superpowers/plans/2026-07-18-lobby-system.md`
 
 Pre-game lobby: name-gated Ready + roster showing Waiting trainers and Ongoing games.
 Model: one `UPDATE_PRESENCE(name, ready)` event → server rebroadcasts `LOBBY_ROSTER`.
 
-- [ ] Task 1 — backend: `name` field on connected user + pure `buildLobbyRoster` (test/session_test.js)
-- [ ] Task 2 — backend: `UPDATE_PRESENCE` event (replaces READY/UNREADY), name gate, roster broadcast
-- [ ] Task 3 — frontend: socket.js listeners + `updatePresence` emitter; reducer state
-- [ ] Task 4 — frontend: dedicated lobby panel (Waiting + Ongoing), name-gated Ready button, CSS
-- [ ] Verify end-to-end with two browser tabs (Task 4 Step 8 checklist)
+- [x] Backend: `name` field on connected user + pure `buildLobbyRoster` (test/session_test.js)
+- [x] Backend: `UPDATE_PRESENCE` event (replaces READY/UNREADY), name gate, roster broadcast
+- [x] Frontend: socket.js listeners + `updatePresence` emitter; reducer state
+- [x] Frontend: dedicated lobby panel (Waiting + Ongoing), name-gated Ready button, CSS
+- [x] Verified end-to-end with two browser tabs
+
+Follow-ups (optional):
+- [ ] Persist trainer name across refresh (localStorage) — name is currently client-only, lost on socket-reconnect reload
+- [ ] Exercise Ongoing-games list with 2+ simultaneous games
 
 ## Fix for play
 
