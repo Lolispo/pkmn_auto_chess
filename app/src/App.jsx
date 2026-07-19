@@ -1488,7 +1488,7 @@ class App extends Component {
           </div>
         </form>
       </div>
-      <div className='mainMenuSoundDiv marginTop5'>
+      <div className='mainMenuSoundDiv'>
         <div>
           <img className='musicImgMainMenu' src={(this.props.musicEnabled ? getImage('music') : getImage('musicMuted'))} 
           alt={(this.props.musicEnabled ? 'Mute Music': 'Turn on Music')} onClick={() => this.props.dispatch({type: 'TOGGLE_MUSIC'})}/>
