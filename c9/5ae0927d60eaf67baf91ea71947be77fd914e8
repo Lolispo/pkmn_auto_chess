@@ -1,0 +1,28 @@
+app/src/offscreenDetector.js
+  s_27e7f8ce0f7df9::t_ab1c9bb59ee074 86
+  s_27e7f8ce0f7df9::t_79a3570770fccc 128-130
+  s_27e7f8ce0f7df9::t_7615a05368fc4f 1-19,21-23,27-29,31-85,87-103,105-127,131-150,152-173
+  s_27e7f8ce0f7df9::t_3c3614082323bf 20
+  s_27e7f8ce0f7df9::t_5ca11427284d6d 24-26,30
+  s_27e7f8ce0f7df9::t_eed8d0c583e83b 104
+  s_27e7f8ce0f7df9::t_40825d5730b8a1 151
+app/src/index.jsx
+  s_27e7f8ce0f7df9::t_6055ede3c0c284 9,12-13
+  s_27e7f8ce0f7df9::t_380c43dc25253c 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "c95ae0927d60eaf67baf91ea71947be77fd914e8",
+  "prompts": {},
+  "sessions": {
+    "s_27e7f8ce0f7df9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24a079b4-0bae-44c1-b2f0-49497edb3f60",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
