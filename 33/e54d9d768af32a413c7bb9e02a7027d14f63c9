@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-07-19-drag-and-drop-placement-design.md
+  s_27e7f8ce0f7df9::t_eb28dbc84f5ee8 1-103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "33e54d9d768af32a413c7bb9e02a7027d14f63c9",
+  "prompts": {},
+  "sessions": {
+    "s_27e7f8ce0f7df9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "24a079b4-0bae-44c1-b2f0-49497edb3f60",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
