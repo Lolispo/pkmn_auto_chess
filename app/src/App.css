@@ -1395,6 +1395,14 @@ body {
 .nameSave:hover { filter: brightness(1.05); }
 .nameSave:active { transform: translateY(2px); box-shadow: 0 1px 0 #c99f00; }
 
+.nameForm { margin-top: 16px; }
+.labelReq { color: #ffcb05; font-weight: 800; text-transform: none; letter-spacing: 0; }
+.nameInputNeeded {
+  border-color: #ffcb05;
+  box-shadow: 0 0 0 3px rgba(255, 203, 5, 0.28);
+}
+.menuHintWarn { color: #ffcb05; font-weight: 700; }
+
 .lobbyPanel {
   width: 340px;
   max-width: 88%;

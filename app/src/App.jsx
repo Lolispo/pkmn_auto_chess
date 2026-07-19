@@ -1501,6 +1501,7 @@ class App extends Component {
     const forceStartVisible = this.props.playersReady >= 2 && this.props.playersReady !== this.props.connectedPlayers && this.props.ready;
     const nameSet = this.props.playerName !== '';
     const lobbyReady = this.props.connected && loadingProgress >= 100;
+    const nameNeeded = lobbyReady && !nameSet; // in lobby but no name -> can't ready yet
     const lobbyPanel = lobbyReady ? (
       <div className='lobbyPanel'>
         <div className='lobbySection'>
@@ -1541,9 +1542,20 @@ class App extends Component {
         <div className='statePill'><span className='stateDot'></span>{stateLabel}</div>
         <div className='menuSub'>{stateSub}</div>
 
+        <form className='nameForm' onSubmit={this.handleNameChange}>
+          <div className='consoleLabel'>Trainer name{nameNeeded && <span className='labelReq'> · required to ready</span>}</div>
+          <div className='nameRow'>
+            <input className={`nameInput ${nameNeeded ? 'nameInputNeeded' : ''}`} maxLength='20' type='text'
+              placeholder={this.props.playerName || 'Enter a name…'} value={this.state.nameChangeInput}
+              onChange={(event) => this.setState({...this.state, nameChangeInput: event.target.value})} />
+            <button className='nameSave' type='submit'>Save</button>
+          </div>
+        </form>
+        <div className='consoleDivider'></div>
+
         {loadingProgress >= 100 ? (
           <div className='consoleActions'>
-            <button className='consoleBtn ghost' onClick={this.toggleReady} disabled={!nameSet}>{this.props.ready ? 'Unready' : 'Ready'}</button>
+            <button className='consoleBtn ghost' onClick={this.toggleReady} disabled={!nameSet} title={!nameSet ? 'Enter a trainer name first' : ''}>{this.props.ready ? 'Unready' : 'Ready'}</button>
             <button className='consoleBtn' onClick={() => this.startGameEvent()}>{`Start game (${this.props.playersReady}/${this.props.connectedPlayers})`}</button>
           </div>
         ) : (this.props.connected || this.state.waking) ? (
@@ -1552,7 +1564,7 @@ class App extends Component {
           <button className='consoleBtn' onClick={this.wakeServer}>▶ Wake server</button>
         )}
         {lobbyReady && (!nameSet || this.props.nameRequiredHint) && (
-          <div className='menuHint'>Enter a trainer name below to ready up.</div>
+          <div className='menuHint menuHintWarn'>⚠ Enter a trainer name above to ready up.</div>
         )}
         {forceStartVisible && (
           <button className='consoleBtn ghost consoleForce' onClick={() => this.startGameEvent(true)}>Force start</button>
@@ -1560,16 +1572,6 @@ class App extends Component {
         {(!this.props.connected && !this.state.waking) && (
           <div className='menuHint'>First load takes up to a minute while the server wakes.</div>
         )}
-
-        <div className='consoleDivider'></div>
-        <form onSubmit={this.handleNameChange}>
-          <div className='consoleLabel'>Trainer name</div>
-          <div className='nameRow'>
-            <input className='nameInput' maxLength='20' type='text' placeholder={this.props.playerName} value={this.state.nameChangeInput}
-              onChange={(event) => this.setState({...this.state, nameChangeInput: event.target.value})} />
-            <button className='nameSave' type='submit'>Save</button>
-          </div>
-        </form>
       </div>
       <div className='mainMenuSoundDiv'>
         <div>
