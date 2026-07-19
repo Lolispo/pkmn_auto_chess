@@ -1,0 +1,19 @@
+infra/cdk.context.json
+  s_33bb37f8b441d5::t_8d8458a7a5765b 10-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "90c778f405e90d7f638c8c6f93c38e40293a1df2",
+  "prompts": {},
+  "sessions": {
+    "s_33bb37f8b441d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ba8d6a8-b7f5-41fd-94fc-18f21efa4917",
+        "model": "unknown"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
