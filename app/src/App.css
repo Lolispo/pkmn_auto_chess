@@ -1492,3 +1492,19 @@ body {
 .infoTab:hover { color: #fff; }
 .infoTabActive { color: #1b1d26; background: #ffcb05; }
 .infoBody { white-space: pre-line; font-size: 13.5px; line-height: 1.6; color: #d7dbe6; }
+
+/* ---- Bottom-right HUD panels (chat + damage) ---- */
+.hudPanels { gap: 12px; margin-top: 6px; align-items: stretch; }
+.hudPanel {
+  background: rgba(15, 17, 25, 0.82); border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px; padding: 10px 12px; color: #f3f5fb; font-family: sans-serif;
+}
+.hudPanelHeader {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px; color: #a6adbe; margin-bottom: 8px;
+}
+.hudEmpty { font-size: 12.5px; color: #8b92a4; font-style: italic; }
+.damagePanel { width: 240px; }
+.chatPanel { width: 300px; display: flex; flex-direction: column; }
+.chatPanel .messagesContainer { flex: 1 1 auto; max-height: 150px; overflow-y: auto; font-size: 13px; }
+.chatPanel .chatTypingDiv { display: flex; gap: 6px; margin-top: 8px; }
+.chatPanel .textInput { flex: 1 1 auto; min-width: 0; }

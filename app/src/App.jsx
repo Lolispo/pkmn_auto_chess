@@ -1399,6 +1399,42 @@ class App extends Component {
     }
   }*/
 
+  renderChatPanel = () => {
+    const messages = [];
+    for (let i = 0; i < this.props.chatMessages.length; i++) {
+      messages.push(
+        <div key={i}><span className='text_shadow bold'>{this.props.senderMessages[i]}</span><span>{this.props.chatMessages[i]}</span></div>
+      );
+    }
+    return (
+      <div className='hudPanel chatPanel'>
+        <div className='hudPanelHeader'>Chat</div>
+        <div className='messagesContainer'>{messages}</div>
+        <div style={{ float: 'left', clear: 'both' }} ref={(el) => { this.messagesEnd = el; }}></div>
+        <form className='chatTypingDiv' onSubmit={this.handleChatSubmit}>
+          <input placeholder='Type a message …' className='textInput' type='text' value={this.state.chatMessageInput}
+            onChange={(event) => this.setState({ ...this.state, chatMessageInput: event.target.value })} />
+          <input className='text_shadow normalButton chatTypingSubmit' type='submit' value='Send' />
+        </form>
+      </div>
+    );
+  }
+
+  renderDamagePanel = () => {
+    const cur = this.props.dmgBoard && Object.keys(this.props.dmgBoard).length > 0 ? this.props.dmgBoard : null;
+    const prev = this.props.prevDmgBoard && Object.keys(this.props.prevDmgBoard).length > 0 ? this.props.prevDmgBoard : null;
+    const board = cur || prev;
+    const label = cur ? 'Last battle' : (prev ? 'Previous round' : '');
+    return (
+      <div className='hudPanel damagePanel'>
+        <div className='hudPanelHeader'>Damage{label ? ` · ${label}` : ''}</div>
+        {board
+          ? <div className='dmgBoardDiv helpText text_shadow'>{this.getDmgBoard(board)}</div>
+          : <div className='hudEmpty'>No battles yet</div>}
+      </div>
+    );
+  }
+
   renderInfoSidepanel = () => {
     if (!this.props.infoOpen) return null;
     const hotkeys = 'Q  Place unit\nW  Withdraw unit\nE  Sell unit\nF  Buy exp\nD  Refresh shop\n1-8  Select hand slot';
@@ -1426,67 +1462,6 @@ class App extends Component {
     );
   }
 
-  buildHelp = () => {
-    let s = '';
-    let s2 = 'Hotkeys:\n';
-    s2 += 'Q: Place Unit\n';
-    s2 += 'W: Withdraw Unit\n';
-    s2 += 'E: Sell Unit\n';
-    s2 += 'F: Buy Exp\n';
-    s2 += 'D: Refresh Shop\n';
-    let chat = false;
-    let messageCollection = [];
-    switch(this.props.chatHelpMode){
-      case 'types':
-        if(this.props.typeStatsString){
-          s += this.props.typeStatsString;
-        } else {
-          s += s2;
-        }
-        break;
-      case 'typeBonuses':
-        if(this.props.typeBonusString){
-          s += this.props.typeBonusString;
-        } else {
-          s += s2;
-        }
-        break;
-      case 'hotkeys':
-        s += s2;
-        break;
-      case 'chat':
-      default:
-          //s += this.props.chatMessage;
-          for(let i = 0; i < this.props.chatMessages.length; i++){
-            messageCollection.push(<div key={i}><span className='text_shadow bold'>{this.props.senderMessages[i]}</span><span>{this.props.chatMessages[i]}</span></div>);
-          }
-          chat = true;
-        break;
-    }
-    return (chat ? <div>{
-    <div className='helpText text_shadow'>
-      <span className='bold'>Chat:</span>
-      <div className='messageContainerDiv'>
-        <div className='messagesContainer'>{messageCollection}</div>
-      </div>
-      <div style={{ float:"left", clear: "both" }}
-        ref={(el) => { this.messagesEnd = el;}}>
-      </div>
-    </div>}
-    <div className='chatTypingDiv'>
-      <form onSubmit={this.handleChatSubmit}>
-        <label>
-          <input placeholder='Type a message ...' className='textInput' type="text" value={this.state.chatMessageInput} 
-          onChange={(event) => this.setState({...this.state, chatMessageInput: event.target.value})} />
-        </label>
-        <input className='text_shadow normalButton chatTypingSubmit' type="submit" value="Submit" />
-      </form>
-    </div>
-    </div> : <div className='helpText text_shadow'>
-        <span className='bold'>{'Information:\n'}</span>
-        <div className='messageContainerSimple'>{s}</div>
-    </div>);
-  }
 
   getDmgBoard = (dmgBoard) => {
     const list = [];
@@ -1764,26 +1739,9 @@ class App extends Component {
             </div>*/}
           </div>
         </div>
-        <div>
-          {(this.props.help ? <div className='text_shadow marginTop5'>
-            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'chat'})}/>
-            <label className='labels'>Chat</label> 
-            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'hotkeys'})}/> 
-            <label className='labels'>Hotkeys</label> 
-            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'types'})}/>
-            <label className='labels'>Types</label> 
-            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'typeBonuses'})}/>
-            <label className='labels'>Buffs</label> 
-            <input className='check' type='radio' name='helpRadio' onChange={() => this.props.dispatch({type: 'SET_HELP_MODE', chatHelpMode: 'damageBoard'})}/>
-            <label className='labels'>Damage</label> 
-          </div>: '')}
-            {(!this.props.onGoingBattle && this.props.dmgBoard && Object.keys(this.props.dmgBoard).length > 0 && (this.props.showDmgBoard
-              || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>
-              <span className='bold'>Damage Dealt:</span>{this.getDmgBoard(this.props.dmgBoard)}
-            </div> : (this.props.onGoingBattle && this.props.prevDmgBoard && Object.keys(this.props.prevDmgBoard).length > 0 && (this.props.showDmgBoard
-              || this.props.chatHelpMode === 'damageBoard') ? <div className='dmgBoardDiv helpText text_shadow'>
-              <span className='bold'>Damage Dealt Previous Round:</span>{this.getDmgBoard(this.props.prevDmgBoard)}
-            </div> : (this.props.help ? this.buildHelp() : '')))}
+        <div className='hudPanels flex'>
+          {this.renderDamagePanel()}
+          {this.renderChatPanel()}
         </div>
       </div>
       {this.playerStatsDiv()}
