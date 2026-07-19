@@ -124,9 +124,9 @@ const reducer = (
     typeBonusString: '',
     typeMap: '',
     round: 1,
-    musicEnabled: true,
-    soundEnabled: true,
-    timerDuration: 30,
+    musicEnabled: !devMode, // dev starts muted (no auto audio), but the toggle works + persists
+    soundEnabled: !devMode,
+    timerDuration: devMode ? 15 : 30,
     chatSoundEnabled: true,
     selectedSound: '',
     soundEffects: ['', '', '', '', '','', '', '', '', ''],
@@ -159,9 +159,8 @@ const reducer = (
   action
 ) => {
   let tempSoundEffects;
-  if(devMode) {
-    state = {...state, musicEnabled: false, soundEnabled: false, timerDuration: 15} // Disallows testing sounds currently
-  }
+  // dev-mode audio/timer defaults are applied once in the initial state above (not per action),
+  // so toggling music/sound on in dev actually sticks instead of being reset every dispatch.
   switch (action.type) { // Listens to events dispatched from from socket.js
     case 'LOAD_UNIT_JSON': {
       console.log('Loaded sprites!');
