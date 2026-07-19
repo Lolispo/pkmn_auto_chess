@@ -853,6 +853,9 @@ class App extends Component {
       return;
     }
     switch(event.key){
+      case 'Escape':
+        if (this.props.infoOpen) this.props.dispatch({ type: 'SET_INFO_OPEN', open: false });
+        break;
       case '1':
       case '2':
       case '3':
@@ -1396,6 +1399,33 @@ class App extends Component {
     }
   }*/
 
+  renderInfoSidepanel = () => {
+    if (!this.props.infoOpen) return null;
+    const hotkeys = 'Q  Place unit\nW  Withdraw unit\nE  Sell unit\nF  Buy exp\nD  Refresh shop\n1-8  Select hand slot';
+    const section = this.props.infoSection;
+    let body;
+    if (section === 'types') body = this.props.typeStatsString || 'Type info appears once a game starts.';
+    else if (section === 'buffs') body = this.props.typeBonusString || 'Type buffs appear once a game starts.';
+    else body = hotkeys;
+    const tab = (key, label) => (
+      <button key={key}
+        className={`infoTab ${section === key ? 'infoTabActive' : ''}`}
+        onClick={() => this.props.dispatch({ type: 'SET_INFO_SECTION', section: key })}>{label}</button>
+    );
+    return (
+      <div className='infoBackdrop' onClick={() => this.props.dispatch({ type: 'SET_INFO_OPEN', open: false })}>
+        <div className='infoPanelSide' onClick={(e) => e.stopPropagation()}>
+          <div className='infoPanelHeader'>
+            <span className='infoPanelTitle'>Info</span>
+            <button className='infoClose' onClick={() => this.props.dispatch({ type: 'SET_INFO_OPEN', open: false })}>✕</button>
+          </div>
+          <div className='infoTabs'>{tab('hotkeys', 'Hotkeys')}{tab('types', 'Types')}{tab('buffs', 'Buffs')}</div>
+          <div className='infoBody text_shadow'>{body}</div>
+        </div>
+      </div>
+    );
+  }
+
   buildHelp = () => {
     let s = '';
     let s2 = 'Hotkeys:\n';
@@ -1721,8 +1751,7 @@ class App extends Component {
               </div>
             </div>
             <div className='toggleHelpDiv'>
-              <img className='toggleHelpImg' src={(this.props.help ? getImage('collapse') : getImage('collapseNot'))} 
-                    onClick={() => this.props.dispatch({type: 'TOGGLE_HELP'})} alt='toggleHelp'/>
+              <button className='infoOpenBtn' onClick={() => this.props.dispatch({type: 'TOGGLE_INFO'})}>ⓘ Info</button>
             </div>
             {(this.props.debugMode ? <div className='text_shadow hoveringDiv'>Hovering: {JSON.stringify(this.props.mouseOverId, null, 2)}</div> : '')}
             <div className={'text_shadow messageUpdate'} style={{padding: '5px'}} >
@@ -1766,6 +1795,7 @@ class App extends Component {
         {boardDiv}
         {rightSide}
       </div>
+      {this.renderInfoSidepanel()}
       <input className='hidden' type='checkbox' checked={this.props.startBattle} onChange={(this.props.startBattle ? this.startBattleEvent.bind(this)() : () => '')}/>
     </div> : <div className='mainMenu'>{mainMenu}</div>);
   }
@@ -1787,6 +1817,8 @@ const mapStateToProps = state => ({
   nameRequiredHint: state.nameRequiredHint,
   help: state.help,
   chatHelpMode: state.chatHelpMode,
+  infoOpen: state.infoOpen,
+  infoSection: state.infoSection,
   senderMessages: state.senderMessages,
   chatMessages: state.chatMessages,
   storedState: state.storedState,

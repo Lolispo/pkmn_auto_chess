@@ -1459,3 +1459,36 @@ body {
   background: rgba(255, 203, 5, 0.12);
   border-radius: 8px;
 }
+
+/* ---- Info side panel ---- */
+.infoOpenBtn {
+  padding: 7px 12px; border: none; border-radius: 9px; cursor: pointer;
+  font-family: sans-serif; font-weight: 800; font-size: 13px; color: #e7eaf2;
+  background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.infoOpenBtn:hover { filter: brightness(1.15); }
+.infoBackdrop {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 1000;
+  display: flex; justify-content: flex-end;
+}
+.infoPanelSide {
+  width: 340px; max-width: 90%; height: 100%; padding: 18px 20px;
+  background: rgba(15, 17, 25, 0.96); border-left: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.5); color: #f3f5fb; font-family: sans-serif;
+  overflow-y: auto;
+}
+.infoPanelHeader { display: flex; align-items: center; justify-content: space-between; }
+.infoPanelTitle { font-size: 16px; font-weight: 800; letter-spacing: 0.3px; }
+.infoClose {
+  border: none; background: transparent; color: #a6adbe; font-size: 18px; cursor: pointer; line-height: 1;
+}
+.infoClose:hover { color: #fff; }
+.infoTabs { display: flex; gap: 6px; margin: 14px 0; }
+.infoTab {
+  flex: 1; padding: 8px 6px; border: none; border-radius: 8px; cursor: pointer;
+  font-family: sans-serif; font-weight: 700; font-size: 12.5px; color: #a6adbe;
+  background: rgba(255, 255, 255, 0.06);
+}
+.infoTab:hover { color: #fff; }
+.infoTabActive { color: #1b1d26; background: #ffcb05; }
+.infoBody { white-space: pre-line; font-size: 13.5px; line-height: 1.6; color: #d7dbe6; }
