@@ -710,3 +710,18 @@ Sounds etc
         time=reached => 
             <- State after battle, marked next battle time
                 Check if players lost, mark correctly etc
+
+## Backend dependency vulnerabilities (follow-up)
+
+`npm audit` at the repo root (the express/socket.io backend) reports ~9 high-severity
+advisories that `npm audit fix` can NOT resolve without `--force` (breaking bumps in the
+express/qs/path-to-regexp ecosystem). The frontend (`app/`) was already fixed cleanly
+(9 → 0, commit d653ab7). To do the backend safely:
+- Run `npm audit fix --force` at the root, then **smoke-test the server** (start `src/index.js`
+  or the ECS task via `infra/server.sh start`, exercise a lobby/game) before pushing — a
+  forced bump may change express/socket behavior.
+- Or merge the 3 open backend Dependabot PRs (#21 qs+express, #19 path-to-regexp, #17
+  flatted) one lockfile-group at a time (they cascade on root `package-lock.json`), same
+  smoke-test after.
+- Low urgency: internal scale-to-zero game server, not a user-facing static asset, and the
+  backend is not auto-deployed (separate CDK/infra deploy).
