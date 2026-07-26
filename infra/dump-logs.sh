@@ -31,11 +31,16 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+# Every pattern is prefixed with the stack name. Without it these also match the sibling
+# ShowdownBackend stack's groups, and `| [0]` returns whichever sorts first. That happens to be
+# PkmnBackend- today, so this script was right only by luck — a consumer named earlier in the
+# alphabet would silently hand you another app's logs. Scoping it makes that impossible.
+STACK="PkmnBackend"
 case "$COMP" in
-  task)    PATTERN="TaskDefappLogGroup" ;;   # the game server (Express + Socket.io) stdout
-  waker)   PATTERN="BackendWaker" ;;
-  sleeper) PATTERN="BackendSleeper" ;;
-  dns)     PATTERN="BackendDnsUpdater" ;;
+  task)    PATTERN="$STACK-BackendTaskDefappLogGroup" ;;   # game server (Express + Socket.io)
+  waker)   PATTERN="$STACK-BackendWaker" ;;
+  sleeper) PATTERN="$STACK-BackendSleeper" ;;
+  dns)     PATTERN="$STACK-BackendDnsUpdater" ;;
   *) echo "unknown component: $COMP (use task|waker|sleeper|dns)" >&2; exit 1 ;;
 esac
 

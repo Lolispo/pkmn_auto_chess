@@ -18,25 +18,30 @@ Follow-ups (optional):
 - [ ] Persist trainer name across refresh (localStorage) — name is currently client-only, lost on socket-reconnect reload
 - [ ] Exercise Ongoing-games list with 2+ simultaneous games
 
-## Waker moved to /__wake — deploy the backend before pushing the frontend
+## ✅ DONE 2026-07-27 — waker moved to /__wake, backend redeployed, frontend shipped
 
-`app/src/socket.js` now derives the wake endpoint as `${VITE_BACKEND_URL}/__wake` instead of
-reading `VITE_WAKER_URL` (which is deleted from `app/.env.production`). That path only exists
-once the `web-platform` change adding the `/__wake*` CloudFront behaviour is deployed.
+`app/src/socket.js` derives the wake endpoint as `${VITE_BACKEND_URL}/__wake` instead of reading
+`VITE_WAKER_URL` (deleted from `app/.env.production`). The `/__wake*` CloudFront behaviour is
+deployed, so that path exists.
 
-Pushing this repo **auto-deploys the frontend** (`.github/workflows/deploy.yml` on push to
-main), so the order matters:
+- [x] `cd infra && npm ci && ./deploy.sh` — `UPDATE_COMPLETE` in 77s. `npm ci` mattered: the
+      copied `web-platform` snapshot in `node_modules` had **no `__wake` in it at all** before
+      the refresh, exactly the silent-staleness failure the instruction warns about. `cdk diff`
+      confirmed the change was one resource, modified in place: the distribution gaining a
+      `/__wake*` behaviour plus the waker Function URL as a second origin. No replacement, so the
+      already-live frontend kept working throughout.
+- [x] `curl -s https://pkmn-api.petterbuilds.com/__wake` → 200 with the status JSON, no 403, so
+      the behaviour has `ALL_VIEWER_EXCEPT_HOST_HEADER` as required.
+- [x] Full wake path re-verified after 8 days asleep (`lastOnline` was 2026-07-19): `POST` scales
+      0→1, task reaches `RUNNING` in 45s logging `connected to port 8000!`, and
+      `GET /health` answers `{"ok":true,"activeSessions":0,...}` through CloudFront.
+- [x] Pushed, CI shipped the frontend.
 
-- [ ] `cd infra && npm ci && ./deploy.sh` — `npm ci`, not `npm install`, or the copied
-      `web-platform` snapshot in `node_modules` will not refresh and the behaviour will be
-      missing from the template
-- [ ] `curl -s https://pkmn-api.petterbuilds.com/__wake` — expect the status JSON. A **403**
-      means the `Host` header is being forwarded to the Lambda function URL; the behaviour needs
-      `ALL_VIEWER_EXCEPT_HOST_HEADER`
-- [ ] Only then push, letting CI ship the frontend
-
-Until the backend is deployed, the currently-live frontend keeps working — it still has the old
-waker URL baked into its bundle.
+Note for next time: **`state: "online"` from the waker does not mean CloudFront can reach the
+task yet.** For up to a minute after `runningCount: 1`, the API domain can hang while the task's
+public IP answers instantly — CloudFront re-resolves `origin-pkmn` on its own schedule. It looks
+like a broken deploy and needs no action. Written up in `web-platform/docs/wakeable-backend.md`
+§10, along with §6 on how backends are deployed (by hand; `deploy.yml` ships only the frontend).
 
 ## Fix for play
 
