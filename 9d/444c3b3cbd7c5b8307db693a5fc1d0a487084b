@@ -1,0 +1,21 @@
+app/src/socket.js
+  s_b702a11fb21449::t_d4d8a59c02c1a1 9-11,22
+infra/deploy.sh
+  s_b702a11fb21449::t_b6a9c60f94efdc 13-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9d444c3b3cbd7c5b8307db693a5fc1d0a487084b",
+  "prompts": {},
+  "sessions": {
+    "s_b702a11fb21449": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "065c319f-0d5d-42c2-9476-3276c414a0b5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
