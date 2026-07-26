@@ -1,0 +1,32 @@
+# Deploys the pkmn_auto_chess FRONTEND (app/) to pkmn.petterbuilds.com on push
+# to main. The frontend is a Vite app in app/; `npm run build` there produces
+# app/dist. This repo is PUBLIC, so it calls the shared PUBLIC Lolispo/ci
+# workflow directly and passes the AWS deploy role as a masked SECRET.
+# working-directory: app scopes install/build there and resolves dist-dir to
+# app/dist.
+#
+# NOTE: this deploys ONLY the static frontend to S3/CloudFront. The backend
+# (src/ + Dockerfile + infra/, a scale-to-zero ECS Fargate service) has its own
+# CDK/infra deploy and is intentionally NOT handled here.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    permissions:
+      id-token: write
+      contents: read
+    uses: Lolispo/ci/.github/workflows/deploy-app.yml@main
+    with:
+      app-id: pkmn
+      working-directory: app
+      build-command: npm run build
+    secrets:
+      role-arn: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
