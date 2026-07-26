@@ -10,4 +10,5 @@ cd "$SCRIPT_DIR"
 npm ci
 npx cdk deploy PkmnBackend --require-approval never "$@"
 echo ""
-echo "→ Copy the WakerUrl output into app/.env.production (VITE_WAKER_URL), then: cd app && npm run deploy"
+echo "→ Backend deployed. The frontend derives the wake endpoint from VITE_BACKEND_URL,"
+echo "   so there is nothing to copy. Ship it with:  cd app && npm run deploy"

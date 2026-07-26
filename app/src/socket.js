@@ -6,22 +6,21 @@ import { io } from 'socket.io-client';
 const ipAdress = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 console.log('Connecting to ' + ipAdress + ' ...');
 const socket = io(ipAdress, { transports: ['websocket'] });
+// The waker rides a /__wake behaviour on the same distribution — nothing to configure, and
+// reachable while the server is asleep.
+const wakerUrl = ipAdress + '/__wake';
 let timeoutCounter = 1;
 
 // Trigger the scale-to-zero backend to wake (POST). Fire-and-forget; the socket and the
 // /sprites fetch already retry until the backend is up (~30-60s cold start).
 export function wakeBackend() {
-  const wakerUrl = import.meta.env.VITE_WAKER_URL;
-  if (!wakerUrl) return;
   fetch(wakerUrl, { method: 'POST' }).catch(() => { /* backend will wake shortly */ });
 }
 
 // Report backend status without waking it (GET). Works while the server is asleep
 // because the waker is a Lambda. Returns { state, desiredCount, runningCount, lastOnline }
-// or null if unavailable / not configured.
+// or null if unavailable.
 export async function getServerStatus() {
-  const wakerUrl = import.meta.env.VITE_WAKER_URL;
-  if (!wakerUrl) return null;
   try {
     const res = await fetch(wakerUrl, { method: 'GET' });
     if (!res.ok) return null;
