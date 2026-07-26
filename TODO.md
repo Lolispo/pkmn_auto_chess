@@ -18,6 +18,26 @@ Follow-ups (optional):
 - [ ] Persist trainer name across refresh (localStorage) — name is currently client-only, lost on socket-reconnect reload
 - [ ] Exercise Ongoing-games list with 2+ simultaneous games
 
+## Waker moved to /__wake — deploy the backend before pushing the frontend
+
+`app/src/socket.js` now derives the wake endpoint as `${VITE_BACKEND_URL}/__wake` instead of
+reading `VITE_WAKER_URL` (which is deleted from `app/.env.production`). That path only exists
+once the `web-platform` change adding the `/__wake*` CloudFront behaviour is deployed.
+
+Pushing this repo **auto-deploys the frontend** (`.github/workflows/deploy.yml` on push to
+main), so the order matters:
+
+- [ ] `cd infra && npm ci && ./deploy.sh` — `npm ci`, not `npm install`, or the copied
+      `web-platform` snapshot in `node_modules` will not refresh and the behaviour will be
+      missing from the template
+- [ ] `curl -s https://pkmn-api.petterbuilds.com/__wake` — expect the status JSON. A **403**
+      means the `Host` header is being forwarded to the Lambda function URL; the behaviour needs
+      `ALL_VIEWER_EXCEPT_HOST_HEADER`
+- [ ] Only then push, letting CI ship the frontend
+
+Until the backend is deployed, the currently-live frontend keeps working — it still has the old
+waker URL baked into its bundle.
+
 ## Fix for play
 
 Enable sounds @ reducer 'enabledSound'
