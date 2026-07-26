@@ -1,0 +1,21 @@
+infra/dump-logs.sh
+  s_360d0412690f28::t_2cf3c9917408f7 34-38,40-43
+TODO.md
+  s_360d0412690f28::t_6ca18966799b47 21-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "f3032694ce8ff50086a954f76d111a579fd9da36",
+  "prompts": {},
+  "sessions": {
+    "s_360d0412690f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e4da7be-8652-4f5e-8389-73ee85e4670f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Petter Andersson <12279747+Lolispo@users.noreply.github.com>"
+    }
+  }
+}
