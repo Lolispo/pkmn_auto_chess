@@ -1,0 +1,22 @@
+{
+  "summary": "Pokémon auto-chess, multiplayer.",
+  "status": "live",
+  "tier": "active",
+  "resources": [
+    {
+      "kind": "s3-prefix",
+      "id": "petterbuilds-apps/pkmn"
+    },
+    {
+      "kind": "platform-shared",
+      "id": "petterbuilds-edge",
+      "note": "CloudFront + router that serves this app; owned by web-platform"
+    },
+    {
+      "kind": "aws-stack",
+      "id": "PkmnBackend",
+      "region": "eu-north-1",
+      "note": "scale-to-zero Fargate"
+    }
+  ]
+}
