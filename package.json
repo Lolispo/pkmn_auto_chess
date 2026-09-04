@@ -28,7 +28,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.0",
-    "immutable": "^3.8.2",
+    "immutable": "^4.3.9",
     "immutable-shuffle": "^1.0.3",
     "socket.io": "^4.8.0"
   },
